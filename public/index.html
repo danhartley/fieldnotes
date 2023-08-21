@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <title>LTP proto lesson</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./ui.js" type="module"></script>
+  </head>
+
+  <body>  
+    <header>
+      <h1>Learn the planet</h1>
+    </header>
+
+    <main>
+      <div class="section">
+        <div class="section-header">
+          <h2>iNaturalist guides</h2>
+          <div id="customGuideCtrl"></div>
+        </div>
+        
+        <div id="custom">
+          <fieldset>
+            <legend>Taxa</legend>
+            <div id="iconic-taxa" class="grid"></div>
+          </fieldset>        
+
+            <fieldset>
+              <legend>Search parameters</legend>
+
+              <div id="inat-autocomplete-group" class="grid mb2"></div>
+
+              <div class="grid mb2">
+                <div>
+                    <label for="inat-autocomplete" class="initial-text mb">Search iNaturalist</label>
+                    <input id="inat-autocomplete" list="inat-autocomplete-list" type="text" class="p" autocomplete="off" placeholder="Start typing… ">
+                    <datalist id="inat-autocomplete-list"></datalist>
+                </div>
+              </div>
+ 
+              <div class="mb2">
+                <label for="species-count" class="mb">Species count</label>
+                <input id="species-count" type="number" value="0" min="1" max="200" class="p">
+              </div>
+
+              
+
+              <button id="fetch-custom-inat-species-btn" class="mb2">
+                Fetch inat species
+              </button>              
+            </fieldset>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>Curated guides</h2>
+          <div id="curatedGuideCtrl"></div>
+        </div>
+        <fieldset id="curated" class="guide-fs flex-row">
+          <legend>Guides</legend>
+          <div id="guide-group" class="grid"></div>
+        </fieldset>          
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>Display options</h2>
+          <div id="displayCtrl"></div>
+        </div>
+
+        <div id="display">
+          <fieldset class="flex-row">
+            <legend>Species display</legend>
+            <div id="lesson-filters" class="grid"></div>
+          </fieldset>
+  
+          <fieldset class="flex-row">
+            <legend>Test for</legend>
+            <div id="target-group" class="grid"></div>
+          </fieldset>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>Lesson</h2>
+          <div id="lessonCtrl"></div>
+        </div>
+      
+        <fieldset id="lesson">
+          <legend>Species</legend>
+          <ul id="species-list-parent" class="js-template"></ul>          
+          <div id="species-grid-parent" class="grid js-template"></div>
+          <div id="species-card-parent" class="grid js-template"></div>
+        
+          <button
+            id="check-answers-btn"
+            class="mt2 mb"
+          >
+            Check answers
+          </button>
+        </fieldset>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>Progress</h2>
+          <div id="progressCtrl"></div>
+        </div>
+
+        <fieldset id="progress">
+          <legend>Score</legend>
+            <dl>
+              <dt>Questions</dt><dd id="score-count">-</dd>
+              <dt>Correct</dt><dd id="score-correct">-</dd>
+            </dl>
+        </fieldset>
+      </div>
+
+      <div class="section">
+        <div class="section-header">
+          <h2>Preferences</h2>
+          <div id="preferencesCtrl"></div>
+        </div>
+        <fieldset id="preferences">
+          <legend>Language</legend>
+          <div id="language-group" class="grid"></div>
+          <div>Language determines the locale preference for taxon common names</div>
+        </fieldset>
+      </div>
+    </main>    
+
+    <template id="checkbox-template">
+      <div class="flex-row">                  
+        <input type="checkbox" id="" name="" class="mr" />
+        <label for=""></label>      
+      </div>
+    </template>
+
+    <template id="radio-button-template">
+      <div class="flex-row">
+        <input type="radio" id="" name="" class="m0 mr" />
+        <label for=""></label>
+      </div>
+    </template>
+
+    <template id="species-list-template" name="species-list">
+      <li></li>
+    </template>
+
+    <template id="species-card-test-template" name="species-tests">
+      <div>
+        <img src="" alt="">
+        <div>
+          <span></span>
+        </div>
+        <label for="id" class="mt mb">Latin name</label>
+        <input id="id" type="text" class="p" autocomplete="off"
+        />
+      </div>
+    </template>
+
+    <template id="species-card-template" name="species-cards">
+      <div>
+        <img src="" alt="">
+        <div>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </template>
+
+    <template id="species-detail-template" name="species-panel">
+      <div class="species-panel">
+        <hgroup>
+          <h3></h3>
+        </hgroup>
+        <p></p>
+      </div>
+    </template>
+  </body>
+</html>

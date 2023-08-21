@@ -1,0 +1,385 @@
+/* VARIABLES */
+
+:root {
+  --d: .5rem;
+  --w: 100vw;
+  --h: 100vh;
+  --c0: #ffffff;
+  --c1: #fbfbfb;
+  --c2: #d7d7d7;
+  --c3: #b9b9b9;
+  --c4: #9e9e9e;
+  --c5: #565656;
+  --c6: #323232;
+  --c7: #414141;
+  --c8: #000000;
+  --s1: .6rem;
+  --s2: .7rem;
+  --s3: .8rem;
+  --s4: .9rem;
+  --s5: 1rem;
+  --s6: 1.1rem;
+  --s7: 1.2rem;
+  --s8: 1.3rem;
+  --s9: 1.4rem;
+  --fungi: #e1e1e1;
+  --amphibia: #e2deb4;
+  --mammalia: #f0c782;
+  --plantae: #d8dfd2;
+  --insecta: #e2dce2;
+  --aves: #d7e3f1;
+  --reptilia: #fee2df;
+  --highlight: #ebf0ea;
+}
+
+/* ELEMENTS */
+
+body {
+  font-family: Open Sans,sans-serif;
+  background-color: var(--c1);
+}
+
+header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: calc(var(--w) / 30);
+  min-height: 50px;
+  border-bottom: 5px solid var(--c4);
+  margin: 0 calc(var(--d) * 3) calc(var(--d) * 3) calc(var(--d) * 3);
+}
+
+main {
+  margin: auto var(--d);
+}
+
+@media (orientation: landscape) {
+  main {
+    margin: auto calc(var(--w) / 5);  
+  }
+}
+
+h1 {
+  text-transform: uppercase;
+  font-size: var(--s3);
+  font-weight: 400;
+  color: var(--c5);
+  letter-spacing: calc(var(--d) / 5);
+}
+
+h2 {
+  margin: 0 0 calc(var(--d) * 2) 0;
+  font-size: var(--s8);
+  font-weight: 500;
+  letter-spacing: calc(var(--d) / 10);
+}
+
+h3 {
+  color: var(--c6);
+  font-size: var(--s5);
+  font-weight: 500;
+  letter-spacing: calc(var(--d) / 10);
+  margin: var(--d) 0;
+}
+
+ul {
+  margin: 0;
+}
+
+li {
+  margin: calc(2 * var(--d)) 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+button {
+  margin: 0;
+  padding: var(--d);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: calc(var(--d) * .05);
+  font-size: var(--s2);
+  border: 1px solid var(--c3);
+}
+
+button:hover {
+  border-color: var(--c8);
+}
+
+button:focus-visible {
+  outline: 1px solid var(--c8);
+  outline: auto;
+  outline-offset: -2px;
+}
+
+label {
+  display: block;
+  text-transform: lowercase;    
+  font-size: var(--s3);
+  color: var(--c5);
+}
+
+label::first-letter {
+  text-transform: capitalize;
+}
+
+input {
+  border: 1px solid var(--c3);
+}
+
+input:focus-visible {
+  outline: 1px solid var(--c8);
+}
+
+input[type='checkbox'] {
+  cursor: pointer;
+}
+
+input[type='checkbox'] + label, input[type='radio'] + label {
+  width: 100%;
+  cursor: pointer;
+  letter-spacing: .05rem;
+}
+
+input[type='number'] {
+  width: calc(var(--d) * 6);
+}
+
+select {
+  border: 1px solid var(--c3);
+  padding: calc(var(--d) * .75) 0;
+  cursor: pointer;
+}
+
+select:focus-visible {
+  border: none;
+  outline: 1px solid var(--c8);
+}
+
+dl {
+  margin: 0;
+  font-size: var(--s3);
+}
+
+dt {
+  float: left;
+  margin: 0 var(--d) var(--d) 0;
+  color: var(--c5);
+}
+
+dd {
+  margin: 0 var(--d) var(--d) 0;
+}
+
+fieldset {
+  position: relative;
+  margin: 0 0 calc(var(--d) * 2) 0;
+  padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 2) calc(var(--d) * 2);
+  background-color: var(--c0);
+  border: 1px dashed var(--c2);
+}
+
+fieldset fieldset {
+  border: none;
+  margin: 0;
+  padding-left: 0;
+  text-transform: initial;
+  width: 100%;
+}
+
+legend {
+  position: absolute;
+  top: calc(var(--d) * 2);
+  margin: 0 0 var(--d) 0;
+  font-size: var(--s3);
+  font-weight: bold;
+  letter-spacing: calc(var(--d) * .05);
+  color: var(--c5);
+}
+
+fieldset fieldset .grid .flex-row {
+  background-color: var(--highlight);
+}
+
+/* STATES */
+
+.hidden {
+  display: none;
+}
+
+.invisible {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* BROWSER HACKS */
+
+@media screen {
+  img {
+    aspect-ratio: 1/1;
+  }
+} 
+
+/* LAYOUT */
+
+@media (orientation: landscape) {
+  #header span {
+    top: calc(var(--d) * 1);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--d);
+  background-color: var(--c0);
+}
+
+.grid > div {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid img {
+  width: 100%;
+  height: calc(35 * var(--d));  
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.grid .flex-row {
+  flex-direction: row;
+  align-items: center;
+  margin: 0;
+  padding: calc(var(--d) * 1.5) var(--d);
+  background-color: var(--c1);
+  border: 1px dotted var(--c2);
+}
+
+.grid .species-panel {
+  display: flex;
+  font-size: var(--s3);
+}
+
+.grid .species-panel hgroup p {
+  white-space: pre-line;
+}
+
+.grid .species-panel:empty {
+  display: none;
+}
+
+@supports (aspect-ratio: 1) {
+  .grid img {
+    height: initial;
+    aspect-ratio: 1;
+  }
+}
+
+.grid div > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  
+  justify-content: center;
+  padding: var(--d) 0;
+  height: calc(6 * var(--d));
+  text-transform: lowercase;
+}
+
+.grid span::first-letter {
+  text-transform: capitalize;
+}
+
+.grid div > div span:nth-child(2) {
+  margin-top: calc(var(--d) * .5);
+  font-size: var(--s3);
+}
+
+/* ENTITIES */
+
+.section {
+  margin-bottom: calc(var(--d) * 4);
+  border-bottom: 1px dashed var(--c2);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.latin {
+  font-style: italic;
+}
+
+.initial-text {
+  text-transform: initial;
+}
+
+/* CONTROLS */
+
+#curatedGuideCtrl, #customGuideCtrl, #displayCtrl, #lessonCtrl, #progressCtrl, #preferencesCtrl {
+  font-size: var(--s7);    
+  cursor: pointer;
+  margin: 0 var(--d)0 0;
+  text-transform: uppercase;
+}
+
+#customGuideCtrl.hide::after,
+#curatedGuideCtrl.hide::after,
+#lessonCtrl.hide::after,
+#displayCtrl.hide::after,
+#progressCtrl.hide::after,
+#preferencesCtrl.hide::after
+{
+  content: 'Show';
+  font-size: var(--s2);
+}
+
+#customGuideCtrl::after, 
+#curatedGuideCtrl::after, 
+#lessonCtrl::after,
+#displayCtrl::after,
+#progressCtrl::after,
+#preferencesCtrl::after {
+  content: 'Hide';
+  font-size: var(--s2);
+}
+
+/* LAYOUT */
+
+.m {
+  margin: var(--d);
+}
+
+.m0 {
+  margin: 0
+}
+
+.mt {
+  margin-top: var(--d);
+}
+
+.mt2 {
+  margin-top: calc(var(--d) * 2);
+}
+
+.mr {
+  margin-right: var(--d);
+}
+
+.mb {
+  margin-bottom: var(--d);
+}
+
+.mb2 {
+  margin-bottom: calc(var(--d) * 2);
+}
+
+.p {
+  padding: var(--d);
+}
+
+.p0 {
+  padding: 0;
+}
