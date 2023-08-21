@@ -114,13 +114,12 @@ button:focus-visible {
 
 label {
   display: block;
-  text-transform: lowercase;    
   font-size: var(--s3);
   color: var(--c5);
 }
 
-label::first-letter {
-  text-transform: capitalize;
+input[type='radio'] + label::first-letter {
+  text-transform: uppercase;
 }
 
 input {
@@ -165,10 +164,19 @@ dt {
   float: left;
   margin: 0 var(--d) var(--d) 0;
   color: var(--c5);
+  min-width: 50px;
 }
 
 dd {
   margin: 0 var(--d) var(--d) 0;
+}
+
+dd:empty {
+  display: none;
+}
+
+dt:has(+ dd:empty) {
+  display: none;
 }
 
 fieldset {
@@ -310,10 +318,6 @@ fieldset fieldset .grid .flex-row {
 
 .latin {
   font-style: italic;
-}
-
-.initial-text {
-  text-transform: initial;
 }
 
 /* CONTROLS */

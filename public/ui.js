@@ -102,33 +102,44 @@ let guides = [
 let guide = guides[0]
 let language = LANGUAGES[1]
 let matches = []
-let place = null
-let place_id = null
-let user = null
-let user_id = null
 let inatSpecies = []
 let inatAutocompleteOptions = [
     {
         id: 'users',
-        name: 'users',
-        prop: 'login'
+        name: 'user',
+        prop: 'login',
+        isActive: false,
+        user: null,
     },
     {
         id: 'places',
-        name: 'places',
-        prop: 'display_name'
+        name: 'place',
+        prop: 'display_name',
+        isActive: false,
+        place: null,
     },
     {
         id: 'projects',
-        name: 'projects',
+        name: 'project',
+        prop: '',
+        isActive: false,
+        project: null,
     }
 ]
-let inatAutocomplete = inatAutocompleteOptions[0]
+let inatAutocomplete = {
+    id: '',
+    name: '',
+    prop: '',
+    isActive: false,
+    user: null,
+    project: null,
+    place: null,
+}
 
-const getInatSpecies = async () => {
+const getInatSpecies = async ({user, place}) => {    
     return await getInatObservations({ 
-        user_id,
-        place_id,
+        user_id: user ? user.id : null,
+        place_id: place ? place.id : null,
         iconic_taxa: taxa,
         per_page: count + 10,
         locale: language.id,
@@ -349,6 +360,47 @@ const createTaxaCheckboxGroup = () => {
     })
 }
 
+const attachListenersToInatParams = () => {
+    const cbInatParamGroup = document.querySelectorAll('input[name="inat-param"]')
+
+    cbInatParamGroup.forEach(cb => {
+        cb.addEventListener('click', e => {
+            const name = e.target.value
+            inatAutocompleteOptions.forEach(option => {
+                if(option.name === name) {
+                    option.isActive = !option.isActive
+                }
+            })
+        })
+    })
+}
+
+const createInatParamsCheckboxGroup = () => {
+    const parent = document.getElementById('inat-params')
+    const t = document.getElementById('checkbox-template')
+
+    parent.innerHTML = ''
+
+    inatAutocompleteOptions.filter(param => param.isActive).forEach(param => {
+        const clone = t.content.cloneNode(true)
+
+        const div = clone.querySelector('div')
+        const input = clone.querySelector('input')
+        const label = clone.querySelector('label')
+    
+        input.setAttribute('name', 'inat-param')
+        input.id = param.id
+        if(param.isActive) input.setAttribute('checked', true)
+        input.value = param.name
+        label.textContent = param[param.name][param.prop]
+        label.setAttribute('for', param.name)
+
+        parent.appendChild(clone)
+    })
+
+    attachListenersToInatParams()
+}
+
 const createRadioLessonGroup = () => {
     const addHandlers = () => {
         const rbGroupLesson = document.querySelectorAll('input[name="lesson"]')
@@ -503,19 +555,25 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     const fetchCustomInatSpeciesBtn = document.getElementById('fetch-custom-inat-species-btn')
 
-    const filterInatCustomSpecies = async () => {
+    const filterInatSpecies = async () => {
         const filters = Array.from(document.getElementById('iconic-taxa').querySelectorAll('input'))
         const f = filters.filter(t => t.checked)
         taxa = ICONIC_TAXA.filter(taxon => filters.filter(t => t.checked).map(t => t.id.toLowerCase()).includes(taxon.name))
+        
+        const user = inatAutocompleteOptions.find(o => o.id === 'users')
+        const place = inatAutocompleteOptions.find(o => o.id === 'places')
 
-        inatSpecies = await getInatSpecies()
+        inatSpecies = await getInatSpecies({
+              user: user.isActive ? user.user : null
+            , place: place.isActive ? place.place : null
+        })
 
         species = mapInatSpeciesToLTP()
         
         startLesson()
     }
 
-    fetchCustomInatSpeciesBtn.addEventListener('click', filterInatCustomSpecies, false)
+    fetchCustomInatSpeciesBtn.addEventListener('click', filterInatSpecies, false)
 
     const rbInatAutocompleteGroup = document.querySelectorAll('input[name="inat-autocomplete"]')
 
@@ -603,19 +661,21 @@ document.addEventListener("DOMContentLoaded", (event) => {
     })
 
     iNatAutocompleteInput.addEventListener('change', e => {
-        const { id, prop } = inatAutocomplete
-        const name = e.target.value
-                
-        switch(id) {
-            case 'users':
-                user = matches.find(match => match[prop] === name)
-                user_id = user.id
-            break
-            case 'places':
-                place = matches.find(match => match[prop] === name)
-                place_id = place.id
-            break
-        }        
+        const { id, name, prop } = inatAutocomplete
+        const match = e.target.value
+
+        inatAutocompleteOptions.forEach(option => {
+            if(option.id === id) {
+                option.isActive = true
+            }
+        })
+
+        if(match) {
+            const option = inatAutocompleteOptions.find(option => option.id === id)
+            option[name] = matches.find(m => m[prop] === match)
+
+            createInatParamsCheckboxGroup()
+        }
     })
 })
 
@@ -627,6 +687,7 @@ const init = () => {
 
     createTaxaCheckboxGroup()
     createRadioLessonGroup()
+    createInatParamsCheckboxGroup()
 }
 
 init()
