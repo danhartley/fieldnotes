@@ -108,6 +108,7 @@ let inatAutocompleteOptions = [
         id: 'users',
         name: 'user',
         prop: 'login',
+        placeholder: 'Username or user ID',
         isActive: false,
         user: null,
     },
@@ -115,26 +116,43 @@ let inatAutocompleteOptions = [
         id: 'places',
         name: 'place',
         prop: 'display_name',
+        placeholder: 'Location',
         isActive: false,
         place: null,
     },
     {
         id: 'projects',
         name: 'project',
+        placeholder: 'Name or URL slug, e.g. my-project',
         prop: '',
         isActive: false,
         project: null,
     }
 ]
 let inatAutocomplete = {
-    id: '',
-    name: '',
-    prop: '',
+    id: 'users',
+    name: 'user',
+    prop: 'login',
+    placeholder: 'Username or user ID',
     isActive: false,
     user: null,
     project: null,
     place: null,
 }
+
+const debounce = (func, wait) => {
+    let timeout
+  
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout)
+        func(...args)
+      }
+  
+      clearTimeout(timeout)
+      timeout = setTimeout(later, wait)
+    }
+  }
 
 const getInatSpecies = async ({user, place}) => {    
     return await getInatObservations({ 
@@ -563,14 +581,20 @@ document.addEventListener("DOMContentLoaded", (event) => {
         const user = inatAutocompleteOptions.find(o => o.id === 'users')
         const place = inatAutocompleteOptions.find(o => o.id === 'places')
 
-        inatSpecies = await getInatSpecies({
-              user: user.isActive ? user.user : null
-            , place: place.isActive ? place.place : null
-        })
+        const debounceGetInatSpecies = async () => {
+            inatSpecies = await getInatSpecies({
+                user: user.isActive ? user.user : null
+                , place: place.isActive ? place.place : null
+            })
 
-        species = mapInatSpeciesToLTP()
+            species = mapInatSpeciesToLTP()
         
-        startLesson()
+            startLesson()
+        }
+
+        const getDebouncedInatSpecies = debounce(debounceGetInatSpecies, 250)
+
+        getDebouncedInatSpecies()
     }
 
     fetchCustomInatSpeciesBtn.addEventListener('click', filterInatSpecies, false)
@@ -581,6 +605,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         rb.addEventListener('change', e => {
             inatAutocomplete = inatAutocompleteOptions.find(o => o.id === e.target.value)
             iNatAutocompleteInput.value = ''
+            iNatAutocompleteInput.setAttribute('placeholder', inatAutocomplete.placeholder)
             iNatAutocompleteInput.focus()
         })
     })
@@ -644,20 +669,29 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     iNatAutocompleteInput.addEventListener('input', async (e) => {
         while (iNatAutocompleteDatalist.firstChild) {
-            iNatAutocompleteDatalist.removeChild(iNatAutocompleteDatalist.firstChild);
+            iNatAutocompleteDatalist.removeChild(iNatAutocompleteDatalist.firstChild)
         }
 
         const { id, prop } = inatAutocomplete
         const strToComplete = e.target.value
-        const data = await getByAutocomplete({ by: id, toComplete: strToComplete })
-        
-        matches = data.results
 
-        matches.forEach(match => {
-            const option = document.createElement('option')
-            option.value = match[prop]
-            iNatAutocompleteDatalist.appendChild(option)
-        })
+        const debounceAutocomplete = async () => {
+            if(strToComplete.length < 3) return
+
+            const data = await getByAutocomplete({ by: id, toComplete: strToComplete })
+            console.log(data.results)
+            matches = data.results
+    
+            matches.forEach(match => {
+                const option = document.createElement('option')
+                option.value = match[prop]
+                iNatAutocompleteDatalist.appendChild(option)
+            })
+        }
+
+        const debouncedAutocomplete = debounce(debounceAutocomplete, 250)
+
+        debouncedAutocomplete()                    
     })
 
     iNatAutocompleteInput.addEventListener('change', e => {

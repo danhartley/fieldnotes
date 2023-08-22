@@ -28,7 +28,7 @@ export const getInatObservations = async ({
 }
 
 export const getByAutocomplete = async ({by, toComplete}) => {
-    const url = `https://api.inaturalist.org/v1/${by}/autocomplete?q=${toComplete}`
+    const url = `https://api.inaturalist.org/v1/${by}/autocomplete?q=${toComplete}&per_page=10`
     const response = await fetch(url)
     const json = await response.json()
     return json
