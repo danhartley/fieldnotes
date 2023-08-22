@@ -142,17 +142,17 @@ let inatAutocomplete = {
 
 const debounce = (func, wait) => {
     let timeout
-  
+
     return function executedFunction(...args) {
-      const later = () => {
+        const later = () => {
         clearTimeout(timeout)
         func(...args)
-      }
-  
-      clearTimeout(timeout)
-      timeout = setTimeout(later, wait)
+        }
+
+        clearTimeout(timeout)
+        timeout = setTimeout(later, wait)
     }
-  }
+}
 
 const getInatSpecies = async ({user, place}) => {    
     return await getInatObservations({ 
@@ -581,20 +581,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
         const user = inatAutocompleteOptions.find(o => o.id === 'users')
         const place = inatAutocompleteOptions.find(o => o.id === 'places')
 
-        const debounceGetInatSpecies = async () => {
-            inatSpecies = await getInatSpecies({
-                user: user.isActive ? user.user : null
-                , place: place.isActive ? place.place : null
-            })
+        inatSpecies = await getInatSpecies({
+            user: user.isActive ? user.user : null
+            , place: place.isActive ? place.place : null
+        })
 
-            species = mapInatSpeciesToLTP()
-        
-            startLesson()
-        }
-
-        const getDebouncedInatSpecies = debounce(debounceGetInatSpecies, 250)
-
-        getDebouncedInatSpecies()
+        species = mapInatSpeciesToLTP()
+    
+        startLesson()
     }
 
     fetchCustomInatSpeciesBtn.addEventListener('click', filterInatSpecies, false)
@@ -667,7 +661,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     addImgClickEventHandlers()
 
-    iNatAutocompleteInput.addEventListener('input', async (e) => {
+    iNatAutocompleteInput.addEventListener('input', debounce(async (e) => {
         while (iNatAutocompleteDatalist.firstChild) {
             iNatAutocompleteDatalist.removeChild(iNatAutocompleteDatalist.firstChild)
         }
@@ -675,24 +669,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
         const { id, prop } = inatAutocomplete
         const strToComplete = e.target.value
 
-        const debounceAutocomplete = async () => {
-            if(strToComplete.length < 3) return
+        if(strToComplete.length < 3) return
 
-            const data = await getByAutocomplete({ by: id, toComplete: strToComplete })
-            console.log(data.results)
-            matches = data.results
-    
-            matches.forEach(match => {
-                const option = document.createElement('option')
-                option.value = match[prop]
-                iNatAutocompleteDatalist.appendChild(option)
-            })
-        }
-
-        const debouncedAutocomplete = debounce(debounceAutocomplete, 250)
-
-        debouncedAutocomplete()                    
-    })
+        const data = await getByAutocomplete({ by: id, toComplete: strToComplete })
+        
+        matches = data.results
+        
+        matches.forEach(match => {
+            const option = document.createElement('option')
+            option.value = match[prop]
+            iNatAutocompleteDatalist.appendChild(option)
+        })   
+    }, 1000))
 
     iNatAutocompleteInput.addEventListener('change', e => {
         const { id, name, prop } = inatAutocomplete
