@@ -387,3 +387,9 @@ fieldset fieldset .grid .flex-row {
 .p0 {
   padding: 0;
 }
+
+/* SIZE */
+
+.small {
+  font-size: var(--s3);
+}

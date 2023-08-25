@@ -12908,3 +12908,9 @@ export const mapSnapSpeciesToLTP = ({ count, taxa, language}) => {
             }
         })
 }
+
+1150906
+63621
+82722
+82742
+47452

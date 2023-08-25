@@ -680,7 +680,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             option.value = match[prop]
             iNatAutocompleteDatalist.appendChild(option)
         })   
-    }, 1000))
+    }, 350))
 
     iNatAutocompleteInput.addEventListener('change', e => {
         const { id, name, prop } = inatAutocomplete

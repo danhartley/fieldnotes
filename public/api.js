@@ -9,6 +9,7 @@ export const getInatObservations = async ({
     , per_page = 200
     , page = 1
     , locale = 'en'
+    , species_count = true
 }) => {
     
     let params = ''
@@ -18,8 +19,11 @@ export const getInatObservations = async ({
     params = iconic_taxa ? params + `&iconic_taxa=${iconic_taxa.map(taxon => taxon.name).join(',')}` : params
     params = params + `&page=${page}&per_page=${per_page}`
     params = params + `&locale=${locale}`
-
-    const url = 'https://api.inaturalist.org/v1/observations?order=desc&photos=true' + params
+    
+    const base = species_count
+        ? 'https://api.inaturalist.org/v1/observations/species_counts'
+        : 'https://api.inaturalist.org/v1/observations'
+    const url = `${base}?order=desc&photos=true` + params
 
     const response = await fetch(url)
     const json = await response.json()
