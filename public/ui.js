@@ -4,138 +4,16 @@ import {
     , getByAutocomplete
     , getInatObservations
     , getInatTaxa
+    , g
 } from './api.js'
 
-const g = {
-    ICONIC_TAXA: [
-        {
-            name: 'fungi',
-        },
-        {
-            name: 'amphibia',
-        },
-        {
-            name: 'mammalia',
-        },
-        {
-            name: 'plantae',
-        },
-        {
-            name: 'insecta',
-        },
-        {
-            name: 'aves',
-        },
-        {
-            name: 'reptilia',
-        },
-    ],
-    taxa: [],
-    LANGUAGES: [
-        { name: 'Deutsche', id: 'de' },
-        { name: 'English', id: 'en' },
-        { name: 'Español', id: 'es' },
-        { name: 'Français', id: 'fr' },
-        { name: 'Italiano', id: 'it' },
-        { name: 'Português', id: 'pt' },
-        { name: 'Slovenščina', id: 'sl' },
-    ],
-    language: null,
-    templates: [
-        {
-            id: 'species-list-template',
-            name: 'species-list',
-            parent: 'species-list-parent',
-            isTest: false,
-        },
-        {
-            id: 'species-card-test-template',
-            name: 'species-card-tests',
-            parent: 'species-grid-parent',
-            isTest: true,
-        },
-        {
-            id: 'species-card-template',
-            name: 'species-cards',
-            parent: 'species-card-parent',
-            isTest: false,
-        },
-    ],
-    template: null,
-    count: 10,
-    species: [],
-    targets: [
-        {
-            id: 'common',
-            name: 'common name',
-        },
-        {
-            id: 'latin',
-            name: 'latin name',
-        },
-    ],
-    target: null,
-    showFilters: true,
-    showLesson: true,
-    showScore: true,
-    showPreferences: true,
-    guides: [
-        {
-            id: 'danielhartley',
-            name: 'Daniel Hartley',
-            lessons: [
-                {
-                    id: 1
-                }
-            ]
-        }
-    ],
-    guide: null,
-    inatSpecies: [],
-    inatAutocompleteOptions: [
-        {
-            id: 'users',
-            name: 'user',
-            prop: 'login',
-            placeholder: 'Username or user ID',
-            isActive: false,
-            user: null,
-        },
-        {
-            id: 'places',
-            name: 'place',
-            prop: 'display_name',
-            placeholder: 'Location',
-            isActive: false,
-            place: null,
-        },
-        {
-            id: 'projects',
-            name: 'project',
-            placeholder: 'Name or URL slug, e.g. my-project',
-            prop: '',
-            isActive: false,
-            project: null,
-        }
-    ],
-    inatAutocomplete: {
-        id: 'users',
-        name: 'user',
-        prop: 'login',
-        placeholder: 'Username or user ID',
-        isActive: false,
-        user: null,
-        project: null,
-        place: null,
-    },
-    matches: []
-}
-
-g.template = g.templates[1]
-g.target = g.targets[0]
-g.taxa = g.ICONIC_TAXA
-g.guide = g.guides[0]
-g.language = g.LANGUAGES[1]
+Object.assign(g, {
+    taxa: g.ICONIC_TAXA,
+    language: g.LANGUAGES[1],
+    template: g.templates[1],
+    target: g.targets[0],
+    guide: g.guides[0],
+})
 
 const debounce = (func, wait) => {
     let timeout
@@ -187,16 +65,6 @@ const mapInatSpeciesToLTP = () => {
         })
 }
 
-const lesson = {
-    id: 0,
-    scores: [],
-    score: 0,
-}
-
-const lessons = [
-    lesson,
-]
-
 const scoreLesson = answers => {
     answers.forEach(answer => {
         const sp = g.species.find(s => s.taxon.id === Number(answer.id))
@@ -216,10 +84,10 @@ const scoreLesson = answers => {
           isCorrect,               
         }
 
-        lesson.scores.push(score)        
+        g.lesson.scores.push(score)        
     })
 
-    lesson.score = lesson.scores.filter(score => score.isCorrect).length
+    g.lesson.score = g.lesson.scores.filter(score => score.isCorrect).length
 }
 
 const toggleFilterCtrl = (({ ctrl, state, panelId }) => {
@@ -554,9 +422,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     const updateScore = () => {
         const scoreCount = document.getElementById('score-count')
-        scoreCount.innerText = species.length
+        scoreCount.innerText = g.species.length
         const scoreCorrect = document.getElementById('score-correct')
-        scoreCorrect.innerText = lesson.score
+        scoreCorrect.innerText = g.lesson.score
     }
 
     const scoreHandler = () => {
@@ -622,7 +490,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             
             g.guide = g.guides.find(t => t.id === e.target.value)            
             
-            lesson.id = g.guide.lessons[0].id
+            g.lesson.id = g.guide.lessons[0].id
  
             const results = guideResources.results.find(gl => gl.id === lesson.id)
             const taxaIds = results.taxa
