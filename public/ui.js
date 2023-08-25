@@ -6,148 +6,136 @@ import {
     , getInatTaxa
 } from './api.js'
 
-const ICONIC_TAXA = [
-    {
-        name: 'fungi',
-    },
-    {
-        name: 'amphibia',
-    },
-    {
-        name: 'mammalia',
-    },
-    {
-        name: 'plantae',
-    },
-    {
-        name: 'insecta',
-    },
-    {
-        name: 'aves',
-    },
-    {
-        name: 'reptilia',
-    },
-]
-
-const LANGUAGES = [
-    { name: 'Deutsche', id: 'de' },
-    { name: 'English', id: 'en' },
-    { name: 'Español', id: 'es' },
-    { name: 'Français', id: 'fr' },
-    { name: 'Italiano', id: 'it' },
-    { name: 'Português', id: 'pt' },
-    { name: 'Slovenščina', id: 'sl' },
-]
-
-let templates = [
-    {
-        id: 'species-list-template',
-        name: 'species-list',
-        parent: 'species-list-parent',
-        isTest: false,
-    },
-    {
-        id: 'species-card-test-template',
-        name: 'species-card-tests',
-        parent: 'species-grid-parent',
-        isTest: true,
-    },
-    {
-        id: 'species-card-template',
-        name: 'species-cards',
-        parent: 'species-card-parent',
-        isTest: false,
-    },
-]
-let template = templates[1]
-let count = 10
-let species = []
-let targets = [
-    {
-        id: 'common',
-        name: 'common name',
-    },
-    {
-        id: 'latin',
-        name: 'latin name',
-    },
-]
-let target = targets[0]
-let taxa = ICONIC_TAXA
-let showFilters = true
-let showLesson = true
-let showScore = true
-let showPreferences = true
-let guides = [
-    {
-        id: 'danielhartley',
-        name: 'Daniel Hartley',
-        lessons: [
-            {
-                id: 1
-            }
-        ]
-    }
-    // {
-    //     id: 'Susun_Weed',
-    //     name: 'Susun Weed',
-    //     description: 'Susun Weed - Wild Plant Identification',
-    //     lessons: [{ id: 1008 }],
-    // },
-    // {
-    //     id: 'Adam_Haritan',
-    //     name: 'Adam Haritan',
-    //     description: 'New To Mushroom Hunting? Start Here!',
-    //     lessons: [{ id: 10012 }],
-    // },
-    // {
-    //     id: 'Jag_Singh',
-    //     name: 'Jag Singh',
-    //     description: 'Daisy Creek Farms - 10 Indoor Herbs',
-    //     lessons: [],
-    // },
-]
-let guide = guides[0]
-let language = LANGUAGES[1]
-let matches = []
-let inatSpecies = []
-let inatAutocompleteOptions = [
-    {
+const g = {
+    ICONIC_TAXA: [
+        {
+            name: 'fungi',
+        },
+        {
+            name: 'amphibia',
+        },
+        {
+            name: 'mammalia',
+        },
+        {
+            name: 'plantae',
+        },
+        {
+            name: 'insecta',
+        },
+        {
+            name: 'aves',
+        },
+        {
+            name: 'reptilia',
+        },
+    ],
+    taxa: [],
+    LANGUAGES: [
+        { name: 'Deutsche', id: 'de' },
+        { name: 'English', id: 'en' },
+        { name: 'Español', id: 'es' },
+        { name: 'Français', id: 'fr' },
+        { name: 'Italiano', id: 'it' },
+        { name: 'Português', id: 'pt' },
+        { name: 'Slovenščina', id: 'sl' },
+    ],
+    language: null,
+    templates: [
+        {
+            id: 'species-list-template',
+            name: 'species-list',
+            parent: 'species-list-parent',
+            isTest: false,
+        },
+        {
+            id: 'species-card-test-template',
+            name: 'species-card-tests',
+            parent: 'species-grid-parent',
+            isTest: true,
+        },
+        {
+            id: 'species-card-template',
+            name: 'species-cards',
+            parent: 'species-card-parent',
+            isTest: false,
+        },
+    ],
+    template: null,
+    count: 10,
+    species: [],
+    targets: [
+        {
+            id: 'common',
+            name: 'common name',
+        },
+        {
+            id: 'latin',
+            name: 'latin name',
+        },
+    ],
+    target: null,
+    showFilters: true,
+    showLesson: true,
+    showScore: true,
+    showPreferences: true,
+    guides: [
+        {
+            id: 'danielhartley',
+            name: 'Daniel Hartley',
+            lessons: [
+                {
+                    id: 1
+                }
+            ]
+        }
+    ],
+    guide: null,
+    inatSpecies: [],
+    inatAutocompleteOptions: [
+        {
+            id: 'users',
+            name: 'user',
+            prop: 'login',
+            placeholder: 'Username or user ID',
+            isActive: false,
+            user: null,
+        },
+        {
+            id: 'places',
+            name: 'place',
+            prop: 'display_name',
+            placeholder: 'Location',
+            isActive: false,
+            place: null,
+        },
+        {
+            id: 'projects',
+            name: 'project',
+            placeholder: 'Name or URL slug, e.g. my-project',
+            prop: '',
+            isActive: false,
+            project: null,
+        }
+    ],
+    inatAutocomplete: {
         id: 'users',
         name: 'user',
         prop: 'login',
         placeholder: 'Username or user ID',
         isActive: false,
         user: null,
-    },
-    {
-        id: 'places',
-        name: 'place',
-        prop: 'display_name',
-        placeholder: 'Location',
-        isActive: false,
+        project: null,
         place: null,
     },
-    {
-        id: 'projects',
-        name: 'project',
-        placeholder: 'Name or URL slug, e.g. my-project',
-        prop: '',
-        isActive: false,
-        project: null,
-    }
-]
-let inatAutocomplete = {
-    id: 'users',
-    name: 'user',
-    prop: 'login',
-    placeholder: 'Username or user ID',
-    isActive: false,
-    user: null,
-    project: null,
-    place: null,
+    matches: []
 }
+
+g.template = g.templates[1]
+g.target = g.targets[0]
+g.taxa = g.ICONIC_TAXA
+g.guide = g.guides[0]
+g.language = g.LANGUAGES[1]
 
 const debounce = (func, wait) => {
     let timeout
@@ -167,9 +155,9 @@ const getInatSpecies = async ({user, place}) => {
     return await getInatObservations({ 
         user_id: user ? user.id : null,
         place_id: place ? place.id : null,
-        iconic_taxa: taxa,
-        per_page: count + 10,
-        locale: language.id,
+        iconic_taxa: g.taxa,
+        per_page: g.count + 10,
+        locale: g.language.id,
     })
 }
 
@@ -185,12 +173,12 @@ const mapTaxon = taxon => {
 }
 
 const mapInatSpeciesToLTP = () => {
-    return inatSpecies
+    return g.inatSpecies
         .filter(sp => sp.taxon)
         .filter(sp => sp.taxon.preferred_common_name)
         .filter(sp => sp.taxon.default_photo)
-        .filter(sp => taxa.map(t => t.name).includes(sp.taxon.iconic_taxon_name.toLowerCase()))
-        .slice(0,count)
+        .filter(sp => g.taxa.map(t => t.name).includes(sp.taxon.iconic_taxon_name.toLowerCase()))
+        .slice(0,g.count)
         .map(sp => {
             return {
                 count: sp.count,
@@ -211,14 +199,14 @@ const lessons = [
 
 const scoreLesson = answers => {
     answers.forEach(answer => {
-        const sp = species.find(s => s.taxon.id === Number(answer.id))
+        const sp = g.species.find(s => s.taxon.id === Number(answer.id))
 
         if(!sp) return
 
         let isCorrect = false
 
         if(answer.value.length) {
-            isCorrect = target.name === 'common name' 
+            isCorrect = g.target.name === 'common name' 
               ? sp.taxon.preferred_common_name.toLowerCase() === answer.value.toLowerCase()
               : sp.taxon.name.toLowerCase() === answer.value.toLowerCase()            
         }
@@ -363,7 +351,7 @@ const createTaxaCheckboxGroup = () => {
     const parent = document.getElementById('iconic-taxa')
     const t = document.getElementById('checkbox-template')
     
-    ICONIC_TAXA.forEach(taxon => {
+    g.ICONIC_TAXA.forEach(taxon => {
         const clone = t.content.cloneNode(true)
     
         const div = clone.querySelector('div')
@@ -376,7 +364,7 @@ const createTaxaCheckboxGroup = () => {
         label.textContent = taxon.name
         label.setAttribute('for', taxon.name)
     
-        if(taxa.map(t => t.name).includes(taxon.name)) {
+        if(g.taxa.map(t => t.name).includes(taxon.name)) {
             input.setAttribute('checked', true)
         }
     
@@ -393,7 +381,7 @@ const attachListenersToInatParams = () => {
     cbInatParamGroup.forEach(cb => {
         cb.addEventListener('click', e => {
             const name = e.target.value
-            inatAutocompleteOptions.forEach(option => {
+            g.inatAutocompleteOptions.forEach(option => {
                 if(option.name === name) {
                     option.isActive = !option.isActive
                 }
@@ -408,7 +396,7 @@ const createInatParamsCheckboxGroup = () => {
 
     parent.innerHTML = ''
 
-    inatAutocompleteOptions.filter(param => param.isActive).forEach(param => {
+    g.inatAutocompleteOptions.filter(param => param.isActive).forEach(param => {
         const clone = t.content.cloneNode(true)
 
         const div = clone.querySelector('div')
@@ -434,7 +422,7 @@ const createRadioLessonGroup = () => {
     
         rbGroupLesson.forEach(rb => {
             rb.addEventListener('change', e => {
-            template = templates.find(t => t.id === e.target.value) 
+            template = g.templates.find(t => t.id === e.target.value) 
                         
             startLesson()
         
@@ -447,7 +435,7 @@ const createRadioLessonGroup = () => {
 
     const filters = document.getElementById('lesson-filters')
 
-    templates.forEach(lesson => {
+    g.templates.forEach(lesson => {
         const clone = rbTemplate.content.cloneNode(true)
     
         const input = clone.querySelector('input')
@@ -460,7 +448,7 @@ const createRadioLessonGroup = () => {
         label.textContent = lesson.name.replaceAll('-', ' ')
         label.setAttribute('for', lesson.name)
     
-        if(lesson.id === template.id) {
+        if(lesson.id === g.template.id) {
             input.setAttribute('checked', true)
         }
     
@@ -471,8 +459,8 @@ const createRadioLessonGroup = () => {
 }
 
 const startLesson = () => {
-    let parent = document.getElementById(template.parent)
-    let templateToClone = document.getElementById(template.id) 
+    let parent = document.getElementById(g.template.parent)
+    let templateToClone = document.getElementById(g.template.id) 
     
     document.querySelectorAll('.js-template').forEach(t => t.innerHTML = '')
 
@@ -480,9 +468,9 @@ const startLesson = () => {
       return getComputedStyle(document.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
     }
 
-    switch(template.id) {
+    switch(g.template.id) {
       case 'species-card-template':
-        species.forEach((sp, i) => {
+        g.species.forEach((sp, i) => {
           const clone = templateToClone.content.cloneNode(true)
 
           const spans = clone.querySelectorAll('span')
@@ -505,7 +493,7 @@ const startLesson = () => {
         })
         break
       case 'species-list-template':            
-        species.forEach(sp => {
+        g.species.forEach(sp => {
           const clone = templateToClone.content.cloneNode(true)
           const li = clone.querySelector('li')
           
@@ -515,7 +503,7 @@ const startLesson = () => {
         })
         break
       case 'species-card-test-template':
-        species.forEach((sp, i) => {
+        g.species.forEach((sp, i) => {
           const clone = templateToClone.content.cloneNode(true)
 
           const span = clone.querySelector('span')
@@ -529,7 +517,7 @@ const startLesson = () => {
 
           div.style.setProperty("background-color", bgColour(sp.taxon.iconic_taxon_name))
           
-          switch(target.name) {
+          switch(g.target.name) {
             case 'common name':
               span.textContent = sp.taxon.name
               span.classList.add('latin')
@@ -572,7 +560,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }
 
     const scoreHandler = () => {
-        const parent = document.getElementById(template.parent)
+        const parent = document.getElementById(g.template.parent)
         const answers = Array.from(parent.getElementsByTagName('input'))          
         scoreLesson(answers)
         updateScore()
@@ -585,17 +573,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const filterInatSpecies = async () => {
         const filters = Array.from(document.getElementById('iconic-taxa').querySelectorAll('input'))
         const f = filters.filter(t => t.checked)
-        taxa = ICONIC_TAXA.filter(taxon => filters.filter(t => t.checked).map(t => t.id.toLowerCase()).includes(taxon.name))
         
-        const user = inatAutocompleteOptions.find(o => o.id === 'users')
-        const place = inatAutocompleteOptions.find(o => o.id === 'places')
+        g.taxa = g.ICONIC_TAXA.filter(taxon => filters.filter(t => t.checked).map(t => t.id.toLowerCase()).includes(taxon.name))
+        
+        const user = g.inatAutocompleteOptions.find(o => o.id === 'users')
+        const place = g.inatAutocompleteOptions.find(o => o.id === 'places')
 
-        inatSpecies = await getInatSpecies({
+        g.inatSpecies = await getInatSpecies({
             user: user.isActive ? user.user : null
             , place: place.isActive ? place.place : null
         })
 
-        species = mapInatSpeciesToLTP()
+        g.species = mapInatSpeciesToLTP()
     
         startLesson()
     }
@@ -606,9 +595,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     rbInatAutocompleteGroup.forEach(rb => {
         rb.addEventListener('change', e => {
-            inatAutocomplete = inatAutocompleteOptions.find(o => o.id === e.target.value)
+            g.inatAutocomplete = g.inatAutocompleteOptions.find(o => o.id === e.target.value)
+
             iNatAutocompleteInput.value = ''
-            iNatAutocompleteInput.setAttribute('placeholder', inatAutocomplete.placeholder)
+            iNatAutocompleteInput.setAttribute('placeholder', g.inatAutocomplete.placeholder)
             iNatAutocompleteInput.focus()
         })
     })
@@ -617,7 +607,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     rbTestForGroup.forEach(rb => {
         rb.addEventListener('change', e => {
-            target = targets.find(t => t.id === e.target.value)
+            g.target = g.targets.find(t => t.id === e.target.value)
             startLesson()
         })
     })
@@ -629,9 +619,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
         rb.addEventListener('change', async (e) => {
             let fss = document.querySelectorAll('.module-fs')
             if(fss) fss.forEach(f => f.classList.add('hidden'))
-            guide = guides.find(t => t.id === e.target.value)            
             
-            lesson.id = guide.lessons[0].id
+            g.guide = g.guides.find(t => t.id === e.target.value)            
+            
+            lesson.id = g.guide.lessons[0].id
  
             const results = guideResources.results.find(gl => gl.id === lesson.id)
             const taxaIds = results.taxa
@@ -642,7 +633,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
             const taxa = await getInatTaxa({ taxaIds: taxaIds })
 
-            species = taxa.results
+            g.species = taxa.results
                 .filter(t => t.default_photo)
                 .map(t => { 
                     if(taxaNames.includes(t.name)) {
@@ -658,24 +649,24 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     const speciesCount = document.getElementById('species-count')
 
-    speciesCount.value = count
+    speciesCount.value = g.count
 
     speciesCount.addEventListener('change', () => {
-        count = Number(speciesCount.value)
+        g.count = Number(speciesCount.value)
     })
 
     const rbLanguageGroup = document.querySelectorAll('input[name="language"]')
 
     rbLanguageGroup.forEach(rb => {
-        rb.addEventListener('change', () => language = LANGUAGES.find(l => l.id === rb.value))
+        rb.addEventListener('change', () => g.language = g.LANGUAGES.find(l => l.id === rb.value))
     })
 
-    toggleFilterCtrl({ ctrl: customGuideCtrl, state: showFilters, panelId: 'custom' })
-    toggleFilterCtrl({ ctrl: curatedGuideCtrl, state: showFilters, panelId: 'curated' })
-    toggleFilterCtrl({ ctrl: lessonCtrl, state: showLesson, panelId: 'lesson' })
-    toggleFilterCtrl({ ctrl: displayCtrl, state: showLesson, panelId: 'display' })
-    toggleFilterCtrl({ ctrl: progressCtrl, state: showScore, panelId: 'progress' })
-    toggleFilterCtrl({ ctrl: preferencesCtrl, state: showPreferences, panelId: 'preferences' })
+    toggleFilterCtrl({ ctrl: customGuideCtrl, state: g.showFilters, panelId: 'custom' })
+    toggleFilterCtrl({ ctrl: curatedGuideCtrl, state: g.showFilters, panelId: 'curated' })
+    toggleFilterCtrl({ ctrl: lessonCtrl, state: g.showLesson, panelId: 'lesson' })
+    toggleFilterCtrl({ ctrl: displayCtrl, state: g.showLesson, panelId: 'display' })
+    toggleFilterCtrl({ ctrl: progressCtrl, state: g.showScore, panelId: 'progress' })
+    toggleFilterCtrl({ ctrl: preferencesCtrl, state: g.showPreferences, panelId: 'preferences' })
 
     addImgClickEventHandlers()
 
@@ -684,16 +675,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
             iNatAutocompleteDatalist.removeChild(iNatAutocompleteDatalist.firstChild)
         }
 
-        const { id, prop } = inatAutocomplete
+        const { id, prop } = g.inatAutocomplete
         const strToComplete = e.target.value
 
         if(strToComplete.length < 3) return
 
         const data = await getByAutocomplete({ by: id, toComplete: strToComplete })
         
-        matches = data.results
+        g.matches = data.results
         
-        matches.forEach(match => {
+        g.matches.forEach(match => {
             const option = document.createElement('option')
             option.value = match[prop]
             iNatAutocompleteDatalist.appendChild(option)
@@ -701,18 +692,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }, 350))
 
     iNatAutocompleteInput.addEventListener('change', e => {
-        const { id, name, prop } = inatAutocomplete
+        const { id, name, prop } = g.inatAutocomplete
         const match = e.target.value
 
-        inatAutocompleteOptions.forEach(option => {
+        g.inatAutocompleteOptions.forEach(option => {
             if(option.id === id) {
                 option.isActive = true
             }
         })
 
         if(match) {
-            const option = inatAutocompleteOptions.find(option => option.id === id)
-            option[name] = matches.find(m => m[prop] === match)
+            const option = g.inatAutocompleteOptions.find(option => option.id === id)
+            option[name] = g.matches.find(m => m[prop] === match)
 
             createInatParamsCheckboxGroup()
         }
@@ -720,10 +711,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
 })
 
 const init = () => {
-    createRadioGroup({collection: targets, checked:target, rbGroup:'target', parent:targetGroup})    
-    createRadioGroup({collection: inatAutocompleteOptions, checked:inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroup})    
-    createRadioGroup({collection: guides, checked:guide, rbGroup:'guide', parent:guideGroup})
-    createRadioGroup({collection: LANGUAGES, checked:language, rbGroup:'language', parent:languageGroup})
+    createRadioGroup({collection: g.targets, checked:g.target, rbGroup:'target', parent:targetGroup})    
+    createRadioGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroup})    
+    createRadioGroup({collection: g.guides, checked:g.guide, rbGroup:'guide', parent:guideGroup})
+    createRadioGroup({collection: g.LANGUAGES, checked:g.language, rbGroup:'language', parent:languageGroup})
 
     createTaxaCheckboxGroup()
     createRadioLessonGroup()
