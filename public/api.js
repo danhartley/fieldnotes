@@ -38,6 +38,13 @@ export const getByAutocomplete = async ({by, toComplete}) => {
     return json
 }
 
+export const getInatTaxa = async({ taxaIds }) => {
+    const url = 'https://api.inaturalist.org/v1/taxa?order=desc&order_by=observations_count&rank=species&taxon_id=' + taxaIds.join('%2C')
+    const response = await fetch(url)
+    const json = await response.json()
+    return json
+}
+
 // HARD-CODED DATA
 
 export const snapSpeciesTraits = [
@@ -2903,6 +2910,58 @@ export const snapModules = {
                 "title": "New To Mushroom Hunting? Start Here!"
             },
             "videoState": ""
+        }
+    ]
+}
+
+// rank 20: genus
+// rank 10: species
+
+export const guideResources = {
+    results: [
+        {
+            id: 1,
+            taxa: [
+                {
+                    id: 1150906,
+                    name: 'Juniperus oxycedrus',
+                    rank: 10,
+                },
+                {
+                    id: 63621,
+                    name: 'Pinus pinea',
+                    rank: 10,
+                },
+                {
+                    id: 82722,
+                    name: 'Pinus halepensis',
+                    rank: 10,
+                },
+                {
+                    id: 82742,
+                    name: 'Ceratonia siliqua',
+                    rank: 10,
+                },
+                {
+                    id: 47452,
+                    name: 'Acacia',
+                    rank: 20,
+                },
+            ],
+            name: 'Mediterranean regeneration',
+            description: 'Something…',
+            lessons: [
+                {
+                    id: 1,
+                    name: 'Plants of the garrigue and maquis'
+                }
+            ],
+            tours: [
+                {
+                    id: 1,
+                    name: 'Regeneration'
+                }
+            ]
         }
     ]
 }

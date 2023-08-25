@@ -1,9 +1,9 @@
 import { 
-      snapModules
+      guideResources
     , snapSpeciesTraits
     , getByAutocomplete
-    , getInatObservations 
-    , staticInatSpeciesData
+    , getInatObservations
+    , getInatTaxa
 } from './api.js'
 
 const ICONIC_TAXA = [
@@ -81,23 +81,32 @@ let showScore = true
 let showPreferences = true
 let guides = [
     {
-        id: 'Susun_Weed',
-        name: 'Susun Weed',
-        description: 'Susun Weed - Wild Plant Identification',
-        lessons: [{ id: 1008 }],
-    },
-    {
-        id: 'Adam_Haritan',
-        name: 'Adam Haritan',
-        description: 'New To Mushroom Hunting? Start Here!',
-        lessons: [{ id: 10012 }],
-    },
-    {
-        id: 'Jag_Singh',
-        name: 'Jag Singh',
-        description: 'Daisy Creek Farms - 10 Indoor Herbs',
-        lessons: [],
-    },
+        id: 'danielhartley',
+        name: 'Daniel Hartley',
+        lessons: [
+            {
+                id: 1
+            }
+        ]
+    }
+    // {
+    //     id: 'Susun_Weed',
+    //     name: 'Susun Weed',
+    //     description: 'Susun Weed - Wild Plant Identification',
+    //     lessons: [{ id: 1008 }],
+    // },
+    // {
+    //     id: 'Adam_Haritan',
+    //     name: 'Adam Haritan',
+    //     description: 'New To Mushroom Hunting? Start Here!',
+    //     lessons: [{ id: 10012 }],
+    // },
+    // {
+    //     id: 'Jag_Singh',
+    //     name: 'Jag Singh',
+    //     description: 'Daisy Creek Farms - 10 Indoor Herbs',
+    //     lessons: [],
+    // },
 ]
 let guide = guides[0]
 let language = LANGUAGES[1]
@@ -270,9 +279,9 @@ const createRadioGroup = ({collection, checked, rbGroup, parent}) => {
     label.textContent = item.name
     label.setAttribute('for', item.id)
 
-    if(item.id == checked.id) {
-        input.setAttribute('checked', true)
-    }
+    // if(item.id == checked.id) {
+    //     input.setAttribute('checked', true)
+    // }
 
     parent.appendChild(clone)
     })
@@ -617,22 +626,31 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     rbGuideGroup.forEach(rb => {
                 
-        rb.addEventListener('change', e => {
+        rb.addEventListener('change', async (e) => {
             let fss = document.querySelectorAll('.module-fs')
             if(fss) fss.forEach(f => f.classList.add('hidden'))
             guide = guides.find(t => t.id === e.target.value)            
             
             lesson.id = guide.lessons[0].id
-            const results = snapModules.results.find(m => m.id === lesson.id)
-            const names = results.species.map(sp => sp.name)
-            
-            species = staticInatSpeciesData
-                .filter(taxon => names.includes(taxon.name))
-                .map(taxon => { 
-                    return {
-                        taxon: mapTaxon(taxon)
+ 
+            const results = guideResources.results.find(gl => gl.id === lesson.id)
+            const taxaIds = results.taxa
+                .filter(t => t.rank === 10)
+                .map(t => t.id)
+            const taxaNames = results.taxa
+                .map(t => t.name)
+
+            const taxa = await getInatTaxa({ taxaIds: taxaIds })
+
+            species = taxa.results
+                .filter(t => t.default_photo)
+                .map(t => { 
+                    if(taxaNames.includes(t.name)) {
+                        return {
+                            taxon: mapTaxon(t)
+                        }
                     }
-            })                    
+                })
     
             startLesson()
         })
