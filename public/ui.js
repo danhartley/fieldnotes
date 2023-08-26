@@ -111,16 +111,16 @@ const guideGroup = document.getElementById('guide-group')
 const languageGroup = document.getElementById('language-group')
 const targetGroup = document.getElementById('target-group')
 const inatAutocompleteGroup = document.getElementById('inat-autocomplete-group')
-
 const iNatAutocompleteInput = document.getElementById('inat-autocomplete')
 const iNatAutocompleteDatalist = document.getElementById('inat-autocomplete-list')
-
 const customGuideCtrl = document.getElementById('customGuideCtrl')
 const curatedGuideCtrl = document.getElementById('curatedGuideCtrl')
 const lessonCtrl = document.getElementById('lessonCtrl')
 const displayCtrl = document.getElementById('displayCtrl')
 const progressCtrl = document.getElementById('progressCtrl')
 const preferencesCtrl = document.getElementById('preferencesCtrl')
+
+let rbGuideGroup, rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup
 
 const createRadioGroup = ({collection, checked, rbGroup, parent}) => {
     collection.forEach(item => {
@@ -135,12 +135,14 @@ const createRadioGroup = ({collection, checked, rbGroup, parent}) => {
     label.textContent = item.name
     label.setAttribute('for', item.id)
 
-    // if(item.id == checked.id) {
-    //     input.setAttribute('checked', true)
-    // }
+    if(collection.length > 1 && item.id == checked.id) {
+        input.setAttribute('checked', true)
+    }
 
     parent.appendChild(clone)
     })
+
+    return document.querySelectorAll(`input[name="${rbGroup}"]`)
 }
 
 const addImgClickEventHandlers = () => {
@@ -232,6 +234,9 @@ const createTaxaCheckboxGroup = () => {
         label.textContent = taxon.name
         label.setAttribute('for', taxon.name)
     
+        /**
+         * Only allow a radio button to be pre-selected if there is more than one in the group
+         */
         if(g.taxa.map(t => t.name).includes(taxon.name)) {
             input.setAttribute('checked', true)
         }
@@ -290,11 +295,11 @@ const createRadioLessonGroup = () => {
     
         rbGroupLesson.forEach(rb => {
             rb.addEventListener('change', e => {
-            template = g.templates.find(t => t.id === e.target.value) 
+            g.template = g.templates.find(t => t.id === e.target.value) 
                         
             startLesson()
         
-            template.isTest 
+            g.template.isTest 
                 ? checkAnswersBtn.classList.remove('hidden')
                 : checkAnswersBtn.classList.add('hidden')
             })
@@ -302,6 +307,7 @@ const createRadioLessonGroup = () => {
     }
 
     const filters = document.getElementById('lesson-filters')
+    filters.innerHTML = ''
 
     g.templates.forEach(lesson => {
         const clone = rbTemplate.content.cloneNode(true)
@@ -459,8 +465,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     fetchCustomInatSpeciesBtn.addEventListener('click', filterInatSpecies, false)
 
-    const rbInatAutocompleteGroup = document.querySelectorAll('input[name="inat-autocomplete"]')
-
     rbInatAutocompleteGroup.forEach(rb => {
         rb.addEventListener('change', e => {
             g.inatAutocomplete = g.inatAutocompleteOptions.find(o => o.id === e.target.value)
@@ -471,8 +475,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
         })
     })
 
-    const rbTestForGroup = document.querySelectorAll('input[name="target"]')
-
     rbTestForGroup.forEach(rb => {
         rb.addEventListener('change', e => {
             g.target = g.targets.find(t => t.id === e.target.value)
@@ -480,39 +482,44 @@ document.addEventListener("DOMContentLoaded", (event) => {
         })
     })
 
-    const rbGuideGroup = document.querySelectorAll('input[name="guide"]')
-
     rbGuideGroup.forEach(rb => {
                 
         rb.addEventListener('change', async (e) => {
             let fss = document.querySelectorAll('.module-fs')
             if(fss) fss.forEach(f => f.classList.add('hidden'))
-            
-            g.guide = g.guides.find(t => t.id === e.target.value)            
-            
-            g.lesson.id = g.guide.lessons[0].id
+
+            g.guide = g.guides.find(t => t.id === e.target.value)
+            g.lesson.id = g.guide.lesson.id
+            g.guide.templates.forEach(t => g.templates.push(t))
  
-            const results = guideResources.results.find(gl => gl.id === lesson.id)
-            const taxaIds = results.taxa
+            const taxaIds = g.guide.taxa
                 .filter(t => t.rank === 10)
                 .map(t => t.id)
-            const taxaNames = results.taxa
+            const taxaNames = g.guide.taxa
                 .map(t => t.name)
 
-            const taxa = await getInatTaxa({ taxaIds: taxaIds })
+            const inatTaxa = await getInatTaxa({ taxaIds: taxaIds })
 
-            g.species = taxa.results
+            g.species = inatTaxa.results
                 .filter(t => t.default_photo)
                 .map(t => { 
+                    /**
+                     * Only allow one name for a taxon
+                     */
                     if(taxaNames.includes(t.name)) {
                         return {
                             taxon: mapTaxon(t)
                         }
                     }
                 })
+                /**
+                 * Remove undefined members
+                 */
+                .filter(t => t)
     
+            createRadioLessonGroup()
             startLesson()
-        })
+        })        
     })
 
     const speciesCount = document.getElementById('species-count')
@@ -522,8 +529,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
     speciesCount.addEventListener('change', () => {
         g.count = Number(speciesCount.value)
     })
-
-    const rbLanguageGroup = document.querySelectorAll('input[name="language"]')
 
     rbLanguageGroup.forEach(rb => {
         rb.addEventListener('change', () => g.language = g.LANGUAGES.find(l => l.id === rb.value))
@@ -579,10 +584,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
 })
 
 const init = () => {
-    createRadioGroup({collection: g.targets, checked:g.target, rbGroup:'target', parent:targetGroup})    
-    createRadioGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroup})    
-    createRadioGroup({collection: g.guides, checked:g.guide, rbGroup:'guide', parent:guideGroup})
-    createRadioGroup({collection: g.LANGUAGES, checked:g.language, rbGroup:'language', parent:languageGroup})
+    rbTestForGroup = createRadioGroup({collection: g.targets, checked:g.target, rbGroup:'target', parent:targetGroup})    
+    rbInatAutocompleteGroup = createRadioGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroup})    
+    rbGuideGroup = createRadioGroup({collection: g.guides, checked:g.guide, rbGroup:'guide', parent:guideGroup})
+    rbLanguageGroup = createRadioGroup({collection: g.LANGUAGES, checked:g.language, rbGroup:'language', parent:languageGroup})
 
     createTaxaCheckboxGroup()
     createRadioLessonGroup()

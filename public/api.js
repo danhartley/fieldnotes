@@ -581,6 +581,7 @@ export const guideResources = {
     results: [
         {
             id: 1,
+            guideId: 'danielhartley',
             taxa: [
                 {
                     id: 1150906,
@@ -610,17 +611,14 @@ export const guideResources = {
             ],
             name: 'Mediterranean regeneration',
             description: 'Something…',
-            lessons: [
-                {
-                    id: 1,
-                    name: 'Plants of the garrigue and maquis'
-                }
-            ],
-            tours: [
-                {
-                    id: 1,
-                    name: 'Regeneration'
-                }
+            templates: [
+              {
+                id: 'fire-history-template',
+                name: 'fire-history',
+                parent: 'guide-history-parent',
+                isTest: false,
+                title: 'Plants of the garrigue and maquis'
+              },
             ]
         }
     ]
@@ -677,7 +675,7 @@ export const g = {
         {
             id: 'species-card-template',
             name: 'species-cards',
-            parent: 'species-card-parent',
+            parent: 'species-grid-parent',
             isTest: false,
         },
     ],
@@ -701,10 +699,42 @@ export const g = {
         {
             id: 'danielhartley',
             name: 'Daniel Hartley',
-            lessons: [
-                {
-                    id: 1
-                }
+            lesson: { id: 1 },
+            taxa: [
+              {
+                  id: 1150906,
+                  name: 'Juniperus oxycedrus',
+                  rank: 10,
+              },
+              {
+                  id: 63621,
+                  name: 'Pinus pinea',
+                  rank: 10,
+              },
+              {
+                  id: 82722,
+                  name: 'Pinus halepensis',
+                  rank: 10,
+              },
+              {
+                  id: 82742,
+                  name: 'Ceratonia siliqua',
+                  rank: 10,
+              },
+              {
+                  id: 47452,
+                  name: 'Acacia',
+                  rank: 20,
+              },
+            ],
+            templates: [
+              {
+                id: 'fire-history-template',
+                name: 'fire-history',
+                parent: 'guide-history-parent',
+                isTest: false,
+                title: 'Plants of the garrigue and maquis'
+              },
             ]
         }
     ],
