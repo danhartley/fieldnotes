@@ -9,8 +9,7 @@ import {
 Object.assign(g, {
     taxa: g.ICONIC_TAXA,
     language: g.LANGUAGES[1],
-    template: g.templates[1],
-    target: g.targets[0],
+    template: g.templates[0],
     guide: g.guides[0],
 })
 
@@ -108,7 +107,7 @@ const rbTemplate = document.getElementById('radio-button-template')
 const checkAnswersBtn = document.getElementById('check-answers-btn')
 const guideGroup = document.getElementById('guide-group')
 const languageGroup = document.getElementById('language-group')
-const targetGroup = document.getElementById('target-group')
+// const targetGroup = document.getElementById('target-group')
 const inatAutocompleteGroup = document.getElementById('inat-autocomplete-group')
 const iNatAutocompleteInput = document.getElementById('inat-autocomplete')
 const iNatAutocompleteDatalist = document.getElementById('inat-autocomplete-list')
@@ -290,12 +289,29 @@ const createInatParamsCheckboxGroup = () => {
 
 const createRadioLessonGroup = () => {
     const addHandlers = () => {
-        const rbGroupLesson = document.querySelectorAll('input[name="lesson"]')
-    
-        rbGroupLesson.forEach(rb => {
+        const rbGroupTemplate = document.querySelectorAll('input[name="template"]')        
+        const targets = document.getElementById('targets')
+
+        rbGroupTemplate.forEach(rb => {
             rb.addEventListener('change', e => {
             g.template = g.templates.find(t => t.id === e.target.value) 
                         
+            if(g.template.targets) {
+                targets.classList.remove('hidden')
+                const targetGroup = document.getElementById('target-group')
+                targetGroup.innerHTML = ''
+                g.target = g.template.targets[0]
+                rbTestForGroup = createRadioGroup({collection: g.template.targets, checked:g.target, rbGroup:'target', parent:targetGroup})
+                rbTestForGroup.forEach(rb => {
+                    rb.addEventListener('change', e => {
+                        g.target = g.targets.find(t => t.id === e.target.value)
+                        startLesson()
+                    })
+                })
+            } else {
+                targets.classList.add('hidden')
+            }
+
             startLesson()
         
             g.template.isTest 
@@ -305,27 +321,27 @@ const createRadioLessonGroup = () => {
         })
     }
 
-    const filters = document.getElementById('lesson-filters')
-    filters.innerHTML = ''
+    const display = document.getElementById('species-display')
+    display.innerHTML = ''
 
-    g.templates.forEach(lesson => {
+    g.templates.forEach(t => {
         const clone = rbTemplate.content.cloneNode(true)
     
         const input = clone.querySelector('input')
         const label = clone.querySelector('label')
     
-        input.setAttribute('name', 'lesson')
-        input.id = lesson.name
-        input.value = lesson.id
+        input.setAttribute('name', 'template')
+        input.id = t.name
+        input.value = t.id
     
-        label.textContent = lesson.name.replaceAll('-', ' ')
-        label.setAttribute('for', lesson.name)
+        label.textContent = t.name.replaceAll('-', ' ')
+        label.setAttribute('for', t.name)
     
-        if(lesson.id === g.template.id) {
+        if(t.id === g.template.id) {
             input.setAttribute('checked', true)
         }
     
-        filters.appendChild(clone)
+        display.appendChild(clone)
     })
 
     addHandlers()
@@ -474,13 +490,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
         })
     })
 
-    rbTestForGroup.forEach(rb => {
-        rb.addEventListener('change', e => {
-            g.target = g.targets.find(t => t.id === e.target.value)
-            startLesson()
-        })
-    })
-
     rbGuideGroup.forEach(rb => {
                 
         rb.addEventListener('change', async (e) => {
@@ -535,8 +544,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     toggleFilterCtrl({ ctrl: customGuideCtrl, state: g.showFilters, panelId: 'custom' })
     toggleFilterCtrl({ ctrl: curatedGuideCtrl, state: g.showFilters, panelId: 'curated' })
-    toggleFilterCtrl({ ctrl: lessonCtrl, state: g.showLesson, panelId: 'lesson' })
     toggleFilterCtrl({ ctrl: displayCtrl, state: g.showLesson, panelId: 'display' })
+    toggleFilterCtrl({ ctrl: lessonCtrl, state: g.showLesson, panelId: 'lesson' })
     toggleFilterCtrl({ ctrl: progressCtrl, state: g.showScore, panelId: 'progress' })
     toggleFilterCtrl({ ctrl: preferencesCtrl, state: g.showPreferences, panelId: 'preferences' })
 
@@ -583,7 +592,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 })
 
 const init = () => {
-    rbTestForGroup = createRadioGroup({collection: g.targets, checked:g.target, rbGroup:'target', parent:targetGroup})    
     rbInatAutocompleteGroup = createRadioGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroup})    
     rbGuideGroup = createRadioGroup({collection: g.guides, checked:g.guide, rbGroup:'guide', parent:guideGroup})
     rbLanguageGroup = createRadioGroup({collection: g.LANGUAGES, checked:g.language, rbGroup:'language', parent:languageGroup})

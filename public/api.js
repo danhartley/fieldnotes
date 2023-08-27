@@ -627,6 +627,16 @@ export const g = {
             name: 'species-card-tests',
             parent: 'species-grid-parent',
             isTest: true,
+            targets: [
+              {
+                  id: 'common',
+                  name: 'common name',
+              },
+              {
+                  id: 'latin',
+                  name: 'latin name',
+              },
+          ]
         },
         {
             id: 'species-card-template',
@@ -637,16 +647,6 @@ export const g = {
     ],
     count: 10,
     species: [],
-    targets: [
-        {
-            id: 'common',
-            name: 'common name',
-        },
-        {
-            id: 'latin',
-            name: 'latin name',
-        },
-    ],
     showFilters: true,
     showLesson: true,
     showScore: true,
