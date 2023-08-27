@@ -38,8 +38,12 @@ export const getByAutocomplete = async ({by, toComplete}) => {
     return json
 }
 
-export const getInatTaxa = async({ taxaIds }) => {
-    const url = 'https://api.inaturalist.org/v1/taxa?order=desc&order_by=observations_count&rank=species&taxon_id=' + taxaIds.join('%2C')
+export const getInatTaxa = async({ 
+    taxaIds 
+  , locale = 'en'
+  , rank = 'species'
+}) => {
+    const url = `https://api.inaturalist.org/v1/taxa?order=desc&order_by=observations_count&rank=${rank}&locale=${locale}&taxon_id=` + taxaIds.join('%2C')
     const response = await fetch(url)
     const json = await response.json()
     return json
@@ -574,58 +578,10 @@ export const snapSpeciesTraits = [
     }
 ]
 
-// rank 20: genus
-// rank 10: species
-
-export const guideResources = {
-    results: [
-        {
-            id: 1,
-            guideId: 'danielhartley',
-            taxa: [
-                {
-                    id: 1150906,
-                    name: 'Juniperus oxycedrus',
-                    rank: 10,
-                },
-                {
-                    id: 63621,
-                    name: 'Pinus pinea',
-                    rank: 10,
-                },
-                {
-                    id: 82722,
-                    name: 'Pinus halepensis',
-                    rank: 10,
-                },
-                {
-                    id: 82742,
-                    name: 'Ceratonia siliqua',
-                    rank: 10,
-                },
-                {
-                    id: 47452,
-                    name: 'Acacia',
-                    rank: 20,
-                },
-            ],
-            name: 'Mediterranean regeneration',
-            description: 'Something…',
-            templates: [
-              {
-                id: 'fire-history-template',
-                name: 'fire-history',
-                parent: 'guide-history-parent',
-                isTest: false,
-                title: 'Plants of the garrigue and maquis'
-              },
-            ]
-        }
-    ]
-}
-
 // GLOBAL OBJECT
 
+// rank 20: genus
+// rank 10: species
 export const g = {
     ICONIC_TAXA: [
         {
@@ -724,6 +680,231 @@ export const g = {
               {
                   id: 47452,
                   name: 'Acacia',
+                  rank: 20,
+              },
+              {
+                  id: 340941,
+                  name: 'Calicotome villosa',
+                  rank: 10,
+              },
+              {
+                  id: 47407,
+                  name: 'Genista',
+                  rank: 20,
+              },
+              {
+                  id: 47406,
+                  name: 'Spartium junceum',
+                  rank: 10,
+              },
+              {
+                  id: 771653,
+                  name: 'Ulex',
+                  rank: 20,
+              },
+              {
+                  id: 82727,
+                  name: 'Ulex parviflorus',
+                  rank: 10,
+              },
+              {
+                  id: 54812,
+                  name: 'Rhamnus',
+                  rank: 20,
+              },
+              {
+                  id: 60218,
+                  name: 'Ficus carica',
+                  rank: 10,
+              },
+              {
+                  id: 133387,
+                  name: 'Ericaceae',
+                  rank: 20,
+              },
+              {
+                  id: 51047,
+                  name: 'Arbutus',
+                  rank: 20,
+              },
+              {
+                  id: 82689,
+                  name: 'Arbutus unedo',
+                  rank: 10,
+              },
+              {
+                  id: 82688,
+                  name: 'Erica arborea',
+                  rank: 10,
+              },
+              {
+                  id: 129759,
+                  name: 'Carpobrotus acinaciformis',
+                  rank: 10,
+              },
+              {
+                  id: 167774,
+                  name: 'Reichardia tingitana',
+                  rank: 10,
+              },
+              {
+                  id: 59904,
+                  name: 'Glebionis coronaria',
+                  rank: 10,
+              },
+              {
+                  id: 72301,
+                  name: 'Pistacia',
+                  rank: 20,
+              },
+              {
+                  id: 82600,
+                  name: 'Pistacia lentiscus',
+                  rank: 10,
+              },
+              {
+                  id: 51815,
+                  name: 'Eucalyptus',
+                  rank: 20,
+              },
+              {
+                  id: 72248,
+                  name: 'Myrtus',
+                  rank: 20,
+              },
+              {
+                  id: 47851,
+                  name: 'Quercus',
+                  rank: 20,
+              },
+              {
+                  id: 50868,
+                  name: 'Quercus suber',
+                  rank: 10,
+              },
+              {
+                  id: 1137754,
+                  name: 'Quercus ilex',
+                  rank: 10,
+              },
+              {
+                  id: 82942,
+                  name: 'Quercus coccifera',
+                  rank: 10,
+              },
+              {
+                  id: 121763,
+                  name: 'Castanea sativa',
+                  rank: 10,
+              },
+              {
+                  id: 63935,
+                  name: 'Juglans regia',
+                  rank: 10,
+              },
+              {
+                  id: 57140,
+                  name: 'Olea europaea',
+                  rank: 10,
+              },
+              {
+                  id: 48623,
+                  name: 'Lamiaceae',
+                  rank: 20,
+              },
+              {
+                  id: 61904,
+                  name: 'Lavandula stoechas',
+                  rank: 10,
+              },
+              {
+                  id: 82927,
+                  name: 'Rosmarinus',
+                  rank: 20,
+              },
+              {
+                  id: 52344,
+                  name: 'Ipomoea purpurea',
+                  rank: 10,
+              },
+              {
+                  id: 76432,
+                  name: 'Convolvulus althaeoides',
+                  rank: 10,
+              },
+              {
+                  id: 48797,
+                  name: 'Malvaceae',
+                  rank: 20,
+              },
+              {
+                  id: 77950,
+                  name: 'Malva arborea',
+                  rank: 10,
+              },
+              {
+                  id: 333734,
+                  name: 'Thymelaea hirsuta',
+                  rank: 10,
+              },
+              {
+                  id: 64322,
+                  name: 'Cistus',
+                  rank: 20,
+              },
+              {
+                  id: 76363,
+                  name: 'Cistus monspeliensis',
+                  rank: 10,
+              },
+              {
+                  id: 76365,
+                  name: 'Cistus salviifolius',
+                  rank: 10,
+              },
+              {
+                  id: 64318,
+                  name: 'Cistus creticus',
+                  rank: 10,
+              },
+              {
+                  id: 82673,
+                  name: 'Cistus albidus',
+                  rank: 10,
+              },
+              {
+                  id: 54760,
+                  name: 'Laurus',
+                  rank: 20,
+              },
+              {
+                  id: 76764,
+                  name: 'Echium plantagineum',
+                  rank: 10,
+              },
+              {
+                  id: 179648,
+                  name: 'Aphyllanthes monspeliensis',
+                  rank: 10,
+              },
+              {
+                  id: 82895,
+                  name: 'Allium roseum',
+                  rank: 10,
+              },
+              {
+                  id: 47328,
+                  name: 'Liliaceae',
+                  rank: 20,
+              },
+              {
+                  id: 82903,
+                  name: 'Smilax aspera',
+                  rank: 10,
+              },
+              {
+                  id: 52594,
+                  name: 'Phytophthora',
                   rank: 20,
               },
             ],

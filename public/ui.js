@@ -1,6 +1,5 @@
 import { 
-      guideResources
-    , snapSpeciesTraits
+      snapSpeciesTraits
     , getByAutocomplete
     , getInatObservations
     , getInatTaxa
@@ -498,7 +497,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             const taxaNames = g.guide.taxa
                 .map(t => t.name)
 
-            const inatTaxa = await getInatTaxa({ taxaIds: taxaIds })
+            const inatTaxa = await getInatTaxa({ taxaIds: taxaIds, locale: g.language.id })
 
             g.species = inatTaxa.results
                 .filter(t => t.default_photo)
