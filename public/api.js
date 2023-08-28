@@ -907,6 +907,36 @@ export const g = {
                   name: 'Phytophthora',
                   rank: 20,
               },
+              {
+                  id: 118535,
+                  name: 'Drimia maritima',
+                  rank: 10,
+              },
+              {
+                  id: 338067,
+                  name: 'Asparagus aphyllus',
+                  rank: 10,
+              },
+              {
+                  id: 82836,
+                  name: 'Daphne gnidium',
+                  rank: 10,
+              },
+              {
+                  id: 956048,
+                  name: 'Chamaeleon gummifer',
+                  rank: 10,
+              },
+              {
+                  id: 113507,
+                  name: 'Sympetrum fonscolombii',
+                  rank: 10,
+              },
+              {
+                  id: 123912,
+                  name: 'Charaxes jasius',
+                  rank: 10,
+              },
             ],
             templates: [
               {
@@ -914,10 +944,45 @@ export const g = {
                 name: 'fire-history',
                 parent: 'guide-history-parent',
                 isTest: false,
-                title: 'Plants of the garrigue and maquis'
+                title: 'Regeneration: Palmela after the fire',
+                terms: [
+                  'Serotiny',
+                  'Secondary succession',
+                  'Maquis',
+                  'Garrigue',
+                ],
+                texts: [
+                  'Mediterranean vegetation is among the most fire-prone and fire-shaped in the world.',
+                  'Sclerophyllous (hard-leaved, with a high weight-to-area ratio) evergreen shrublands with widespread adaptations to intense fire. (Maquis)',
+                  'Lower, more xeric, sometimes drought-deciduous shrublands. (Garrigue)',
+                  'It is found on limestone soils in southern France and around the Mediterranean Basin, generally near the seacoast where the moderated Mediterranean climate provides annual summer drought. It is an anthropogenic degradation and succession form of former evergreen oak forests that existed until around 2500 years BC.'
+                ]
               },
-            ]
+            ],
+            // score
         }
+    ],
+    terms: [
+      {
+        dt: 'Serotiny',
+        dd: 'Remaining on a tree after maturity and opening to release seeds only after exposure to certain conditions, especially heat from a fire. Used of the cones of gymnosperms.',
+        ds: 'https://en.wikipedia.org/wiki/Serotiny'
+      },
+      {
+        dt: 'Secondary succession',
+        dd: 'A process started by an event (e.g. forest fire, harvesting, hurricane, etc.) that reduces an already established ecosystem (e.g. a forest or a wheat field) to a smaller population of species.',
+        ds: 'https://en.wikipedia.org/wiki/Secondary_succession'
+      },
+      {
+        dt: 'Maquis',
+        dd: 'A shrubland biome in the Mediterranean region, typically consisting of densely growing evergreen shrubs.',
+        ds: 'https://en.wikipedia.org/wiki/Maquis_shrubland'
+      },
+      {
+        dt: 'Garrigue',
+        dd: 'A type of low scrubland ecoregion and plant community in the Mediterranean forests, woodlands, and scrub biome.',
+        ds: 'https://en.wikipedia.org/wiki/Garrigue'
+      },
     ],
     inatSpecies: [],
     inatAutocompleteOptions: [

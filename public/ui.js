@@ -8,9 +8,10 @@ import {
 
 Object.assign(g, {
     taxa: g.ICONIC_TAXA,
-    language: g.LANGUAGES[1],
+    language: g.LANGUAGES[5],
     template: g.templates[0],
     guide: g.guides[0],
+    // move score under template too (and rename?)
 })
 
 const debounce = (func, wait) => {
@@ -304,7 +305,7 @@ const createRadioLessonGroup = () => {
                 rbTestForGroup = createRadioGroup({collection: g.template.targets, checked:g.target, rbGroup:'target', parent:targetGroup})
                 rbTestForGroup.forEach(rb => {
                     rb.addEventListener('change', e => {
-                        g.target = g.targets.find(t => t.id === e.target.value)
+                        g.target = g.template.targets.find(t => t.id === e.target.value)
                         startLesson()
                     })
                 })
