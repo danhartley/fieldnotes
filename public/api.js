@@ -619,7 +619,7 @@ export const g = {
         {
             id: 'species-list-template',
             name: 'species-list',
-            parent: 'species-list-parent',
+            parent: 'species-grid-parent',
             isTest: false,
         },
         {
@@ -643,14 +643,11 @@ export const g = {
             name: 'species-cards',
             parent: 'species-grid-parent',
             isTest: false,
+            isTestable: true,
         },
     ],
     count: 10,
     species: [],
-    showFilters: true,
-    showLesson: true,
-    showScore: true,
-    showPreferences: true,
     guides: [
         {
             id: 'danielhartley',

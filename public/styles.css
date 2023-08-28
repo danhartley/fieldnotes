@@ -236,6 +236,12 @@ fieldset fieldset .grid .flex-row {
   }
 }
 
+.btn-reset {
+  position: absolute;
+    background-color: initial;
+    border: none;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -392,4 +398,12 @@ fieldset fieldset .grid .flex-row {
 
 .small {
   font-size: var(--s3);
+}
+
+.t1 {
+  top: var(--d);
+}
+
+.r1 {  
+  right: var(--d);
 }

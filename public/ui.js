@@ -91,16 +91,10 @@ const scoreLesson = answers => {
 
 const toggleFilterCtrl = (({ ctrl, state, panelId }) => {
     ctrl.addEventListener('click', () => {
-    state = !state
-    state 
-      ? ctrl.classList.remove('hide')
-      : ctrl.classList.add('hide')
+        ctrl.classList.toggle('hide')
 
-    const panel = document.getElementById(panelId)
-
-    state
-      ? panel.classList.remove('hidden')
-      : panel.classList.add('hidden')
+        const panel = document.getElementById(panelId)
+        panel.classList.toggle('hidden')
     }
 )})
 
@@ -108,7 +102,6 @@ const rbTemplate = document.getElementById('radio-button-template')
 const checkAnswersBtn = document.getElementById('check-answers-btn')
 const guideGroup = document.getElementById('guide-group')
 const languageGroup = document.getElementById('language-group')
-// const targetGroup = document.getElementById('target-group')
 const inatAutocompleteGroup = document.getElementById('inat-autocomplete-group')
 const iNatAutocompleteInput = document.getElementById('inat-autocomplete')
 const iNatAutocompleteDatalist = document.getElementById('inat-autocomplete-list')
@@ -118,6 +111,7 @@ const lessonCtrl = document.getElementById('lessonCtrl')
 const displayCtrl = document.getElementById('displayCtrl')
 const progressCtrl = document.getElementById('progressCtrl')
 const preferencesCtrl = document.getElementById('preferencesCtrl')
+const testbtn = document.querySelector('#lesson button')
 
 let rbGuideGroup, rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup
 
@@ -297,6 +291,9 @@ const createRadioLessonGroup = () => {
             rb.addEventListener('change', e => {
             g.template = g.templates.find(t => t.id === e.target.value) 
                         
+            /**
+             * Nested, target template
+             */
             if(g.template.targets) {
                 targets.classList.remove('hidden')
                 const targetGroup = document.getElementById('target-group')
@@ -313,11 +310,17 @@ const createRadioLessonGroup = () => {
                 targets.classList.add('hidden')
             }
 
+            if(g.template.isTestable) {
+                testbtn.classList.remove('hidden')
+            } else {
+                testbtn.classList.add('hidden')
+            }
+
             startLesson()
         
-            g.template.isTest 
-                ? checkAnswersBtn.classList.remove('hidden')
-                : checkAnswersBtn.classList.add('hidden')
+            // g.template.isTest 
+            //     ? checkAnswersBtn.classList.remove('hidden')
+            //     : checkAnswersBtn.classList.add('hidden')
             })
         })
     }
@@ -325,7 +328,7 @@ const createRadioLessonGroup = () => {
     const display = document.getElementById('species-display')
     display.innerHTML = ''
 
-    g.templates.forEach(t => {
+    g.templates.filter(t => !t.isTest).forEach(t => {
         const clone = rbTemplate.content.cloneNode(true)
     
         const input = clone.querySelector('input')
@@ -437,7 +440,7 @@ const startLesson = () => {
 
     addImgClickEventHandlers()
 
-    document.getElementById('lessonCtrl').scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
+    lessonCtrl.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
 }       
 
 document.addEventListener("DOMContentLoaded", (event) => {
@@ -543,12 +546,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
         rb.addEventListener('change', () => g.language = g.LANGUAGES.find(l => l.id === rb.value))
     })
 
-    toggleFilterCtrl({ ctrl: customGuideCtrl, state: g.showFilters, panelId: 'custom' })
-    toggleFilterCtrl({ ctrl: curatedGuideCtrl, state: g.showFilters, panelId: 'curated' })
-    toggleFilterCtrl({ ctrl: displayCtrl, state: g.showLesson, panelId: 'display' })
-    toggleFilterCtrl({ ctrl: lessonCtrl, state: g.showLesson, panelId: 'lesson' })
-    toggleFilterCtrl({ ctrl: progressCtrl, state: g.showScore, panelId: 'progress' })
-    toggleFilterCtrl({ ctrl: preferencesCtrl, state: g.showPreferences, panelId: 'preferences' })
+    toggleFilterCtrl({ ctrl: customGuideCtrl, panelId: 'custom' })
+    toggleFilterCtrl({ ctrl: curatedGuideCtrl, panelId: 'curated' })
+    toggleFilterCtrl({ ctrl: displayCtrl, panelId: 'display' })
+    toggleFilterCtrl({ ctrl: lessonCtrl, panelId: 'lesson' })
+    toggleFilterCtrl({ ctrl: progressCtrl, panelId: 'progress' })
+    toggleFilterCtrl({ ctrl: preferencesCtrl, panelId: 'preferences' })
 
     addImgClickEventHandlers()
 
