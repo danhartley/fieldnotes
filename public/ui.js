@@ -89,7 +89,7 @@ const scoreLesson = answers => {
     g.lesson.score = g.lesson.scores.filter(score => score.isCorrect).length
 }
 
-const toggleFilterCtrl = (({ ctrl, state, panelId }) => {
+const toggleFilterCtrl = (({ ctrl, panelId }) => {
     ctrl.addEventListener('click', () => {
         ctrl.classList.toggle('hide')
 
@@ -111,11 +111,11 @@ const lessonCtrl = document.getElementById('lessonCtrl')
 const displayCtrl = document.getElementById('displayCtrl')
 const progressCtrl = document.getElementById('progressCtrl')
 const preferencesCtrl = document.getElementById('preferencesCtrl')
-const testbtn = document.querySelector('#lesson button')
+const testbtn = document.getElementById('show-test-btn')
 
 let rbGuideGroup, rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup
 
-const createRadioGroup = ({collection, checked, rbGroup, parent}) => {
+const createRadioBtnGroup = ({collection, checked, rbGroup, parent}) => {
     collection.forEach(item => {
     const clone = rbTemplate.content.cloneNode(true)
 
@@ -210,6 +210,14 @@ const addImgClickEventHandlers = () => {
     })  
 }
 
+const showOrHideTestOption = ({ element, condition, css }) => {
+    if(condition) {
+        element.classList.remove(css)
+    } else {
+        element.classList.add(css)
+    }
+}
+
 const createTaxaCheckboxGroup = () => {
     const parent = document.getElementById('iconic-taxa')
     const t = document.getElementById('checkbox-template')
@@ -282,45 +290,44 @@ const createInatParamsCheckboxGroup = () => {
     attachListenersToInatParams()
 }
 
-const createRadioLessonGroup = () => {
+const createRadioBtnLessonGroup = () => {
     const addHandlers = () => {
         const rbGroupTemplate = document.querySelectorAll('input[name="template"]')        
-        const targets = document.getElementById('targets')
 
         rbGroupTemplate.forEach(rb => {
             rb.addEventListener('change', e => {
             g.template = g.templates.find(t => t.id === e.target.value) 
                         
-            /**
-             * Nested, target template
-             */
-            if(g.template.targets) {
-                targets.classList.remove('hidden')
-                const targetGroup = document.getElementById('target-group')
-                targetGroup.innerHTML = ''
-                g.target = g.template.targets[0]
-                rbTestForGroup = createRadioGroup({collection: g.template.targets, checked:g.target, rbGroup:'target', parent:targetGroup})
-                rbTestForGroup.forEach(rb => {
-                    rb.addEventListener('change', e => {
-                        g.target = g.template.targets.find(t => t.id === e.target.value)
-                        startLesson()
-                    })
-                })
-            } else {
-                targets.classList.add('hidden')
-            }
+            showOrHideTestOption({element: testbtn, condition: g.template.isTestable, css: 'hidden'})
+            
+            testbtn.addEventListener('click', () => {
+                if(g.template.isTestable) {
+                    g.template = g.templates.find(t => t.id === g.template.testTemplateId)
 
-            if(g.template.isTestable) {
-                testbtn.classList.remove('hidden')
-            } else {
-                testbtn.classList.add('hidden')
-            }
+                    if(g.template.targets) {
+                        const targetGroup = document.getElementById('target-group')
+                        targetGroup.innerHTML = ''
+                        g.target = g.template.targets[0]
+                        rbTestForGroup = createRadioBtnGroup({collection: g.template.targets, checked:g.target, rbGroup:'target', parent:targetGroup})
+                        rbTestForGroup.forEach(rb => {
+                            rb.addEventListener('change', e => {
+                                g.target = g.template.targets.find(t => t.id === e.target.value)
+                                startLesson()
+                            })
+                        })
+                    }
 
+                    testbtn.innerHTML = 'Hide test'
+                } else {
+                    g.template = g.templates.find(t => t.id === g.template.testedTemplateId)
+
+                    testbtn.innerHTML = 'Show test'
+                }
+
+                startLesson()
+            })
+                        
             startLesson()
-        
-            // g.template.isTest 
-            //     ? checkAnswersBtn.classList.remove('hidden')
-            //     : checkAnswersBtn.classList.add('hidden')
             })
         })
     }
@@ -529,7 +536,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                  */
                 .filter(t => t)
     
-            createRadioLessonGroup()
+            createRadioBtnLessonGroup()
             startLesson()
         })        
     })
@@ -596,12 +603,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
 })
 
 const init = () => {
-    rbInatAutocompleteGroup = createRadioGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroup})    
-    rbGuideGroup = createRadioGroup({collection: g.guides, checked:g.guide, rbGroup:'guide', parent:guideGroup})
-    rbLanguageGroup = createRadioGroup({collection: g.LANGUAGES, checked:g.language, rbGroup:'language', parent:languageGroup})
+    rbInatAutocompleteGroup = createRadioBtnGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroup})    
+    rbGuideGroup = createRadioBtnGroup({collection: g.guides, checked:g.guide, rbGroup:'guide', parent:guideGroup})
+    rbLanguageGroup = createRadioBtnGroup({collection: g.LANGUAGES, checked:g.language, rbGroup:'language', parent:languageGroup})
 
     createTaxaCheckboxGroup()
-    createRadioLessonGroup()
+    createRadioBtnLessonGroup()
     createInatParamsCheckboxGroup()
 }
 

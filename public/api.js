@@ -626,6 +626,7 @@ export const g = {
             id: 'species-card-test-template',
             name: 'species-card-tests',
             parent: 'species-grid-parent',
+            testedTemplateId: 'species-card-template',
             isTest: true,
             targets: [
               {
@@ -642,6 +643,7 @@ export const g = {
             id: 'species-card-template',
             name: 'species-cards',
             parent: 'species-grid-parent',
+            testTemplateId: 'species-card-test-template',
             isTest: false,
             isTestable: true,
         },
@@ -651,7 +653,7 @@ export const g = {
     guides: [
         {
             id: 'danielhartley',
-            name: 'Daniel Hartley',
+            name: 'Regeneration: Palmela after the fire',            
             lesson: { id: 1 },
             taxa: [
               {
@@ -940,8 +942,7 @@ export const g = {
                 id: 'fire-history-template',
                 name: 'fire-history',
                 parent: 'guide-history-parent',
-                isTest: false,
-                title: 'Regeneration: Palmela after the fire',
+                isTest: false,                
                 terms: [
                   'Serotiny',
                   'Secondary succession',
@@ -957,7 +958,7 @@ export const g = {
               },
             ],
             // score
-        }
+        },
     ],
     terms: [
       {
