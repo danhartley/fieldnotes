@@ -284,6 +284,16 @@ fieldset fieldset .grid .flex-row {
   display: none;
 }
 
+.non-grid {
+  margin: 0 auto;
+  max-width: 60ch;
+}
+
+.non-grid p {
+  font-size: var(--s4);
+  line-height: 1.2;
+}
+
 @supports (aspect-ratio: 1) {
   .grid img {
     height: initial;

@@ -89,15 +89,17 @@ const scoreLesson = answers => {
     g.lesson.score = g.lesson.scores.filter(score => score.isCorrect).length
 }
 
-const toggleFilterCtrl = (({ ctrl, panelId }) => {
+const toggleFilterCtrl = (({ ctrl, fieldsetId }) => {
     ctrl.addEventListener('click', () => {
         ctrl.classList.toggle('hide')
 
-        const panel = document.getElementById(panelId)
-        panel.classList.toggle('hidden')
+        const fieldset = document.getElementById(fieldsetId)
+        fieldset.classList.toggle('hidden')
     }
 )})
 
+const lessonLegend = document.querySelector('#lesson > legend')
+const speciesParent = document.getElementById('species-parent')
 const rbTemplate = document.getElementById('radio-button-template')
 const checkAnswersBtn = document.getElementById('check-answers-btn')
 const guideGroup = document.getElementById('guide-group')
@@ -358,92 +360,135 @@ const createRadioBtnLessonGroup = () => {
     addHandlers()
 }
 
-const startLesson = () => {
-    let parent = document.getElementById(g.template.parent)
-    let templateToClone = document.getElementById(g.template.id) 
-    
-    document.querySelectorAll('.js-template').forEach(t => t.innerHTML = '')
+const bgColour = taxon => {
+    return getComputedStyle(document.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
+}
 
-    const bgColour = taxon => {
-      return getComputedStyle(document.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
-    }
+const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) => {
+    const clone = templateToClone.content.cloneNode(true)
+
+    const spans = clone.querySelectorAll('span')
+    const img = clone.querySelector('img')      
+    const div = clone.querySelector('img + div')
+
+    div.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
+
+    spans[0].textContent = species.taxon.preferred_common_name
+    spans[1].textContent = species.taxon.name
+    spans[1].classList.add('latin')
+    
+    img.src = species.taxon.default_photo.medium_url
+    img.alt = species.taxon.name
+    img.id = species.taxon.id
+    img.setAttribute('data-i', index + 1)
+    img.setAttribute('loading', 'lazy')
+
+    return clone
+}
+
+const startLesson = () => {
+    let template = document.getElementById(g.template.parent)
+    let parentClone = template.content.cloneNode(true)
+    let templateToClone = document.getElementById(g.template.id) 
+    let parent = null
+    
+    speciesParent.innerHTML = ''
 
     switch(g.template.id) {
-      case 'species-card-template':
+    case 'species-card-template':
         g.species.forEach((sp, i) => {
-          const clone = templateToClone.content.cloneNode(true)
-
-          const spans = clone.querySelectorAll('span')
-          const img = clone.querySelector('img')      
-          const div = clone.querySelector('img + div')
-
-          div.style.setProperty("background-color", bgColour(sp.taxon.iconic_taxon_name))
-
-          spans[0].textContent = sp.taxon.preferred_common_name
-          spans[1].textContent = sp.taxon.name
-          spans[1].classList.add('latin')
-          
-          img.src = sp.taxon.default_photo.medium_url
-          img.alt = sp.taxon.name
-          img.id = sp.taxon.id
-          img.setAttribute('data-i', i + 1)
-          img.setAttribute('loading', 'lazy')
-          
-          parent.appendChild(clone)
+            const clone = cloneSpeciesCardFromTemplate({templateToClone, species: sp, index: i})
+            parent = parentClone.querySelector('div')          
+            parent.appendChild(clone)
         })
+        speciesParent.appendChild(parent)
         break
-      case 'species-list-template':            
+    case 'species-list-template':            
         g.species.forEach(sp => {
           const clone = templateToClone.content.cloneNode(true)
           const li = clone.querySelector('li')
-          
+        
           li.textContent = sp.taxon.name
-          
+
+          parent = parentClone.querySelector('div')          
           parent.appendChild(clone)
         })
+        speciesParent.appendChild(parent)
         break
-      case 'species-card-test-template':
-        g.species.forEach((sp, i) => {
-          const clone = templateToClone.content.cloneNode(true)
+    case 'species-card-test-template':
+    g.species.forEach((sp, i) => {
+        const clone = templateToClone.content.cloneNode(true)
 
-          const span = clone.querySelector('span')
-          const label = clone.querySelector('label')
-          const input = clone.querySelector('input')
-          const img = clone.querySelector('img')      
-          const div = clone.querySelector('img + div')
+        const span = clone.querySelector('span')
+        const label = clone.querySelector('label')
+        const input = clone.querySelector('input')
+        const img = clone.querySelector('img')      
+        const div = clone.querySelector('img + div')
 
-          label.setAttribute('for', sp.taxon.id)
-          input.setAttribute('id', sp.taxon.id)
+        label.setAttribute('for', sp.taxon.id)
+        input.setAttribute('id', sp.taxon.id)
 
-          div.style.setProperty("background-color", bgColour(sp.taxon.iconic_taxon_name))
-          
-          switch(g.target.name) {
-            case 'common name':
-              span.textContent = sp.taxon.name
-              span.classList.add('latin')
-              label.textContent = 'common name'
-              break
-            case 'latin name':
-              if(sp.taxon.preferred_common_name) {
-                span.textContent = sp.taxon.preferred_common_name
-              } else {
-                span.textContent = sp.taxon.name
-                span.classList.add('latin')
-              }
-              label.textContent = 'latin name'
-              break
-          }
-          
-          img.src = sp.taxon.default_photo.medium_url
-          img.alt = sp.taxon.name
-          img.id = sp.taxon.id
-          img.setAttribute('data-i', i + 1)
-          img.setAttribute('loading', 'lazy')
-          
-          parent.appendChild(clone)
+        div.style.setProperty("background-color", bgColour(sp.taxon.iconic_taxon_name))
+        
+        switch(g.target.name) {
+        case 'common name':
+            span.textContent = sp.taxon.name
+            span.classList.add('latin')
+            label.textContent = 'common name'
+            break
+        case 'latin name':
+            if(sp.taxon.preferred_common_name) {
+            span.textContent = sp.taxon.preferred_common_name
+            } else {
+            span.textContent = sp.taxon.name
+            span.classList.add('latin')
+            }
+            label.textContent = 'latin name'
+            break
+        }
+        
+        img.src = sp.taxon.default_photo.medium_url
+        img.alt = sp.taxon.name
+        img.id = sp.taxon.id
+        img.setAttribute('data-i', i + 1)
+        img.setAttribute('loading', 'lazy')
+        
+        parent = parentClone.querySelector('div')          
+        parent.appendChild(clone)
+    })
+    speciesParent.appendChild(parent)
+    break
+    case 'mediterranean-wild-edible-plants-template':
+        lessonLegend.innerText = g.guide.name
+        templateToClone = document.getElementById('text-template')
+        g.template.templates.forEach(t => {
+            switch(t.type) {
+                case 'text':
+                    t.texts.forEach(text => {
+                        const clone = templateToClone.content.cloneNode(true)                            
+                        const p = clone.querySelector('p')
+                        p.textContent = text.text                            
+                        parent = parentClone.querySelector('div')
+                        parent.appendChild(clone)                            
+                    })
+                    speciesParent.appendChild(parent)
+                    break
+                case 'species':
+                    template = document.getElementById(t.parent)
+                    parentClone = template.content.cloneNode(true)
+                    templateToClone = document.getElementById('species-card-template')
+                    t.species.forEach((sp, i) => {
+                        const s = g.species.find(s => s.taxon.name === sp)
+                        const clone = cloneSpeciesCardFromTemplate({templateToClone, species: s, index: i})
+                        parent = parentClone.querySelector('div')
+                        parent.appendChild(clone)
+                    })
+                    speciesParent.appendChild(parent)
+                    break
+            }
         })
         break
-    }
+    }    
 
     addImgClickEventHandlers()
 
@@ -553,12 +598,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
         rb.addEventListener('change', () => g.language = g.LANGUAGES.find(l => l.id === rb.value))
     })
 
-    toggleFilterCtrl({ ctrl: customGuideCtrl, panelId: 'custom' })
-    toggleFilterCtrl({ ctrl: curatedGuideCtrl, panelId: 'curated' })
-    toggleFilterCtrl({ ctrl: displayCtrl, panelId: 'display' })
-    toggleFilterCtrl({ ctrl: lessonCtrl, panelId: 'lesson' })
-    toggleFilterCtrl({ ctrl: progressCtrl, panelId: 'progress' })
-    toggleFilterCtrl({ ctrl: preferencesCtrl, panelId: 'preferences' })
+    toggleFilterCtrl({ ctrl: customGuideCtrl, fieldsetId: 'custom' })
+    toggleFilterCtrl({ ctrl: curatedGuideCtrl, fieldsetId: 'curated' })
+    toggleFilterCtrl({ ctrl: displayCtrl, fieldsetId: 'display' })
+    toggleFilterCtrl({ ctrl: lessonCtrl, fieldsetId: 'lesson' })
+    toggleFilterCtrl({ ctrl: progressCtrl, fieldsetId: 'progress' })
+    toggleFilterCtrl({ ctrl: preferencesCtrl, fieldsetId: 'preferences' })
 
     addImgClickEventHandlers()
 

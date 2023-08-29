@@ -92,7 +92,7 @@
         <fieldset id="lesson">
           <legend>Species</legend>
           <button id="show-test-btn" class="btn-reset t1 r1 hidden">Show test</button>
-          <div id="species-grid-parent" class="grid js-template"></div>
+          <article id="species-parent"></div>
           <button
             id="check-answers-btn"
             class="mt2 mb hidden"
@@ -129,6 +129,14 @@
         </fieldset>
       </div>
     </main>    
+
+    <template id="grid-template">
+      <div class="grid"></div>
+    </template>
+    
+    <template id="non-grid-template">
+      <div class="non-grid"></div>
+    </template>
 
     <template id="checkbox-template">
       <div class="flex-row">                  
@@ -177,6 +185,12 @@
         </hgroup>
         <p></p>
       </div>
+    </template>
+
+    <template id="mediterranean-wild-edible-plants-template" name="mediterranean-wild-edible-plants"></template>
+
+    <template id="text-template" name="text">
+      <p></p>
     </template>
   </body>
 </html>

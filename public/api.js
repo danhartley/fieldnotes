@@ -619,13 +619,13 @@ export const g = {
         {
             id: 'species-list-template',
             name: 'species-list',
-            parent: 'species-grid-parent',
+            parent: 'grid-template',
             isTest: false,
         },
         {
             id: 'species-card-test-template',
             name: 'species-card-tests',
-            parent: 'species-grid-parent',
+            parent: 'grid-template',
             testedTemplateId: 'species-card-template',
             isTest: true,
             targets: [
@@ -642,7 +642,7 @@ export const g = {
         {
             id: 'species-card-template',
             name: 'species-cards',
-            parent: 'species-grid-parent',
+            parent: 'grid-template',
             testTemplateId: 'species-card-test-template',
             isTest: false,
             isTestable: true,
@@ -653,8 +653,127 @@ export const g = {
     guides: [
         {
             id: 'danielhartley',
-            name: 'Regeneration: Palmela after the fire',            
+            name: 'The Mediterranean Landscape and Wild Edible Plants',  
             lesson: { id: 1 },
+            taxa: [
+              {
+                id: 82946,
+                name: 'Quercus rotundifolia',
+                rank: 10,
+              },
+              {
+                id: 57140,
+                name: 'Olea europaea',
+                rank: 10,
+              },
+              {
+                id: 79009,
+                name: 'Scolymus hispanicus',
+                rank: 10,
+              },
+              {
+                id: 55721,
+                name: 'Silene vulgaris',
+                rank: 10,
+              },
+              {
+                id: 52586,
+                name: 'Silybum marianum',
+                rank: 10,
+              },
+            ],
+            templates: [
+              {
+                id: 'mediterranean-wild-edible-plants-template',
+                name: 'mediterranean-food-history',
+                parent: 'non-grid-template',
+                isTest: false,
+                templates: [
+                  {
+                    id: 'text-template',
+                    name: 'text',
+                    type: 'text',
+                    texts: [
+                      {
+                        text: 'The typical Mediterranean landscape is an amazing mosaic of diverse plant communities characterised by its notable biodiversity.',
+                      },
+                      {
+                        text: 'These complexes are home to an important group of edible plants and plants that provide wild edible fruits, as well as aromatic plants used as seasoning in human nutrition.',
+                      },
+                      {
+                        text: 'Mild and rainy winters contrasting with hot and dry summers.',
+                      },
+                      {
+                        text: 'The Mediterranean macrobioclimate is shared with southern and south-western territories on all the continents.',
+                      },
+                      {
+                        text: 'The lands in these regions around the world are covered by characteristic veg-etation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
+                      },
+                      {
+                        text: 'Wild plants were a major source of food and a key nutritional complement to the animal proteins obtained from hunting and fishing. Knowledge of wild edible plants has survived in more advanced farming and livestock societies, and in times of hardship, such as war and famine, it has once again served as a vital source of food and medicinal resources.',
+                      },
+                      {
+                        text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the re-stricted summer rainfall when temperatures reach their maximum.',
+                      },
+                      {
+                        text: 'Plants that have developed and diversified in areas with a Mediterranean macro-climate have acquired special characteristics adapting their morphology and metab-olism to survive during the drought period and to resprout after wildfires.',
+                      },
+                      {
+                        text: 'The main Mediterranean vegetation types through-out the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
+                      },
+                      {
+                        text: 'Matorrals can be considered as different vegetation types developed on disturbed or altered sites where forest species form the natural potential vegetation and its vegetation series.',
+                      },
+                      {
+                        text: 'Most of the food crops cultivated in the area were originated in the Mediterranean Basin and in Middle Eastern regions. Wheat, barley, legumes (such as lentils and chickpeas), vegetables (such as artichokes, asparagus, cabbage, leeks, onions and garlic), and fruits and seeds (such as grapes, olives, almonds and acorns).',
+                      },
+                      {
+                        text: 'The present Mediterranean landscape is the complex result of human activity in the management of nature for its own benefit.'
+                      },                  
+                      {
+                        text: 'The pristine Mediterranean vegetation was transformed through human intervention. This was not only due to agriculture, livestock and the building of cities but also due to mining for metals, a key activity throughout its history.'
+                      },                
+                      {
+                        text: 'Natural woods and bushes were transformed into a new cultural space where crops and grasslands could be identified with boundaries defining their ownership.'
+                      },                
+                      {
+                        text: 'Changes promoted nitrogen-loving (nitrophilous) plants. Many are as-sociated with farmlands and cultivated plants (weeds), and others grow near places of human habitation (ruderals) or live along the borders of paths, roads or cattle tracks, carried by man and domestic animals in their seasonal migration.'
+                      },                
+                      {
+                        text: 'Numerous weeds and ruderal plants are used and collected as wild vegetables in the Iberian Peninsula, such as Scolymus hispanicus (Asteraceae), Silene vulgaris, Garcke (Caryophyllaceae) and Silybum marianum.'
+                      },                
+                    ]
+                  },
+                  {
+                    id: 'species-template',
+                    name: 'species',
+                    parent: 'grid-template',
+                    type: 'species',
+                    species: [
+                      'Quercus rotundifolia',
+                      'Olea europaea',
+                    ],
+                  },
+                  {
+                    id: 'term-template',
+                    name: 'term', 
+                    parent: 'non-grid-template',
+                    type: 'term',
+                    terms: [
+                      'Sclerophyll',
+                      'Marcescence',
+                      'Xerothermic'
+                    ],
+                  },
+                ],  
+              },
+            ],
+            // score
+        },
+        {
+            id: 'danielhartley',
+            name: 'Mediterranean',            
+            lesson: { id: 2 },
             taxa: [
               {
                   id: 1150906,
@@ -941,13 +1060,15 @@ export const g = {
               {
                 id: 'fire-history-template',
                 name: 'fire-history',
-                parent: 'guide-history-parent',
+                parent: 'non-grid-template',
                 isTest: false,                
                 terms: [
                   'Serotiny',
                   'Secondary succession',
                   'Maquis',
                   'Garrigue',
+                  'Sclerophyll',
+                  'Ruderal species',
                 ],
                 texts: [
                   'Mediterranean vegetation is among the most fire-prone and fire-shaped in the world.',
@@ -980,6 +1101,37 @@ export const g = {
         dt: 'Garrigue',
         dd: 'A type of low scrubland ecoregion and plant community in the Mediterranean forests, woodlands, and scrub biome.',
         ds: 'https://en.wikipedia.org/wiki/Garrigue'
+      },
+      {
+        dt: 'Sclerophyll',
+        dd: 'A type of vegetation that is adapted to long periods of dryness and heat. The plants feature hard leaves, short internodes (the distance between leaves along the stem) and leaf orientation which is parallel or oblique to direct sunlight.',
+        ds: 'https://en.wikipedia.org/wiki/Sclerophyll',
+        dx: ['Quercus ilex', 'Myrtus communis', 'Arbutus unedo', 'Olea europaea', 'Laurus nobilis', 'Phillyrea latifolia', 'Rhamnus alaternus']
+      },
+      {
+        dt: 'Marcescence',
+        dd: 'The withering and persistence of plant organs that normally are shed, and is a term most commonly applied to plant leaves.',
+        ds: 'https://en.wikipedia.org/wiki/Marcescence',
+        dx: ['Quercus', 'Fagus']
+      },
+      {
+        dt: 'Therophytes',
+        dd: 'These are annual plants that complete their lives rapidly in favorable conditions and survive the unfavorable cold or dry season in the form of seeds.',
+        ds: 'https://en.wikipedia.org//wiki/Raunki%C3%A6r_plant_life-form#Therophytes',
+      },
+      {
+        dt: 'Xerothermic',
+        dd: 'Adapted to or flourishing in an environment that is both dry and hot.',
+      },
+      {
+        dt: 'Ruderal species',
+        dd: 'A plant species that is first to colonize disturbed lands. The disturbance may be natural – for example, wildfires or avalanches – or the consequences of human activities.',
+        ds: 'https://en.wikipedia.org/wiki/Ruderal_species'
+      },
+      {
+        dt: 'Synanthrope',
+        dd: 'An organism that lives near and benefits from humans and their environmental modifications.',
+        ds: 'https://en.wikipedia.org/wiki/Synanthrope'
       },
     ],
     inatSpecies: [],
