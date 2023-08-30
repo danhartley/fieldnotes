@@ -10,7 +10,7 @@ Object.assign(g, {
     taxa: g.ICONIC_TAXA,
     language: g.LANGUAGES[5],
     template: g.templates[0],
-    guide: g.guides[0],
+    guide: g.guides[1],
     // move score under template too (and rename?)
 })
 
@@ -458,30 +458,48 @@ const startLesson = () => {
     })
     speciesParent.appendChild(parent)
     break
-    case 'mediterranean-wild-edible-plants-template':
+    }
+    
+    if(g.template.type === 'guide') {
         lessonLegend.innerText = g.guide.name
         
         g.template.sections.forEach(section => {            
             section.templates.forEach(t => {
-                console.log('section title', section.title)
+                template = document.getElementById(t.parent)
+                parentClone = template.content.cloneNode(true)
+                templateToClone = document.getElementById(t.id)
                 switch(t.type) {
+                    case 'header':
+                        const clone = templateToClone.content.cloneNode(true)
+                        const h3 = clone.querySelector('h3')
+                        h3.textContent = t.h3
+                        parent = parentClone.querySelector('div')
+                        parent.appendChild(clone)
+                        speciesParent.appendChild(parent)
+                    break
+                    case 'img':
+                        t.imgs.forEach(img => {
+                            const clone = templateToClone.content.cloneNode(true)
+                            const image = clone.querySelector('img')
+                            image.src = img.src
+                            image.width = `${img.width}px`
+                            image.height = `${img.height}px`
+                            parent = parentClone.querySelector('div')
+                            parent.appendChild(clone)
+                            speciesParent.appendChild(parent)
+                        })
+                    break
                     case 'text':
-                        template = document.getElementById(t.parent)
-                        parentClone = template.content.cloneNode(true)
-                        templateToClone = document.getElementById(t.id)
                         t.texts.forEach(text => {
-                            const clone = templateToClone.content.cloneNode(true)                            
+                            const clone = templateToClone.content.cloneNode(true)                      
                             const p = clone.querySelector('p')
                             p.textContent = text.text                            
                             parent = parentClone.querySelector('div')
-                            parent.appendChild(clone)                            
+                            parent.appendChild(clone)
                         })
                         speciesParent.appendChild(parent)
                         break
                     case 'species':
-                        template = document.getElementById(t.parent)
-                        parentClone = template.content.cloneNode(true)
-                        templateToClone = document.getElementById(t.id)
                         t.species.forEach((sp, i) => {
                             const s = g.species.find(s => s.taxon.name === sp)
                             const clone = cloneSpeciesCardFromTemplate({templateToClone, species: s, index: i})
@@ -493,8 +511,7 @@ const startLesson = () => {
                 }
             })
         })
-        break
-    }    
+    }
 
     addImgClickEventHandlers()
 

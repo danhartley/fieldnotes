@@ -652,7 +652,8 @@ export const g = {
     species: [],
     guides: [
         {
-            id: 'danielhartley',
+            id: 'med-edible-wild-plants',
+            author: 'danielhartley',
             name: 'The Mediterranean Landscape and Wild Edible Plants',  
             lesson: { id: 1 },
             taxa: [
@@ -817,11 +818,30 @@ export const g = {
                 id: 'mediterranean-wild-edible-plants-template',
                 name: 'mediterranean-food-history',
                 parent: 'non-grid-template',
+                type: 'guide',
                 isTest: false,
                 sections: [
                   {
-                    title: 'Section 1',
                     templates: [
+                      {
+                        id: 'title-h3-template',
+                        parent: 'grid-template',
+                        type: 'header',
+                        h3: 'Section 1',
+                      },
+                      {
+                        id: 'img-template',
+                        parent: 'grid-template',
+                        type: 'img',
+                        imgs: [
+                          {
+                            src: 'https://drive.google.com/thumbnail?id=1GcMih3Zcrv8oHa_Hc8Y_m4nYGKxKIsIA',
+                            alt: 'Arrábida after the fire',
+                            width: 220,
+                            height: 165,
+                          }
+                        ]
+                      },
                       {
                         id: 'text-template',
                         name: 'text',
@@ -841,7 +861,7 @@ export const g = {
                             text: 'The Mediterranean macrobioclimate is shared with southern and south-western territories on all the continents.',
                           },
                           {
-                            text: 'The lands in these regions around the world are covered by characteristic veg-etation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
+                            text: 'The lands in these regions around the world are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
                           },
                           {
                             text: 'Wild plants were a major source of food and a key nutritional complement to the animal proteins obtained from hunting and fishing. Knowledge of wild edible plants has survived in more advanced farming and livestock societies, and in times of hardship, such as war and famine, it has once again served as a vital source of food and medicinal resources.',
@@ -870,7 +890,6 @@ export const g = {
                           'Asparagus acutifolius',
                           'Nasturtium officinale',                        
                         ],
-                        isTestable: true,
                       },
                       {
                         id: 'term-template',
@@ -887,8 +906,13 @@ export const g = {
                     ],
                   },
                   {
-                    title: 'Section 2',
                     templates: [
+                      {
+                        id: 'title-h3-template',
+                        parent: 'grid-template',
+                        type: 'header',
+                        h3: 'Section 2',
+                      },
                       {
                         id: 'text-template',
                         name: 'text',
@@ -981,7 +1005,8 @@ export const g = {
             // score
         },
         {
-            id: 'danielhartley',
+            id: 'med-fire',
+            author: 'danielhartley',
             name: 'Mediterranean',            
             lesson: { id: 2 },
             taxa: [
