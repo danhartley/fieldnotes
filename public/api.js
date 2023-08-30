@@ -681,6 +681,136 @@ export const g = {
                 name: 'Silybum marianum',
                 rank: 10,
               },
+              {
+                id: 60232,
+                name: 'Rumex pulcher',
+                rank: 10,
+                description: [
+                  {
+                    text: 'At its best in early spring when the plant has developed its basal leaves and before the growth of the flowering stems.'
+                  }
+                ]
+              },
+              {
+                id: 82691,
+                name: 'Dioscorea communis',
+                rank: 10,
+                description: [
+                  {
+                    text: 'The young shoots are collected in mid-spring.'
+                  }
+                ]
+              },
+              {
+                id: 210513,
+                name: 'Asparagus acutifolius',
+                rank: 10,
+              },
+              {
+                id: 78174,
+                name: 'Nasturtium officinale',
+                rank: 10,
+              },
+              {
+                id: 53196,
+                name: 'Rumex',
+                rank: 20,
+              },
+              {
+                id: 79009,
+                name: 'Scolymus hispanicus',
+                rank: 10,
+              },
+              {
+                id: 72264,
+                name: 'Onopordum',
+                rank: 20,
+              },
+              {
+                id: 48150,
+                name: 'Boraginaceae',
+                rank: 20,
+                description: [
+                  {
+                    text: 'Have been used as stewed vegetables.'
+                  }
+                ]
+              },
+              {
+                id: 53294,
+                name: 'Sonchus oleraceus',
+                rank: 10,
+              },
+              {
+                id: 53779,
+                name: 'Humulus lupulus',
+                rank: 10,
+              },
+              {
+                id: 493017,
+                name: 'Scandix australis',
+                rank: 10,
+              },
+              {
+                id: 75429,
+                name: 'Anchusa azurea',
+                rank: 10,
+                description: [
+                  {
+                    text: 'These flowers, which typically appear in May–July, are edible and attract bees.'
+                  }
+                ]
+              },
+              {
+                id: 53052,
+                name: 'Foeniculum vulgare',
+                rank: 10,
+                description: [
+                  {
+                    text: 'Consumed in salads or eaten raw.'
+                  }
+                ]
+              },
+              {
+                id: 76300,
+                name: 'Chondrilla juncea',
+                rank: 10,
+                description: [
+                  {
+                    text: 'Consumed in salads or eaten raw.'
+                  }
+                ]
+              },
+              {
+                id: 82642,
+                name: 'Mantisalca salmantica',
+                rank: 10,
+                description: [
+                  {
+                    text: 'Consumed in salads or eaten raw.'
+                  }
+                ]
+              },
+              {
+                id: 168693,
+                name: 'Scorzonera laciniata',
+                rank: 10,
+                description: [
+                  {
+                    text: 'Consumed in salads or eaten raw.'
+                  }
+                ]
+              },
+              {
+                id: 61396,
+                name: 'Origanum vulgare',
+                rank: 10,
+                description: [
+                  {
+                    text: ''
+                  }
+                ]
+              },
             ],
             templates: [
               {
@@ -688,84 +818,164 @@ export const g = {
                 name: 'mediterranean-food-history',
                 parent: 'non-grid-template',
                 isTest: false,
-                templates: [
+                sections: [
                   {
-                    id: 'text-template',
-                    name: 'text',
-                    type: 'text',
-                    texts: [
+                    title: 'Section 1',
+                    templates: [
                       {
-                        text: 'The typical Mediterranean landscape is an amazing mosaic of diverse plant communities characterised by its notable biodiversity.',
+                        id: 'text-template',
+                        name: 'text',
+                        parent: 'non-grid-template',
+                        type: 'text',
+                        texts: [
+                          {
+                            text: 'The typical Mediterranean landscape is an amazing mosaic of diverse plant communities characterised by its notable biodiversity.',
+                          },
+                          {
+                            text: 'These complexes are home to an important group of edible plants and plants that provide wild edible fruits, as well as aromatic plants used as seasoning in human nutrition.',
+                          },
+                          {
+                            text: 'Mild and rainy winters contrasting with hot and dry summers.',
+                          },
+                          {
+                            text: 'The Mediterranean macrobioclimate is shared with southern and south-western territories on all the continents.',
+                          },
+                          {
+                            text: 'The lands in these regions around the world are covered by characteristic veg-etation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
+                          },
+                          {
+                            text: 'Wild plants were a major source of food and a key nutritional complement to the animal proteins obtained from hunting and fishing. Knowledge of wild edible plants has survived in more advanced farming and livestock societies, and in times of hardship, such as war and famine, it has once again served as a vital source of food and medicinal resources.',
+                          },
+                          {
+                            text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the re-stricted summer rainfall when temperatures reach their maximum.',
+                          },
+                          {
+                            text: 'Plants that have developed and diversified in areas with a Mediterranean macro-climate have acquired special characteristics adapting their morphology and metab-olism to survive during the drought period and to resprout after wildfires.',
+                          },
+                          {
+                            text: 'The main Mediterranean vegetation types through-out the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
+                          },                        
+                        ]
                       },
                       {
-                        text: 'These complexes are home to an important group of edible plants and plants that provide wild edible fruits, as well as aromatic plants used as seasoning in human nutrition.',
+                        id: 'species-card-template',
+                        name: 'species-cards',
+                        parent: 'grid-template',
+                        type: 'species',
+                        species: [
+                          'Quercus rotundifolia',
+                          'Olea europaea',
+                          'Rumex pulcher',
+                          'Dioscorea communis',
+                          'Asparagus acutifolius',
+                          'Nasturtium officinale',                        
+                        ],
+                        isTestable: true,
                       },
                       {
-                        text: 'Mild and rainy winters contrasting with hot and dry summers.',
+                        id: 'term-template',
+                        name: 'term', 
+                        parent: 'non-grid-template',
+                        type: 'term',
+                        terms: [
+                          'Sclerophyll',
+                          'Marcescence',
+                          'Xerothermic',
+                          'Phytophagous Insects'
+                        ],
                       },
-                      {
-                        text: 'The Mediterranean macrobioclimate is shared with southern and south-western territories on all the continents.',
-                      },
-                      {
-                        text: 'The lands in these regions around the world are covered by characteristic veg-etation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
-                      },
-                      {
-                        text: 'Wild plants were a major source of food and a key nutritional complement to the animal proteins obtained from hunting and fishing. Knowledge of wild edible plants has survived in more advanced farming and livestock societies, and in times of hardship, such as war and famine, it has once again served as a vital source of food and medicinal resources.',
-                      },
-                      {
-                        text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the re-stricted summer rainfall when temperatures reach their maximum.',
-                      },
-                      {
-                        text: 'Plants that have developed and diversified in areas with a Mediterranean macro-climate have acquired special characteristics adapting their morphology and metab-olism to survive during the drought period and to resprout after wildfires.',
-                      },
-                      {
-                        text: 'The main Mediterranean vegetation types through-out the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
-                      },
-                      {
-                        text: 'Matorrals can be considered as different vegetation types developed on disturbed or altered sites where forest species form the natural potential vegetation and its vegetation series.',
-                      },
-                      {
-                        text: 'Most of the food crops cultivated in the area were originated in the Mediterranean Basin and in Middle Eastern regions. Wheat, barley, legumes (such as lentils and chickpeas), vegetables (such as artichokes, asparagus, cabbage, leeks, onions and garlic), and fruits and seeds (such as grapes, olives, almonds and acorns).',
-                      },
-                      {
-                        text: 'The present Mediterranean landscape is the complex result of human activity in the management of nature for its own benefit.'
-                      },                  
-                      {
-                        text: 'The pristine Mediterranean vegetation was transformed through human intervention. This was not only due to agriculture, livestock and the building of cities but also due to mining for metals, a key activity throughout its history.'
-                      },                
-                      {
-                        text: 'Natural woods and bushes were transformed into a new cultural space where crops and grasslands could be identified with boundaries defining their ownership.'
-                      },                
-                      {
-                        text: 'Changes promoted nitrogen-loving (nitrophilous) plants. Many are as-sociated with farmlands and cultivated plants (weeds), and others grow near places of human habitation (ruderals) or live along the borders of paths, roads or cattle tracks, carried by man and domestic animals in their seasonal migration.'
-                      },                
-                      {
-                        text: 'Numerous weeds and ruderal plants are used and collected as wild vegetables in the Iberian Peninsula, such as Scolymus hispanicus (Asteraceae), Silene vulgaris, Garcke (Caryophyllaceae) and Silybum marianum.'
-                      },                
-                    ]
-                  },
-                  {
-                    id: 'species-template',
-                    name: 'species',
-                    parent: 'grid-template',
-                    type: 'species',
-                    species: [
-                      'Quercus rotundifolia',
-                      'Olea europaea',
                     ],
                   },
                   {
-                    id: 'term-template',
-                    name: 'term', 
-                    parent: 'non-grid-template',
-                    type: 'term',
-                    terms: [
-                      'Sclerophyll',
-                      'Marcescence',
-                      'Xerothermic'
+                    title: 'Section 2',
+                    templates: [
+                      {
+                        id: 'text-template',
+                        name: 'text',
+                        parent: 'non-grid-template',
+                        type: 'text',
+                        texts: [
+                          {
+                            text: 'Matorrals can be considered as different vegetation types developed on disturbed or altered sites where forest species form the natural potential vegetation and its vegetation series.',
+                          },
+                          {
+                            text: 'Most of the food crops cultivated in the area were originated in the Mediterranean Basin and in Middle Eastern regions. Wheat, barley, legumes (such as lentils and chickpeas), vegetables (such as artichokes, asparagus, cabbage, leeks, onions and garlic), and fruits and seeds (such as grapes, olives, almonds and acorns).',
+                          },
+                          {
+                            text: 'The present Mediterranean landscape is the complex result of human activity in the management of nature for its own benefit.'
+                          },                  
+                          {
+                            text: 'The pristine Mediterranean vegetation was transformed through human intervention. This was not only due to agriculture, livestock and the building of cities but also due to mining for metals, a key activity throughout its history.'
+                          },                
+                          {
+                            text: 'Natural woods and bushes were transformed into a new cultural space where crops and grasslands could be identified with boundaries defining their ownership.'
+                          },                
+                          {
+                            text: 'Changes promoted nitrogen-loving (nitrophilous) plants. Many are as-sociated with farmlands and cultivated plants (weeds), and others grow near places of human habitation (ruderals) or live along the borders of paths, roads or cattle tracks, carried by man and domestic animals in their seasonal migration.'
+                          },                
+                          {
+                            text: 'Numerous weeds and ruderal plants are used and collected as wild vegetables in the Iberian Peninsula, such as Scolymus hispanicus (Asteraceae), Silene vulgaris, Garcke (Caryophyllaceae) and Silybum marianum.'
+                          },          
+                          {
+                            text: 'Late winter, and especially spring, is in general the best time to collect vegetables that reach their higher development while being still tender, though de-pending on the local climatic conditions, they could be collected in other parts of the year.'
+                          },       
+                          {
+                            text: 'Seasonality is a very determinant condition for the life in the Mediterranean areas.'
+                          },       
+                          {
+                            text: 'Very dry autumns in Spanish continental sites signal the beginning of a bad year for collecting wild vegetables which develop during this season and produce their stems and leaves in late winter and spring.'
+                          },       
+                          {
+                            text: 'Asparagus acutifolius — which grows in oak forest communities, in olive groves and, in the past, inside rain-fed farm crops — has very tough underground organs like tuberous roots, and in dry years also produces new shoots or asparagus.'
+                          },      
+                          {
+                            text: 'There are also species that are not so dependent on the yearly climatic variation, such as watercress (Nasturtium officinale) that always grow where there are permanent waters.'
+                          },    
+                          {
+                            text: 'Late spring and summer is the season of aromatic plants used for seasoning. The diverse floras of the Mediterranean Basin countries provide numerous highly scented species. Chemical compounds from the essential oils are produced in the secondary metabolism of all these plants and are present in the small uni- or multicellular dots that are transformed hairs located on the epidermis of leaves and flowers.'
+                          },
+                          {
+                            text: 'These tiny dots burst, and the essential oil evap-orates into the air producing their pleasant aromas, even when the plants are dried. One of the biological advantages of the presence of these chemical compounds is that plants are protected from being eaten by large animals or phytophagous insects and from bacterial infections.'
+                          },
+                          {
+                            text: 'One of the biological advantages of the presence of these chemical compounds is that plants are protected from being eaten by large animals or phytophagous insects and from bacterial infections.'
+                          },
+                          {
+                            text: 'There is a high biodiversity within the group of species used for cooking, flavouring and preserving. Lamiaceae, Apiaceae and Asteraceae are the main aromatic plant families in the territories of the Mediterranean Basin.'
+                          },
+                        ]
+                      },
+                      {
+                        id: 'species-card-template',
+                        name: 'species',
+                        parent: 'grid-template',
+                        type: 'species',
+                        species: [
+                          'Silene vulgaris',
+                          'Silybum marianum',
+                          'Sonchus oleraceus',
+                          'Anchusa azurea',
+                          'Foeniculum vulgare',
+                          'Chondrilla juncea',
+                          'Mantisalca salmantica',
+                          'Origanum vulgare',
+                        ],
+                      },
+                      {
+                        id: 'term-template',
+                        name: 'term', 
+                        parent: 'non-grid-template',
+                        type: 'term',
+                        terms: [
+                          'Sclerophyll',
+                          'Marcescence',
+                          'Xerothermic',
+                          'Phytophagous Insects'
+                        ],
+                      },
                     ],
-                  },
-                ],  
+                  }
+                ],
               },
             ],
             // score
@@ -1132,6 +1342,11 @@ export const g = {
         dt: 'Synanthrope',
         dd: 'An organism that lives near and benefits from humans and their environmental modifications.',
         ds: 'https://en.wikipedia.org/wiki/Synanthrope'
+      },
+      {
+        dt: 'Phytophagous Insects',
+        dd: 'Species that attack roots, stems, leaves, flowers, and fruits, either as larvae or as adults or in both stages. Phytophagous insects are highly diverse and the total species number is at least 500,000.',
+        ds: 'https://www.sciencedirect.com/topics/agricultural-and-biological-sciences/phytophagous-insects'
       },
     ],
     inatSpecies: [],

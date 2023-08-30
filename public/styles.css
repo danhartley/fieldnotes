@@ -202,7 +202,6 @@ legend {
   font-size: var(--s3);
   font-weight: bold;
   letter-spacing: calc(var(--d) * .05);
-  color: var(--c5);
 }
 
 fieldset fieldset .grid .flex-row {
@@ -290,8 +289,11 @@ fieldset fieldset .grid .flex-row {
 }
 
 .non-grid p {
-  font-size: var(--s4);
-  line-height: 1.2;
+  font-size: var(--s6);
+  font-family: Elena, "PT Serif", serif;
+  color: var(--c6);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
 }
 
 @supports (aspect-ratio: 1) {
