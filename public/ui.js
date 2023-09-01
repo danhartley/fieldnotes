@@ -99,10 +99,12 @@ const toggleFilterCtrl = (({ ctrl, fieldsetId }) => {
 const lessonLegend = document.querySelector('#lesson > legend')
 const speciesParent = document.getElementById('species-parent')
 const rbTemplate = document.getElementById('radio-button-template')
-const checkAnswersBtn = document.getElementById('check-answers-btn')
+const testSubmitBtn = document.getElementById('check-answers-btn')
 const guideGroup = document.getElementById('guide-group')
 const languageGroup = document.getElementById('language-group')
 const inatAutocompleteGroup = document.getElementById('inat-autocomplete-group')
+const display = document.getElementById('species-display')
+const targetGroup = document.getElementById('target-group')
 const iNatAutocompleteInput = document.getElementById('inat-autocomplete')
 const iNatAutocompleteDatalist = document.getElementById('inat-autocomplete-list')
 const customGuideCtrl = document.getElementById('customGuideCtrl')
@@ -207,12 +209,17 @@ const addImgClickEventHandlers = () => {
     })  
 }
 
-const showOrHideTestOption = ({ element, condition, css }) => {
-    if(condition) {
-        element.classList.remove(css)
-        testbtn.innerHTML = 'Show test'    
+const resetTestOptions = () => {
+    const cssClass = 'hidden'
+    
+    testSubmitBtn.classList.add(cssClass)
+
+    if(g.template.isTestable) {
+        testbtn.classList.remove(cssClass)
+        testbtn.innerText = 'Show test'
     } else {
-        element.classList.add(css)
+        testbtn.classList.add(cssClass)
+        targets.classList.add(cssClass)
     }
 }
 
@@ -285,52 +292,41 @@ const createInatParamsCheckboxGroup = () => {
     attachListenersToInatParams()
 }
 
-const createRadioBtnLessonGroup = () => {
+const createRadioBtnTemplateGroup = () => {
     const addHandlers = () => {
         const rbGroupTemplate = document.querySelectorAll('input[name="template"]')        
 
-        rbGroupTemplate.forEach(rb => {
-            rb.addEventListener('change', e => {
-                g.template = g.templates.find(t => t.id === e.target.value) 
+        rbGroupTemplate.forEach(template => {
+            template.addEventListener('change', e => {
+                const templateId = e.target.value
+                g.template = g.templates.find(t => t.id === templateId) 
                 
-                if(!g.template.isTestable) {
-                    targets.classList.add('hidden')             
-                }
-
-                checkAnswersBtn.classList.add('hidden')
-                        
-                showOrHideTestOption({element: testbtn, condition: g.template.isTestable, css: 'hidden'})
+                resetTestOptions()
                 
                 const toggleTestableTemplate = () => {      
-                    /**
-                     *  If the current template can be tested e.g. for species, we toggle to the test template
-                     */          
-                    if(g.template.isTestable) {
-                        g.template = g.templates.find(t => t.id === g.template.testTemplateId)
+                    g.template = g.templates.find(t => t.id === g.template.pairedTemplateId)
 
-                        if(g.template.targets) {
-                            const targetGroup = document.getElementById('target-group')
-                            targetGroup.innerHTML = ''
-                            targets.classList.remove('hidden')
-                            g.target = g.template.targets[0]
-                            rbTestForGroup = createRadioBtnGroup({collection: g.template.targets, checked:g.target, rbGroup:'target', parent:targetGroup})
-                            rbTestForGroup.forEach(rb => {
-                                rb.addEventListener('change', e => {
-                                    g.target = g.template.targets.find(t => t.id === e.target.value)
-                                    startLesson()
-                                })
+                    if(g.template.targets) {
+                        targetGroup.innerHTML = ''
+                        targets.classList.remove('hidden')
+                        g.target = g.template.targets[0]
+                        rbTestForGroup = createRadioBtnGroup({collection: g.template.targets, checked:g.target, rbGroup:'target', parent:targetGroup})
+                        rbTestForGroup.forEach(test => {
+                            test.addEventListener('change', e => {
+                                const testId = e.target.value
+                                g.target = g.template.targets.find(t => t.id === testId)
+                                startLesson()
                             })
-                        }
-                        testbtn.innerHTML = 'Hide test'                        
-                        checkAnswersBtn.classList.remove('hidden')
+                        })
+                    }
+
+                    if(g.template.isTest) {
+                        testbtn.innerText = 'Hide test'                    
+                        testSubmitBtn.classList.remove('hidden')
                     } 
-                    /**
-                     * If the current template is a test e.g. for species, we toggle to the non-test template
-                     */
                     else {
-                        g.template = g.templates.find(t => t.id === g.template.testedTemplateId)
-                        testbtn.innerHTML = 'Show test'                        
-                        checkAnswersBtn.classList.add('hidden')
+                        testbtn.innerText = 'Show test'                  
+                        testSubmitBtn.classList.add('hidden')
                     }
 
                     startLesson()
@@ -342,8 +338,7 @@ const createRadioBtnLessonGroup = () => {
             })
         })
     }
-
-    const display = document.getElementById('species-display')
+    
     display.innerHTML = ''
 
     g.templates.filter(t => !t.isTest).forEach(t => {
@@ -581,7 +576,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         updateScore()
     }
 
-    checkAnswersBtn.addEventListener('click', scoreHandler, false)
+    testSubmitBtn.addEventListener('click', scoreHandler, false)
 
     const fetchCustomInatSpeciesBtn = document.getElementById('fetch-custom-inat-species-btn')
 
@@ -642,12 +637,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
                         }
                     }
                 })
-                /**
-                 * Remove undefined members
-                 */
                 .filter(t => t)
     
-            createRadioBtnLessonGroup()
+            createRadioBtnTemplateGroup()
             startLesson()
         })
     }
@@ -721,7 +713,7 @@ const init = () => {
     rbLanguageGroup = createRadioBtnGroup({collection: g.LANGUAGES, checked:g.language, rbGroup:'language', parent:languageGroup})
 
     createTaxaCheckboxGroup()
-    createRadioBtnLessonGroup()
+    createRadioBtnTemplateGroup()
     createInatParamsCheckboxGroup()
 }
 

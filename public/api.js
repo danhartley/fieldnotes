@@ -589,7 +589,7 @@ const templates = [
       id: 'species-card-test-template',
       name: 'species-card-tests',
       parent: 'grid-template',
-      testedTemplateId: 'species-card-template',
+      pairedTemplateId: 'species-card-template',
       isTest: true,
       targets: [
         {
@@ -606,13 +606,11 @@ const templates = [
       id: 'species-card-template',
       name: 'species-cards',
       parent: 'grid-template',
-      testTemplateId: 'species-card-test-template',
+      pairedTemplateId: 'species-card-test-template',
       isTest: false,
       isTestable: true,
   },
 ]
-
-// GLOBAL OBJECT
 
 // rank 20: genus
 // rank 10: species
@@ -1041,8 +1039,8 @@ export const g = {
             // score
         },
         {
-            id: 'landscape-and-wild-edible-plants-of-the-mediterranean-guide',
-            name: 'Landscape and wild edible plants of the Mediterranean',
+            id: 'wild-edible-plants-of-the-mediterranean-guide',
+            name: 'Wild edible plants of the Mediterranean',
             author: 'danielhartley',
             lesson: { id: 2 },
             taxa: [
