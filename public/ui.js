@@ -9,8 +9,6 @@ import {
 Object.assign(g, {
     taxa: g.ICONIC_TAXA,
     language: g.LANGUAGES[5],
-    // template: g.templates[0],
-    guide: g.guides[1],
     // move score under template too (and rename?)
 })
 
@@ -129,10 +127,6 @@ const createRadioBtnGroup = ({collection, checked, rbGroup, parent}) => {
     input.value = item.id
     label.textContent = item.name
     label.setAttribute('for', item.id)
-
-    if(collection.length > 1 && item.id == checked.id) {
-        input.setAttribute('checked', true)
-    }
 
     parent.appendChild(clone)
     })
