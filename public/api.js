@@ -819,7 +819,7 @@ export const g = {
               ...templates,
               {
                 id: 'introduction-to-mediterranean-climate-regions-template',
-                name: 'guide-to-mediterranean-climate-regions',
+                name: 'Guide',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,
@@ -1044,7 +1044,7 @@ export const g = {
             id: 'landscape-and-wild-edible-plants-of-the-mediterranean-guide',
             name: 'Landscape and wild edible plants of the Mediterranean',
             author: 'danielhartley',
-            lesson: { id: 1 },
+            lesson: { id: 2 },
             taxa: [
               {
                 id: 82946,
@@ -1206,7 +1206,7 @@ export const g = {
               ...templates,
               {
                 id: 'wild-edible-plants-template',
-                name: 'Wild edible plants',
+                name: 'Guide',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,
@@ -1420,7 +1420,7 @@ export const g = {
             id: 'fire-prone-ecosystems-guide',
             name: 'Fire-prone ecosystems',
             author: 'danielhartley',
-            lesson: { id: 2 },
+            lesson: { id: 3 },
             taxa: [
               {
                   id: 1150906,
@@ -1707,7 +1707,7 @@ export const g = {
               ...templates,
               {
                 id: 'introduction-to-fire-prone-ecosystems-template',
-                name: 'introduction-to-fire-prone-ecosystems',
+                name: 'Guide',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,                
