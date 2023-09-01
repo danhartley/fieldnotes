@@ -600,7 +600,9 @@ const templates = [
             id: 'latin',
             name: 'latin name',
         },
-    ]
+      ],
+      score: 0,
+      scores: [],
   },
   {
       id: 'species-card-template',
@@ -655,7 +657,6 @@ export const g = {
             id: 'mediterranean-climate-regions-guide',
             name: 'Mediterranean climate regions',
             author: 'danielhartley',
-            lesson: { id: 1 },
             taxa: [
               {
                 id: 82946,
@@ -1036,13 +1037,11 @@ export const g = {
                 ],
               },
             ],
-            // score
         },
         {
             id: 'wild-edible-plants-of-the-mediterranean-guide',
             name: 'Wild edible plants of the Mediterranean',
             author: 'danielhartley',
-            lesson: { id: 2 },
             taxa: [
               {
                 id: 82946,
@@ -1412,13 +1411,11 @@ export const g = {
                 ]
               }
             ],
-            // score
         },
         {
             id: 'fire-prone-ecosystems-guide',
             name: 'Fire-prone ecosystems',
             author: 'danielhartley',
-            lesson: { id: 3 },
             taxa: [
               {
                   id: 1150906,
@@ -1751,7 +1748,6 @@ export const g = {
                 ],
               },
             ],
-            // score
         },
     ],
     terms: [
@@ -1872,13 +1868,5 @@ export const g = {
         place: null,
     },
     matches: [],
-    lessons: [
-        lesson,
-    ],
-    lesson: {
-        id: 0,
-        scores: [],
-        score: 0,
-    }
 }
 

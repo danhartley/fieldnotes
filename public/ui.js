@@ -9,7 +9,6 @@ import {
 Object.assign(g, {
     taxa: g.ICONIC_TAXA,
     language: g.LANGUAGES[5],
-    // move score under template too (and rename?)
 })
 
 const debounce = (func, wait) => {
@@ -81,10 +80,10 @@ const scoreLesson = answers => {
           isCorrect,               
         }
 
-        g.lesson.scores.push(score)        
+        g.template.scores.push(score)  
     })
 
-    g.lesson.score = g.lesson.scores.filter(score => score.isCorrect).length
+    g.template.score = g.template.scores.filter(score => score.isCorrect).length
 }
 
 const toggleFilterCtrl = (({ ctrl, fieldsetId }) => {
@@ -566,11 +565,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
         const scoreCount = document.getElementById('score-count')
         scoreCount.innerText = g.species.length
         const scoreCorrect = document.getElementById('score-correct')
-        scoreCorrect.innerText = g.lesson.score
+        scoreCorrect.innerText = g.template.score
     }
 
     const scoreHandler = () => {
-        const parent = document.getElementById(g.template.parent)
+        const parent = document.getElementById('species-parent')
         const answers = Array.from(parent.getElementsByTagName('input'))          
         scoreLesson(answers)
         updateScore()
@@ -614,7 +613,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const rbGuideGroupEventHander = rb => {
         rb.addEventListener('change', async (e) => {
             g.guide = g.guides.find(t => t.id === e.target.value)
-            g.lesson.id = g.guide.lesson.id
             g.templates = g.guide.templates
  
             const taxaIds = g.guide.taxa
