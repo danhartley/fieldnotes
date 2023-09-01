@@ -123,10 +123,10 @@ const createRadioBtnGroup = ({collection, checked, rbGroup, parent}) => {
     const label = clone.querySelector('label')
 
     input.setAttribute('name', rbGroup)
-    input.id = item.id
+    input.id = item.name
     input.value = item.id
     label.textContent = item.name
-    label.setAttribute('for', item.id)
+    label.htmlFor = input.id
 
     parent.appendChild(clone)
     })
@@ -229,7 +229,7 @@ const createTaxaCheckboxGroup = () => {
         input.id = taxon.name
         input.value = taxon.name
         label.textContent = taxon.name
-        label.setAttribute('for', taxon.name)
+        label.htmlFor = input.id
     
         /**
          * Only allow a radio button to be pre-selected if there is more than one in the group
@@ -278,7 +278,7 @@ const createInatParamsCheckboxGroup = () => {
         if(param.isActive) input.setAttribute('checked', true)
         input.value = param.name
         label.textContent = param[param.name][param.prop]
-        label.setAttribute('for', param.name)
+        label.htmlFor = input.id
 
         parent.appendChild(clone)
     })
@@ -296,7 +296,7 @@ const createRadioBtnLessonGroup = () => {
                         
             showOrHideTestOption({element: testbtn, condition: g.template.isTestable, css: 'hidden'})
             
-            testbtn.addEventListener('click', () => {
+            const showTests = () => {                
                 if(g.template.isTestable) {
                     g.template = g.templates.find(t => t.id === g.template.testTemplateId)
 
@@ -312,7 +312,6 @@ const createRadioBtnLessonGroup = () => {
                             })
                         })
                     }
-
                     testbtn.innerHTML = 'Hide test'
                 } else {
                     g.template = g.templates.find(t => t.id === g.template.testedTemplateId)
@@ -321,7 +320,9 @@ const createRadioBtnLessonGroup = () => {
                 }
 
                 startLesson()
-            })
+            }
+
+            testbtn.addEventListener('click', showTests, true)
                         
             startLesson()
             })
@@ -342,7 +343,7 @@ const createRadioBtnLessonGroup = () => {
         input.value = t.id
     
         label.textContent = t.name.replaceAll('-', ' ')
-        label.setAttribute('for', t.name)
+        label.htmlFor = input.id
     
         display.appendChild(clone)
     })
@@ -383,8 +384,10 @@ const startLesson = () => {
     let parentClone = template.content.cloneNode(true)
     let templateToClone = document.getElementById(g.template.id) 
     let parent = null
-    
-    speciesParent.innerHTML = ''
+        
+    lessonLegend.innerText = g.template.name.replaceAll('-', ' ')
+
+    if(g.species) speciesParent.innerHTML = ''
 
     switch(g.template.id) {
     case 'species-card-template':
@@ -408,53 +411,51 @@ const startLesson = () => {
         speciesParent.appendChild(parent)
         break
     case 'species-card-test-template':
-    g.species.forEach((sp, i) => {
-        const clone = templateToClone.content.cloneNode(true)
+        g.species.forEach((sp, i) => {
+            const clone = templateToClone.content.cloneNode(true)
 
-        const span = clone.querySelector('span')
-        const label = clone.querySelector('label')
-        const input = clone.querySelector('input')
-        const img = clone.querySelector('img')      
-        const div = clone.querySelector('img + div')
+            const span = clone.querySelector('span')
+            const label = clone.querySelector('label')
+            const input = clone.querySelector('input')
+            const img = clone.querySelector('img')      
+            const div = clone.querySelector('img + div')
 
-        label.setAttribute('for', sp.taxon.id)
-        input.setAttribute('id', sp.taxon.id)
+            input.id = sp.taxon.id
+            label.htmlFor = input.id
 
-        div.style.setProperty("background-color", bgColour(sp.taxon.iconic_taxon_name))
-        
-        switch(g.target.name) {
-        case 'common name':
-            span.textContent = sp.taxon.name
-            span.classList.add('latin')
-            label.textContent = 'common name'
-            break
-        case 'latin name':
-            if(sp.taxon.preferred_common_name) {
-            span.textContent = sp.taxon.preferred_common_name
-            } else {
-            span.textContent = sp.taxon.name
-            span.classList.add('latin')
+            div.style.setProperty("background-color", bgColour(sp.taxon.iconic_taxon_name))
+            
+            switch(g.target.name) {
+            case 'common name':
+                span.textContent = sp.taxon.name
+                span.classList.add('latin')
+                label.textContent = 'common name'
+                break
+            case 'latin name':
+                if(sp.taxon.preferred_common_name) {
+                span.textContent = sp.taxon.preferred_common_name
+                } else {
+                span.textContent = sp.taxon.name
+                span.classList.add('latin')
+                }
+                label.textContent = 'latin name'
+                break
             }
-            label.textContent = 'latin name'
-            break
-        }
-        
-        img.src = sp.taxon.default_photo.medium_url
-        img.alt = sp.taxon.name
-        img.id = sp.taxon.id
-        img.setAttribute('data-i', i + 1)
-        img.setAttribute('loading', 'lazy')
-        
-        parent = parentClone.querySelector('div')          
-        parent.appendChild(clone)
-    })
-    speciesParent.appendChild(parent)
-    break
+            
+            img.src = sp.taxon.default_photo.medium_url
+            img.alt = sp.taxon.name
+            img.id = sp.taxon.id
+            img.setAttribute('data-i', i + 1)
+            img.setAttribute('loading', 'lazy')
+            
+            parent = parentClone.querySelector('div')          
+            parent.appendChild(clone)
+        })
+        speciesParent.appendChild(parent)
+        break
     }
     
     if(g.template.type === 'guide') {
-        lessonLegend.innerText = g.guide.name
-        
         g.template.sections.forEach(section => {            
             section.templates.forEach(t => {
                 template = document.getElementById(t.parent)
