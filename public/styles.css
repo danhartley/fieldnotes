@@ -335,7 +335,7 @@ figcaption {
   text-transform: lowercase;
 }
 
-.grid span::first-letter {
+.grid span::first-letter, legend::first-letter {
   text-transform: capitalize;
 }
 

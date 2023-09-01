@@ -651,12 +651,12 @@ export const g = {
     ],
     templates: templates,
     count: 10,
-    species: [],
+    species: null,
     guides: [
         {
-            id: 'med-edible-wild-plants',
+            id: 'mediterranean-climate-regions-guide',
+            name: 'Mediterranean climate regions',
             author: 'danielhartley',
-            name: 'Mediterranean Climate Regions & The Mediterranean',
             lesson: { id: 1 },
             taxa: [
               {
@@ -818,21 +818,11 @@ export const g = {
             templates: [
               ...templates,
               {
-                id: 'mediterranean-wild-edible-plants-template',
-                name: 'overview',
+                id: 'introduction-to-mediterranean-climate-regions-template',
+                name: 'guide-to-mediterranean-climate-regions',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,
-                sources: [
-                  {
-                    name: 'The Mediterranean Landscape and Wild Edible Plants',
-                    src: 'https://www.researchgate.net/publication/301320513_The_Mediterranean_Landscape_and_Wild_Edible_Plants',
-                    authors: [
-                      'Daniel Sánchez-Mata',
-                      'Ramón Morales',
-                    ]
-                  }
-                ],
                 sections: [
                   {
                     templates: [
@@ -840,7 +830,7 @@ export const g = {
                         id: 'title-h3-template',
                         parent: 'grid-template',
                         type: 'header',
-                        h3: 'Mediterranean Climate Regions',
+                        h3: 'Climate features',
                       },
                       {
                         id: 'img-template',
@@ -1051,9 +1041,9 @@ export const g = {
             // score
         },
         {
-            id: 'med-edible-wild-plants',
+            id: 'landscape-and-wild-edible-plants-of-the-mediterranean-guide',
+            name: 'Landscape and wild edible plants of the Mediterranean',
             author: 'danielhartley',
-            name: 'The Mediterranean Landscape and Wild Edible Plants',  
             lesson: { id: 1 },
             taxa: [
               {
@@ -1215,8 +1205,8 @@ export const g = {
             templates: [
               ...templates,
               {
-                id: 'mediterranean-wild-edible-plants-template',
-                name: 'mediterranean-food-history',
+                id: 'wild-edible-plants-template',
+                name: 'Wild edible plants',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,
@@ -1227,7 +1217,7 @@ export const g = {
                         id: 'title-h3-template',
                         parent: 'grid-template',
                         type: 'header',
-                        h3: 'Section 1',
+                        h3: 'The meditarranean landscape',
                       },
                       {
                         id: 'img-template',
@@ -1414,12 +1404,22 @@ export const g = {
                 ],
               },
             ],
+            sources: [
+              {
+                name: 'The Mediterranean Landscape and Wild Edible Plants',
+                src: 'https://www.researchgate.net/publication/301320513_The_Mediterranean_Landscape_and_Wild_Edible_Plants',
+                authors: [
+                  'Daniel Sánchez-Mata',
+                  'Ramón Morales',
+                ]
+              }
+            ],
             // score
         },
         {
-            id: 'mediterranean-fire',
+            id: 'fire-prone-ecosystems-guide',
+            name: 'Fire-prone ecosystems',
             author: 'danielhartley',
-            name: 'The Mediterranean & Fire',
             lesson: { id: 2 },
             taxa: [
               {
@@ -1706,8 +1706,8 @@ export const g = {
             templates: [
               ...templates,
               {
-                id: 'mediterranean-history-template',
-                name: 'mediterranean-history',
+                id: 'introduction-to-fire-prone-ecosystems-template',
+                name: 'introduction-to-fire-prone-ecosystems',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,                

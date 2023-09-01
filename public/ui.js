@@ -377,6 +377,8 @@ const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) => {
 }
 
 const startLesson = () => {
+    if(!g.template) return
+
     let template = document.getElementById(g.template.parent)
     let parentClone = template.content.cloneNode(true)
     let templateToClone = document.getElementById(g.template.id) 
@@ -595,8 +597,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         })
     })
 
-    rbGuideGroup.forEach(rb => {
-                
+    const rbGuideGroupEventHander = rb => {
         rb.addEventListener('change', async (e) => {
             g.guide = g.guides.find(t => t.id === e.target.value)
             g.lesson.id = g.guide.lesson.id
@@ -629,8 +630,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
     
             createRadioBtnLessonGroup()
             startLesson()
-        })        
-    })
+        })
+    }
+
+    rbGuideGroup.forEach(rb => rbGuideGroupEventHander(rb))
 
     const speciesCount = document.getElementById('species-count')
 
