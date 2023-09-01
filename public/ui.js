@@ -9,7 +9,7 @@ import {
 Object.assign(g, {
     taxa: g.ICONIC_TAXA,
     language: g.LANGUAGES[5],
-    template: g.templates[0],
+    // template: g.templates[0],
     guide: g.guides[1],
     // move score under template too (and rename?)
 })
@@ -350,10 +350,6 @@ const createRadioBtnLessonGroup = () => {
         label.textContent = t.name.replaceAll('-', ' ')
         label.setAttribute('for', t.name)
     
-        if(t.id === g.template.id) {
-            input.setAttribute('checked', true)
-        }
-    
         display.appendChild(clone)
     })
 
@@ -481,13 +477,15 @@ const startLesson = () => {
                         t.imgs.forEach(img => {
                             const clone = templateToClone.content.cloneNode(true)
                             const image = clone.querySelector('img')
+                            const caption = clone.querySelector('figcaption')
                             image.src = img.src
-                            image.width = `${img.width}px`
-                            image.height = `${img.height}px`
+                            image.setAttribute('alt', img.alt)
+                            image.setAttribute('loading', 'eager')
+                            caption.textContent = img.alt
                             parent = parentClone.querySelector('div')
                             parent.appendChild(clone)
-                            speciesParent.appendChild(parent)
                         })
+                        speciesParent.appendChild(parent)
                     break
                     case 'text':
                         t.texts.forEach(text => {
@@ -507,7 +505,41 @@ const startLesson = () => {
                             parent.appendChild(clone)
                         })
                         speciesParent.appendChild(parent)
-                        break
+                    break
+                    case 'term':
+                        t.terms.forEach(term => {
+                            const clone = templateToClone.content.cloneNode(true)                      
+                            const dt = clone.querySelector('dt')
+                            const dd = clone.querySelector('dd')                            
+                            const div1 = clone.querySelectorAll('div')[0]
+                            const div2 = clone.querySelectorAll('div')[1]
+                            const eg = div1.querySelector('span')
+                            const dx = div1.querySelector('em')
+                            const ds = div2.querySelector('a')
+
+                            const def = g.terms.find(t => t.dt === term)
+                            
+                            dt.textContent = def.dt
+                            dd.textContent = def.dd
+
+                            if(def.dx) {                                
+                                eg.textContent = 'e.g.'                                
+                                dx.append(def.dx.join(', '))
+                            } else {
+                                clone.removeChild(div1)
+                            }
+                            if(def.ds) {
+                                ds.textContent = def.da || 'Source'                   
+                                ds.setAttribute('href', def.ds)
+                            } else {
+                                clone.removeChild(div2)
+                            }
+
+                            parent = parentClone.querySelector('dl')
+                            parent.appendChild(clone)                            
+                        })
+                        speciesParent.appendChild(parent)
+                    break
                 }
             })
         })
@@ -572,12 +604,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
     rbGuideGroup.forEach(rb => {
                 
         rb.addEventListener('change', async (e) => {
-            let fss = document.querySelectorAll('.module-fs')
-            if(fss) fss.forEach(f => f.classList.add('hidden'))
-
             g.guide = g.guides.find(t => t.id === e.target.value)
             g.lesson.id = g.guide.lesson.id
-            g.guide.templates.forEach(t => g.templates.push(t))
+            g.templates = g.guide.templates
  
             const taxaIds = g.guide.taxa
                 .filter(t => t.rank === 10)

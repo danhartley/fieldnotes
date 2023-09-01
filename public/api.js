@@ -578,6 +578,40 @@ export const snapSpeciesTraits = [
     }
 ]
 
+const templates = [
+  {
+      id: 'species-list-template',
+      name: 'species-list',
+      parent: 'grid-template',
+      isTest: false,
+  },
+  {
+      id: 'species-card-test-template',
+      name: 'species-card-tests',
+      parent: 'grid-template',
+      testedTemplateId: 'species-card-template',
+      isTest: true,
+      targets: [
+        {
+            id: 'common',
+            name: 'common name',
+        },
+        {
+            id: 'latin',
+            name: 'latin name',
+        },
+    ]
+  },
+  {
+      id: 'species-card-template',
+      name: 'species-cards',
+      parent: 'grid-template',
+      testTemplateId: 'species-card-test-template',
+      isTest: false,
+      isTestable: true,
+  },
+]
+
 // GLOBAL OBJECT
 
 // rank 20: genus
@@ -615,42 +649,407 @@ export const g = {
         { name: 'Português', id: 'pt' },
         { name: 'Slovenščina', id: 'sl' },
     ],
-    templates: [
-        {
-            id: 'species-list-template',
-            name: 'species-list',
-            parent: 'grid-template',
-            isTest: false,
-        },
-        {
-            id: 'species-card-test-template',
-            name: 'species-card-tests',
-            parent: 'grid-template',
-            testedTemplateId: 'species-card-template',
-            isTest: true,
-            targets: [
-              {
-                  id: 'common',
-                  name: 'common name',
-              },
-              {
-                  id: 'latin',
-                  name: 'latin name',
-              },
-          ]
-        },
-        {
-            id: 'species-card-template',
-            name: 'species-cards',
-            parent: 'grid-template',
-            testTemplateId: 'species-card-test-template',
-            isTest: false,
-            isTestable: true,
-        },
-    ],
+    templates: templates,
     count: 10,
     species: [],
     guides: [
+        {
+            id: 'med-edible-wild-plants',
+            author: 'danielhartley',
+            name: 'Mediterranean Climate Regions & The Mediterranean',
+            lesson: { id: 1 },
+            taxa: [
+              {
+                id: 82946,
+                name: 'Quercus rotundifolia',
+                rank: 10,
+              },
+              {
+                id: 57140,
+                name: 'Olea europaea',
+                rank: 10,
+              },
+              {
+                id: 79009,
+                name: 'Scolymus hispanicus',
+                rank: 10,
+              },
+              {
+                id: 55721,
+                name: 'Silene vulgaris',
+                rank: 10,
+              },
+              {
+                id: 52586,
+                name: 'Silybum marianum',
+                rank: 10,
+              },
+              {
+                id: 60232,
+                name: 'Rumex pulcher',
+                rank: 10,
+                description: [
+                  {
+                    text: 'At its best in early spring when the plant has developed its basal leaves and before the growth of the flowering stems.'
+                  }
+                ]
+              },
+              {
+                id: 82691,
+                name: 'Dioscorea communis',
+                rank: 10,
+                description: [
+                  {
+                    text: 'The young shoots are collected in mid-spring.'
+                  }
+                ]
+              },
+              {
+                id: 210513,
+                name: 'Asparagus acutifolius',
+                rank: 10,
+              },
+              {
+                id: 78174,
+                name: 'Nasturtium officinale',
+                rank: 10,
+              },
+              {
+                id: 53196,
+                name: 'Rumex',
+                rank: 20,
+              },
+              {
+                id: 79009,
+                name: 'Scolymus hispanicus',
+                rank: 10,
+              },
+              {
+                id: 72264,
+                name: 'Onopordum',
+                rank: 20,
+              },
+              {
+                id: 48150,
+                name: 'Boraginaceae',
+                rank: 20,
+                description: [
+                  {
+                    text: 'Have been used as stewed vegetables.'
+                  }
+                ]
+              },
+              {
+                id: 53294,
+                name: 'Sonchus oleraceus',
+                rank: 10,
+              },
+              {
+                id: 53779,
+                name: 'Humulus lupulus',
+                rank: 10,
+              },
+              {
+                id: 493017,
+                name: 'Scandix australis',
+                rank: 10,
+              },
+              {
+                id: 75429,
+                name: 'Anchusa azurea',
+                rank: 10,
+                description: [
+                  {
+                    text: 'These flowers, which typically appear in May–July, are edible and attract bees.'
+                  }
+                ]
+              },
+              {
+                id: 53052,
+                name: 'Foeniculum vulgare',
+                rank: 10,
+                description: [
+                  {
+                    text: 'Consumed in salads or eaten raw.'
+                  }
+                ]
+              },
+              {
+                id: 76300,
+                name: 'Chondrilla juncea',
+                rank: 10,
+                description: [
+                  {
+                    text: 'Consumed in salads or eaten raw.'
+                  }
+                ]
+              },
+              {
+                id: 82642,
+                name: 'Mantisalca salmantica',
+                rank: 10,
+                description: [
+                  {
+                    text: 'Consumed in salads or eaten raw.'
+                  }
+                ]
+              },
+              {
+                id: 168693,
+                name: 'Scorzonera laciniata',
+                rank: 10,
+                description: [
+                  {
+                    text: 'Consumed in salads or eaten raw.'
+                  }
+                ]
+              },
+              {
+                id: 61396,
+                name: 'Origanum vulgare',
+                rank: 10,
+                description: [
+                  {
+                    text: ''
+                  }
+                ]
+              },
+            ],
+            templates: [
+              ...templates,
+              {
+                id: 'mediterranean-wild-edible-plants-template',
+                name: 'overview',
+                parent: 'non-grid-template',
+                type: 'guide',
+                isTest: false,
+                sources: [
+                  {
+                    name: 'The Mediterranean Landscape and Wild Edible Plants',
+                    src: 'https://www.researchgate.net/publication/301320513_The_Mediterranean_Landscape_and_Wild_Edible_Plants',
+                    authors: [
+                      'Daniel Sánchez-Mata',
+                      'Ramón Morales',
+                    ]
+                  }
+                ],
+                sections: [
+                  {
+                    templates: [
+                      {
+                        id: 'title-h3-template',
+                        parent: 'grid-template',
+                        type: 'header',
+                        h3: 'Mediterranean Climate Regions',
+                      },
+                      {
+                        id: 'img-template',
+                        parent: 'grid-template',
+                        type: 'img',
+                        imgs: [
+                          {
+                            src: 'https://drive.google.com/thumbnail?id=1HyoBMUvF76pzfpWkhfkvZZtty1VO32B3',
+                            alt: 'Arrábida after the fire',
+                            width: 220,
+                            height: 165,
+                          },
+                          {
+                            src: 'https://drive.google.com/thumbnail?id=1lLXTsBb8juPgrUar5MD6KOIBusAcG31Y',
+                            alt: 'Arrábida after the fire',
+                            width: 220,
+                            height: 165,
+                          },
+                          {
+                            src: 'https://drive.google.com/thumbnail?id=1GcMih3Zcrv8oHa_Hc8Y_m4nYGKxKIsIA',
+                            alt: 'Arrábida after the fire',
+                            width: 220,
+                            height: 165,
+                          },
+                        ]
+                      },
+                      {
+                        id: 'text-template',
+                        name: 'text',
+                        parent: 'non-grid-template',
+                        type: 'text',
+                        texts: [
+                          {
+                            text: 'The world\'s Mediterranean Climate Regions (MCRs) cover only about 2% of the earth\'s surface.',
+                          },
+                          {
+                            text: 'MCRs are found in five disjunct parts of the world – the Mediterranean Basin (MB), California, coastal central Chile, southwestern Australia, and southwestern South Africa – at temperate latitudes between about 30° and 45°, generally where cold ocean currents wash the west coasts of the continents.',
+                          },
+                          {
+                            text: 'Climatically, the world\'s Mediterranean-climate regions are unique because the wet season is concurrent with the cold season, and the warm, dry season is akin to an annual drought of 3–6 months.',
+                          },
+                          {
+                            text: 'Although the MCRs are widely separated, their vegetation is very similar, providing a classic example of convergent evolution.',
+                          },
+                          {
+                            text: 'Because drought during the growing season is the principle ecological stress in the MCRs, spatial heterogeneity in soil depth, water infiltration and water holding capacity is a major driver of vegetation pattern.',
+                          },
+                          {
+                            text: 'Low soil development makes soil characteristics highly dependent on bedrock.',
+                          },
+                          {
+                            text: 'One distinct feature of the MB as compared to the other Mediterranean-climate regions is the abundance of limestones.',
+                          },
+                          {
+                            text: 'Soil erosion is a major issue in all of the MCRs, due to the frequently skeletal soils, high disturbance rate.',
+                          },
+
+
+
+
+                          // {
+                          //   text: 'The Mediterranean is characterised by mild and rainy winters and hot and dry summers.',
+                          // },
+                          // {
+                          //   text: 'The Mediterranean macrobioclimate is shared with southern and south-western territories on all the continents.',
+                          // },
+                          // {
+                          //   text: 'The lands in these regions around the world are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
+                          // },
+                          // {
+                          //   text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the re-stricted summer rainfall when temperatures reach their maximum.',
+                          // },
+                          // {
+                          //   text: 'Plants that have developed and diversified in areas with a Mediterranean macro-climate have acquired special characteristics adapting their morphology and metab-olism to survive during the drought period and to resprout after wildfires.',
+                          // },
+                          // {
+                          //   text: 'The main Mediterranean vegetation types through-out the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
+                          // },                        
+                        ]
+                      },
+                      {
+                        id: 'species-card-template',
+                        name: 'species-cards',
+                        parent: 'grid-template',
+                        type: 'species',
+                        species: [
+                          'Quercus rotundifolia',
+                          'Olea europaea',
+                          'Rumex pulcher',
+                          'Dioscorea communis',
+                          'Asparagus acutifolius',
+                          'Nasturtium officinale',                        
+                        ],
+                      },
+                      {
+                        id: 'term-template',
+                        name: 'term', 
+                        parent: 'dl-template',
+                        type: 'term',                 
+                        terms: [
+                          'Limestone',
+
+                          'Sclerophyll',
+                          'Marcescence',
+                          'Xerothermic',
+                          'Phytophagous Insects'
+                        ],
+                      },
+                    ],
+                  },
+                  {
+                    templates: [
+                      {
+                        id: 'title-h3-template',
+                        parent: 'grid-template',
+                        type: 'header',
+                        h3: 'Section 2',
+                      },
+                      {
+                        id: 'text-template',
+                        name: 'text',
+                        parent: 'non-grid-template',
+                        type: 'text',
+                        texts: [
+                          {
+                            text: 'Matorrals can be considered as different vegetation types developed on disturbed or altered sites where forest species form the natural potential vegetation and its vegetation series.',
+                          },
+                          {
+                            text: 'Most of the food crops cultivated in the area were originated in the Mediterranean Basin and in Middle Eastern regions. Wheat, barley, legumes (such as lentils and chickpeas), vegetables (such as artichokes, asparagus, cabbage, leeks, onions and garlic), and fruits and seeds (such as grapes, olives, almonds and acorns).',
+                          },
+                          {
+                            text: 'The present Mediterranean landscape is the complex result of human activity in the management of nature for its own benefit.'
+                          },                  
+                          {
+                            text: 'The pristine Mediterranean vegetation was transformed through human intervention. This was not only due to agriculture, livestock and the building of cities but also due to mining for metals, a key activity throughout its history.'
+                          },                
+                          {
+                            text: 'Natural woods and bushes were transformed into a new cultural space where crops and grasslands could be identified with boundaries defining their ownership.'
+                          },                
+                          {
+                            text: 'Changes promoted nitrogen-loving (nitrophilous) plants. Many are as-sociated with farmlands and cultivated plants (weeds), and others grow near places of human habitation (ruderals) or live along the borders of paths, roads or cattle tracks, carried by man and domestic animals in their seasonal migration.'
+                          },                
+                          {
+                            text: 'Numerous weeds and ruderal plants are used and collected as wild vegetables in the Iberian Peninsula, such as Scolymus hispanicus (Asteraceae), Silene vulgaris, Garcke (Caryophyllaceae) and Silybum marianum.'
+                          },          
+                          {
+                            text: 'Late winter, and especially spring, is in general the best time to collect vegetables that reach their higher development while being still tender, though de-pending on the local climatic conditions, they could be collected in other parts of the year.'
+                          },       
+                          {
+                            text: 'Seasonality is a very determinant condition for the life in the Mediterranean areas.'
+                          },       
+                          {
+                            text: 'Very dry autumns in Spanish continental sites signal the beginning of a bad year for collecting wild vegetables which develop during this season and produce their stems and leaves in late winter and spring.'
+                          },       
+                          {
+                            text: 'Asparagus acutifolius — which grows in oak forest communities, in olive groves and, in the past, inside rain-fed farm crops — has very tough underground organs like tuberous roots, and in dry years also produces new shoots or asparagus.'
+                          },      
+                          {
+                            text: 'There are also species that are not so dependent on the yearly climatic variation, such as watercress (Nasturtium officinale) that always grow where there are permanent waters.'
+                          },    
+                          {
+                            text: 'Late spring and summer is the season of aromatic plants used for seasoning. The diverse floras of the Mediterranean Basin countries provide numerous highly scented species. Chemical compounds from the essential oils are produced in the secondary metabolism of all these plants and are present in the small uni- or multicellular dots that are transformed hairs located on the epidermis of leaves and flowers.'
+                          },
+                          {
+                            text: 'These tiny dots burst, and the essential oil evap-orates into the air producing their pleasant aromas, even when the plants are dried. One of the biological advantages of the presence of these chemical compounds is that plants are protected from being eaten by large animals or phytophagous insects and from bacterial infections.'
+                          },
+                          {
+                            text: 'One of the biological advantages of the presence of these chemical compounds is that plants are protected from being eaten by large animals or phytophagous insects and from bacterial infections.'
+                          },
+                          {
+                            text: 'There is a high biodiversity within the group of species used for cooking, flavouring and preserving. Lamiaceae, Apiaceae and Asteraceae are the main aromatic plant families in the territories of the Mediterranean Basin.'
+                          },
+                        ]
+                      },
+                      {
+                        id: 'species-card-template',
+                        name: 'species',
+                        parent: 'grid-template',
+                        type: 'species',
+                        species: [
+                          'Silene vulgaris',
+                          'Silybum marianum',
+                          'Sonchus oleraceus',
+                          'Anchusa azurea',
+                          'Foeniculum vulgare',
+                          'Chondrilla juncea',
+                          'Mantisalca salmantica',
+                          'Origanum vulgare',
+                        ],
+                      },
+                      {
+                        id: 'term-template',
+                        name: 'term', 
+                        parent: 'dl-template',
+                        type: 'term',
+                        terms: [
+                          'Sclerophyll',
+                          'Marcescence',
+                          'Xerothermic',
+                          'Phytophagous Insects'
+                        ],
+                      },
+                    ],
+                  }
+                ],
+              },
+            ],
+            // score
+        },
         {
             id: 'med-edible-wild-plants',
             author: 'danielhartley',
@@ -814,6 +1213,7 @@ export const g = {
               },
             ],
             templates: [
+              ...templates,
               {
                 id: 'mediterranean-wild-edible-plants-template',
                 name: 'mediterranean-food-history',
@@ -835,11 +1235,23 @@ export const g = {
                         type: 'img',
                         imgs: [
                           {
+                            src: 'https://drive.google.com/thumbnail?id=1HyoBMUvF76pzfpWkhfkvZZtty1VO32B3',
+                            alt: 'Arrábida after the fire',
+                            width: 220,
+                            height: 165,
+                          },
+                          {
+                            src: 'https://drive.google.com/thumbnail?id=1lLXTsBb8juPgrUar5MD6KOIBusAcG31Y',
+                            alt: 'Arrábida after the fire',
+                            width: 220,
+                            height: 165,
+                          },
+                          {
                             src: 'https://drive.google.com/thumbnail?id=1GcMih3Zcrv8oHa_Hc8Y_m4nYGKxKIsIA',
                             alt: 'Arrábida after the fire',
                             width: 220,
                             height: 165,
-                          }
+                          },
                         ]
                       },
                       {
@@ -894,8 +1306,8 @@ export const g = {
                       {
                         id: 'term-template',
                         name: 'term', 
-                        parent: 'non-grid-template',
-                        type: 'term',
+                        parent: 'dl-template',
+                        type: 'term',                 
                         terms: [
                           'Sclerophyll',
                           'Marcescence',
@@ -988,7 +1400,7 @@ export const g = {
                       {
                         id: 'term-template',
                         name: 'term', 
-                        parent: 'non-grid-template',
+                        parent: 'dl-template',
                         type: 'term',
                         terms: [
                           'Sclerophyll',
@@ -1005,9 +1417,9 @@ export const g = {
             // score
         },
         {
-            id: 'med-fire',
+            id: 'mediterranean-fire',
             author: 'danielhartley',
-            name: 'Mediterranean',            
+            name: 'The Mediterranean & Fire',
             lesson: { id: 2 },
             taxa: [
               {
@@ -1292,25 +1704,53 @@ export const g = {
               },
             ],
             templates: [
+              ...templates,
               {
-                id: 'fire-history-template',
-                name: 'fire-history',
+                id: 'mediterranean-history-template',
+                name: 'mediterranean-history',
                 parent: 'non-grid-template',
+                type: 'guide',
                 isTest: false,                
-                terms: [
-                  'Serotiny',
-                  'Secondary succession',
-                  'Maquis',
-                  'Garrigue',
-                  'Sclerophyll',
-                  'Ruderal species',
+                sections: [
+                  {
+                    templates: [
+                      {
+                        id: 'text-template',
+                        name: 'text',
+                        parent: 'non-grid-template',
+                        type: 'text',
+                        texts: [
+                          {
+                            text: 'Mediterranean vegetation is among the most fire-prone and fire-shaped in the world.',
+                          },
+                          {
+                            text: 'Sclerophyllous (hard-leaved, with a high weight-to-area ratio) evergreen shrublands with widespread adaptations to intense fire. (Maquis)',
+                          },
+                          {
+                            text: 'Lower, more xeric, sometimes drought-deciduous shrublands. (Garrigue)',
+                          },
+                          {
+                            text: 'It is found on limestone soils in southern France and around the Mediterranean Basin, generally near the seacoast where the moderated Mediterranean climate provides annual summer drought. It is an anthropogenic degradation and succession form of former evergreen oak forests that existed until around 2500 years BC.'
+                          },                                                  
+                        ]
+                      },
+                      {
+                        id: 'term-template',
+                        name: 'term', 
+                        parent: 'dl-template',
+                        type: 'term',
+                        terms: [
+                          'Serotiny',
+                          'Secondary succession',
+                          'Maquis',
+                          'Garrigue',
+                          'Sclerophyll',
+                          'Ruderal species',
+                        ],
+                      }
+                    ]
+                  }
                 ],
-                texts: [
-                  'Mediterranean vegetation is among the most fire-prone and fire-shaped in the world.',
-                  'Sclerophyllous (hard-leaved, with a high weight-to-area ratio) evergreen shrublands with widespread adaptations to intense fire. (Maquis)',
-                  'Lower, more xeric, sometimes drought-deciduous shrublands. (Garrigue)',
-                  'It is found on limestone soils in southern France and around the Mediterranean Basin, generally near the seacoast where the moderated Mediterranean climate provides annual summer drought. It is an anthropogenic degradation and succession form of former evergreen oak forests that existed until around 2500 years BC.'
-                ]
               },
             ],
             // score
@@ -1320,38 +1760,45 @@ export const g = {
       {
         dt: 'Serotiny',
         dd: 'Remaining on a tree after maturity and opening to release seeds only after exposure to certain conditions, especially heat from a fire. Used of the cones of gymnosperms.',
-        ds: 'https://en.wikipedia.org/wiki/Serotiny'
+        ds: 'https://en.wikipedia.org/wiki/Serotiny',
+        da: 'Wikipedia',
       },
       {
         dt: 'Secondary succession',
         dd: 'A process started by an event (e.g. forest fire, harvesting, hurricane, etc.) that reduces an already established ecosystem (e.g. a forest or a wheat field) to a smaller population of species.',
-        ds: 'https://en.wikipedia.org/wiki/Secondary_succession'
+        ds: 'https://en.wikipedia.org/wiki/Secondary_succession',
+        da: 'Wikipedia',
       },
       {
         dt: 'Maquis',
         dd: 'A shrubland biome in the Mediterranean region, typically consisting of densely growing evergreen shrubs.',
-        ds: 'https://en.wikipedia.org/wiki/Maquis_shrubland'
+        ds: 'https://en.wikipedia.org/wiki/Maquis_shrubland',
+        da: 'Wikipedia',
       },
       {
         dt: 'Garrigue',
         dd: 'A type of low scrubland ecoregion and plant community in the Mediterranean forests, woodlands, and scrub biome.',
-        ds: 'https://en.wikipedia.org/wiki/Garrigue'
+        ds: 'https://en.wikipedia.org/wiki/Garrigue',
+        da: 'Wikipedia',
       },
       {
         dt: 'Sclerophyll',
         dd: 'A type of vegetation that is adapted to long periods of dryness and heat. The plants feature hard leaves, short internodes (the distance between leaves along the stem) and leaf orientation which is parallel or oblique to direct sunlight.',
         ds: 'https://en.wikipedia.org/wiki/Sclerophyll',
+        da: 'Wikipedia',
         dx: ['Quercus ilex', 'Myrtus communis', 'Arbutus unedo', 'Olea europaea', 'Laurus nobilis', 'Phillyrea latifolia', 'Rhamnus alaternus']
       },
       {
         dt: 'Marcescence',
         dd: 'The withering and persistence of plant organs that normally are shed, and is a term most commonly applied to plant leaves.',
         ds: 'https://en.wikipedia.org/wiki/Marcescence',
+        da: 'Wikipedia',
         dx: ['Quercus', 'Fagus']
       },
       {
         dt: 'Therophytes',
         dd: 'These are annual plants that complete their lives rapidly in favorable conditions and survive the unfavorable cold or dry season in the form of seeds.',
+        da: 'Wikipedia',
         ds: 'https://en.wikipedia.org//wiki/Raunki%C3%A6r_plant_life-form#Therophytes',
       },
       {
@@ -1361,17 +1808,32 @@ export const g = {
       {
         dt: 'Ruderal species',
         dd: 'A plant species that is first to colonize disturbed lands. The disturbance may be natural – for example, wildfires or avalanches – or the consequences of human activities.',
-        ds: 'https://en.wikipedia.org/wiki/Ruderal_species'
+        ds: 'https://en.wikipedia.org/wiki/Ruderal_species',
+        da: 'Wikipedia',
       },
       {
         dt: 'Synanthrope',
         dd: 'An organism that lives near and benefits from humans and their environmental modifications.',
-        ds: 'https://en.wikipedia.org/wiki/Synanthrope'
+        ds: 'https://en.wikipedia.org/wiki/Synanthrope',
+        da: 'Wikipedia',
       },
       {
         dt: 'Phytophagous Insects',
         dd: 'Species that attack roots, stems, leaves, flowers, and fruits, either as larvae or as adults or in both stages. Phytophagous insects are highly diverse and the total species number is at least 500,000.',
-        ds: 'https://www.sciencedirect.com/topics/agricultural-and-biological-sciences/phytophagous-insects'
+        ds: 'https://www.sciencedirect.com/topics/agricultural-and-biological-sciences/phytophagous-insects',
+        da: 'ScienceDirect'
+      },
+      {
+        dt: 'Limestone',
+        dd: 'Calcium carbonate CaCO3 is a type of carbonate sedimentary rock. Limestone forms when these minerals precipitate out of water containing dissolved calcium, principally through the accumulation of corals and shells in the sea over the past 540 million years.',
+        ds: 'https://en.wikipedia.org/wiki/Limestone',
+        da: 'Wikipedia'
+      },
+      {
+        dt: 'Convergent evolution',
+        dd: 'The independent evolution of similar features in species of different periods or epochs in time.',
+        ds: 'https://en.wikipedia.org//wiki/Convergent_evolution',
+        da: 'Wikipedia'
       },
     ],
     inatSpecies: [],

@@ -79,7 +79,7 @@ h3 {
   font-size: var(--s5);
   font-weight: 500;
   letter-spacing: calc(var(--d) / 10);
-  margin: var(--d) 0;
+  margin: var(--d) 0 calc(var(--d) * 2) 0;
 }
 
 ul {
@@ -156,19 +156,19 @@ select:focus-visible {
 }
 
 dl {
-  margin: 0;
+  margin: 1rem auto;
+  font-size: var(--s3);
+  column-count: 1;
   font-size: var(--s3);
 }
 
 dt {
-  float: left;
-  margin: 0 var(--d) var(--d) 0;
-  color: var(--c5);
-  min-width: 50px;
+  margin: 0 0 calc(var(--d) * .5) 0;
+  font-weight: bold;
 }
 
-dd {
-  margin: 0 var(--d) var(--d) 0;
+dd, dl em, dl a {
+  margin: 0 0 var(--d) 0;
 }
 
 dd:empty {
@@ -208,6 +208,23 @@ fieldset fieldset .grid .flex-row {
   background-color: var(--highlight);
 }
 
+a {
+  text-decoration: none;
+  border-bottom: 1px solid var(--c8);
+  padding-bottom: 0.125rem;
+  color: var(--c8);
+}
+
+figure {
+  text-align: center;
+  margin: 0 0 var(--d) 0;
+}
+
+figcaption {
+  font-size: var(--s3);
+  font-style: italic;
+}
+
 /* STATES */
 
 .hidden {
@@ -219,7 +236,7 @@ fieldset fieldset .grid .flex-row {
   pointer-events: none;
 }
 
-/* BROWSER HACKS */
+/* SCREEN */
 
 @media screen {
   img {
@@ -227,18 +244,24 @@ fieldset fieldset .grid .flex-row {
   }
 } 
 
-/* LAYOUT */
+/* DEVICE */
 
 @media (orientation: landscape) {
   #header span {
     top: calc(var(--d) * 1);
   }
+
+  dl {
+    column-count: 2;
+    border: 1px solid var(--c3);
+    padding: var(--d);
+  }
 }
 
 .btn-reset {
   position: absolute;
-    background-color: initial;
-    border: none;
+  background-color: initial;
+  border: none;
 }
 
 .grid {
@@ -255,7 +278,6 @@ fieldset fieldset .grid .flex-row {
 }
 
 .grid img {
-  width: 100%;
   height: calc(35 * var(--d));  
   object-fit: cover;
   cursor: pointer;
@@ -284,7 +306,7 @@ fieldset fieldset .grid .flex-row {
 }
 
 .non-grid {
-  margin: 0 auto;
+  margin: 0 auto calc(var(--d) * 6) auto;
   max-width: 60ch;
 }
 

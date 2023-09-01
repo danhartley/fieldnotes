@@ -92,7 +92,11 @@
         <fieldset id="lesson">
           <legend>Species</legend>
           <button id="show-test-btn" class="btn-reset t1 r1 hidden">Show test</button>
-          <article id="species-parent"></div>
+          <article id="species-parent">
+            <div class="non-grid">
+              <p>Create a collection of species from iNaturalist observations, or select a guided lesson based on curated species.</p>
+            </div>
+          </div>
           <button
             id="check-answers-btn"
             class="mt2 mb hidden"
@@ -198,7 +202,25 @@
     </template>
 
     <template id="img-template">
-      <img src="" alt="">
+      <figure>
+        <img src="" alt="">
+        <figcaption></figcaption>
+      </figure>
+    </template>
+
+    <template id="dl-template">
+      <dl></dl>
+    </template>
+
+    <template id="term-template">
+        <dt></dt>
+        <dd></dd>        
+        <div class="mb2">
+          <span></span><em></em>
+        </div>
+        <div class="mb2">
+          <a href="" />
+        </div>
     </template>
   </body>
 </html>
