@@ -538,8 +538,10 @@ const startLesson = () => {
                                 clone.removeChild(div1)
                             }
                             if(def.ds) {
-                                ds.textContent = def.da || 'Source'                   
+                                const spans = ds.querySelectorAll('span')                                 
+                                spans[0].textContent = def.da || 'Source'
                                 ds.setAttribute('href', def.ds)
+                                ds.setAttribute('target', '_blank')
                             } else {
                                 clone.removeChild(div2)
                             }

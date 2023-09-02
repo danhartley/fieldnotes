@@ -215,6 +215,34 @@ a {
   color: var(--c8);
 }
 
+a.info {
+  position: relative;
+  z-index: 24;
+  text-decoration: none;
+}
+
+a.info span:nth-child(2) {
+  position: absolute;
+  left: -9000px;
+  width: 0;
+  overflow: hidden;
+}
+
+    a.info:hover span:nth-child(2)
+, a.info:focus span:nth-child(2)
+, a.info:active span:nth-child(2) 
+{
+  display: block;
+  position: absolute;
+  top: calc(var(--d) * -4.5);
+  left: calc(var(--d) * 5);
+  border: 1px solid var(--c2);
+  padding: var(--d);
+  width: 10rem;
+  background-color: var(--c0);
+  text-align: center;
+}
+
 figure {
   text-align: center;
   margin: 0 0 var(--d) 0;
