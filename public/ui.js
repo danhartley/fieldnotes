@@ -88,7 +88,7 @@ const scoreLesson = answers => {
 
 const toggleFilterCtrl = (({ ctrl, fieldsetId }) => {
     ctrl.addEventListener('click', () => {
-        ctrl.classList.toggle('hide')
+        ctrl.innerText = ctrl.innerText === 'HIDE' ? 'SHOW' : 'HIDE'
 
         const fieldset = document.getElementById(fieldsetId)
         fieldset.classList.toggle('hidden')
@@ -215,7 +215,7 @@ const resetTestOptions = () => {
 
     if(g.template.isTestable) {
         testbtn.classList.remove(cssClass)
-        testbtn.innerText = 'Show test'
+        testbtn.innerText = 'SHOW TESTS'
     } else {
         testbtn.classList.add(cssClass)
         targets.classList.add(cssClass)
@@ -320,11 +320,11 @@ const createRadioBtnTemplateGroup = () => {
                     }
 
                     if(g.template.isTest) {
-                        testbtn.innerText = 'Hide test'                    
+                        testbtn.innerText = 'HIDE TESTS'                
                         testSubmitBtn.classList.remove('hidden')
                     } 
                     else {
-                        testbtn.innerText = 'Show test'                  
+                        testbtn.innerText = 'SHOW TESTS'                  
                         testSubmitBtn.classList.add('hidden')
                     }
 

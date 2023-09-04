@@ -31,6 +31,7 @@
   --reptilia: #fee2df;
   --highlight: #ebf0ea;
   --active: #d5e1ba;
+  --inat: #86a91d;
 }
 
 /* ELEMENTS */
@@ -38,6 +39,7 @@
 body {
   font-family: Open Sans,sans-serif;
   background-color: var(--c1);
+  -webkit-font-smoothing: antialiased;
 }
 
 header {
@@ -61,26 +63,26 @@ main {
 }
 
 h1 {
-  text-transform: uppercase;
   font-size: var(--s3);
-  font-weight: 400;
   color: var(--c5);
+  text-transform: uppercase;
   letter-spacing: calc(var(--d) / 5);
+  -webkit-font-smoothing: antialiased;
 }
 
 h2 {
   margin: 0 0 calc(var(--d) * 2) 0;
   font-size: var(--s8);
-  font-weight: 500;
-  letter-spacing: calc(var(--d) / 10);
+  letter-spacing: calc(var(--d) * .125);
+  -webkit-font-smoothing: antialiased;
 }
 
 h3 {
+  margin: var(--d) 0 0 0;
   color: var(--c6);
+  font-family: Elena, "PT Serif", serif;
   font-size: var(--s5);
-  font-weight: 500;
   letter-spacing: calc(var(--d) / 10);
-  margin: var(--d) 0 calc(var(--d) * 2) 0;
 }
 
 ul {
@@ -103,21 +105,25 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+button.submit:hover {
   border-color: var(--c8);
   background-color: var(--active);
 }
 
-button:focus-visible {
+button.submit:focus-visible {
   outline: auto;
   background-color: var(--active);
+}
+
+button:not(.submit):hover {
+  color: var(--inat);
 }
 
 label {
   display: block;
   margin-bottom: calc(var(--d) * .5);
   font-size: var(--s3);
-  color: var(--c5);
+  -webkit-font-smoothing: antialiased;
 }
 
 input[type='radio'] + label::first-letter {
@@ -164,7 +170,11 @@ select:focus-visible {
 }
 
 dl {
-  margin: 1rem auto;
+  margin: var(--d) 0 calc(var(--d) * 2) 0;
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
   font-size: var(--s3);
   column-count: 1;
   font-size: var(--s3);
@@ -205,10 +215,12 @@ fieldset fieldset {
 
 legend {
   position: absolute;
-  top: calc(var(--d) * 2);
+  top: 0;
+  width: 50%;
+  padding: calc(var(--d) * 1.5) var(--d);
   font-size: var(--s3);
   color: var(--c8);
-  letter-spacing: calc(var(--d) * .05);
+  letter-spacing: calc(var(--d) * .05);  
 }
 
 fieldset fieldset .grid .flex-row {
@@ -256,6 +268,7 @@ figure {
 }
 
 figcaption {
+  margin: var(--d) 0 0 0;
   font-size: var(--s3);
   font-style: italic;
 }
@@ -276,6 +289,8 @@ figcaption {
 @media screen {
   img {
     aspect-ratio: 1/1;
+    object-fit: cover;
+    max-height: 165px;
   }
 } 
 
@@ -288,8 +303,10 @@ figcaption {
 
   dl {
     column-count: 2;
+    column-gap: calc(var(--d) * 4);
+    margin: var(--d) 0 calc(var(--d) * 4) 0;
+    padding: calc(var(--d) * 2) calc(var(--d) * 2) 0 calc(var(--d) * 2);
     border: 1px solid var(--c3);
-    padding: var(--d);
   }
 }
 
@@ -303,7 +320,12 @@ figcaption {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: var(--d);
+  margin: 0 auto calc(var(--d)) auto;
   background-color: var(--c0);
+}
+
+.grid:has(figure, img) {
+  margin: 0 auto calc(var(--d) * 4) auto;
 }
 
 .grid > div {
@@ -312,8 +334,7 @@ figcaption {
   flex-direction: column;
 }
 
-.grid img {
-  height: calc(35 * var(--d));  
+.grid:not(:has(figure)) img {
   object-fit: cover;
   cursor: pointer;
 }
@@ -321,7 +342,6 @@ figcaption {
 .grid .flex-row {
   flex-direction: row;
   align-items: center;
-  margin: 0;
   padding: calc(var(--d) * 1.5) var(--d);
   background-color: var(--c1);
   border: 1px dotted var(--c2);
@@ -341,7 +361,7 @@ figcaption {
 }
 
 .non-grid {
-  margin: 0 auto calc(var(--d) * 6) auto;
+  margin: 0 auto calc(var(--d) * 4) auto;
   max-width: 60ch;
 }
 
@@ -351,6 +371,11 @@ figcaption {
   color: var(--c6);
   line-height: 1.8;
   -webkit-font-smoothing: antialiased;
+}
+
+.non-grid + .grid, .non-grid + dl, .grid + dl {
+  max-width: 70ch;
+  margin: 0 auto calc(var(--d) * 4) auto;
 }
 
 @supports (aspect-ratio: 1) {
@@ -368,6 +393,15 @@ figcaption {
   padding: var(--d) 0;
   height: calc(6 * var(--d));
   text-transform: lowercase;
+}
+
+#lesson legend::before {
+  content: "\29bf";
+  margin: 0 calc(var(--d) * .5) 0 0;
+}
+
+#lesson legend:empty {
+  display: none;
 }
 
 .grid span::first-letter, legend::first-letter {
@@ -398,31 +432,14 @@ figcaption {
 /* CONTROLS */
 
 #curatedGuideCtrl, #customGuideCtrl, #displayCtrl, #lessonCtrl, #progressCtrl, #preferencesCtrl {
-  font-size: var(--s7);    
-  cursor: pointer;
   margin: 0 var(--d)0 0;
+  padding-right: 0;
+  border: none;
+  background-color: var(--c1);
+  font-size: var(--s2);
   text-transform: uppercase;
-}
-
-#customGuideCtrl.hide::after,
-#curatedGuideCtrl.hide::after,
-#lessonCtrl.hide::after,
-#displayCtrl.hide::after,
-#progressCtrl.hide::after,
-#preferencesCtrl.hide::after
-{
-  content: 'Show';
-  font-size: var(--s2);
-}
-
-#customGuideCtrl::after, 
-#curatedGuideCtrl::after, 
-#lessonCtrl::after,
-#displayCtrl::after,
-#progressCtrl::after,
-#preferencesCtrl::after {
-  content: 'Hide';
-  font-size: var(--s2);
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* LAYOUT */
@@ -467,6 +484,14 @@ figcaption {
 
 .small {
   font-size: var(--s3);
+}
+
+.tiny {
+  font-size: var(--s1);
+}
+
+.t0 {
+  top: 0;
 }
 
 .t1 {

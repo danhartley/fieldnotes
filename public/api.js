@@ -581,13 +581,13 @@ export const snapSpeciesTraits = [
 const templates = [
   {
       id: 'species-list-template',
-      name: 'species-list',
+      name: 'Species-list',
       parent: 'grid-template',
       isTest: false,
   },
   {
       id: 'species-card-test-template',
-      name: 'species-card-tests',
+      name: 'Species-card-tests',
       parent: 'grid-template',
       pairedTemplateId: 'species-card-template',
       isTest: true,
@@ -606,7 +606,7 @@ const templates = [
   },
   {
       id: 'species-card-template',
-      name: 'species-cards',
+      name: 'Species-cards',
       parent: 'grid-template',
       pairedTemplateId: 'species-card-test-template',
       isTest: false,
@@ -827,34 +827,9 @@ export const g = {
                     templates: [
                       {
                         id: 'title-h3-template',
-                        parent: 'grid-template',
+                        parent: 'non-grid-template',
                         type: 'header',
-                        h3: 'Climate features',
-                      },
-                      {
-                        id: 'img-template',
-                        parent: 'grid-template',
-                        type: 'img',
-                        imgs: [
-                          {
-                            src: 'https://drive.google.com/thumbnail?id=1HyoBMUvF76pzfpWkhfkvZZtty1VO32B3',
-                            alt: 'Arrábida after the fire',
-                            width: 220,
-                            height: 165,
-                          },
-                          {
-                            src: 'https://drive.google.com/thumbnail?id=1lLXTsBb8juPgrUar5MD6KOIBusAcG31Y',
-                            alt: 'Arrábida after the fire',
-                            width: 220,
-                            height: 165,
-                          },
-                          {
-                            src: 'https://drive.google.com/thumbnail?id=1GcMih3Zcrv8oHa_Hc8Y_m4nYGKxKIsIA',
-                            alt: 'Arrábida after the fire',
-                            width: 220,
-                            height: 165,
-                          },
-                        ]
+                        h3: 'Mediterranean Climate Regions',
                       },
                       {
                         id: 'text-template',
@@ -863,16 +838,16 @@ export const g = {
                         type: 'text',
                         texts: [
                           {
-                            text: 'The world\'s Mediterranean Climate Regions (MCRs) cover only about 2% of the earth\'s surface.',
+                            text: 'The world\'s Mediterranean Climate Regions (MCRs) cover ~2% of the earth\'s surface.',
                           },
                           {
-                            text: 'MCRs are found in five disjunct parts of the world – the Mediterranean Basin (MB), California, coastal central Chile, southwestern Australia, and southwestern South Africa – at temperate latitudes between about 30° and 45°, generally where cold ocean currents wash the west coasts of the continents.',
+                            text: 'They are five: the Mediterranean Basin (MB), California, coastal central Chile, southwestern Australia, and southwestern South Africa. All are at temperate latitudes between about 30° and 45°, generally where cold ocean currents meet the west coasts of the continents.',
                           },
                           {
-                            text: 'Climatically, the world\'s Mediterranean-climate regions are unique because the wet season is concurrent with the cold season, and the warm, dry season is akin to an annual drought of 3–6 months.',
+                            text: 'MCRs are unique climatically because the wet season is concurrent with the cold season, and the warm, dry season is comparable to an annual drought of 3–6 months.',
                           },
                           {
-                            text: 'Although the MCRs are widely separated, their vegetation is very similar, providing a classic example of convergent evolution.',
+                            text: 'Although the MCRs are widely separated, their vegetation is similar, providing a classic example of convergent evolution.',
                           },
                           {
                             text: 'Because drought during the growing season is the principle ecological stress in the MCRs, spatial heterogeneity in soil depth, water infiltration and water holding capacity is a major driver of vegetation pattern.',
@@ -885,34 +860,75 @@ export const g = {
                           },
                           {
                             text: 'Soil erosion is a major issue in all of the MCRs, due to the frequently skeletal soils, high disturbance rate.',
+                          },                     
+                        ]
+                      },
+                      {
+                        id: 'img-template',
+                        parent: 'grid-template',
+                        type: 'img',
+                        imgs: [
+                          {
+                            src: 'https://drive.google.com/thumbnail?id=1NfXWqunQ-TvGy8ffuzvR9IVYRwNKPOzF',
+                            alt: 'Pine bark',
+                            width: 220,
+                            height: 165,
                           },
-
-
-
-
-                          // {
-                          //   text: 'The Mediterranean is characterised by mild and rainy winters and hot and dry summers.',
-                          // },
-                          // {
-                          //   text: 'The Mediterranean macrobioclimate is shared with southern and south-western territories on all the continents.',
-                          // },
-                          // {
-                          //   text: 'The lands in these regions around the world are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
-                          // },
-                          // {
-                          //   text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the re-stricted summer rainfall when temperatures reach their maximum.',
-                          // },
-                          // {
-                          //   text: 'Plants that have developed and diversified in areas with a Mediterranean macro-climate have acquired special characteristics adapting their morphology and metab-olism to survive during the drought period and to resprout after wildfires.',
-                          // },
-                          // {
-                          //   text: 'The main Mediterranean vegetation types through-out the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
-                          // },                        
+                          {
+                            src: 'https://drive.google.com/thumbnail?id=1p3Qd3_CCdQuqEl_mRNEx9lFzhYkvzS_p',
+                            alt: 'Costa Vicentina, Portugal',
+                            width: 220,
+                            height: 165,
+                          },
+                          {
+                            src: 'https://drive.google.com/thumbnail?id=1dhlGp_xaVeb67RriGjdXbeY9I8DEhb5C',
+                            alt: 'Costa Vicentina, Portugal',
+                            width: 220,
+                            height: 165,
+                          },
+                          {
+                            src: 'https://drive.google.com/thumbnail?id=11ckREuDuCyHqKkfwNRLV9zTR7TVyezKN',
+                            alt: 'Constância, Portugal',
+                            width: 220,
+                            height: 165,
+                          },
+                        ]
+                      },
+                      {
+                        id: 'title-h3-template',
+                        parent: 'non-grid-template',
+                        type: 'header',
+                        h3: 'Mediterranean climate and vegetation',
+                      },
+                      {
+                        id: 'text-template',
+                        name: 'text',
+                        parent: 'non-grid-template',
+                        type: 'text',
+                        texts: [
+                          {
+                            text: 'The Mediterranean is characterised by mild and rainy winters and hot and dry summers.',
+                          },
+                          {
+                            text: 'The Mediterranean macrobioclimate is shared with southern and south-western territories on all the continents.',
+                          },
+                          {
+                            text: 'The lands in these regions around the world are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
+                          },
+                          {
+                            text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the re-stricted summer rainfall when temperatures reach their maximum.',
+                          },
+                          {
+                            text: 'Plants that have developed and diversified in areas with a Mediterranean macro-climate have acquired special characteristics adapting their morphology and metab-olism to survive during the drought period and to resprout after wildfires.',
+                          },
+                          {
+                            text: 'The main Mediterranean vegetation types through-out the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
+                          },                        
                         ]
                       },
                       {
                         id: 'species-card-template',
-                        name: 'species-cards',
+                        name: 'Species-cards',
                         parent: 'grid-template',
                         type: 'species',
                         species: [
@@ -944,9 +960,9 @@ export const g = {
                     templates: [
                       {
                         id: 'title-h3-template',
-                        parent: 'grid-template',
+                        parent: 'non-grid-template',
                         type: 'header',
-                        h3: 'Section 2',
+                        h3: 'Human impact',
                       },
                       {
                         id: 'text-template',
@@ -1212,15 +1228,39 @@ export const g = {
                     templates: [
                       {
                         id: 'title-h3-template',
-                        parent: 'grid-template',
+                        parent: 'non-grid-template',
                         type: 'header',
-                        h3: 'The meditarranean landscape',
+                        h3: 'The Mediterranean landscape',
                       },
                       {
                         id: 'img-template',
                         parent: 'grid-template',
                         type: 'img',
                         imgs: [
+                          {
+                            src: 'https://drive.google.com/thumbnail?id=1NfXWqunQ-TvGy8ffuzvR9IVYRwNKPOzF',
+                            alt: 'Pine bark',
+                            width: 220,
+                            height: 165,
+                          },
+                          {
+                            src: 'https://drive.google.com/thumbnail?id=1p3Qd3_CCdQuqEl_mRNEx9lFzhYkvzS_p',
+                            alt: 'Costa Vicentina, Portugal',
+                            width: 220,
+                            height: 165,
+                          },
+                          {
+                            src: 'https://drive.google.com/thumbnail?id=1dhlGp_xaVeb67RriGjdXbeY9I8DEhb5C',
+                            alt: 'Costa Vicentina, Portugal',
+                            width: 220,
+                            height: 165,
+                          },
+                          {
+                            src: 'https://drive.google.com/thumbnail?id=11ckREuDuCyHqKkfwNRLV9zTR7TVyezKN',
+                            alt: 'Constância, Portugal',
+                            width: 220,
+                            height: 165,
+                          },
                           {
                             src: 'https://drive.google.com/thumbnail?id=1HyoBMUvF76pzfpWkhfkvZZtty1VO32B3',
                             alt: 'Arrábida after the fire',
@@ -1278,7 +1318,7 @@ export const g = {
                       },
                       {
                         id: 'species-card-template',
-                        name: 'species-cards',
+                        name: 'Species-cards',
                         parent: 'grid-template',
                         type: 'species',
                         species: [
@@ -1308,7 +1348,7 @@ export const g = {
                     templates: [
                       {
                         id: 'title-h3-template',
-                        parent: 'grid-template',
+                        parent: 'non-grid-template',
                         type: 'header',
                         h3: 'Section 2',
                       },

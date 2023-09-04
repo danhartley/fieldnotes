@@ -18,7 +18,7 @@
       <div class="section">
         <div class="section-header">
           <h2>iNaturalist collections</h2>
-          <div id="customGuideCtrl"></div>
+          <button id="customGuideCtrl">HIDE</button>
         </div>
         
         <div id="custom">
@@ -47,7 +47,7 @@
                 <input id="species-count" type="number" value="0" min="1" max="200" class="p">
               </div>
 
-              <button id="fetch-custom-inat-species-btn" class="mb2">
+              <button id="fetch-custom-inat-species-btn" class="mb2 submit">
                 Search inaturalist for species
               </button>              
             </fieldset>
@@ -57,7 +57,7 @@
       <div class="section">
         <div class="section-header">
           <h2>Curated collections</h2>
-          <div id="curatedGuideCtrl"></div>
+          <button id="curatedGuideCtrl">HIDE</button>
         </div>
         <fieldset id="curated" class="guide-fs flex-row">
           <legend>Guides</legend>
@@ -68,7 +68,7 @@
       <div class="section">
         <div class="section-header">
           <h2>Display options</h2>
-          <div id="displayCtrl"></div>
+          <button id="displayCtrl">HIDE</button>
         </div>
 
         <div id="display">
@@ -87,12 +87,12 @@
       <div class="section">
         <div class="section-header">
           <h2>Lesson</h2>
-          <div id="lessonCtrl"></div>
+          <button id="lessonCtrl">HIDE</button>
         </div>
       
         <fieldset id="lesson">
-          <legend>Species</legend>
-          <button id="show-test-btn" class="btn-reset t1 r1 hidden">Show test</button>
+          <legend></legend>
+          <button id="show-test-btn" class="btn-reset t0 r1 tiny hidden">Show test</button>
           <article id="species-parent">
             <div class="non-grid">
               <p>Create a collection of species from iNaturalist observations, or select a guided lesson based on curated species.</p>
@@ -110,7 +110,7 @@
       <div class="section">
         <div class="section-header">
           <h2>Progress</h2>
-          <div id="progressCtrl"></div>
+          <button id="progressCtrl">HIDE</button>
         </div>
 
         <fieldset id="progress">
@@ -125,7 +125,7 @@
       <div class="section">
         <div class="section-header">
           <h2>Preferences</h2>
-          <div id="preferencesCtrl"></div>
+          <button id="preferencesCtrl">HIDE</button>
         </div>
         <fieldset id="preferences">
           <legend>Language</legend>
@@ -204,7 +204,7 @@
 
     <template id="img-template">
       <figure>
-        <img src="" alt="">
+        <img src="" alt="" width="220px" height="165px">
         <figcaption></figcaption>
       </figure>
     </template>
