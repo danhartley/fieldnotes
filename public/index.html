@@ -23,18 +23,18 @@
         
         <div id="custom">
           <fieldset>
-            <legend>Taxa</legend>
+            <legend>Limit you search by taxa</legend>
             <div id="iconic-taxa" class="grid"></div>
           </fieldset>        
 
             <fieldset>
-              <legend>Search parameters</legend>
+              <legend>Limit your search by user, place or project</legend>
 
               <div id="inat-autocomplete-group" class="grid mb2"></div>
 
               <div class="grid mb2">
                 <div>
-                    <label for="inat-autocomplete" class="mb">Search iNaturalist</label>
+                    <label for="inat-autocomplete">Search iNaturalist</label>
                     <input id="inat-autocomplete" list="inat-autocomplete-list" type="text" class="p" autocomplete="off" placeholder="Username or user ID">
                     <datalist id="inat-autocomplete-list"></datalist>
                 </div>
@@ -43,12 +43,12 @@
               <div id="inat-params" class="grid mb2"></div>
 
               <div class="mb2">
-                <label for="species-count" class="mb">Species count</label>
+                <label for="species-count">Number of species requested</label>
                 <input id="species-count" type="number" value="0" min="1" max="200" class="p">
               </div>
 
               <button id="fetch-custom-inat-species-btn" class="mb2">
-                Fetch inat species
+                Search inaturalist for species
               </button>              
             </fieldset>
         </div>
@@ -145,14 +145,14 @@
 
     <template id="checkbox-template">
       <div class="flex-row">                  
-        <input type="checkbox" id="" name="" class="mr" />
+        <input type="checkbox" id="" name="" />
         <label for=""></label>      
       </div>
     </template>
 
     <template id="radio-button-template">
       <div class="flex-row">
-        <input type="radio" class="m0 mr" />
+        <input type="radio" />
         <label></label>
       </div>
     </template>
@@ -167,7 +167,7 @@
         <div>
           <span></span>
         </div>
-        <label class="mt mb"></label>
+        <label class="mt"></label>
         <input type="text" class="p" autocomplete="off"
         />
       </div>

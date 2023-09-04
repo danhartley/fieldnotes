@@ -30,6 +30,7 @@
   --aves: #d7e3f1;
   --reptilia: #fee2df;
   --highlight: #ebf0ea;
+  --active: #d5e1ba;
 }
 
 /* ELEMENTS */
@@ -94,26 +95,27 @@ li {
 
 button {
   margin: 0;
-  padding: var(--d);
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: calc(var(--d) * .05);
-  font-size: var(--s2);
+  padding: calc(var(--d) * 1.5) var(--d);
   border: 1px solid var(--c3);
+  border-radius: calc(var(--d) * .5);
+  font-size: var(--s3);
+  letter-spacing: calc(var(--d) * .025);
+  cursor: pointer;
 }
 
 button:hover {
   border-color: var(--c8);
+  background-color: var(--active);
 }
 
 button:focus-visible {
-  outline: 1px solid var(--c8);
   outline: auto;
-  outline-offset: -2px;
+  background-color: var(--active);
 }
 
 label {
   display: block;
+  margin-bottom: calc(var(--d) * .5);
   font-size: var(--s3);
   color: var(--c5);
 }
@@ -124,6 +126,7 @@ input[type='radio'] + label::first-letter {
 
 input {
   border: 1px solid var(--c3);
+  margin: 0 calc(var(--d) * .75) 0 0;
 }
 
 input:focus-visible {
@@ -136,8 +139,13 @@ input[type='checkbox'] {
 
 input[type='checkbox'] + label, input[type='radio'] + label {
   width: 100%;
-  cursor: pointer;
+  margin-bottom: 0;  
   letter-spacing: .05rem;
+  cursor: pointer;
+}
+
+input[type='checkbox'] + label {
+  text-transform: capitalize;
 }
 
 input[type='number'] {
@@ -198,9 +206,8 @@ fieldset fieldset {
 legend {
   position: absolute;
   top: calc(var(--d) * 2);
-  margin: 0 0 var(--d) 0;
   font-size: var(--s3);
-  font-weight: bold;
+  color: var(--c8);
   letter-spacing: calc(var(--d) * .05);
 }
 
@@ -228,7 +235,7 @@ a.info span:nth-child(2) {
   overflow: hidden;
 }
 
-    a.info:hover span:nth-child(2)
+  a.info:hover span:nth-child(2)
 , a.info:focus span:nth-child(2)
 , a.info:active span:nth-child(2) 
 {

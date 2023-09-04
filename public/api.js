@@ -6,7 +6,7 @@ export const getInatObservations = async ({
     , place_key = 'place_id'
     , place_id = null
     , iconic_taxa
-    , per_page = 200
+    , per_page = 20
     , page = 1
     , locale = 'en'
     , species_count = true
