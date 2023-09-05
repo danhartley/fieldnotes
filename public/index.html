@@ -15,62 +15,64 @@
     </header>
 
     <main>
-      <div class="section">
-        <div class="section-header">
-          <h2>
-            <input id="inatSearchCtrl" type="radio" name="lessonStyle" value="iNaturalist" checked>
-            <label for="inatSearchCtrl">iNaturalist search</label>
-          </h2>
-        </div>
-        
-        <div id="inatSearchMain">
-          <fieldset>
-            <legend>iNaturalist filters</legend>
-            <div id="iconic-taxa" class="grid"></div>
-            
-            <p>iNaturalist searches return a collection of species based on your filters.</p>
-            <p>When requesting species from iNaturalist, you can limit your search by user, place or project.</p>
+      <fieldset>
+        <section>
+          <div class="section-header">
+            <h2>
+              <input id="inatSearchCtrl" type="radio" name="lessonStyle" value="iNaturalist" checked>
+              <label for="inatSearchCtrl">iNaturalist search</label>
+            </h2>
+          </div>
+          
+          <div id="inatSearchMain">
+            <fieldset>
+              <legend>iNaturalist filters</legend>
+              <div id="iconic-taxa" class="grid"></div>
+              
+              <p class="mb05 small">iNaturalist searches return a collection of species based on your filters.</p>
+              <p class="mt0 small">You can limit your search by iNaturalist user, place or project.</p>
 
-            <div id="inat-autocomplete-group" class="grid mb2"></div>
+              <div id="inat-autocomplete-group" class="grid mb2"></div>
 
-            <div class="grid mb2">
-              <div>
-                  <label for="inat-autocomplete">Limit your search to an iNaturalist user, place or project</label>
-                  <input id="inat-autocomplete" list="inat-autocomplete-list" type="text" class="p" autocomplete="off" placeholder="Username or user ID">
-                  <datalist id="inat-autocomplete-list"></datalist>
+              <div class="grid mb2">
+                <div>
+                    <label for="inat-autocomplete">Limit your search to an iNaturalist user, place or project</label>
+                    <input id="inat-autocomplete" list="inat-autocomplete-list" type="text" class="p" autocomplete="off" placeholder="Username or user ID">
+                    <datalist id="inat-autocomplete-list"></datalist>
+                </div>
               </div>
-            </div>
 
-            <div id="inat-params" class="grid mb2"></div>
+              <div id="inat-params" class="grid mb2"></div>
 
-            <div class="mb2">
-              <label for="species-count">Limit your search by species count</label>
-              <input id="species-count" type="number" value="0" min="1" max="200" class="p">
-            </div>
+              <div class="mb2">
+                <label for="species-count">Limit your search by species count</label>
+                <input id="species-count" type="number" value="0" min="1" max="200" class="p">
+              </div>
 
-            <button id="fetch-custom-inat-species-btn" class="mb2 submit">
-              Search inaturalist for species
-            </button>              
-          </fieldset>
-        </div>
-      </div>
+              <button id="fetch-custom-inat-species-btn" class="mb2 submit">
+                Search inaturalist for species
+              </button>              
+            </fieldset>
+          </div>
+        </section>
 
-      <div class="section">
-        <div class="section-header">
-          <h2>
-            <input id="curatedGuideCtrl" type="radio" name="lessonStyle" value="Guides">
-            <label for="curatedGuideCtrl">Guides</label>
-          </h2>
-        </div>
-        <fieldset id="curatedGuideMain" class="guide-fs flex-row hidden">
-          <legend>Curated content</legend>
-          <p class="mt0">Guides are curated content relating to specific environments and species.</p>
-          <p>Guides are an alternative to iNaturalist searches.</p>
-          <div id="guide-group" class="grid"></div>
-        </fieldset>          
-      </div>
-
-      <div class="section">
+        <section>
+          <div class="section-header">
+            <h2>
+              <input id="curatedGuideCtrl" type="radio" name="lessonStyle" value="Guides">
+              <label for="curatedGuideCtrl">Guides</label>
+            </h2>
+          </div>
+          <fieldset id="curatedGuideMain" class="guide-fs flex-row hidden">
+            <legend>Curated content</legend>
+            <p class="mt0 mb05 small">Guides are curated content relating to specific environments and species.</p>
+            <p class="mt0 small">Guides are an alternative to iNaturalist searches.</p>
+            <div id="guide-group" class="grid"></div>
+          </fieldset>          
+        </section>
+      </fieldset>
+      
+      <section>
         <div class="section-header">
           <h2>Display options</h2>
           <button id="displayCtrl">HIDE</button>
@@ -87,9 +89,9 @@
             <div id="target-group" class="grid"></div>
           </fieldset>
         </div>
-      </div>
+      </section>
 
-      <div class="section">
+      <section>
         <div class="section-header">
           <h2>Lesson</h2>
           <button id="lessonCtrl">HIDE</button>
@@ -100,7 +102,7 @@
           <button id="show-test-btn" class="btn-reset t0 r1 tiny hidden">Show test</button>
           <article id="species-parent">
             <div class="non-grid">
-              <p>Create a collection of species from iNaturalist observations, or select a guided lesson based on curated species.</p>
+              <p class="m0">Create a collection of species from iNaturalist observations, or select a guided lesson based on curated species.</p>
             </div>
           </article>
           <button
@@ -110,9 +112,9 @@
             Check answers
           </button>
         </fieldset>
-      </div>
+      </section>
 
-      <div class="section">
+      <section>
         <div class="section-header">
           <h2>Progress</h2>
           <button id="progressCtrl">HIDE</button>
@@ -125,9 +127,9 @@
               <dt>Correct</dt><dd id="score-correct">-</dd>
             </dl>
         </fieldset>
-      </div>
+      </section>
 
-      <div class="section">
+      <section>
         <div class="section-header">
           <h2>Preferences</h2>
           <button id="preferencesCtrl">HIDE</button>
@@ -137,7 +139,7 @@
           <div id="language-group" class="grid"></div>
           <p class="small">Language determines the locale preference for taxon common names</p>
         </fieldset>
-      </div>
+      </section>
     </main>    
 
     <template id="grid-template">

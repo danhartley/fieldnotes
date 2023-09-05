@@ -88,22 +88,34 @@ const scoreLesson = answers => {
 
 const toggleFilterCtrl = (({ ctrl, fieldsetId }) => {
     ctrl.addEventListener('click', () => {
+        ctrl.classList.toggle('hide')
         ctrl.innerText = ctrl.innerText === 'HIDE' ? 'SHOW' : 'HIDE'
 
         const fieldset = document.getElementById(fieldsetId)
         fieldset.classList.toggle('hidden')
+    })
+})
 
-        let altFieldset
+const toggleLessonStyle = (({ ctrl, fieldsetId }) => {
+    ctrl.addEventListener('click', () => {
+        const fieldset = document.getElementById(fieldsetId)
 
-        switch(ctrl.value) {
-            case 'Guides':
-                altFieldset = document.getElementById('inatSearchMain')
-                altFieldset.classList.toggle('hidden')
-                break
-            case 'iNaturalist':
-                altFieldset = document.getElementById('curatedGuideMain')
-                altFieldset.classList.toggle('hidden')
-                break
+        if(fieldset.classList.contains('hidden')) {
+            
+            fieldset.classList.toggle('hidden')
+
+            let altFieldset
+
+            switch(ctrl.value) {
+                case 'Guides':
+                    altFieldset = document.getElementById('inatSearchMain')
+                    altFieldset.classList.toggle('hidden')
+                    break
+                case 'iNaturalist':
+                    altFieldset = document.getElementById('curatedGuideMain')
+                    altFieldset.classList.toggle('hidden')
+                    break
+            }
         }
     }
 )})
@@ -671,8 +683,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
         rb.addEventListener('change', () => g.language = g.LANGUAGES.find(l => l.id === rb.value))
     })
 
-    toggleFilterCtrl({ ctrl: inatSearchCtrl, fieldsetId: 'inatSearchMain' })
-    toggleFilterCtrl({ ctrl: curatedGuideCtrl, fieldsetId: 'curatedGuideMain' })
+    toggleLessonStyle({ ctrl: inatSearchCtrl, fieldsetId: 'inatSearchMain' })
+    toggleLessonStyle({ ctrl: curatedGuideCtrl, fieldsetId: 'curatedGuideMain' })
+
     toggleFilterCtrl({ ctrl: displayCtrl, fieldsetId: 'display' })
     toggleFilterCtrl({ ctrl: lessonCtrl, fieldsetId: 'lesson' })
     toggleFilterCtrl({ ctrl: progressCtrl, fieldsetId: 'progress' })

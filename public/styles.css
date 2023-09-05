@@ -74,14 +74,18 @@ h1 {
 h2 {
   display: flex;
   align-items: center;
-  margin: 0 0 calc(var(--d) * 2) 0;
-  font-size: var(--s8);
+  margin: var(--d) 0 var(--d) 0;
+  font-size: var(--s6);
   letter-spacing: calc(var(--d) * .125);
   -webkit-font-smoothing: antialiased;
 }
 
-h2 label {
-  font-size: var(--s8);
+h2:has(label) {
+  margin: 0 0 calc(var(--d) * 2) 0;
+}
+
+h2 label {  
+  font-size: var(--s6);
   letter-spacing: calc(var(--d) * .125);
 }
 
@@ -217,12 +221,11 @@ fieldset {
   background-color: var(--c0);
 }
 
-fieldset fieldset {
+fieldset:has(fieldset) {
   margin: 0;
-  padding-left: 0;
   border: none;
-  width: 100%;
-  text-transform: initial;
+  padding: calc(var(--d) * 2) 0 0 0;
+  background-color: initial;
 }
 
 legend {
@@ -235,10 +238,6 @@ legend {
   font-weight: bold;
   letter-spacing: calc(var(--d) * .05);
   color: var(--c8);
-}
-
-fieldset fieldset .grid .flex-row {
-  background-color: var(--highlight);
 }
 
 a {
@@ -291,6 +290,10 @@ figcaption {
   font-style: italic;
 }
 
+p {
+  font-family: Elena, "PT Serif", serif;
+}
+
 /* MEDIA */
 
 @media screen {
@@ -312,6 +315,10 @@ figcaption {
     margin: var(--d) 0 calc(var(--d) * 4) 0;
     padding: calc(var(--d) * 2) calc(var(--d) * 2) 0 calc(var(--d) * 2);
     border: 1px solid var(--c3);
+  }
+
+  input[type="text"] {
+    width: 50%;
   }
 }
 
@@ -392,10 +399,13 @@ figcaption {
   max-width: 60ch;
 }
 
+.non-grid:has(h3) {
+  margin-bottom: 0;
+}
+
 .non-grid p {
   line-height: 1.8;
-  font-size: var(--s6);
-  font-family: Elena, "PT Serif", serif;
+  font-size: var(--s6);  
   color: var(--c6);
   -webkit-font-smoothing: antialiased;
 }
@@ -441,7 +451,6 @@ figcaption {
 
 .section {
   margin-bottom: calc(var(--d) * 4);
-  border-bottom: 1px dashed var(--c2);
 }
 
 .section-header {
@@ -490,6 +499,10 @@ figcaption {
 
 .mr {
   margin-right: var(--d);
+}
+
+.mb05 {
+  margin-bottom: calc(var(--d) * .5);
 }
 
 .mb {
