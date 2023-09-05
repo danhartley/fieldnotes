@@ -138,7 +138,7 @@ button:not(.submit):hover {
 
 label {
   display: block;
-  margin-bottom: calc(var(--d) * .5);
+  margin-bottom: calc(var(--d) * .75);
   font-size: var(--s3);
   -webkit-font-smoothing: antialiased;
 }
@@ -221,7 +221,7 @@ fieldset {
   background-color: var(--c0);
 }
 
-fieldset:has(fieldset) {
+fieldset.fieldset-reset {
   margin: 0;
   border: none;
   padding: calc(var(--d) * 2) 0 0 0;
@@ -317,9 +317,9 @@ p {
     border: 1px solid var(--c3);
   }
 
-  input[type="text"] {
+  /* input[type="text"] {
     width: 50%;
-  }
+  } */
 }
 
 /* ASPECT-RATIO */
@@ -518,7 +518,7 @@ p {
 }
 
 .p0 {
-  padding: 0;
+  padding: 0 !important;
 }
 
 /* SIZE */
