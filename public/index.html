@@ -17,11 +17,13 @@
     <main>
       <div class="section">
         <div class="section-header">
-          <h2>iNaturalist search</h2>
-          <button id="customGuideCtrl">HIDE</button>
+          <h2>
+            <input id="inatSearchCtrl" type="radio" name="lessonStyle" value="iNaturalist" checked>
+            <label for="inatSearchCtrl">iNaturalist search</label>
+          </h2>
         </div>
         
-        <div id="custom">
+        <div id="inatSearchMain">
           <fieldset>
             <legend>iNaturalist filters</legend>
             <div id="iconic-taxa" class="grid"></div>
@@ -55,10 +57,12 @@
 
       <div class="section">
         <div class="section-header">
-          <h2>Guides</h2>
-          <button id="curatedGuideCtrl">HIDE</button>
+          <h2>
+            <input id="curatedGuideCtrl" type="radio" name="lessonStyle" value="Guides">
+            <label for="curatedGuideCtrl">Guides</label>
+          </h2>
         </div>
-        <fieldset id="curated" class="guide-fs flex-row">
+        <fieldset id="curatedGuideMain" class="guide-fs flex-row hidden">
           <legend>Curated content</legend>
           <p class="mt0">Guides are curated content relating to specific environments and species.</p>
           <p>Guides are an alternative to iNaturalist searches.</p>

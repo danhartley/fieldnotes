@@ -92,6 +92,19 @@ const toggleFilterCtrl = (({ ctrl, fieldsetId }) => {
 
         const fieldset = document.getElementById(fieldsetId)
         fieldset.classList.toggle('hidden')
+
+        let altFieldset
+
+        switch(ctrl.value) {
+            case 'Guides':
+                altFieldset = document.getElementById('inatSearchMain')
+                altFieldset.classList.toggle('hidden')
+                break
+            case 'iNaturalist':
+                altFieldset = document.getElementById('curatedGuideMain')
+                altFieldset.classList.toggle('hidden')
+                break
+        }
     }
 )})
 
@@ -106,7 +119,7 @@ const display = document.getElementById('species-display')
 const targetGroup = document.getElementById('target-group')
 const iNatAutocompleteInput = document.getElementById('inat-autocomplete')
 const iNatAutocompleteDatalist = document.getElementById('inat-autocomplete-list')
-const customGuideCtrl = document.getElementById('customGuideCtrl')
+const inatSearchCtrl = document.getElementById('inatSearchCtrl')
 const curatedGuideCtrl = document.getElementById('curatedGuideCtrl')
 const lessonCtrl = document.getElementById('lessonCtrl')
 const displayCtrl = document.getElementById('displayCtrl')
@@ -658,8 +671,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
         rb.addEventListener('change', () => g.language = g.LANGUAGES.find(l => l.id === rb.value))
     })
 
-    toggleFilterCtrl({ ctrl: customGuideCtrl, fieldsetId: 'custom' })
-    toggleFilterCtrl({ ctrl: curatedGuideCtrl, fieldsetId: 'curated' })
+    toggleFilterCtrl({ ctrl: inatSearchCtrl, fieldsetId: 'inatSearchMain' })
+    toggleFilterCtrl({ ctrl: curatedGuideCtrl, fieldsetId: 'curatedGuideMain' })
     toggleFilterCtrl({ ctrl: displayCtrl, fieldsetId: 'display' })
     toggleFilterCtrl({ ctrl: lessonCtrl, fieldsetId: 'lesson' })
     toggleFilterCtrl({ ctrl: progressCtrl, fieldsetId: 'progress' })

@@ -72,10 +72,21 @@ h1 {
 }
 
 h2 {
+  display: flex;
+  align-items: center;
   margin: 0 0 calc(var(--d) * 2) 0;
   font-size: var(--s8);
   letter-spacing: calc(var(--d) * .125);
   -webkit-font-smoothing: antialiased;
+}
+
+h2 label {
+  font-size: var(--s8);
+  letter-spacing: calc(var(--d) * .125);
+}
+
+h2 label::first-letter {
+  text-transform: initial !important;
 }
 
 h3 {
@@ -444,7 +455,7 @@ figcaption {
 
 /* CONTROLS */
 
-#curatedGuideCtrl, #customGuideCtrl, #displayCtrl, #lessonCtrl, #progressCtrl, #preferencesCtrl {
+#curatedGuideCtrl, #inatSearchCtrl, #displayCtrl, #lessonCtrl, #progressCtrl, #preferencesCtrl {
   margin: 0 var(--d)0 0;
   padding-right: 0;
   border: none;
