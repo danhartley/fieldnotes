@@ -37,7 +37,7 @@
 
 /* ELEMENTS */
 
-body {
+body {  
   font-family: Open Sans,sans-serif;
   background-color: var(--c1);
   -webkit-font-smoothing: antialiased;
@@ -55,11 +55,13 @@ header {
 
 main {
   margin: auto var(--d);
+  max-width: 60ch;
 }
 
 @media (orientation: landscape) {
   main {
-    margin: auto calc(var(--w) / 5);  
+    margin: auto;
+    max-width: 80ch; 
   }
 }
 
@@ -409,15 +411,6 @@ p {
   color: var(--c6);
   -webkit-font-smoothing: antialiased;
 }
-
-/* .non-grid + .grid, .non-grid + dl, .grid + dl {
-  max-width: 60ch;
-  margin: 0 auto calc(var(--d) * 4) auto;
-}
-
-.grid + dl {
-  max-width: 70ch;
-} */
 
 .grid div > div {
   display: flex;
