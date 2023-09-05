@@ -17,50 +17,51 @@
     <main>
       <div class="section">
         <div class="section-header">
-          <h2>iNaturalist collections</h2>
+          <h2>iNaturalist search</h2>
           <button id="customGuideCtrl">HIDE</button>
         </div>
         
         <div id="custom">
           <fieldset>
-            <legend>Limit you search by taxa</legend>
+            <legend>iNaturalist filters</legend>
             <div id="iconic-taxa" class="grid"></div>
-          </fieldset>        
+            
+            <p>iNaturalist searches return a collection of species based on your filters.</p>
+            <p>When requesting species from iNaturalist, you can limit your search by user, place or project.</p>
 
-            <fieldset>
-              <legend>Limit your search by user, place or project</legend>
+            <div id="inat-autocomplete-group" class="grid mb2"></div>
 
-              <div id="inat-autocomplete-group" class="grid mb2"></div>
-
-              <div class="grid mb2">
-                <div>
-                    <label for="inat-autocomplete">Search iNaturalist</label>
-                    <input id="inat-autocomplete" list="inat-autocomplete-list" type="text" class="p" autocomplete="off" placeholder="Username or user ID">
-                    <datalist id="inat-autocomplete-list"></datalist>
-                </div>
+            <div class="grid mb2">
+              <div>
+                  <label for="inat-autocomplete">Limit your search to an iNaturalist user, place or project</label>
+                  <input id="inat-autocomplete" list="inat-autocomplete-list" type="text" class="p" autocomplete="off" placeholder="Username or user ID">
+                  <datalist id="inat-autocomplete-list"></datalist>
               </div>
+            </div>
 
-              <div id="inat-params" class="grid mb2"></div>
+            <div id="inat-params" class="grid mb2"></div>
 
-              <div class="mb2">
-                <label for="species-count">Number of species requested</label>
-                <input id="species-count" type="number" value="0" min="1" max="200" class="p">
-              </div>
+            <div class="mb2">
+              <label for="species-count">Limit your search by species count</label>
+              <input id="species-count" type="number" value="0" min="1" max="200" class="p">
+            </div>
 
-              <button id="fetch-custom-inat-species-btn" class="mb2 submit">
-                Search inaturalist for species
-              </button>              
-            </fieldset>
+            <button id="fetch-custom-inat-species-btn" class="mb2 submit">
+              Search inaturalist for species
+            </button>              
+          </fieldset>
         </div>
       </div>
 
       <div class="section">
         <div class="section-header">
-          <h2>Curated collections</h2>
+          <h2>Guides</h2>
           <button id="curatedGuideCtrl">HIDE</button>
         </div>
         <fieldset id="curated" class="guide-fs flex-row">
-          <legend>Guides</legend>
+          <legend>Curated content</legend>
+          <p class="mt0">Guides are curated content relating to specific environments and species.</p>
+          <p>Guides are an alternative to iNaturalist searches.</p>
           <div id="guide-group" class="grid"></div>
         </fieldset>          
       </div>

@@ -30,8 +30,9 @@
   --aves: #d7e3f1;
   --reptilia: #fee2df;
   --highlight: #ebf0ea;
-  --active: #d5e1ba;
-  --inat: #86a91d;
+  --inactive-bg: #eef2e3;
+  --active-bg: #d5e1ba;
+  --active-fg: #86a91d;
 }
 
 /* ELEMENTS */
@@ -64,9 +65,9 @@ main {
 
 h1 {
   font-size: var(--s3);
-  color: var(--c5);
   text-transform: uppercase;
   letter-spacing: calc(var(--d) / 5);
+  color: var(--c5);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -79,10 +80,10 @@ h2 {
 
 h3 {
   margin: var(--d) 0 0 0;
-  color: var(--c6);
   font-family: Elena, "PT Serif", serif;
   font-size: var(--s5);
   letter-spacing: calc(var(--d) / 10);
+  color: var(--c6);
 }
 
 ul {
@@ -97,26 +98,27 @@ li {
 
 button {
   margin: 0;
-  padding: calc(var(--d) * 1.5) var(--d);
   border: 1px solid var(--c3);
   border-radius: calc(var(--d) * .5);
+  padding: calc(var(--d) * 1.5) var(--d);
   font-size: var(--s3);
   letter-spacing: calc(var(--d) * .025);
+  background-color: var(--inactive-bg);
   cursor: pointer;
 }
 
 button.submit:hover {
   border-color: var(--c8);
-  background-color: var(--active);
+  background-color: var(--active-bg);
 }
 
 button.submit:focus-visible {
   outline: auto;
-  background-color: var(--active);
+  background-color: var(--active-bg);
 }
 
 button:not(.submit):hover {
-  color: var(--inat);
+  color: var(--active-fg);
 }
 
 label {
@@ -131,8 +133,8 @@ input[type='radio'] + label::first-letter {
 }
 
 input {
-  border: 1px solid var(--c3);
   margin: 0 calc(var(--d) * .75) 0 0;
+  border: 1px solid var(--c3);
 }
 
 input:focus-visible {
@@ -144,8 +146,8 @@ input[type='checkbox'] {
 }
 
 input[type='checkbox'] + label, input[type='radio'] + label {
+  margin-bottom: 0;
   width: 100%;
-  margin-bottom: 0;  
   letter-spacing: .05rem;
   cursor: pointer;
 }
@@ -170,13 +172,12 @@ select:focus-visible {
 }
 
 dl {
+  column-count: 1;
   margin: var(--d) 0 calc(var(--d) * 2) 0;
   margin-block-start: 0px;
   margin-block-end: 0px;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
-  font-size: var(--s3);
-  column-count: 1;
   font-size: var(--s3);
 }
 
@@ -200,27 +201,29 @@ dt:has(+ dd:empty) {
 fieldset {
   position: relative;
   margin: 0 0 calc(var(--d) * 2) 0;
+  border: 1px dashed var(--c2);
   padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 2) calc(var(--d) * 2);
   background-color: var(--c0);
-  border: 1px dashed var(--c2);
 }
 
 fieldset fieldset {
-  border: none;
   margin: 0;
   padding-left: 0;
-  text-transform: initial;
+  border: none;
   width: 100%;
+  text-transform: initial;
 }
 
 legend {
   position: absolute;
   top: 0;
+  left: var(--d);
   width: 50%;
   padding: calc(var(--d) * 1.5) var(--d);
   font-size: var(--s3);
+  font-weight: bold;
+  letter-spacing: calc(var(--d) * .05);
   color: var(--c8);
-  letter-spacing: calc(var(--d) * .05);  
 }
 
 fieldset fieldset .grid .flex-row {
@@ -228,9 +231,9 @@ fieldset fieldset .grid .flex-row {
 }
 
 a {
-  text-decoration: none;
   border-bottom: 1px solid var(--c8);
   padding-bottom: 0.125rem;
+  text-decoration: none;
   color: var(--c8);
 }
 
@@ -256,15 +259,19 @@ a.info span:nth-child(2) {
   top: calc(var(--d) * -4.5);
   left: calc(var(--d) * 5);
   border: 1px solid var(--c2);
-  padding: var(--d);
   width: 10rem;
-  background-color: var(--c0);
+  padding: var(--d);
   text-align: center;
+  background-color: var(--c0);
 }
 
 figure {
-  text-align: center;
   margin: 0 0 var(--d) 0;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  text-align: center;
 }
 
 figcaption {
@@ -273,28 +280,15 @@ figcaption {
   font-style: italic;
 }
 
-/* STATES */
-
-.hidden {
-  display: none;
-}
-
-.invisible {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* SCREEN */
+/* MEDIA */
 
 @media screen {
   img {
     aspect-ratio: 1/1;
     object-fit: cover;
-    max-height: 165px;
+    max-height: 300px;
   }
 } 
-
-/* DEVICE */
 
 @media (orientation: landscape) {
   #header span {
@@ -310,11 +304,33 @@ figcaption {
   }
 }
 
+/* ASPECT-RATIO */
+
+@supports (aspect-ratio: 1) {
+  .grid img {
+    height: initial;
+    aspect-ratio: 1;
+  }
+}
+
+/* STATES */
+
+.hidden {
+  display: none;
+}
+
+.invisible {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .btn-reset {
   position: absolute;
-  background-color: initial;
   border: none;
+  background-color: initial;
 }
+
+/* RULES */
 
 .grid {
   display: grid;
@@ -329,9 +345,9 @@ figcaption {
 }
 
 .grid > div {
-  padding: 0;
   display: flex;
   flex-direction: column;
+  padding: 0;
 }
 
 .grid:not(:has(figure)) img {
@@ -343,8 +359,8 @@ figcaption {
   flex-direction: row;
   align-items: center;
   padding: calc(var(--d) * 1.5) var(--d);
-  background-color: var(--c1);
   border: 1px dotted var(--c2);
+  background-color: var(--c1);
 }
 
 .grid .species-panel {
@@ -366,32 +382,29 @@ figcaption {
 }
 
 .non-grid p {
+  line-height: 1.8;
   font-size: var(--s6);
   font-family: Elena, "PT Serif", serif;
   color: var(--c6);
-  line-height: 1.8;
   -webkit-font-smoothing: antialiased;
 }
 
-.non-grid + .grid, .non-grid + dl, .grid + dl {
-  max-width: 70ch;
+/* .non-grid + .grid, .non-grid + dl, .grid + dl {
+  max-width: 60ch;
   margin: 0 auto calc(var(--d) * 4) auto;
 }
 
-@supports (aspect-ratio: 1) {
-  .grid img {
-    height: initial;
-    aspect-ratio: 1;
-  }
-}
+.grid + dl {
+  max-width: 70ch;
+} */
 
 .grid div > div {
   display: flex;
   flex-direction: column;
   align-items: center;  
   justify-content: center;
-  padding: var(--d) 0;
   height: calc(6 * var(--d));
+  padding: var(--d) 0;
   text-transform: lowercase;
 }
 
@@ -404,7 +417,7 @@ figcaption {
   display: none;
 }
 
-.grid span::first-letter, legend::first-letter {
+.grid span::first-letter {
   text-transform: capitalize;
 }
 
@@ -435,14 +448,14 @@ figcaption {
   margin: 0 var(--d)0 0;
   padding-right: 0;
   border: none;
-  background-color: var(--c1);
   font-size: var(--s2);
   text-transform: uppercase;
+  background-color: var(--c1);
   cursor: pointer;
   -webkit-font-smoothing: antialiased;
 }
 
-/* LAYOUT */
+/* SPACING */
 
 .m {
   margin: var(--d);
@@ -454,6 +467,10 @@ figcaption {
 
 .mt {
   margin-top: var(--d);
+}
+
+.mt0 {
+  margin-top: 0;
 }
 
 .mt2 {
