@@ -28,12 +28,12 @@
             <fieldset>
               <legend>iNaturalist filters</legend>
               <fieldset class="fieldset-reset p0">
-                <p class="mt0">You can filter your iNaturalist search by taxa.</p>
+                <legend class="as-p mt0">You can filter your iNaturalist search by taxa.</legend>
                 <div id="iconic-taxa" class="grid"></div>
               </fieldset>
 
               <fieldset class="fieldset-reset p0">
-                <p>You can also limit your search by iNaturalist user, place or project.</p>
+                <legend class="as-p pt">You can also limit your search by iNaturalist user, place or project.</legend>
                 <div id="inat-autocomplete-group" class="grid mb2"></div>
 
                 <div class="grid">
@@ -47,16 +47,20 @@
               </fieldset>
 
               <fieldset class="fieldset-reset p0">
-                <p class="mt0">You can view up to 200 species.</p>
-                <div class="mb2">
-                  <label for="species-count">Number of species</label>
-                  <input id="species-count" type="number" value="0" min="1" max="200" class="p">
+                <legend class="as-p mt0">Choose how many species you want to review.</legend>
+                <div class="centred-block box mb2">
+                  <label for="species-count" class="mb0 mr">Number of species</label>
+                  <input id="species-count" type="number" value="0" min="1" max="200" class="mr p">
+                  <div class="small">(You can view up to 200 species)</div>
                 </div>
               </fieldset>
 
-              <button id="fetch-custom-inat-species-btn" class="mb2 submit">
-                Search inaturalist for species
-              </button>              
+              <div class="centred-block">
+                <button id="fetch-inat-species-btn" class="submit mr">
+                  Search iNaturalist for species
+                </button>
+                <div id="fetch-inat-species-notification" class="small hidden">Waiting for response from iNaturalist…</div>
+              </div>
             </fieldset>
           </div>
         </section>
@@ -65,7 +69,7 @@
           <div class="section-header">
             <h2>
               <input id="curatedGuideCtrl" type="radio" name="lessonStyle" value="Guides">
-              <label for="curatedGuideCtrl">Guides</label>
+              <label for="curatedGuideCtrl">Field guides</label>
             </h2>
           </div>
           <fieldset id="curatedGuideMain" class="guide-fs flex-row hidden">
@@ -107,7 +111,7 @@
           <button id="show-test-btn" class="btn-reset t0 r1 tiny hidden">Show test</button>
           <article id="species-parent">
             <div class="non-grid">
-              <p class="m0">Create a collection of species from iNaturalist observations, or select a guided lesson based on curated species.</p>
+              <p class="m0">Create a lesson based on species provided by iNaturalist, or use a field guide.</p>
             </div>
           </article>
           <button

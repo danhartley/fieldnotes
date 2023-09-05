@@ -91,7 +91,7 @@ h2 label {
   letter-spacing: calc(var(--d) * .125);
 }
 
-h2 label::first-letter {
+h2 label::first-letter, label.text-initial::first-letter {
   text-transform: initial !important;
 }
 
@@ -149,9 +149,12 @@ input[type='radio'] + label::first-letter {
   text-transform: uppercase;
 }
 
-input {
-  margin: 0 calc(var(--d) * .75) 0 0;
+input {  
   border: 1px solid var(--c3);
+}
+
+input[type='checkbox'], input[type='radio'] {
+  margin: 0 calc(var(--d) * .75) 0 0;
 }
 
 input:focus-visible {
@@ -174,7 +177,7 @@ input[type='checkbox'] + label {
 }
 
 input[type='number'] {
-  width: calc(var(--d) * 6);
+  width: calc(var(--d) * 5);
 }
 
 select {
@@ -318,10 +321,6 @@ p {
     padding: calc(var(--d) * 2) calc(var(--d) * 2) 0 calc(var(--d) * 2);
     border: 1px solid var(--c3);
   }
-
-  /* input[type="text"] {
-    width: 50%;
-  } */
 }
 
 /* ASPECT-RATIO */
@@ -422,10 +421,10 @@ p {
   text-transform: lowercase;
 }
 
-#lesson legend::before {
+/* #lesson legend::before {
   content: "\29bf";
   margin: 0 calc(var(--d) * .5) 0 0;
-}
+} */
 
 #lesson legend:empty {
   display: none;
@@ -440,10 +439,21 @@ p {
   font-size: var(--s3);
 }
 
+#inat-autocomplete::placeholder {
+  font-family: Elena, "PT Serif", serif;
+  opacity: 1;
+}
+
 /* ENTITIES */
 
-.section {
-  margin-bottom: calc(var(--d) * 4);
+.centred-block {
+  display: flex;
+  align-items: center;
+}
+
+.box {
+  border: 1px solid var(--c2);
+  padding: var(--d);
 }
 
 .section-header {
@@ -453,6 +463,14 @@ p {
 
 .latin {
   font-style: italic;
+}
+
+.as-p {
+  font-family: Elena, "PT Serif", serif;
+  position: initial;
+  padding: 0 0 var(--d) 0;
+  width: initial;
+  font-weight: initial;
 }
 
 /* CONTROLS */
@@ -494,6 +512,10 @@ p {
   margin-right: var(--d);
 }
 
+.mb0 {
+  margin-bottom: 0;
+}
+
 .mb05 {
   margin-bottom: calc(var(--d) * .5);
 }
@@ -508,6 +530,10 @@ p {
 
 .p {
   padding: var(--d);
+}
+
+.pt {
+  padding-top: var(--d);
 }
 
 .p0 {

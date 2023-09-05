@@ -818,7 +818,7 @@ export const g = {
               ...templates,
               {
                 id: 'introduction-to-mediterranean-climate-regions-template',
-                name: 'Guide',
+                name: 'Field-guide',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,
@@ -1219,7 +1219,7 @@ export const g = {
               ...templates,
               {
                 id: 'wild-edible-plants-template',
-                name: 'Guide',
+                name: 'Field-guide',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,
@@ -1742,7 +1742,7 @@ export const g = {
               ...templates,
               {
                 id: 'introduction-to-fire-prone-ecosystems-template',
-                name: 'Guide',
+                name: 'Field-guide',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,                

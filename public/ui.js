@@ -139,23 +139,29 @@ const progressCtrl = document.getElementById('progressCtrl')
 const preferencesCtrl = document.getElementById('preferencesCtrl')
 const testbtn = document.getElementById('show-test-btn')
 const targets = document.getElementById('targets')
+const fetchInatSpeciesBtn = document.getElementById('fetch-inat-species-btn')
+const fetchInatSpeciesNotification = document.getElementById('fetch-inat-species-notification')
 
 let rbGuideGroup, rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup
 
 const createRadioBtnGroup = ({collection, checked, rbGroup, parent}) => {
     collection.forEach(item => {
-    const clone = rbTemplate.content.cloneNode(true)
+        const clone = rbTemplate.content.cloneNode(true)
 
-    const input = clone.querySelector('input')
-    const label = clone.querySelector('label')
+        const input = clone.querySelector('input')
+        const label = clone.querySelector('label')
 
-    input.setAttribute('name', rbGroup)
-    input.id = item.name
-    input.value = item.id
-    label.textContent = item.name
-    label.htmlFor = input.id
+        input.setAttribute('name', rbGroup)
+        input.id = item.name
+        input.value = item.id
+        label.textContent = item.name
+        label.htmlFor = input.id
 
-    parent.appendChild(clone)
+        if(!!checked && checked.id === item.id) {
+            input.setAttribute('checked', true)
+        }
+
+        parent.appendChild(clone)
     })
 
     return document.querySelectorAll(`input[name="${rbGroup}"]`)
@@ -302,6 +308,7 @@ const createInatParamsCheckboxGroup = () => {
         const div = clone.querySelector('div')
         const input = clone.querySelector('input')
         const label = clone.querySelector('label')
+        label.setAttribute('class', 'text-initial')
     
         input.setAttribute('name', 'inat-param')
         input.id = param.id
@@ -604,16 +611,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     testSubmitBtn.addEventListener('click', scoreHandler, false)
 
-    const fetchCustomInatSpeciesBtn = document.getElementById('fetch-custom-inat-species-btn')
-
-    const filterInatSpecies = async () => {
+    const fetchInatSpecies = async () => {
         const filters = Array.from(document.getElementById('iconic-taxa').querySelectorAll('input'))
         const f = filters.filter(t => t.checked)
         
         g.taxa = g.ICONIC_TAXA.filter(taxon => filters.filter(t => t.checked).map(t => t.id.toLowerCase()).includes(taxon.name))
         
         const user = g.inatAutocompleteOptions.find(o => o.id === 'users')
-        const place = g.inatAutocompleteOptions.find(o => o.id === 'places')
+        const place = g.inatAutocompleteOptions.find(o => o.id === 'places')        
+
+        fetchInatSpeciesNotification.classList.toggle('hidden')
 
         g.inatSpecies = await getInatSpecies({
             user: user.isActive ? user.user : null
@@ -623,9 +630,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
         g.species = mapInatSpeciesToLTP()
     
         startLesson()
+
+        fetchInatSpeciesNotification.classList.toggle('hidden')
     }
 
-    fetchCustomInatSpeciesBtn.addEventListener('click', filterInatSpecies, false)
+    fetchInatSpeciesBtn.addEventListener('click', fetchInatSpecies, false)
 
     rbInatAutocompleteGroup.forEach(rb => {
         rb.addEventListener('change', e => {
@@ -633,7 +642,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
             iNatAutocompleteInput.value = ''
             iNatAutocompleteInput.setAttribute('placeholder', g.inatAutocomplete.placeholder)
-            iNatAutocompleteInput.focus()
         })
     })
 
