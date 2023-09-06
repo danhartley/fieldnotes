@@ -17,7 +17,21 @@
     <main>
       <fieldset class="fieldset-reset">
         <section>
-          <div class="section-header">
+          <div class="section-header section-group">
+            <h2>
+              <input id="curatedGuideCtrl" type="radio" name="lessonStyle" value="Guides">
+              <label for="curatedGuideCtrl">Field guides</label>
+            </h2>
+          </div>
+          <fieldset id="curatedGuideMain" class="flex-row hidden">
+            <legend>Curated content</legend>
+            <p class="mt0 mb05 small">Guides have content for specific environments and species.</p>
+            <p class="mt0 small">They are an alternative to iNaturalist searches.</p>
+            <div id="guide-group" class="grid"></div>
+          </fieldset>      
+        </section>
+        <section class="mb2">
+          <div class="section-header section-group">
             <h2>
               <input id="inatSearchCtrl" type="radio" name="lessonStyle" value="iNaturalist" checked>
               <label for="inatSearchCtrl">iNaturalist search</label>
@@ -63,22 +77,7 @@
               </div>
             </fieldset>
           </div>
-        </section>
-
-        <section>
-          <div class="section-header">
-            <h2>
-              <input id="curatedGuideCtrl" type="radio" name="lessonStyle" value="Guides">
-              <label for="curatedGuideCtrl">Field guides</label>
-            </h2>
-          </div>
-          <fieldset id="curatedGuideMain" class="guide-fs flex-row hidden">
-            <legend>Curated content</legend>
-            <p class="mt0 mb05">Guides have content for specific environments and species.</p>
-            <p class="mt0">They are an alternative to iNaturalist searches.</p>
-            <div id="guide-group" class="grid"></div>
-          </fieldset>          
-        </section>
+        </section>        
       </fieldset>
       
       <section>
@@ -220,7 +219,7 @@
 
     <template id="img-template">
       <figure>
-        <img src="" alt="" width="220px" height="165px">
+        <img src="" alt="" >
         <figcaption></figcaption>
       </figure>
     </template>

@@ -859,9 +859,20 @@ export const g = {
                             text: 'One distinct feature of the MB as compared to the other Mediterranean-climate regions is the abundance of limestones.',
                           },
                           {
-                            text: 'Soil erosion is a major issue in all of the MCRs, due to the frequently skeletal soils, high disturbance rate.',
+                            text: 'Soil erosion is a major issue in all of the MCRs, due to the frequently skeletal soils (orthents), high disturbance rate.',
                           },                     
                         ]
+                      },
+                      {
+                        id: 'term-template',
+                        name: 'term', 
+                        parent: 'dl-template',
+                        type: 'term',                 
+                        terms: [
+                          'Convergent evolution',
+                          'Limestone',
+                          'Orthent',
+                        ],
                       },
                       {
                         id: 'img-template',
@@ -927,6 +938,16 @@ export const g = {
                         ]
                       },
                       {
+                        id: 'term-template',
+                        name: 'term', 
+                        parent: 'dl-template',
+                        type: 'term',                 
+                        terms: [
+                          'Sclerophyll',
+                          'Marcescence',
+                        ],
+                      },
+                      {
                         id: 'species-card-template',
                         name: 'Species-cards',
                         parent: 'grid-template',
@@ -946,10 +967,6 @@ export const g = {
                         parent: 'dl-template',
                         type: 'term',                 
                         terms: [
-                          'Limestone',
-
-                          'Sclerophyll',
-                          'Marcescence',
                           'Xerothermic',
                           'Phytophagous Insects'
                         ],
@@ -1867,6 +1884,12 @@ export const g = {
         dt: 'Convergent evolution',
         dd: 'The independent evolution of similar features in species of different periods or epochs in time.',
         ds: 'https://en.wikipedia.org//wiki/Convergent_evolution',
+        da: 'Wikipedia'
+      },
+      {
+        dt: 'Orthent',
+        dd: 'Soils that lack horizon development due to either steep slopes or parent materials that contain no permanent weatherable minerals (such as ironstone). Typically, orthents are exceedingly shallow soils. They are often referred to as skeletal soils (USDA - entisols, UN FAO soil classification - lithosols).',
+        ds: 'https://en.wikipedia.org/wiki/Orthent',
         da: 'Wikipedia'
       },
     ],

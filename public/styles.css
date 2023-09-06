@@ -32,7 +32,9 @@
   --highlight: #ebf0ea;
   --inactive-bg: #eef2e3;
   --active-bg: #d5e1ba;
-  --active-fg: #86a91d;
+  --active-fg: #1f87ac;
+  --ltp-bg: #e4f3f8;
+  --ltp-fg: #1f87ac;  
 }
 
 /* ELEMENTS */
@@ -49,7 +51,7 @@ header {
   align-items: center;
   height: calc(var(--w) / 30);
   min-height: 50px;
-  border-bottom: 5px solid var(--c4);
+  border-bottom: 1px dashed var(--c8);
   margin: 0 calc(var(--d) * 3) calc(var(--d) * 3) calc(var(--d) * 3);
 }
 
@@ -69,7 +71,6 @@ h1 {
   font-size: var(--s3);
   text-transform: uppercase;
   letter-spacing: calc(var(--d) / 5);
-  color: var(--c5);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -77,18 +78,13 @@ h2 {
   display: flex;
   align-items: center;
   margin: var(--d) 0 var(--d) 0;
-  font-size: var(--s6);
-  letter-spacing: calc(var(--d) * .125);
+  font-size: var(--s4);  
+  letter-spacing: calc(var(--d) * .025);
   -webkit-font-smoothing: antialiased;
 }
 
-h2:has(label) {
-  margin: 0 0 calc(var(--d) * 2) 0;
-}
-
 h2 label {  
-  font-size: var(--s6);
-  letter-spacing: calc(var(--d) * .125);
+  font-size: var(--s5);  
 }
 
 h2 label::first-letter, label.text-initial::first-letter {
@@ -167,8 +163,8 @@ input[type='checkbox'] {
 
 input[type='checkbox'] + label, input[type='radio'] + label {
   margin-bottom: 0;
-  width: 100%;
-  letter-spacing: .05rem;
+  width: 100%;  
+  letter-spacing: calc(var(--d) * .025);
   cursor: pointer;
 }
 
@@ -192,8 +188,8 @@ select:focus-visible {
 }
 
 dl {
-  column-count: 1;
-  margin: var(--d) 0 calc(var(--d) * 2) 0;
+  max-width: 70ch;
+  margin: 0 auto calc(var(--d) * 4) auto;
   margin-block-start: 0px;
   margin-block-end: 0px;
   margin-inline-start: 0px;
@@ -281,11 +277,7 @@ a.info span:nth-child(2) {
 }
 
 figure {
-  margin: 0 0 var(--d) 0;
-  margin-block-start: 0;
-  margin-block-end: 0;
-  margin-inline-start: 0;
-  margin-inline-end: 0;
+  margin: var(--d) 0;
   text-align: center;
 }
 
@@ -305,7 +297,7 @@ p {
   img {
     aspect-ratio: 1/1;
     object-fit: cover;
-    max-height: 300px;
+    /* max-height: 300px; */
   }
 } 
 
@@ -315,11 +307,9 @@ p {
   }
 
   dl {
-    column-count: 2;
-    column-gap: calc(var(--d) * 4);
-    margin: var(--d) 0 calc(var(--d) * 4) 0;
-    padding: calc(var(--d) * 2) calc(var(--d) * 2) 0 calc(var(--d) * 2);
+    margin: 0 auto calc(var(--d) * 4) auto;
     border: 1px solid var(--c3);
+    padding: calc(var(--d) * 2) calc(var(--d) * 2) 0 calc(var(--d) * 2);
   }
 }
 
@@ -327,7 +317,6 @@ p {
 
 @supports (aspect-ratio: 1) {
   .grid img {
-    height: initial;
     aspect-ratio: 1;
   }
 }
@@ -353,7 +342,7 @@ p {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: var(--d);
   margin: 0 auto calc(var(--d)) auto;
   background-color: var(--c0);
@@ -363,7 +352,11 @@ p {
   margin: 0 auto calc(var(--d) * 4) auto;
 }
 
-.grid > div {
+.grid:has(figure) {
+  max-width: 70ch;
+}
+
+.grid > * {
   display: flex;
   flex-direction: column;
   padding: 0;
@@ -411,20 +404,16 @@ p {
   -webkit-font-smoothing: antialiased;
 }
 
-.grid div > div {
+.grid div > div  {
   display: flex;
   flex-direction: column;
   align-items: center;  
   justify-content: center;
   height: calc(6 * var(--d));
-  padding: var(--d) 0;
+  padding: var(--d);
+  font-size: var(--s3);
   text-transform: lowercase;
 }
-
-/* #lesson legend::before {
-  content: "\29bf";
-  margin: 0 calc(var(--d) * .5) 0 0;
-} */
 
 #lesson legend:empty {
   display: none;
@@ -461,6 +450,12 @@ p {
   justify-content: space-between;
 }
 
+.section-group {
+  margin-bottom: calc(var(--d) * .25);
+  padding-left: calc(var(--d) * 2);
+  align-items: center;
+}
+
 .latin {
   font-style: italic;
 }
@@ -476,7 +471,6 @@ p {
 /* CONTROLS */
 
 #curatedGuideCtrl, #inatSearchCtrl, #displayCtrl, #lessonCtrl, #progressCtrl, #preferencesCtrl {
-  margin: 0 var(--d)0 0;
   padding-right: 0;
   border: none;
   font-size: var(--s2);
@@ -541,6 +535,10 @@ p {
 }
 
 /* SIZE */
+
+/* .big {
+  font-size: var(--s6);
+} */
 
 .small {
   font-size: var(--s3);
