@@ -4,6 +4,7 @@ import {
     , getInatObservations
     , getInatTaxa
     , g
+    , templates
 } from './api.js'
 
 Object.assign(g, {
@@ -109,16 +110,18 @@ const toggleLessonStyle = (({ ctrl, fieldsetId }) => {
             switch(ctrl.value) {
                 case 'Guides':
                     altFieldset = document.getElementById('inatSearchMain')
-                    altFieldset.classList.toggle('hidden')
+                    altFieldset.classList.toggle('hidden')                    
                     break
                 case 'iNaturalist':
                     altFieldset = document.getElementById('curatedGuideMain')
                     altFieldset.classList.toggle('hidden')
+                    g.templates = templates
                     break
             }
         }
-    }
-)})
+        display.classList.add('disabled')
+    })    
+})
 
 const lessonLegend = document.querySelector('#lesson > legend')
 const speciesParent = document.getElementById('species-parent')
@@ -365,7 +368,7 @@ const createRadioBtnTemplateGroup = () => {
 
                 testbtn.addEventListener('click', toggleTestableTemplate, true)
                             
-                startLesson()
+                startLesson()                
             })
         })
     }
@@ -678,7 +681,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 })
                 .filter(t => t)
     
+                
             createRadioBtnTemplateGroup()
+            display.classList.remove('disabled')
             startLesson()
         })
     }

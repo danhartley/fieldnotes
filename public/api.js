@@ -578,7 +578,7 @@ export const snapSpeciesTraits = [
     }
 ]
 
-const templates = [
+export const templates = [
   {
       id: 'species-card-test-template',
       name: 'Species-card-tests',

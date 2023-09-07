@@ -189,7 +189,7 @@ input[type="checkbox"] {
   appearance: none;
   width: calc(var(--d) * 2);
   height: calc(var(--d) * 2);
-  border: 0.15em solid var(--c8);
+  border: 1px solid var(--c8);
   transform: translateY(-0.075em);
   display: grid;
   place-content: center;
@@ -221,12 +221,22 @@ input[type='checkbox'] + label, .flex-row input[type='radio'] + label {
   position: relative;
 }
 
+input[type="checkbox"] + label {
+  height: calc(var(--d) * 2 + 1px);
+}
+
 h2 input[type='radio'] + label {
   position: relative;
 }
 
 @-moz-document url-prefix() {
-  input[type='checkbox'] + label, .flex-row input[type='radio'] + label, h2 input[type='radio'] + label {
+  label {
+    width: initial;
+  }
+  input[type='checkbox'] + label {
+    top: 2px;
+  }
+  .flex-row input[type='radio'] + label, h2 input[type='radio'] + label {
     top: 1px;
   }
 }
