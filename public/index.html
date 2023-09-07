@@ -18,23 +18,27 @@
       <fieldset class="fieldset-reset">
         <section>
           <div class="section-header section-group">
-            <h2>
+            <h2>              
               <input id="curatedGuideCtrl" type="radio" name="lessonStyle" value="Guides">
-              <label for="curatedGuideCtrl">Field guides</label>
+              <label for="curatedGuideCtrl">
+                Field guides
+              </label>
             </h2>
           </div>
           <fieldset id="curatedGuideMain" class="flex-row hidden">
             <legend>Curated content</legend>
             <p class="mt0 mb05 small">Guides have content for specific environments and species.</p>
-            <p class="mt0 small">They are an alternative to iNaturalist searches.</p>
+            <p class="mt0 small">They range from field guides, to country diaries and observations.</p>
             <div id="guide-group" class="grid"></div>
           </fieldset>      
         </section>
         <section class="mb2">
           <div class="section-header section-group">
-            <h2>
+            <h2>              
               <input id="inatSearchCtrl" type="radio" name="lessonStyle" value="iNaturalist" checked>
-              <label for="inatSearchCtrl">iNaturalist search</label>
+              <label for="inatSearchCtrl">
+                iNaturalist search
+              </label>
             </h2>
           </div>
           
@@ -65,7 +69,7 @@
                 <div class="centred-block box mb2">
                   <label for="species-count" class="mb0 mr">Number of species</label>
                   <input id="species-count" type="number" value="0" min="1" max="200" class="mr p">
-                  <div class="small">(You can view up to 200 species)</div>
+                  <div class="small">(up to 200)</div>
                 </div>
               </fieldset>
 
@@ -231,7 +235,7 @@
     <template id="term-template">
         <dt></dt>
         <dd></dd>        
-        <div class="mb2">
+        <div class="mb">
           <span></span><em></em>
         </div>
         <div class="mb2">

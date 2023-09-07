@@ -156,7 +156,8 @@ const createRadioBtnGroup = ({collection, checked, rbGroup, parent}) => {
         input.value = item.id
         label.textContent = item.name
         label.htmlFor = input.id
-
+        label.setAttribute('position', 'absolute')
+        
         if(!!checked && checked.id === item.id) {
             input.setAttribute('checked', true)
         }
@@ -651,7 +652,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             g.templates = g.guide.templates
  
             const taxaIds = g.guide.taxa
-                .filter(t => t.rank === 10)
+                // .filter(t => t.rank === 10)
                 .map(t => t.id)
             const taxaNames = g.guide.taxa
                 .map(t => t.name)

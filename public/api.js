@@ -614,8 +614,6 @@ const templates = [
   },
 ]
 
-// rank 20: genus
-// rank 10: species
 export const g = {
     ICONIC_TAXA: [
         {
@@ -659,8 +657,18 @@ export const g = {
             author: 'danielhartley',
             taxa: [
               {
-                id: 82946,
-                name: 'Quercus rotundifolia',
+                id: 1137754,
+                name: 'Quercus ilex',
+                rank: 10,
+              },
+              {
+                id: 78159,
+                name: 'Myrtus communis',
+                rank: 10,
+              },
+              {
+                id: 82689,
+                name: 'Arbutus unedo',
                 rank: 10,
               },
               {
@@ -669,153 +677,167 @@ export const g = {
                 rank: 10,
               },
               {
-                id: 79009,
-                name: 'Scolymus hispanicus',
+                id: 54759,
+                name: 'Laurus nobilis',
                 rank: 10,
               },
               {
-                id: 55721,
-                name: 'Silene vulgaris',
+                id: 82856,
+                name: 'Rhamnus alaternus',
                 rank: 10,
               },
-              {
-                id: 52586,
-                name: 'Silybum marianum',
-                rank: 10,
-              },
-              {
-                id: 60232,
-                name: 'Rumex pulcher',
-                rank: 10,
-                description: [
-                  {
-                    text: 'At its best in early spring when the plant has developed its basal leaves and before the growth of the flowering stems.'
-                  }
-                ]
-              },
-              {
-                id: 82691,
-                name: 'Dioscorea communis',
-                rank: 10,
-                description: [
-                  {
-                    text: 'The young shoots are collected in mid-spring.'
-                  }
-                ]
-              },
-              {
-                id: 210513,
-                name: 'Asparagus acutifolius',
-                rank: 10,
-              },
-              {
-                id: 78174,
-                name: 'Nasturtium officinale',
-                rank: 10,
-              },
-              {
-                id: 53196,
-                name: 'Rumex',
-                rank: 20,
-              },
-              {
-                id: 79009,
-                name: 'Scolymus hispanicus',
-                rank: 10,
-              },
-              {
-                id: 72264,
-                name: 'Onopordum',
-                rank: 20,
-              },
-              {
-                id: 48150,
-                name: 'Boraginaceae',
-                rank: 20,
-                description: [
-                  {
-                    text: 'Have been used as stewed vegetables.'
-                  }
-                ]
-              },
-              {
-                id: 53294,
-                name: 'Sonchus oleraceus',
-                rank: 10,
-              },
-              {
-                id: 53779,
-                name: 'Humulus lupulus',
-                rank: 10,
-              },
-              {
-                id: 493017,
-                name: 'Scandix australis',
-                rank: 10,
-              },
-              {
-                id: 75429,
-                name: 'Anchusa azurea',
-                rank: 10,
-                description: [
-                  {
-                    text: 'These flowers, which typically appear in May–July, are edible and attract bees.'
-                  }
-                ]
-              },
-              {
-                id: 53052,
-                name: 'Foeniculum vulgare',
-                rank: 10,
-                description: [
-                  {
-                    text: 'Consumed in salads or eaten raw.'
-                  }
-                ]
-              },
-              {
-                id: 76300,
-                name: 'Chondrilla juncea',
-                rank: 10,
-                description: [
-                  {
-                    text: 'Consumed in salads or eaten raw.'
-                  }
-                ]
-              },
-              {
-                id: 82642,
-                name: 'Mantisalca salmantica',
-                rank: 10,
-                description: [
-                  {
-                    text: 'Consumed in salads or eaten raw.'
-                  }
-                ]
-              },
-              {
-                id: 168693,
-                name: 'Scorzonera laciniata',
-                rank: 10,
-                description: [
-                  {
-                    text: 'Consumed in salads or eaten raw.'
-                  }
-                ]
-              },
-              {
-                id: 61396,
-                name: 'Origanum vulgare',
-                rank: 10,
-                description: [
-                  {
-                    text: ''
-                  }
-                ]
-              },
+              // {
+              //   id: 82946,
+              //   name: 'Quercus rotundifolia',
+              //   rank: 10,
+              // },              
+              // {
+              //   id: 79009,
+              //   name: 'Scolymus hispanicus',
+              //   rank: 10,
+              // },
+              // {
+              //   id: 55721,
+              //   name: 'Silene vulgaris',
+              //   rank: 10,
+              // },
+              // {
+              //   id: 52586,
+              //   name: 'Silybum marianum',
+              //   rank: 10,
+              // },
+              // {
+              //   id: 60232,
+              //   name: 'Rumex pulcher',
+              //   rank: 10,
+              //   description: [
+              //     {
+              //       text: 'At its best in early spring when the plant has developed its basal leaves and before the growth of the flowering stems.'
+              //     }
+              //   ]
+              // },
+              // {
+              //   id: 82691,
+              //   name: 'Dioscorea communis',
+              //   rank: 10,
+              //   description: [
+              //     {
+              //       text: 'The young shoots are collected in mid-spring.'
+              //     }
+              //   ]
+              // },
+              // {
+              //   id: 210513,
+              //   name: 'Asparagus acutifolius',
+              //   rank: 10,
+              // },
+              // {
+              //   id: 78174,
+              //   name: 'Nasturtium officinale',
+              //   rank: 10,
+              // },
+              // {
+              //   id: 53196,
+              //   name: 'Rumex',
+              //   rank: 20,
+              // },
+              // {
+              //   id: 79009,
+              //   name: 'Scolymus hispanicus',
+              //   rank: 10,
+              // },
+              // {
+              //   id: 72264,
+              //   name: 'Onopordum',
+              //   rank: 20,
+              // },
+              // {
+              //   id: 48150,
+              //   name: 'Boraginaceae',
+              //   rank: 20,
+              //   description: [
+              //     {
+              //       text: 'Have been used as stewed vegetables.'
+              //     }
+              //   ]
+              // },
+              // {
+              //   id: 53294,
+              //   name: 'Sonchus oleraceus',
+              //   rank: 10,
+              // },
+              // {
+              //   id: 53779,
+              //   name: 'Humulus lupulus',
+              //   rank: 10,
+              // },
+              // {
+              //   id: 493017,
+              //   name: 'Scandix australis',
+              //   rank: 10,
+              // },
+              // {
+              //   id: 75429,
+              //   name: 'Anchusa azurea',
+              //   rank: 10,
+              //   description: [
+              //     {
+              //       text: 'These flowers, which typically appear in May–July, are edible and attract bees.'
+              //     }
+              //   ]
+              // },
+              // {
+              //   id: 53052,
+              //   name: 'Foeniculum vulgare',
+              //   rank: 10,
+              //   description: [
+              //     {
+              //       text: 'Consumed in salads or eaten raw.'
+              //     }
+              //   ]
+              // },
+              // {
+              //   id: 76300,
+              //   name: 'Chondrilla juncea',
+              //   rank: 10,
+              //   description: [
+              //     {
+              //       text: 'Consumed in salads or eaten raw.'
+              //     }
+              //   ]
+              // },
+              // {
+              //   id: 82642,
+              //   name: 'Mantisalca salmantica',
+              //   rank: 10,
+              //   description: [
+              //     {
+              //       text: 'Consumed in salads or eaten raw.'
+              //     }
+              //   ]
+              // },
+              // {
+              //   id: 168693,
+              //   name: 'Scorzonera laciniata',
+              //   rank: 10,
+              //   description: [
+              //     {
+              //       text: 'Consumed in salads or eaten raw.'
+              //     }
+              //   ]
+              // },
+              // {
+              //   id: 61396,
+              //   name: 'Origanum vulgare',
+              //   rank: 10,
+              //   description: [
+              //     {
+              //       text: ''
+              //     }
+              //   ]
+              // },
             ],
-            templates: [
-              ...templates,
+            templates: [              
               {
                 id: 'introduction-to-mediterranean-climate-regions-template',
                 name: 'Field-guide',
@@ -879,12 +901,12 @@ export const g = {
                         parent: 'grid-template',
                         type: 'img',
                         imgs: [
-                          {
-                            src: 'https://drive.google.com/thumbnail?id=1NfXWqunQ-TvGy8ffuzvR9IVYRwNKPOzF',
-                            alt: 'Pine bark',
-                            width: 220,
-                            height: 165,
-                          },
+                          // {
+                          //   src: 'https://drive.google.com/thumbnail?id=1NfXWqunQ-TvGy8ffuzvR9IVYRwNKPOzF',
+                          //   alt: 'Pine bark',
+                          //   width: 220,
+                          //   height: 165,
+                          // },
                           {
                             src: 'https://drive.google.com/thumbnail?id=1p3Qd3_CCdQuqEl_mRNEx9lFzhYkvzS_p',
                             alt: 'Costa Vicentina, Portugal',
@@ -930,7 +952,7 @@ export const g = {
                             text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the re-stricted summer rainfall when temperatures reach their maximum.',
                           },
                           {
-                            text: 'Plants that have developed and diversified in areas with a Mediterranean macro-climate have acquired special characteristics adapting their morphology and metab-olism to survive during the drought period and to resprout after wildfires.',
+                            text: 'Plants that have developed and diversified in areas with a Mediterranean macro-climate have acquired special characteristics adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
                           },
                           {
                             text: 'The main Mediterranean vegetation types through-out the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
@@ -945,6 +967,7 @@ export const g = {
                         terms: [
                           'Sclerophyll',
                           'Marcescence',
+                          'Conifer',
                         ],
                       },
                       {
@@ -953,12 +976,18 @@ export const g = {
                         parent: 'grid-template',
                         type: 'species',
                         species: [
-                          'Quercus rotundifolia',
+                          'Quercus ilex',
+                          'Myrtus communis',
+                          'Arbutus unedo',
                           'Olea europaea',
-                          'Rumex pulcher',
-                          'Dioscorea communis',
-                          'Asparagus acutifolius',
-                          'Nasturtium officinale',                        
+                          'Laurus nobilis',
+                          'Rhamnus alaternus',
+                          // 'Quercus rotundifolia',
+                          // 'Olea europaea',
+                          // 'Rumex pulcher',
+                          // 'Dioscorea communis',
+                          // 'Asparagus acutifolius',
+                          // 'Nasturtium officinale',                        
                         ],
                       },
                       {
@@ -1069,6 +1098,7 @@ export const g = {
                   }
                 ],
               },
+              ...templates,
             ],
         },
         {
@@ -1232,8 +1262,7 @@ export const g = {
                 ]
               },
             ],
-            templates: [
-              ...templates,
+            templates: [              
               {
                 id: 'wild-edible-plants-template',
                 name: 'Field-guide',
@@ -1254,12 +1283,12 @@ export const g = {
                         parent: 'grid-template',
                         type: 'img',
                         imgs: [
-                          {
-                            src: 'https://drive.google.com/thumbnail?id=1NfXWqunQ-TvGy8ffuzvR9IVYRwNKPOzF',
-                            alt: 'Pine bark',
-                            width: 220,
-                            height: 165,
-                          },
+                          // {
+                          //   src: 'https://drive.google.com/thumbnail?id=1NfXWqunQ-TvGy8ffuzvR9IVYRwNKPOzF',
+                          //   alt: 'Pine bark',
+                          //   width: 220,
+                          //   height: 165,
+                          // },
                           {
                             src: 'https://drive.google.com/thumbnail?id=1p3Qd3_CCdQuqEl_mRNEx9lFzhYkvzS_p',
                             alt: 'Costa Vicentina, Portugal',
@@ -1326,7 +1355,7 @@ export const g = {
                             text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the re-stricted summer rainfall when temperatures reach their maximum.',
                           },
                           {
-                            text: 'Plants that have developed and diversified in areas with a Mediterranean macro-climate have acquired special characteristics adapting their morphology and metab-olism to survive during the drought period and to resprout after wildfires.',
+                            text: 'Plants that have developed and diversified in areas with a Mediterranean macro-climate have acquired special characteristics adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
                           },
                           {
                             text: 'The main Mediterranean vegetation types through-out the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
@@ -1457,6 +1486,7 @@ export const g = {
                   }
                 ],
               },
+              ...templates,
             ],
             sources: [
               {
@@ -1755,8 +1785,7 @@ export const g = {
                   rank: 10,
               },
             ],
-            templates: [
-              ...templates,
+            templates: [              
               {
                 id: 'introduction-to-fire-prone-ecosystems-template',
                 name: 'Field-guide',
@@ -1804,6 +1833,7 @@ export const g = {
                   }
                 ],
               },
+              ...templates,
             ],
         },
     ],
@@ -1891,6 +1921,13 @@ export const g = {
         dd: 'Soils that lack horizon development due to either steep slopes or parent materials that contain no permanent weatherable minerals (such as ironstone). Typically, orthents are exceedingly shallow soils. They are often referred to as skeletal soils (USDA - entisols, UN FAO soil classification - lithosols).',
         ds: 'https://en.wikipedia.org/wiki/Orthent',
         da: 'Wikipedia'
+      },
+      {
+        dt: 'Conifer',
+        dd: 'A group of cone-bearing seed plants.',
+        ds: 'https://en.wikipedia.org/wiki/Conifer',
+        da: 'Wikipedia',
+        dx: ['cedars', 'cypresses', 'firs', 'junipers', 'kauri', 'larches', 'pines', 'hemlocks', 'redwoods', 'spruces', 'yews'],
       },
     ],
     inatSpecies: [],
