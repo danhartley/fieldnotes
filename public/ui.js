@@ -306,7 +306,6 @@ const createInatParamsCheckboxGroup = () => {
     g.inatAutocompleteOptions.filter(param => param.isActive).forEach(param => {
         const clone = t.content.cloneNode(true)
 
-        const div = clone.querySelector('div')
         const input = clone.querySelector('input')
         const label = clone.querySelector('label')
         label.setAttribute('class', 'text-initial')
@@ -376,8 +375,11 @@ const createRadioBtnTemplateGroup = () => {
     g.templates.filter(t => !t.isTest).forEach(t => {
         const clone = rbTemplate.content.cloneNode(true)
     
+        const row = clone.querySelector('div')
         const input = clone.querySelector('input')
         const label = clone.querySelector('label')
+
+        display.classList.add('disabled')
     
         input.setAttribute('name', 'template')
         input.id = t.name
@@ -622,6 +624,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         const place = g.inatAutocompleteOptions.find(o => o.id === 'places')        
 
         fetchInatSpeciesNotification.classList.toggle('hidden')
+        fetchInatSpeciesBtn.classList.toggle('disabled')
 
         g.inatSpecies = await getInatSpecies({
             user: user.isActive ? user.user : null
@@ -632,7 +635,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
     
         startLesson()
 
+        fetchInatSpeciesBtn.classList.toggle('disabled')
         fetchInatSpeciesNotification.classList.toggle('hidden')
+        display.classList.toggle('disabled')
+        display.querySelector('input').click()
     }
 
     fetchInatSpeciesBtn.addEventListener('click', fetchInatSpecies, false)
@@ -652,7 +658,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
             g.templates = g.guide.templates
  
             const taxaIds = g.guide.taxa
-                // .filter(t => t.rank === 10)
                 .map(t => t.id)
             const taxaNames = g.guide.taxa
                 .map(t => t.name)

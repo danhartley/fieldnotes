@@ -580,12 +580,6 @@ export const snapSpeciesTraits = [
 
 const templates = [
   {
-      id: 'species-list-template',
-      name: 'Species-list',
-      parent: 'grid-template',
-      isTest: false,
-  },
-  {
       id: 'species-card-test-template',
       name: 'Species-card-tests',
       parent: 'grid-template',
@@ -612,6 +606,12 @@ const templates = [
       isTest: false,
       isTestable: true,
   },
+  {
+    id: 'species-list-template',
+    name: 'Species-list',
+    parent: 'grid-template',
+    isTest: false,
+},
 ]
 
 export const g = {
@@ -648,7 +648,7 @@ export const g = {
         { name: 'Slovenščina', id: 'sl' },
     ],
     templates: templates,
-    count: 10,
+    count: 12,
     species: null,
     guides: [
         {

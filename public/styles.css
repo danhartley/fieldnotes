@@ -28,9 +28,9 @@
   --plantae: #d8dfd2;
   --insecta: #e2dce2;
   --aves: #d7e3f1;
-  --reptilia: #fee2df;
-  --highlight: #ebf0ea;
+  --reptilia: #fee2df;  
   --inactive-bg: #eef2e3;
+  --inactive-bg-light: #f7f9f2;
   --active-bg: #d5e1ba;
   --active-fg: #74ac02;
   --grid-min-max: 180px;
@@ -83,7 +83,7 @@ h2 {
   align-items: center;
   margin: var(--d) 0 var(--d) 0;
   width: 100%;
-  font-size: var(--s4);  
+  font-size: var(--s5);
   letter-spacing: calc(var(--d) * .025);
   -webkit-font-smoothing: antialiased;
 }
@@ -146,6 +146,10 @@ label {
   -webkit-font-smoothing: antialiased;
 }
 
+label:has(+ input) {
+  width: initial;
+}
+
 div > label {
   margin: 0 0 calc(var(--d) * .75);
 }
@@ -177,13 +181,12 @@ input[type="checkbox"]:checked::before {
 }
 
 input[type='radio']:checked {
-  border: 5px solid var(--c8);
+  border: 5px solid var(--c6);
 }
 
 input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
-  margin: 0 var(--d) 0 0;
   width: calc(var(--d) * 2);
   height: calc(var(--d) * 2);
   border: 0.15em solid var(--c8);
@@ -200,11 +203,11 @@ input[type="checkbox"]::before {
   transform: scale(0);
   transform-origin: bottom left;
   box-shadow: inset 1em 1em var(--c8);
-  background-color: var(--c8);
+  background-color: var(--c6);
 }
 
 input:focus-visible {
-  outline: 1px solid var(--c8);
+  outline: 1px solid var(--c6);
 }
 
 input[type='checkbox'] + label, input[type='radio'] + label {
@@ -399,6 +402,11 @@ p {
   background-color: initial;
 }
 
+.disabled {
+  pointer-events: none;
+  opacity: .5;
+}
+
 /* RULES */
 
 .grid {
@@ -434,6 +442,10 @@ p {
   padding: calc(var(--d) * 1.5) var(--d);
   border: 1px dotted var(--c2);
   background-color: var(--c1);
+}
+
+#inat-autocomplete-group .flex-row {
+  background-color: var(--inactive-bg-light);
 }
 
 .grid .species-panel {
