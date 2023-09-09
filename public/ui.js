@@ -9,7 +9,7 @@ import {
 
 Object.assign(g, {
     taxa: g.ICONIC_TAXA,
-    language: g.LANGUAGES[5],
+    language: g.LANGUAGES[1],
 })
 
 const debounce = (func, wait) => {
@@ -120,6 +120,8 @@ const toggleLessonStyle = (({ ctrl, fieldsetId }) => {
             }
         }
         display.classList.add('disabled')
+        g.templates = templates
+        createRadioBtnTemplateGroup()
     })    
 })
 
@@ -511,11 +513,21 @@ const startLesson = () => {
                 template = document.getElementById(t.parent)
                 parentClone = template.content.cloneNode(true)
                 templateToClone = document.getElementById(t.id)
+
+                let clone, h3, h4 
                 switch(t.type) {
-                    case 'header':
-                        const clone = templateToClone.content.cloneNode(true)
-                        const h3 = clone.querySelector('h3')
+                    case 'h3-header':
+                        clone = templateToClone.content.cloneNode(true)
+                        h3 = clone.querySelector('h3')
                         h3.textContent = t.h3
+                        parent = parentClone.querySelector('div')
+                        parent.appendChild(clone)
+                        speciesParent.appendChild(parent)
+                    break
+                    case 'h4-header':
+                        clone = templateToClone.content.cloneNode(true)
+                        h4 = clone.querySelector('h4')
+                        h4.textContent = t.h4
                         parent = parentClone.querySelector('div')
                         parent.appendChild(clone)
                         speciesParent.appendChild(parent)

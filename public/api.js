@@ -850,7 +850,7 @@ export const g = {
                       {
                         id: 'title-h3-template',
                         parent: 'non-grid-template',
-                        type: 'header',
+                        type: 'h3-header',
                         h3: 'Mediterranean Climate Regions',
                       },
                       {
@@ -863,7 +863,10 @@ export const g = {
                             text: 'The world\'s Mediterranean Climate Regions (MCRs) cover ~2% of the earth\'s surface.',
                           },
                           {
-                            text: 'They are five: the Mediterranean Basin (MB), California, coastal central Chile, southwestern Australia, and southwestern South Africa. All are at temperate latitudes between about 30° and 45°, generally where cold ocean currents meet the west coasts of the continents.',
+                            text: 'They are five: the Mediterranean Basin (MB), California, coastal central Chile, Southwest Australia, and the Cape Peninsula in South Africa.',
+                          },
+                          {
+                            text: 'All are at temperate latitudes between ~30° and ~45°, where cold ocean currents meet the west coasts of the continents.',
                           },
                           {
                             text: 'MCRs are unique climatically because the wet season is concurrent with the cold season, and the warm, dry season is comparable to an annual drought of 3–6 months.',
@@ -872,17 +875,14 @@ export const g = {
                             text: 'Although the MCRs are widely separated, their vegetation is similar, providing a classic example of convergent evolution.',
                           },
                           {
-                            text: 'Because drought during the growing season is the principle ecological stress in the MCRs, spatial heterogeneity in soil depth, water infiltration and water holding capacity is a major driver of vegetation pattern.',
+                            text: 'Because drought during the growing season is the principle ecological stress in the MCRs, spatial heterogeneity in soil depth, water infiltration, and water holding capacity is a major driver of vegetation pattern.',
                           },
                           {
-                            text: 'Low soil development makes soil characteristics highly dependent on bedrock.',
+                            text: 'Soil erosion is common due to the preponderance of skeletal soils (orthents). Soil characteristics are therefore highly dependent on bedrock.',
                           },
                           {
-                            text: 'One distinct feature of the MB as compared to the other Mediterranean-climate regions is the abundance of limestones.',
-                          },
-                          {
-                            text: 'Soil erosion is a major issue in all of the MCRs, due to the frequently skeletal soils (orthents), high disturbance rate.',
-                          },                     
+                            text: 'One distinct feature of the MB as compared to the other MCRs is the abundance of limestones.',
+                          },              
                         ]
                       },
                       {
@@ -895,6 +895,17 @@ export const g = {
                           'Limestone',
                           'Orthent',
                         ],
+                      },
+                      {
+                        id: 'text-template',
+                        name: 'text',
+                        parent: 'non-grid-template',
+                        type: 'text',
+                        texts: [
+                          {
+                            text: 'Much of Portugal has a Mediterranean climate.',
+                          },
+                        ]
                       },
                       {
                         id: 'img-template',
@@ -930,7 +941,7 @@ export const g = {
                       {
                         id: 'title-h3-template',
                         parent: 'non-grid-template',
-                        type: 'header',
+                        type: 'h3-header',
                         h3: 'Mediterranean climate and vegetation',
                       },
                       {
@@ -943,19 +954,16 @@ export const g = {
                             text: 'The Mediterranean is characterised by mild and rainy winters and hot and dry summers.',
                           },
                           {
-                            text: 'The Mediterranean macrobioclimate is shared with southern and south-western territories on all the continents.',
-                          },
-                          {
-                            text: 'The lands in these regions around the world are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
+                            text: 'MCRs are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
                           },
                           {
                             text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the re-stricted summer rainfall when temperatures reach their maximum.',
                           },
                           {
-                            text: 'Plants that have developed and diversified in areas with a Mediterranean macro-climate have acquired special characteristics adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
+                            text: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
                           },
                           {
-                            text: 'The main Mediterranean vegetation types through-out the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
+                            text: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
                           },                        
                         ]
                       },
@@ -969,6 +977,17 @@ export const g = {
                           'Marcescence',
                           'Conifer',
                         ],
+                      },
+                      {
+                        id: 'text-template',
+                        name: 'text',
+                        parent: 'non-grid-template',
+                        type: 'text',
+                        texts: [
+                          {
+                            text: 'Quercus ilex, Myrtus communis, Arbutus unedo, Olea europaea, Laurus nobilis, and Rhamnus alaternus are sclerophyllic, a typical adaptation to areas with low rainfall or seasonal droughts.',
+                          },
+                        ]
                       },
                       {
                         id: 'species-card-template',
@@ -990,16 +1009,6 @@ export const g = {
                           // 'Nasturtium officinale',                        
                         ],
                       },
-                      {
-                        id: 'term-template',
-                        name: 'term', 
-                        parent: 'dl-template',
-                        type: 'term',                 
-                        terms: [
-                          'Xerothermic',
-                          'Phytophagous Insects'
-                        ],
-                      },
                     ],
                   },
                   {
@@ -1007,7 +1016,7 @@ export const g = {
                       {
                         id: 'title-h3-template',
                         parent: 'non-grid-template',
-                        type: 'header',
+                        type: 'h3-header',
                         h3: 'Human impact',
                       },
                       {
@@ -1031,39 +1040,39 @@ export const g = {
                           {
                             text: 'Natural woods and bushes were transformed into a new cultural space where crops and grasslands could be identified with boundaries defining their ownership.'
                           },                
-                          {
-                            text: 'Changes promoted nitrogen-loving (nitrophilous) plants. Many are as-sociated with farmlands and cultivated plants (weeds), and others grow near places of human habitation (ruderals) or live along the borders of paths, roads or cattle tracks, carried by man and domestic animals in their seasonal migration.'
-                          },                
-                          {
-                            text: 'Numerous weeds and ruderal plants are used and collected as wild vegetables in the Iberian Peninsula, such as Scolymus hispanicus (Asteraceae), Silene vulgaris, Garcke (Caryophyllaceae) and Silybum marianum.'
-                          },          
-                          {
-                            text: 'Late winter, and especially spring, is in general the best time to collect vegetables that reach their higher development while being still tender, though de-pending on the local climatic conditions, they could be collected in other parts of the year.'
-                          },       
-                          {
-                            text: 'Seasonality is a very determinant condition for the life in the Mediterranean areas.'
-                          },       
-                          {
-                            text: 'Very dry autumns in Spanish continental sites signal the beginning of a bad year for collecting wild vegetables which develop during this season and produce their stems and leaves in late winter and spring.'
-                          },       
-                          {
-                            text: 'Asparagus acutifolius — which grows in oak forest communities, in olive groves and, in the past, inside rain-fed farm crops — has very tough underground organs like tuberous roots, and in dry years also produces new shoots or asparagus.'
-                          },      
-                          {
-                            text: 'There are also species that are not so dependent on the yearly climatic variation, such as watercress (Nasturtium officinale) that always grow where there are permanent waters.'
-                          },    
-                          {
-                            text: 'Late spring and summer is the season of aromatic plants used for seasoning. The diverse floras of the Mediterranean Basin countries provide numerous highly scented species. Chemical compounds from the essential oils are produced in the secondary metabolism of all these plants and are present in the small uni- or multicellular dots that are transformed hairs located on the epidermis of leaves and flowers.'
-                          },
-                          {
-                            text: 'These tiny dots burst, and the essential oil evap-orates into the air producing their pleasant aromas, even when the plants are dried. One of the biological advantages of the presence of these chemical compounds is that plants are protected from being eaten by large animals or phytophagous insects and from bacterial infections.'
-                          },
-                          {
-                            text: 'One of the biological advantages of the presence of these chemical compounds is that plants are protected from being eaten by large animals or phytophagous insects and from bacterial infections.'
-                          },
-                          {
-                            text: 'There is a high biodiversity within the group of species used for cooking, flavouring and preserving. Lamiaceae, Apiaceae and Asteraceae are the main aromatic plant families in the territories of the Mediterranean Basin.'
-                          },
+                          // {
+                          //   text: 'Changes promoted nitrogen-loving (nitrophilous) plants. Many are as-sociated with farmlands and cultivated plants (weeds), and others grow near places of human habitation (ruderals) or live along the borders of paths, roads or cattle tracks, carried by man and domestic animals in their seasonal migration.'
+                          // },                
+                          // {
+                          //   text: 'Numerous weeds and ruderal plants are used and collected as wild vegetables in the Iberian Peninsula, such as Scolymus hispanicus (Asteraceae), Silene vulgaris, Garcke (Caryophyllaceae) and Silybum marianum.'
+                          // },          
+                          // {
+                          //   text: 'Late winter, and especially spring, is in general the best time to collect vegetables that reach their higher development while being still tender, though de-pending on the local climatic conditions, they could be collected in other parts of the year.'
+                          // },       
+                          // {
+                          //   text: 'Seasonality is a very determinant condition for the life in the Mediterranean areas.'
+                          // },       
+                          // {
+                          //   text: 'Very dry autumns in Spanish continental sites signal the beginning of a bad year for collecting wild vegetables which develop during this season and produce their stems and leaves in late winter and spring.'
+                          // },       
+                          // {
+                          //   text: 'Asparagus acutifolius — which grows in oak forest communities, in olive groves and, in the past, inside rain-fed farm crops — has very tough underground organs like tuberous roots, and in dry years also produces new shoots or asparagus.'
+                          // },      
+                          // {
+                          //   text: 'There are also species that are not so dependent on the yearly climatic variation, such as watercress (Nasturtium officinale) that always grow where there are permanent waters.'
+                          // },    
+                          // {
+                          //   text: 'Late spring and summer is the season of aromatic plants used for seasoning. The diverse floras of the Mediterranean Basin countries provide numerous highly scented species. Chemical compounds from the essential oils are produced in the secondary metabolism of all these plants and are present in the small uni- or multicellular dots that are transformed hairs located on the epidermis of leaves and flowers.'
+                          // },
+                          // {
+                          //   text: 'These tiny dots burst, and the essential oil evap-orates into the air producing their pleasant aromas, even when the plants are dried. One of the biological advantages of the presence of these chemical compounds is that plants are protected from being eaten by large animals or phytophagous insects and from bacterial infections.'
+                          // },
+                          // {
+                          //   text: 'One of the biological advantages of the presence of these chemical compounds is that plants are protected from being eaten by large animals or phytophagous insects and from bacterial infections.'
+                          // },
+                          // {
+                          //   text: 'There is a high biodiversity within the group of species used for cooking, flavouring and preserving. Lamiaceae, Apiaceae and Asteraceae are the main aromatic plant families in the territories of the Mediterranean Basin.'
+                          // },
                         ]
                       },
                       {
@@ -1275,7 +1284,7 @@ export const g = {
                       {
                         id: 'title-h3-template',
                         parent: 'non-grid-template',
-                        type: 'header',
+                        type: 'h3-header',
                         h3: 'The Mediterranean landscape',
                       },
                       {
@@ -1334,31 +1343,31 @@ export const g = {
                         type: 'text',
                         texts: [
                           {
-                            text: 'The typical Mediterranean landscape is an amazing mosaic of diverse plant communities characterised by its notable biodiversity.',
+                            text: 'The typical Mediterranean landscape is a mosaic of diverse plant communities characterised by biodiversity.',
+                          },
+                          // {
+                          //   text: 'These complexes are home to an important group of edible plants and plants that provide wild edible fruits, as well as aromatic plants used as seasoning in human nutrition.',
+                          // },
+                          // {
+                          //   text: 'Mild and rainy winters contrasting with hot and dry summers.',
+                          // },
+                          // {
+                          //   text: 'The Mediterranean macrobioclimate is shared with southern and south-western territories on all the continents.',
+                          // },
+                          // {
+                          //   text: 'The lands in these regions around the world are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
+                          // },
+                          // {
+                          //   text: 'Wild plants were a major source of food and a key nutritional complement to the animal proteins obtained from hunting and fishing. Knowledge of wild edible plants has survived in more advanced farming and livestock societies, and in times of hardship, such as war and famine, it has once again served as a vital source of food and medicinal resources.',
+                          // },
+                          // {
+                          //   text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the restricted summer rainfall when temperatures reach their maximum.',
+                          // },
+                          {
+                            text: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
                           },
                           {
-                            text: 'These complexes are home to an important group of edible plants and plants that provide wild edible fruits, as well as aromatic plants used as seasoning in human nutrition.',
-                          },
-                          {
-                            text: 'Mild and rainy winters contrasting with hot and dry summers.',
-                          },
-                          {
-                            text: 'The Mediterranean macrobioclimate is shared with southern and south-western territories on all the continents.',
-                          },
-                          {
-                            text: 'The lands in these regions around the world are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
-                          },
-                          {
-                            text: 'Wild plants were a major source of food and a key nutritional complement to the animal proteins obtained from hunting and fishing. Knowledge of wild edible plants has survived in more advanced farming and livestock societies, and in times of hardship, such as war and famine, it has once again served as a vital source of food and medicinal resources.',
-                          },
-                          {
-                            text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the re-stricted summer rainfall when temperatures reach their maximum.',
-                          },
-                          {
-                            text: 'Plants that have developed and diversified in areas with a Mediterranean macro-climate have acquired special characteristics adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
-                          },
-                          {
-                            text: 'The main Mediterranean vegetation types through-out the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
+                            text: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
                           },                        
                         ]
                       },
@@ -1395,7 +1404,7 @@ export const g = {
                       {
                         id: 'title-h3-template',
                         parent: 'non-grid-template',
-                        type: 'header',
+                        type: 'h3-header',
                         h3: 'Section 2',
                       },
                       {
@@ -1848,6 +1857,12 @@ export const g = {
         dt: 'Secondary succession',
         dd: 'A process started by an event (e.g. forest fire, harvesting, hurricane, etc.) that reduces an already established ecosystem (e.g. a forest or a wheat field) to a smaller population of species.',
         ds: 'https://en.wikipedia.org/wiki/Secondary_succession',
+        da: 'Wikipedia',
+      },
+      {
+        dt: 'Ecological succession',
+        dd: 'The process of change in the species that make up an ecological community over time. Primary succession is the initial state of a new habitat.',
+        ds: 'https://en.wikipedia.org/wiki/Ecological_succession',
         da: 'Wikipedia',
       },
       {

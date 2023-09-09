@@ -105,6 +105,14 @@ h3 {
   color: var(--c6);
 }
 
+h4 {
+  margin: var(--d) 0 0 0;
+  font-family: Elena, "PT Serif", serif;
+  font-size: var(--s3);
+  letter-spacing: calc(var(--d) / 10);
+  color: var(--c6);
+}
+
 ul {
   margin: 0;
 }
