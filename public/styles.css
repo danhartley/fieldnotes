@@ -291,6 +291,11 @@ dt:has(+ dd:empty) {
   display: none;
 }
 
+main > fieldset {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
 fieldset {
   position: relative;
   margin: 0 0 calc(var(--d) * 2) 0;
