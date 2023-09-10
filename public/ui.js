@@ -414,7 +414,11 @@ const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) => {
     const img = clone.querySelector('img')      
     const div = clone.querySelector('img + div')
 
-    div.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
+    try {
+        div.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
+    } catch (e) {
+        console.log(e)
+    }
 
     spans[0].textContent = species.taxon.preferred_common_name
     spans[1].textContent = species.taxon.name

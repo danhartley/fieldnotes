@@ -19,7 +19,7 @@
         <section>
           <div class="section-header section-group">
             <h2>              
-              <input id="curatedGuideCtrl" type="radio" name="lessonStyle" value="Guides">
+              <input id="curatedGuideCtrl" type="radio" name="lessonStyle" value="Guides" checked>
               <label for="curatedGuideCtrl">
                 Curated guides
               </label>
@@ -29,7 +29,7 @@
         <section class="mb2">
           <div class="section-header section-group">
             <h2>              
-              <input id="inatSearchCtrl" type="radio" name="lessonStyle" value="iNaturalist" checked>
+              <input id="inatSearchCtrl" type="radio" name="lessonStyle" value="iNaturalist">
               <label for="inatSearchCtrl">
                 iNaturalist
               </label>
@@ -39,7 +39,7 @@
       </fieldset>
 
       <section>
-        <fieldset id="curatedGuideMain" class="flex-row hidden">
+        <fieldset id="curatedGuideMain" class="flex-row">
           <legend>Curated content</legend>
           <p class="mt0 mb05 small">Guides have content for specific environments and species.</p>
           <p class="mt0 small">They range from field guides, to country diaries and observations.</p>
@@ -48,7 +48,7 @@
       </section>
 
       <section>
-        <div id="inatSearchMain">
+        <div id="inatSearchMain" class="hidden">
           <fieldset>
             <legend>iNaturalist filters</legend>
             <fieldset class="fieldset-reset p0">
