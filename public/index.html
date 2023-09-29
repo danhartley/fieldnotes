@@ -16,12 +16,13 @@
 
     <main>
       <fieldset class="fieldset-reset">
+        <legend class="hidden">Choice between curated content or iNaturalist search</legend>
         <section>
           <div class="section-header section-group">
             <h2>              
               <input id="curatedGuideCtrl" type="radio" name="lessonStyle" value="Guides" checked>
               <label for="curatedGuideCtrl">
-                Curated guides
+                Curated content
               </label>
             </h2>
           </div>      
@@ -31,7 +32,7 @@
             <h2>              
               <input id="inatSearchCtrl" type="radio" name="lessonStyle" value="iNaturalist">
               <label for="inatSearchCtrl">
-                iNaturalist
+                iNaturalist search
               </label>
             </h2>
           </div>        
@@ -41,8 +42,7 @@
       <section>
         <fieldset id="curatedGuideMain" class="flex-row">
           <legend>Curated content</legend>
-          <p class="mt0 mb05 small">Guides have content for specific environments and species.</p>
-          <p class="mt0 small">They range from field guides, to country diaries and observations.</p>
+          <p class="mt0 mb1 small">Nature writing supplemented by species and environmental data.</p>
           <div id="guide-group" class="grid"></div>
         </fieldset>
       </section>
@@ -91,13 +91,13 @@
       
       <section>
         <div class="section-header">
-          <h2>Guide display options</h2>
+          <h2>Display options</h2>
           <button id="displayCtrl">HIDE</button>
         </div>
 
         <div id="display">
           <fieldset class="flex-row">
-            <legend>iNaturalist species</legend>
+            <legend>Select view</legend>
             <div id="species-display" class="grid"></div>
           </fieldset>
   
@@ -110,7 +110,7 @@
 
       <section>
         <div class="section-header">
-          <h2>Guide</h2>
+          <h2>Content</h2>
           <button id="lessonCtrl">HIDE</button>
         </div>
       
@@ -119,7 +119,7 @@
           <button id="show-test-btn" class="btn-reset t0 r1 tiny hidden">Show test</button>
           <article id="species-parent">
             <div class="non-grid">
-              <p class="m0">Create a guide based on species provided by iNaturalist, or select a curated guide.</p>
+              <p class="m0">Select curated content, or species from iNaturalist.</p>
             </div>
           </article>
           <button
@@ -137,12 +137,30 @@
           <button id="progressCtrl">HIDE</button>
         </div>
 
-        <fieldset id="progress">
+        <fieldset id="progress" class="disabled">
           <legend>Score</legend>
-            <dl>
-              <dt>Questions</dt><dd id="score-count">-</dd>
-              <dt>Correct</dt><dd id="score-correct">-</dd>
-            </dl>
+          <table>
+            <thead>
+              <tr>
+                <td></td>
+                <th>Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Correct</td>
+                <td id="score-correct">-</td>
+              </tr>
+              <tr>
+                <td>Incorrect</td>
+                <td id="score-incorrect">-</td>
+              </tr>
+              <tr>
+                <td>Total</td>
+                <td id="score-count">-</td>
+              </tr>
+            </tbody>
+          </table>
         </fieldset>
       </section>
 
@@ -154,7 +172,7 @@
         <fieldset id="preferences">
           <legend>Language</legend>
           <div id="language-group" class="grid"></div>
-          <p class="small">Language determines the locale preference for taxon common names</p>
+          <p class="small">Language determines the locale preference for taxon common names.</p>
         </fieldset>
       </section>
     </main>    

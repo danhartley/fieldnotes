@@ -225,8 +225,11 @@ input[type='checkbox'] + label, input[type='radio'] + label {
 }
 
 input[type='checkbox'] + label, .flex-row input[type='radio'] + label {
-  text-transform: capitalize;
   position: relative;
+}
+
+input[type='checkbox'] + label {
+  text-transform: capitalize;
 }
 
 input[type="checkbox"] + label {
@@ -378,6 +381,13 @@ p {
   font-family: Elena, "PT Serif", serif;
 }
 
+th, td {
+  min-width: 100px;
+  font-size: var(--s3);
+  text-align: left;
+  font-weight: normal;
+}
+
 /* MEDIA */
 
 @media screen {
@@ -438,6 +448,10 @@ p {
   gap: var(--d);
   margin: 0 auto calc(var(--d)) auto;
   background-color: var(--c0);
+}
+
+#guide-group.grid {
+  grid-template-columns: 1fr;
 }
 
 .grid:has(figure, img) {

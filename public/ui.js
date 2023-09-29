@@ -140,6 +140,7 @@ const inatSearchCtrl = document.getElementById('inatSearchCtrl')
 const curatedGuideCtrl = document.getElementById('curatedGuideCtrl')
 const lessonCtrl = document.getElementById('lessonCtrl')
 const displayCtrl = document.getElementById('displayCtrl')
+const progress = document.getElementById('progress')
 const progressCtrl = document.getElementById('progressCtrl')
 const preferencesCtrl = document.getElementById('preferencesCtrl')
 const testbtn = document.getElementById('show-test-btn')
@@ -358,12 +359,14 @@ const createRadioBtnTemplateGroup = () => {
 
                     if(g.template.isTest) {
                         testbtn.innerText = 'HIDE TESTS'                
-                        testSubmitBtn.classList.remove('hidden')
+                        testSubmitBtn.classList.remove('hidden')                        
                     } 
                     else {
                         testbtn.innerText = 'SHOW TESTS'                  
                         testSubmitBtn.classList.add('hidden')
                     }
+
+                    progress.classList.toggle('disabled')
 
                     startLesson()
                 }
@@ -380,7 +383,6 @@ const createRadioBtnTemplateGroup = () => {
     g.templates.filter(t => !t.isTest).forEach(t => {
         const clone = rbTemplate.content.cloneNode(true)
     
-        const row = clone.querySelector('div')
         const input = clone.querySelector('input')
         const label = clone.querySelector('label')
 
@@ -413,12 +415,8 @@ const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) => {
     const spans = clone.querySelectorAll('span')
     const img = clone.querySelector('img')      
     const div = clone.querySelector('img + div')
-
-    try {
-        div.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
-    } catch (e) {
-        console.log(e)
-    }
+ 
+    div.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
 
     spans[0].textContent = species.taxon.preferred_common_name
     spans[1].textContent = species.taxon.name
@@ -562,10 +560,15 @@ const startLesson = () => {
                         break
                     case 'species':
                         t.species.forEach((sp, i) => {
-                            const s = g.species.find(s => s.taxon.name === sp)
-                            const clone = cloneSpeciesCardFromTemplate({templateToClone, species: s, index: i})
-                            parent = parentClone.querySelector('div')
-                            parent.appendChild(clone)
+                            try{
+                                const s = g.species.find(s => s.taxon.name === sp)
+                                const clone = cloneSpeciesCardFromTemplate({templateToClone, species: s, index: i})
+                                parent = parentClone.querySelector('div')
+                                parent.appendChild(clone)
+                            } catch (e) {
+                                console.log('species', sp)
+                                console.log(e)
+                            }
                         })
                         speciesParent.appendChild(parent)
                     break
@@ -622,6 +625,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
         scoreCount.innerText = g.species.length
         const scoreCorrect = document.getElementById('score-correct')
         scoreCorrect.innerText = g.template.score
+        const scoreIncorrect = document.getElementById('score-incorrect')
+        scoreIncorrect.innerText = g.species.length - g.template.score
     }
 
     const scoreHandler = () => {

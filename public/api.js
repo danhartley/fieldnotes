@@ -830,7 +830,7 @@ export const g = {
             templates: [              
               {
                 id: 'introduction-to-mediterranean-climate-regions-template',
-                name: 'Field-guide',
+                name: 'curated-content',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,
@@ -844,7 +844,7 @@ export const g = {
                             text: 'The typical Mediterranean landscape is a mosaic of diverse plant communities characterised by biodiversity.',
                           },
                           {
-                            text: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
+                            text: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics, adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
                           },
                           {
                             text: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
@@ -852,9 +852,9 @@ export const g = {
                         ]
                       },
                       { ...term, terms: [
-                        'Convergent evolution',
-                        'Limestone',
-                        'Orthent',
+                        'Sclerophyll',
+                        'Marcescence',
+                        'Conifer',
                         ]
                       },
                       { ...text, texts: [
@@ -901,19 +901,19 @@ export const g = {
                           text: 'MCRs are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
                         },
                         {
-                          text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the re-stricted summer rainfall when temperatures reach their maximum.',
+                          text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the restricted summer rainfall when temperatures reach their maximum.',
                         },
                         {
-                          text: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
+                          text: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics, adapting their morphology and metabolism to survive during drought, and to resprout after wildfires.',
                         },
                         {
                           text: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
                         },   
                       ] },
                       { ...term, terms: [
-                        'Sclerophyll',
-                        'Marcescence',
-                        'Conifer',
+                        'Convergent evolution',
+                        'Limestone',
+                        'Orthent',
                         ]
                       },
                       {
@@ -1142,7 +1142,7 @@ export const g = {
             templates: [              
               {
                 id: 'wild-edible-plants-template',
-                name: 'Field-guide',
+                name: 'curated-content',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,
@@ -1150,29 +1150,6 @@ export const g = {
                   {
                     templates: [
                       { ...h3,  h3: 'The Mediterranean landscape' },
-                      {
-                        ...image,
-                        imgs: [
-                          {
-                            src: 'https://drive.google.com/thumbnail?id=1p3Qd3_CCdQuqEl_mRNEx9lFzhYkvzS_p',
-                            alt: 'Costa Vicentina, Portugal',
-                            width: 220,
-                            height: 165,
-                          },
-                          {
-                            src: 'https://drive.google.com/thumbnail?id=1dhlGp_xaVeb67RriGjdXbeY9I8DEhb5C',
-                            alt: 'Costa Vicentina, Portugal',
-                            width: 220,
-                            height: 165,
-                          },
-                          {
-                            src: 'https://drive.google.com/thumbnail?id=11ckREuDuCyHqKkfwNRLV9zTR7TVyezKN',
-                            alt: 'Constância, Portugal',
-                            width: 220,
-                            height: 165,
-                          },
-                        ]
-                      },
                       {
                         ...text,
                         texts: [
@@ -1197,12 +1174,35 @@ export const g = {
                           // {
                           //   text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the restricted summer rainfall when temperatures reach their maximum.',
                           // },
+                          // {
+                          //   text: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
+                          // },
+                          // {
+                          //   text: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
+                          // },                        
+                        ]
+                      },
+                      {
+                        ...image,
+                        imgs: [
                           {
-                            text: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
+                            src: 'https://drive.google.com/thumbnail?id=1p3Qd3_CCdQuqEl_mRNEx9lFzhYkvzS_p',
+                            alt: 'Costa Vicentina, Portugal',
+                            width: 220,
+                            height: 165,
                           },
                           {
-                            text: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
-                          },                        
+                            src: 'https://drive.google.com/thumbnail?id=1dhlGp_xaVeb67RriGjdXbeY9I8DEhb5C',
+                            alt: 'Costa Vicentina, Portugal',
+                            width: 220,
+                            height: 165,
+                          },
+                          {
+                            src: 'https://drive.google.com/thumbnail?id=11ckREuDuCyHqKkfwNRLV9zTR7TVyezKN',
+                            alt: 'Constância, Portugal',
+                            width: 220,
+                            height: 165,
+                          },
                         ]
                       },
                       {
@@ -1611,7 +1611,7 @@ export const g = {
             templates: [              
               {
                 id: 'introduction-to-fire-prone-ecosystems-template',
-                name: 'Field-guide',
+                name: 'curated-content',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,                
