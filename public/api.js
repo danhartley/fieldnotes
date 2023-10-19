@@ -9,7 +9,7 @@ export const getInatObservations = async ({
     , per_page = 20
     , page = 1
     , locale = 'en'
-    , species_count = true
+    , species_count = false
 }) => {
     
     let params = ''
@@ -712,6 +712,139 @@ const terms = [
     da: 'Wikipedia',
     dx: ['cedars', 'cypresses', 'firs', 'junipers', 'kauri', 'larches', 'pines', 'hemlocks', 'redwoods', 'spruces', 'yews'],
   },
+  {
+    dt: 'Mesozoic',
+    dd: 'The second-to-last era of Earth\'s geological history, lasting from about 252 to 66 million years ago, comprising the Triassic, Jurassic and Cretaceous Periods.',
+    ds: 'https://en.wikipedia.org/wiki/Mesozoic',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Solstice',
+    dd: 'A solstice is an event that occurs when the Sun appears to reach its most northerly or southerly excursion relative to the celestial equator on the celestial sphere.',
+    ds: 'https://en.wikipedia.org/wiki/Solstice',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Subsolar point',
+    dd: 'The subsolar point on a planet is the point at which its Sun is perceived to be directly overhead (at the zenith); that is, where the Su\'s rays strike the planet exactly perpendicular to its surface.',
+    ds: 'https://en.wikipedia.org/wiki/Subsolar_point',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Tropic of Cancer (Northern Tropic)',
+    dd: 'The most northerly circle of latitude on Earth at which the Sun can be directly overhead. This occurs on the June solstice, when the Northern Hemisphere is tilted toward the Sun to its maximum extent.',
+    ds: 'https://en.wikipedia.org/wiki/Tropic_of_Cancer',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Tropic of Capricorn (Southern Tropic)',
+    dd: 'The circle of latitude that contains the subsolar point at the December (or southern) solstice. It is thus the southernmost latitude where the Sun can be seen directly overhead. It also reaches 90 degrees below the horizon at solar midnight on the June Solstice.',
+    ds: 'https://en.wikipedia.org/wiki/Tropic_of_Capricorn',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Köppen climate classification',
+    dd: 'Divides climates into five main climate groups, with each group being divided based on patterns of seasonal precipitation and temperature. The five main groups are A (tropical), B (arid), C (temperate), D (continental), and E (polar). These are in turn divided into subgroups. Climates are assigned a group and typically a subgroup e.g. Mediterranean climate has a Köppen climate classification of Csa/Csb.',
+    ds: 'https://en.wikipedia.org/wiki/K%C3%B6ppen_climate_classification',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Siliceous rock',
+    dd: 'Sedimentary rocks that have silica (SiO2) as the principal constituent. The most common siliceous rock is chert.',
+    ds: 'https://en.wikipedia.org/wiki/Siliceous_rock',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Lignotuber',
+    dd: 'A woody swelling of the root crown (that part of a root system from which a stem arise) possessed by some plants as a protection against destruction of the plant stem, such as by fire.',
+    ds: 'https://en.wikipedia.org/wiki/lignotuber',
+    da: 'Wikipedia',
+    dx: ['Quercus suber', 'Erica arborea', 'Olea europaea']
+  },
+  {
+    dt: 'Phytology',
+    dd: 'The study of plants; botany.',
+    ds: 'https://en.wikipedia.org/wiki/Lignotuberphytology',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Obligate seeders',
+    dd: 'Plants with large, fire-activated seed banks that germinate, grow, and mature rapidly following a fire, in order to reproduce and renew the seed bank before the next fire.',
+    ds: 'https://en.wikipedia.org/wiki/Fire_ecology#Fire_intolerance',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Resprouters',
+    dd: 'Plant species that are able to survive fire by the activation of dormant vegetative buds to produce regrowth.',
+    ds: 'https://en.wikipedia.org/wiki/Fire_ecology#Fire_tolerance',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Iteroparity',
+    dd: 'Characterized by multiple reproductive cycles over the course of its lifetime. Compare polycarpy.',
+    ds: 'https://en.wikipedia.org/wiki/Semelparity_and_iteroparity',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Semelparity',
+    dd: 'Characterized by a single reproductive episode before death. Compare monocarpy.',
+    ds: 'https://en.wikipedia.org/wiki/Semelparity_and_iteroparity',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Monocarpic',
+    dd: 'Plants are those that flower and set seeds only once, and then die.',
+    ds: 'https://en.wikipedia.org/wiki/Monocarpic',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Polycarpic',
+    dd: 'Plants are those that flower and set seeds many times before dying.',
+    ds: 'https://en.wikipedia.org/wiki/Polycarpic',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Monopyric',
+    dd: 'Species that perform all their life cycle within a fire cycle. In plants, examples are annual and biennial species, postfire obligate seeders and some bamboos.',
+    ds: 'https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.12921',
+    da: 'New Phytologist',
+  },
+  {
+    dt: 'Polypyric',
+    dd: 'Species that perform all their life cycle through multiple fire cycles. In plants, examples are those with postfire resprouting capacity as well as trees with other survival strategies such as very thick bark.',
+    ds: 'https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.12921',
+    da: 'New Phytologist',
+  },
+  {
+    dt: 'Subtropics',
+    dd: 'Geographical and climate zones to the north of the tropic of Cancer and south of the tropic of Capricorn. The tropics lie at a latitude of ~23.44° north and south, which corresponds to the Earth\'s axial tilt.',
+    ds: 'https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.12921',
+    da: 'New Phytologist',
+  },
+  {
+    dt: 'Climax community',
+    dd: 'A historic term for a community of plants, animals, and fungi which, through the process of ecological succession in the development of vegetation in an area over time, have reached a steady state.',
+    ds: 'https://en.wikipedia.org/wiki/Climax_community',
+    da: 'Wikipedia',
+  },
+  {
+    dt: 'Edaphology',
+    dd: 'Concerned with the influence of soils on living beings, particularly plants.',
+    ds: 'https://en.wikipedia.org/wiki/Edaphology',
+    da: 'Wikipedia',
+  },
+]
+
+const keys = [
+  {
+    key: 'mediterranean',
+    values: [
+      'Biodiversity hotspot: Mediterranean Sea 4% to 18% of all identified marine species in 0.82% of the global ocean surface.',
+      '26,000 people have died attemptig to cross the Mediterranean since 2014',
+      'Average annual temperatures are now 1.4 °C higher than during the period 1880-1899.',
+      'The estimated sea level rise during the last two decades was ~3 cm/decade.',
+    ]
+  }
 ]
 
 // TEMPLATES
@@ -830,7 +963,7 @@ export const g = {
             templates: [              
               {
                 id: 'introduction-to-mediterranean-climate-regions-template',
-                name: 'curated-content',
+                name: 'Waymark',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,
@@ -838,6 +971,35 @@ export const g = {
                   {
                     templates: [
                       { ...h3, h3: 'Mediterranean Climate Regions' },
+                      { 
+                        ...text, texts: [
+                          {
+                            text: 'The Mediterranean has a subtropical climate with hot summers and mild winters. Precipitation is concentrated in the winter.',
+                          },
+                          {
+                            text: 'The subtropics fall outside of the tropics of Cancer (in the northern hemisphere) and Capricorn (southern hemisphere).',
+                          },
+                        ]
+                      },
+                      {
+                        ...image,
+                        imgs: [
+                          {
+                            src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Subtropical.png/320px-Subtropical.png',
+                            alt: 'Subtropical regions on Earth',
+                            width: 640,
+                            height: 296,
+                            contain: true,
+                          },                          
+                          // {
+                          //   src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Roman_Empire_Trajan_117AD.png/320px-Roman_Empire_Trajan_117AD.png',
+                          //   alt: 'Roman Empire under Trajan 117AD',
+                          //   width: 640,
+                          //   height: 408,
+                          //   contain: true,
+                          // },                          
+                        ]
+                      },
                       { 
                         ...text, texts: [
                           {
@@ -877,18 +1039,21 @@ export const g = {
                             alt: 'Costa Vicentina, Portugal',
                             width: 220,
                             height: 165,
+                            contain: true,
                           },
                           {
                             src: 'https://drive.google.com/thumbnail?id=1dhlGp_xaVeb67RriGjdXbeY9I8DEhb5C',
                             alt: 'Costa Vicentina, Portugal',
                             width: 220,
                             height: 165,
+                            contain: true,
                           },
                           {
                             src: 'https://drive.google.com/thumbnail?id=11ckREuDuCyHqKkfwNRLV9zTR7TVyezKN',
                             alt: 'Constância, Portugal',
                             width: 220,
                             height: 165,
+                            contain: true,
                           },
                         ]
                       },
@@ -933,6 +1098,8 @@ export const g = {
                           'Olea europaea',
                           'Laurus nobilis',
                           'Rhamnus alaternus',
+                          'Triticum', // wheat genus
+                          'Vitis', // grapevine genus
                         ]
                       }
                     ],
@@ -1142,7 +1309,7 @@ export const g = {
             templates: [              
               {
                 id: 'wild-edible-plants-template',
-                name: 'curated-content',
+                name: 'Waymark',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,
@@ -1156,30 +1323,30 @@ export const g = {
                           {
                             text: 'The typical Mediterranean landscape is a mosaic of diverse plant communities characterised by biodiversity.',
                           },
-                          // {
-                          //   text: 'These complexes are home to an important group of edible plants and plants that provide wild edible fruits, as well as aromatic plants used as seasoning in human nutrition.',
-                          // },
-                          // {
-                          //   text: 'Mild and rainy winters contrasting with hot and dry summers.',
-                          // },
-                          // {
-                          //   text: 'The Mediterranean macrobioclimate is shared with southern and south-western territories on all the continents.',
-                          // },
-                          // {
-                          //   text: 'The lands in these regions around the world are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
-                          // },
-                          // {
-                          //   text: 'Wild plants were a major source of food and a key nutritional complement to the animal proteins obtained from hunting and fishing. Knowledge of wild edible plants has survived in more advanced farming and livestock societies, and in times of hardship, such as war and famine, it has once again served as a vital source of food and medicinal resources.',
-                          // },
-                          // {
-                          //   text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the restricted summer rainfall when temperatures reach their maximum.',
-                          // },
-                          // {
-                          //   text: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
-                          // },
-                          // {
-                          //   text: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
-                          // },                        
+                          {
+                            text: 'These complexes are home to an important group of edible plants and plants that provide wild edible fruits, as well as aromatic plants used as seasoning in human nutrition.',
+                          },
+                          {
+                            text: 'Mild and rainy winters contrasting with hot and dry summers.',
+                          },
+                          {
+                            text: 'The Mediterranean macrobioclimate is shared with southern and south-western territories on all the continents.',
+                          },
+                          {
+                            text: 'The lands in these regions around the world are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
+                          },
+                          {
+                            text: 'Wild plants were a major source of food and a key nutritional complement to the animal proteins obtained from hunting and fishing. Knowledge of wild edible plants has survived in more advanced farming and livestock societies, and in times of hardship, such as war and famine, it has once again served as a vital source of food and medicinal resources.',
+                          },
+                          {
+                            text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the restricted summer rainfall when temperatures reach their maximum.',
+                          },
+                          {
+                            text: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
+                          },
+                          {
+                            text: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
+                          },                        
                         ]
                       },
                       {
@@ -1190,18 +1357,21 @@ export const g = {
                             alt: 'Costa Vicentina, Portugal',
                             width: 220,
                             height: 165,
+                            contain: true,
                           },
                           {
                             src: 'https://drive.google.com/thumbnail?id=1dhlGp_xaVeb67RriGjdXbeY9I8DEhb5C',
                             alt: 'Costa Vicentina, Portugal',
                             width: 220,
                             height: 165,
+                            contain: true,
                           },
                           {
                             src: 'https://drive.google.com/thumbnail?id=11ckREuDuCyHqKkfwNRLV9zTR7TVyezKN',
                             alt: 'Constância, Portugal',
                             width: 220,
                             height: 165,
+                            contain: true,
                           },
                         ]
                       },
@@ -1611,7 +1781,7 @@ export const g = {
             templates: [              
               {
                 id: 'introduction-to-fire-prone-ecosystems-template',
-                name: 'curated-content',
+                name: 'Waymark',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,                

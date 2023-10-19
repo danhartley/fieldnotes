@@ -372,7 +372,6 @@ figure {
 }
 
 figcaption {
-  margin: var(--d) 0 0 0;
   font-size: var(--s3);
   font-style: italic;
 }
@@ -440,6 +439,10 @@ th, td {
   opacity: .5;
 }
 
+.object-fit-contain {
+  object-fit: contain; 
+}
+
 /* RULES */
 
 .grid {
@@ -456,10 +459,6 @@ th, td {
 
 .grid:has(figure, img) {
   margin: 0 auto calc(var(--d) * 4) auto;
-}
-
-.grid:has(figure) {
-  max-width: 70ch;
 }
 
 .grid > * {
@@ -657,10 +656,6 @@ th, td {
 }
 
 /* SIZE */
-
-/* .big {
-  font-size: var(--s6);
-} */
 
 .small {
   font-size: var(--s3);

@@ -540,6 +540,7 @@ const startLesson = () => {
                             const image = clone.querySelector('img')
                             const caption = clone.querySelector('figcaption')
                             image.src = img.src
+                            if(img.contain) image.classList.add('object-fit-contain')
                             image.setAttribute('alt', img.alt)
                             image.setAttribute('loading', 'eager')
                             caption.textContent = img.alt
