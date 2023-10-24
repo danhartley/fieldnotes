@@ -833,6 +833,33 @@ const terms = [
     ds: 'https://en.wikipedia.org/wiki/Edaphology',
     da: 'Wikipedia',
   },
+  {
+    dt: 'Epicormic shoot',
+    dd: 'A shoot growing from an epicormic bud, which lies underneath the bark of a trunk, stem, or branch of a plant. Epicormic resprouting is typical of some tree species from fire-prone ecosystems.',
+    ds: 'https://en.wikipedia.org/wiki/Epicormic_shoot',
+    da: 'Wikipedia',
+    dx: ['Eucalyptus', 'Quercus suber']
+  },
+  {
+    dt: 'Epicuticular wax',
+    dd: 'A waxy coating which covers the outer surface of the plant cuticle in land plants. It may form a whitish film or bloom on leaves, fruits and other plant organs.',
+    ds: 'https://en.wikipedia.org/wiki/Epicuticular_wax',
+    da: 'Wikipedia',
+    dx: ['Cercis siliquastrum', 'Ceratonia siliqua']
+  },
+  {
+    dt: 'Geophyte',
+    dd: 'Plants with underground storage organs (bulbs, rhizomes, tuber) lying beneath the surface of the ground.',
+    ds: 'https://www.sciencedirect.com/topics/earth-and-planetary-sciences/geophyte',
+    da: 'ScienceDirect',
+  },
+  {
+    dt: 'Karst',
+    dd: 'A topography formed from the dissolution of soluble carbonate rocks such as limestone, dolomite, and gypsum.',
+    ds: 'https://en.wikipedia.org/wiki/Karst',
+    da: 'Wikipedia',
+    dx: ['Cercis siliquastrum', 'Ceratonia siliqua']
+  },
 ]
 
 const keys = [
@@ -963,7 +990,7 @@ export const g = {
             templates: [              
               {
                 id: 'introduction-to-mediterranean-climate-regions-template',
-                name: 'Waymark',
+                name: 'Journal',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,
@@ -1309,7 +1336,7 @@ export const g = {
             templates: [              
               {
                 id: 'wild-edible-plants-template',
-                name: 'Waymark',
+                name: 'Journal',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,
@@ -1781,7 +1808,7 @@ export const g = {
             templates: [              
               {
                 id: 'introduction-to-fire-prone-ecosystems-template',
-                name: 'Waymark',
+                name: 'Journal',
                 parent: 'non-grid-template',
                 type: 'guide',
                 isTest: false,                
@@ -1885,6 +1912,7 @@ export const g = {
         project: null,
         place: null,
     },
-    matches: [],
+    matches: [],    
+    useObservationsSpeciesCountOptions: [{name:'Observations', id: "false"}, {name:'Observations by species', id: "true"}],
 }
 

@@ -10,6 +10,7 @@ import {
 Object.assign(g, {
     taxa: g.ICONIC_TAXA,
     language: g.LANGUAGES[1],
+    useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[1],
 })
 
 const debounce = (func, wait) => {
@@ -33,6 +34,7 @@ const getInatSpecies = async ({user, place}) => {
         iconic_taxa: g.taxa,
         per_page: g.count + 10,
         locale: g.language.id,
+        species_count: (g.useObservationsSpeciesCount.id === "true")
     })
 }
 
@@ -132,6 +134,7 @@ const testSubmitBtn = document.getElementById('check-answers-btn')
 const guideGroup = document.getElementById('guide-group')
 const languageGroup = document.getElementById('language-group')
 const inatAutocompleteGroup = document.getElementById('inat-autocomplete-group')
+const inatUseObservationSpeciesCountGroup = document.getElementById('inat-use-observations-species-count-group')
 const display = document.getElementById('species-display')
 const targetGroup = document.getElementById('target-group')
 const iNatAutocompleteInput = document.getElementById('inat-autocomplete')
@@ -148,7 +151,7 @@ const targets = document.getElementById('targets')
 const fetchInatSpeciesBtn = document.getElementById('fetch-inat-species-btn')
 const fetchInatSpeciesNotification = document.getElementById('fetch-inat-species-notification')
 
-let rbGuideGroup, rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup
+let rbGuideGroup, rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup
 
 const createRadioBtnGroup = ({collection, checked, rbGroup, parent}) => {
     collection.forEach(item => {
@@ -724,6 +727,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
         rb.addEventListener('change', () => g.language = g.LANGUAGES.find(l => l.id === rb.value))
     })
 
+    rbInatUseObservationSpeciesCountGroup.forEach(rb => {
+        rb.addEventListener('change', () => g.useObservationsSpeciesCount = g.useObservationsSpeciesCountOptions.find(o => o.id === rb.value))
+    })
+
     toggleLessonStyle({ ctrl: inatSearchCtrl, fieldsetId: 'inatSearchMain' })
     toggleLessonStyle({ ctrl: curatedGuideCtrl, fieldsetId: 'curatedGuideMain' })
 
@@ -778,6 +785,7 @@ const init = () => {
     rbInatAutocompleteGroup = createRadioBtnGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroup})    
     rbGuideGroup = createRadioBtnGroup({collection: g.guides, checked:g.guide, rbGroup:'guide', parent:guideGroup})
     rbLanguageGroup = createRadioBtnGroup({collection: g.LANGUAGES, checked:g.language, rbGroup:'language', parent:languageGroup})
+    rbInatUseObservationSpeciesCountGroup = createRadioBtnGroup({collection: g.useObservationsSpeciesCountOptions, checked:g.useObservationsSpeciesCount, rbGroup:'inat-use-observations-species-count-group', parent:inatUseObservationSpeciesCountGroup})
 
     createTaxaCheckboxGroup()
     createRadioBtnTemplateGroup()
