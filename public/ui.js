@@ -34,7 +34,9 @@ const getInatSpecies = async ({user, place}) => {
         iconic_taxa: g.taxa,
         per_page: g.count + 10,
         locale: g.language.id,
-        species_count: (g.useObservationsSpeciesCount.id === "true")
+        species_count: (g.useObservationsSpeciesCount.id === "true"),
+        d1: startDate.value,
+        d2: endDate.value,
     })
 }
 
@@ -150,6 +152,8 @@ const testbtn = document.getElementById('show-test-btn')
 const targets = document.getElementById('targets')
 const fetchInatSpeciesBtn = document.getElementById('fetch-inat-species-btn')
 const fetchInatSpeciesNotification = document.getElementById('fetch-inat-species-notification')
+const startDate = document.getElementById('observations-start-date')
+const endDate = document.getElementById('observations-end-date')
 
 let rbGuideGroup, rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup
 
@@ -790,6 +794,12 @@ const init = () => {
     createTaxaCheckboxGroup()
     createRadioBtnTemplateGroup()
     createInatParamsCheckboxGroup()
+
+    const date = new Date()
+    const today = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+
+    startDate.value = today
+    endDate.value = today
 }
 
 init()

@@ -256,6 +256,15 @@ input[type='number'] {
   width: calc(var(--d) * 5);
 }
 
+input[type='date']::-webkit-datetime-edit {
+   padding: var(--d);
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+   margin: var(--d);
+   cursor: pointer;
+}
+
 select {
   border: 1px solid var(--c3);
   padding: calc(var(--d) * .75) 0;
