@@ -3,9 +3,10 @@ import {
     , getByAutocomplete
     , getInatObservations
     , getInatTaxa
-    , g
-    , templates
+    , g 
 } from './api.js'
+
+import { templates } from './templates.js'
 
 Object.assign(g, {
     taxa: g.ICONIC_TAXA,
@@ -51,13 +52,13 @@ const mapTaxon = taxon => {
     }
 }
 
-const mapInatSpeciesToLTP = () => {
+const mapInatSpeciesToLTP = count => {
     return g.inatSpecies
         .filter(sp => sp.taxon)
         .filter(sp => sp.taxon.preferred_common_name)
         .filter(sp => sp.taxon.default_photo)
         .filter(sp => g.taxa.map(t => t.name).includes(sp.taxon.iconic_taxon_name.toLowerCase()))
-        .slice(0,g.count)
+        .slice(0,count)
         .map(sp => {
             return {
                 count: sp.count,
@@ -663,7 +664,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             , place: place.isActive ? place.place : null
         })
 
-        g.species = mapInatSpeciesToLTP()
+        g.species = mapInatSpeciesToLTP(g.count)
     
         startLesson()
 
@@ -695,6 +696,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 .map(t => t.name)
 
             const inatTaxa = await getInatTaxa({ taxaIds, locale: g.language.id })
+
+            // here reqire user observation
 
             g.species = inatTaxa.results
                 .filter(t => t.default_photo)
