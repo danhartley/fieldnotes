@@ -1005,7 +1005,8 @@ export const g = {
                       { 
                         ...text, texts: [
                           {
-                            text: 'The Mediterranean has a subtropical climate with hot summers and mild winters. Precipitation is concentrated in the winter.',
+                            text: `
+                            The Mediterranean has a subtropical climate with hot summers and mild winters. Precipitation is concentrated in the winter.`,
                           },
                           {
                             text: 'The subtropics fall outside of the tropics of Cancer (in the northern hemisphere) and Capricorn (southern hemisphere).',
@@ -1116,7 +1117,8 @@ export const g = {
                         ...text,
                         texts: [
                           {
-                            text: 'Quercus ilex, Myrtus communis, Arbutus unedo, Olea europaea, Laurus nobilis, and Rhamnus alaternus are sclerophyllic, a typical adaptation to areas with low rainfall or seasonal droughts.',
+                            text: `
+                            Quercus *ilex*, Myrtus *communis*, Arbutus *unedo*, Olea *europaea*, Laurus *nobilis*, and Rhamnus *alaternus* are sclerophyllic, a typical adaptation to areas with low rainfall or seasonal droughts.`,
                           },
                         ]
                       },

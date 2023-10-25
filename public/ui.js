@@ -559,8 +559,8 @@ const startLesson = () => {
                     case 'text':
                         t.texts.forEach(text => {
                             const clone = templateToClone.content.cloneNode(true)                      
-                            const p = clone.querySelector('p')
-                            p.textContent = text.text                            
+                            const md = clone.querySelector('md-block')
+                            md.textContent = text.text                            
                             parent = parentClone.querySelector('div')
                             parent.appendChild(clone)
                         })

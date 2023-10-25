@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="./styles.css">
     <link rel="icon" href="./favicon.ico" />
     <script src="./ui.js" type="module"></script>
+    <script type="module" src="https://md-block.verou.me/md-block.js"></script>
   </head>
 
   <body>  
@@ -20,7 +21,7 @@
         <section>
           <div class="section-header section-group">
             <h2>              
-              <input id="curatedGuideCtrl" type="radio" name="lessonStyle" value="Guides" checked>
+              <input id="curatedGuideCtrl" type="radio" name="lessonStyle" value="Guides">
               <label for="curatedGuideCtrl">
                 Fieldnotes
               </label>
@@ -30,7 +31,7 @@
         <section class="mb2">
           <div class="section-header section-group">
             <h2>              
-              <input id="inatSearchCtrl" type="radio" name="lessonStyle" value="iNaturalist">
+              <input id="inatSearchCtrl" type="radio" name="lessonStyle" value="iNaturalist" checked>
               <label for="inatSearchCtrl">
                 iNaturalist search
               </label>
@@ -40,7 +41,7 @@
       </fieldset>
 
       <section>
-        <fieldset id="curatedGuideMain" class="flex-row">
+        <fieldset id="curatedGuideMain" class="flex-row hidden">
           <legend>Fieldnotes</legend>
           <p class="mt0 mb1 small">Observations, species lists and accounts.</p>
           <div id="guide-group" class="grid"></div>
@@ -48,7 +49,7 @@
       </section>
 
       <section>
-        <div id="inatSearchMain" class="hidden">
+        <div id="inatSearchMain">
           <fieldset>
             <legend>iNaturalist search</legend>
             <fieldset class="fieldset-reset p0">
@@ -81,10 +82,10 @@
               <div id="inat-use-observations-species-count-group" class="grid mb2"></div>
 
               <div class="box mb2">
-                <label for="observations-start-date">Observations start date</label>
-                <input type="date" id="observations-start-date" name="observations-start-date" />
+                <label for="observations-start-date" class="mr">Observations start date</label>
+                <input type="date" id="observations-start-date" name="observations-start-date" class="mr" />
 
-                <label for="observations-end-date">Observations end date</label>
+                <label for="observations-end-date" class="mr">Observations end date</label>
                 <input type="date" id="observations-end-date" name="observations-end-date" />
               </div>
             </fieldset>
@@ -246,8 +247,10 @@
 
     <template id="mediterranean-wild-edible-plants-template" name="mediterranean-wild-edible-plants"></template>
 
-    <template id="text-template" name="text">
-      <p></p>
+    <template id="text-template" name="text">      
+<md-block>
+<p></p>
+</md-block>
     </template>
 
     <template id="title-h3-template">
@@ -280,6 +283,6 @@
             <span></span><span>Opens in a new tab</span>
           </a>
         </div>
-    </template>
+    </template>    
   </body>
 </html>
