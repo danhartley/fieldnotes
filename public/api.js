@@ -1,4 +1,5 @@
-import { fieldNotes } from "./field-notes.js"
+import { guides } from "./guides.js"
+import { fieldNotes } from './field-notes.js'
 import { templates } from './templates.js'
 
 // INAT API
@@ -881,7 +882,7 @@ export const g = {
     templates: templates,
     count: 12,
     species: null,
-    guides: fieldNotes,
+    guides: [ ...guides, ...fieldNotes],
     terms: terms,
     inatSpecies: [],
     inatAutocompleteOptions: [
@@ -921,6 +922,162 @@ export const g = {
         place: null,
     },
     matches: [],    
-    useObservationsSpeciesCountOptions: [{name:'Observations', id: "false"}, {name:'Observations by species', id: "true"}],
+    useObservationsSpeciesCountOptions: [{name:'Observations', id: "false"}, {name:'Species by taxa', id: "true"}],
 }
 
+export const inatControls = [
+  {
+    "id": 9,
+    "multivalued": false,
+    "values": [
+      {
+        "id": 10,
+        "label": "Female"
+      },
+      {
+        "id": 11,
+        "label": "Male"
+      },
+      {
+        "id": 20,
+        "label": "Cannot Be Determined"
+      }
+    ],
+    "label": "Sex"
+  },
+  {
+    "id": 12,
+    "multivalued": true,
+    "values": [
+      {
+        "id": 13,
+        "label": "Flowering"
+      },
+      {
+        "id": 14,
+        "label": "Fruiting"
+      },
+      {
+        "id": 15,
+        "label": "Flower Budding"
+      },
+      {
+        "id": 21,
+        "label": "No Evidence of Flowering"
+      }
+    ],
+    "label": "Plant Phenology"
+  },
+  {
+    "id": 17,
+    "multivalued": false,
+    "values": [
+      {
+        "id": 18,
+        "label": "Alive"
+      },
+      {
+        "id": 19,
+        "label": "Dead"
+      },
+      {
+        "id": 20,
+        "label": "Cannot Be Determined"
+      }
+    ],
+    "label": "Alive or Dead"
+  },
+  {
+    "id": 1,
+    "multivalued": false,
+    "values": [
+      {
+        "id": 2,
+        "label": "Adult"
+      },
+      {
+        "id": 3,
+        "label": "Teneral"
+      },
+      {
+        "id": 4,
+        "label": "Pupa"
+      },
+      {
+        "id": 5,
+        "label": "Nymph"
+      },
+      {
+        "id": 6,
+        "label": "Larva"
+      },
+      {
+        "id": 7,
+        "label": "Egg"
+      },
+      {
+        "id": 8,
+        "label": "Juvenile"
+      },
+      {
+        "id": 16,
+        "label": "Subimago"
+      }
+    ],
+    "label": "Life Stage"
+  },
+  {
+    "id": 22,
+    "multivalued": true,
+    "values": [
+      {
+        "id": 23,
+        "label": "Feather"
+      },
+      {
+        "id": 24,
+        "label": "Organism"
+      },
+      {
+        "id": 25,
+        "label": "Scat"
+      },
+      {
+        "id": 29,
+        "label": "Gall"
+      },
+      {
+        "id": 26,
+        "label": "Track"
+      },
+      {
+        "id": 27,
+        "label": "Bone"
+      },
+      {
+        "id": 28,
+        "label": "Molt"
+      }
+    ],
+    "label": "Evidence of Presence"
+  }
+]
+
+// export const observations = spp.map(sp => 
+//   { 
+//     return { 
+//         annotations: sp.annotations.map(a => {
+//           return { controlled_attribute_id: a.controlled_attribute_id, controlled_value_id: a.controlled_value_id, }
+//         })        
+//       , comments: sp.comments
+//       , id: sp.id, location: sp.location
+//       , observation_photos: sp.observation_photos
+//       , observed_on:sp.observed_on
+//       , place_guess: sp.place_guess
+//       , species_guess: sp.species_guess
+//       , tags: sp.tags
+//       , taxon: { 
+//           endemic: sp.taxon.endemic, iconic_taxon_id: sp.taxon.iconic_taxon_id, rank_level: sp.taxon.rank_level, introduced: sp.taxon.introduced, native: sp.taxon.native, name: sp.taxon.name, rank: sp.taxon.rank, id: sp.taxon.id, default_photo: sp.taxon.default_photo, observations_count: sp.taxon.observations_count, wikipedia_url: sp.taxon.wikipedia_url, iconic_taxon_name: sp.taxon.iconic_taxon_name, preferred_common_name: sp.taxon.preferred_common_name 
+//       }
+//   }
+// })

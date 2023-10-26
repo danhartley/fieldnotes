@@ -3,10 +3,11 @@ import {
     , getByAutocomplete
     , getInatObservations
     , getInatTaxa
-    , g 
+    , g
 } from './api.js'
 
 import { templates } from './templates.js'
+import { fieldNotes, getAnnotations } from './field-notes.js'
 
 Object.assign(g, {
     taxa: g.ICONIC_TAXA,
@@ -48,20 +49,20 @@ const mapTaxon = taxon => {
         id: taxon.id,
         default_photo: taxon.default_photo,
         iconic_taxon_name: taxon.iconic_taxon_name,
-        preferred_common_name: taxon.preferred_common_name
+        preferred_common_name: taxon.preferred_common_name || '-'
     }
 }
 
 const mapInatSpeciesToLTP = count => {
     return g.inatSpecies
         .filter(sp => sp.taxon)
-        .filter(sp => sp.taxon.preferred_common_name)
+        .filter(sp => sp.taxon.preferred_common_name || sp.taxon.name)
         .filter(sp => sp.taxon.default_photo)
         .filter(sp => g.taxa.map(t => t.name).includes(sp.taxon.iconic_taxon_name.toLowerCase()))
         .slice(0,count)
         .map(sp => {
             return {
-                count: sp.count,
+                count: sp.count || 0,
                 taxon: mapTaxon(sp.taxon)
             }
         })
@@ -560,7 +561,8 @@ const startLesson = () => {
                     case 'text':
                         t.texts.forEach(text => {
                             const clone = templateToClone.content.cloneNode(true)                      
-                            const md = clone.querySelector('md-block')
+                            const md = clone.querySelector('p')
+                            // const md = clone.querySelector('md-block')
                             md.textContent = text.text                            
                             parent = parentClone.querySelector('div')
                             parent.appendChild(clone)
@@ -665,6 +667,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
         })
 
         g.species = mapInatSpeciesToLTP(g.count)
+
+        const annotations = getAnnotations(fieldNotes[1].observations)
+        console.log(annotations)
     
         startLesson()
 
@@ -696,9 +701,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 .map(t => t.name)
 
             const inatTaxa = await getInatTaxa({ taxaIds, locale: g.language.id })
-
-            // here reqire user observation
-
+            
             g.species = inatTaxa.results
                 .filter(t => t.default_photo)
                 .map(t => { 

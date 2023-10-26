@@ -33,3 +33,43 @@ export const templates = [
     isTest: false,
   },
 ]
+
+// TEMPLATES
+
+export const h3 = {
+  id: 'title-h3-template',
+  parent: 'non-grid-template',
+  type: 'h3-header',
+  h3: 'title',
+}
+
+export const text = {
+  id: 'text-template',
+  name: 'text',
+  parent: 'non-grid-template',
+  type: 'text',
+  texts: [],
+}
+
+export const term = {
+  id: 'term-template',
+  name: 'term', 
+  parent: 'dl-template',
+  type: 'term',                 
+  terms: [],
+}
+
+export const species = {
+  id: 'species-card-template',
+  name: 'Species-cards',
+  parent: 'grid-template',
+  type: 'species',
+  species: [],
+}
+
+export const image = {
+  id: 'img-template',
+  parent: 'grid-template',
+  type: 'img',
+  imgs: [],
+}

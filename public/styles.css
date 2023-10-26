@@ -378,6 +378,7 @@ a.info span:nth-child(2) {
 figure {
   margin: var(--d) 0;
   text-align: center;
+  border: 1px solid var(--c2);
 }
 
 figcaption {
