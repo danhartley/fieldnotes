@@ -5,6 +5,7 @@ import {
 , term
 , species
 , image
+, annotation
 } from './templates.js'
 
 // fieldnotes app:
@@ -15,7 +16,7 @@ import {
 export const fieldNotes = [
     {
       id: 'benenden-autumn-fieldnotes',
-      name: 'benenden-autumn fieldnotes',
+      name: 'benendenutumn fieldnotes',
       author: 'danielhartley',
       d1: '2023-09-22',
       d2: '2023-09-22',
@@ -4167,8 +4168,8 @@ export const fieldNotes = [
         },
         ...templates,
       ],
-  },
-  {
+    },
+    {
     id: 'arrábida-post-fire-fieldnotes',
     name: 'arrábida post fire fieldnotes',
     author: 'danielhartley',
@@ -5811,7 +5812,261 @@ export const fieldNotes = [
               "preferred_common_name": "Flax-leaved Daphne"
           }
       }
-    ]
+    ],
+    taxa: [
+        {
+            "id": 806563,
+            "name": "Visnaga daucoides",
+            "rank": "species"
+        },
+        {
+            "id": 333964,
+            "name": "Carlina racemosa",
+            "rank": "species"
+        },
+        {
+            "id": 62452,
+            "name": "Pyronia cecilia",
+            "rank": "species"
+        },
+        {
+            "id": 372380,
+            "name": "Sixalix",
+            "rank": "genus"
+        },
+        {
+            "id": 61068,
+            "name": "Lagurus ovatus",
+            "rank": "species"
+        },
+        {
+            "id": 211194,
+            "name": "Tracheophyta",
+            "rank": "phylum"
+        },
+        {
+            "id": 52913,
+            "name": "Cichorium intybus",
+            "rank": "species"
+        },
+        {
+            "id": 956048,
+            "name": "Chamaeleon gummifer",
+            "rank": "species"
+        },
+        {
+            "id": 320779,
+            "name": "Phlomis purpurea",
+            "rank": "species"
+        },
+        {
+            "id": 118535,
+            "name": "Drimia maritima",
+            "rank": "species"
+        },
+        {
+            "id": 338067,
+            "name": "Asparagus aphyllus",
+            "rank": "species"
+        },
+        {
+            "id": 123912,
+            "name": "Charaxes jasius",
+            "rank": "species"
+        },
+        {
+            "id": 82942,
+            "name": "Quercus coccifera",
+            "rank": "species"
+        },
+        {
+            "id": 82836,
+            "name": "Daphne gnidium",
+            "rank": "species"
+        },
+        {
+            "id": 632885,
+            "name": "Carduinae",
+            "rank": "subtribe"
+        },
+        {
+            "id": 338057,
+            "name": "Dipsacus comosus",
+            "rank": "species"
+        },
+        {
+            "id": 333950,
+            "name": "Carlina hispanica",
+            "rank": "species"
+        },
+        {
+            "id": 113507,
+            "name": "Sympetrum fonscolombii",
+            "rank": "species"
+        },
+        {
+            "id": 82836,
+            "name": "Daphne gnidium",
+            "rank": "species"
+        }
+    ],
+    templates: [              
+        {
+          id: 'introduction-to-fire-prone-ecosystems-template',
+          name: 'Journal',
+          parent: 'non-grid-template',
+          type: 'guide',
+          isTest: false,                
+          sections: [
+            {
+              templates: [
+                {
+                  ...text,
+                  texts: [
+                    {
+                      text: 'Record features that may not be preserved in the pressed specimen, such as colour, odor, sap or latex, height, diameter, etc.',
+                    },
+                    {
+                      text: 'Particular attention should be paid to phenology – is tree in fruit or flower? If so, what color are flowers? You can also describe the plant’s habit – is the plant a tree, shrub, or vine?',
+                    },
+                    {
+                      text: 'If you have reason to believe a specimen is cultivated or offspring of a cultivated specimen that has “escaped,” that information should be recorded as such.',
+                    },                                                  
+                  ]
+                },
+                {
+                  ...image,
+                  imgs: [
+                    {
+                      src: 'https://drive.google.com/thumbnail?id=1HyoBMUvF76pzfpWkhfkvZZtty1VO32B3',
+                      alt: 'Arrábida after the fire',
+                      width: 220,
+                      height: 165,
+                    },
+                    {
+                      src: 'https://drive.google.com/thumbnail?id=1lLXTsBb8juPgrUar5MD6KOIBusAcG31Y',
+                      alt: 'Arrábida after the fire',
+                      width: 220,
+                      height: 165,
+                    },
+                    {
+                      src: 'https://drive.google.com/thumbnail?id=1GcMih3Zcrv8oHa_Hc8Y_m4nYGKxKIsIA',
+                      alt: 'Arrábida after the fire',
+                      width: 220,
+                      height: 165,
+                    },
+                  ],
+                },
+                { ...h3,  h3: 'Grinnell method of note-taking	' },
+                {
+                  ...text,
+                  texts: [
+                    {
+                      text: 'A field-worthy notebook where one records direct observations as they are being observed.',
+                    },
+                    {
+                      text: 'A larger more substantial journal containing written entries on observations and information, transcribed from the smaller field notebook as soon as possible.',
+                    },
+                    {
+                      text: 'Species accounts of the notes taken on specific species.',
+                    },
+                    {
+                      text: 'A catalogue to record the location and date of collected specimens.',
+                    },
+                  ]
+                },
+                {
+                  ...term,
+                  terms: [
+                    'Secondary succession',
+                    'Maquis',
+                    'Garrigue',
+                  ],
+                },
+                { ...h3,  h3: 'Biological habitat' },
+                {
+                  ...text,
+                  texts: [
+                    {
+                      text: 'The other types of plants growing around your specimen.',
+                    },
+                    {
+                      text: 'What kind of plant community is it growing in (open forest, opening in forest, closed forest, grassland, shrub-steppe, disturbed roadside).',
+                    },
+                    {
+                      text: 'If you know the identification (even to genus or family) of any other plants growing in the immediate surroundings of your collection, record them here.',
+                    },
+                    {
+                      text: 'This information can help researchers assess what type of habitat is present at this location.',
+                    },
+                  ]
+                },
+                {
+                  ...image,
+                  imgs: [
+                    {
+                      src: 'https://inaturalist-open-data.s3.amazonaws.com/photos/225727222/medium.jpeg',
+                      alt: 'Damson leaves',
+                    },
+                    {
+                      src: 'https://inaturalist-open-data.s3.amazonaws.com/photos/225727251/medium.jpeg',
+                      alt: 'Damson thorns',
+                    },
+                    {
+                      src: 'https://inaturalist-open-data.s3.amazonaws.com/photos/225727200/medium.jpeg',
+                      alt: 'Damson fruit',
+                    },
+                  ]
+                },
+                { ...h3,  h3: 'Physical habitat' },
+                { ...text,
+                  texts: [
+                    {
+                      text: 'The type of soil, rocks, slope, elevation, aspect, moisture (for instance, whether the site is continuously wet)',
+                    },
+                    {
+                      text: 'Record anything you know about soil type (sand, clay, loam), topography, slope, exposure, amount of sun, proximity to water sources such as streams or lakes, etc. Describe the site to the best of your ability.',
+                    },
+                    {
+                      text: 'You can also include information about the level of disturbance of the habitat, e.g. does the area appear to be naturally forested? In agricultural use?',
+                    },
+                  ]
+                },
+                {
+                  ...image,
+                  imgs: [
+                    {
+                      src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Garrigue_herault.jpg/500px-Garrigue_herault.jpg',
+                      alt: 'Garrigue',
+                    },
+                    {
+                      src: 'https://imgs.search.brave.com/9QJj-kXLkUKr6uFS6XI6mBR8SWpFboMF4COqZfHoR8w/rs:fit:860:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy9l/L2UyL0p1bmlwZXJ1/c19waG9lbmljZWFf/a3oxLmpwZw',
+                      alt: 'Maquis',
+                    },
+                    {
+                      src: 'https://imgs.search.brave.com/0FNAjS4UvGwHrZBFAgcgEx6lruv37nqj0FjmJisZEhw/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMudGFrZXNoYXBl/LmlvLzg2Y2U5NTI1/LWY1ZjItNGU5Ny04/MWJhLTU0ZThjZTkz/M2RhNy9kZXYvNzJk/NGEwYTYtZmE4OS00/YTI2LWIyYTktNTU4/NGUwNGQxOTU5Lzc1/OCUyME1lZGl0ZXJy/YW5lYW4lMjBIaWdo/JTIwQXRsYXMlMjBq/dW5pcGVyJTIwc3Rl/cHBlJTIwLSUyMFdp/bGZyaWVkJTIwU2Fu/dGVyLmpwZz9hdXRv/PWNvbXByZXNzLGZv/cm1hdCZ3PTE2MDA',
+                      alt: 'Steppe',
+                    },
+                  ]
+                },
+                {
+                  ...term,
+                  terms: [
+                    'Serotiny',
+                    'Sclerophyll',
+                    'Ruderal species',
+                  ],
+                },
+                {
+                    ...annotation,
+                    annotations: [],
+                }
+              ]
+            }
+          ],
+        },
+        ...templates,
+    ],
   }
 ]
 
@@ -5821,50 +6076,24 @@ export const getAnnotations = observations => {
     return {
       ...ctrl,
       species: observations
-        .filter(o => o.annotations 
-            .filter(a => 
-                  a.controlled_attribute_id === ctrl.controlled_attribute_id 
-              &&  a.controlled_value_id === ctrl.controlled_value_id
-          )
-        )
+        .filter(o => o.annotations.length > 0)
+        .map(o => o.annotations
+            .map(a => {
+                if(a.controlled_attribute_id === ctrl.controlled_attribute_id && a.controlled_value_id === ctrl.controlled_value_id) {
+                    return o.taxon
+                }
+            })
+            )
+            .flat()
+            .filter(o => o)
+            .map(o => {
+                return { 
+                    id: o.id,
+                    name: o.name
+                }                
+            })
+            .flat()
       }
   })
   return annotations
 }
-
-// then loop through observations looking for names for each combination
-
-// [
-//   {
-//       "controlled_attribute_id": 12,
-//       "controlled_value_id": 13
-//   },
-//   {
-//       "controlled_attribute_id": 12,
-//       "controlled_value_id": 15
-//   },
-//   {
-//       "controlled_attribute_id": 12,
-//       "controlled_value_id": 14
-//   },
-//   {
-//       "controlled_attribute_id": 1,
-//       "controlled_value_id": 2
-//   },
-//   {
-//       "controlled_attribute_id": 9,
-//       "controlled_value_id": 20
-//   },
-//   {
-//       "controlled_attribute_id": 17,
-//       "controlled_value_id": 18
-//   },
-//   {
-//       "controlled_attribute_id": 22,
-//       "controlled_value_id": 24
-//   },
-//   {
-//       "controlled_attribute_id": 9,
-//       "controlled_value_id": 10
-//   }
-// ]

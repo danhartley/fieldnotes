@@ -73,3 +73,11 @@ export const image = {
   type: 'img',
   imgs: [],
 }
+
+export const annotation = {
+  id: 'annotation-template',
+  name: 'annotation', 
+  parent: 'dl-template',
+  type: 'annotation',                 
+  annotations: [],
+}

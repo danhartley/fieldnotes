@@ -3,6 +3,7 @@ import {
     , getByAutocomplete
     , getInatObservations
     , getInatTaxa
+    , inatControls
     , g
 } from './api.js'
 
@@ -587,7 +588,7 @@ const startLesson = () => {
                         t.terms.forEach(term => {
                             const clone = templateToClone.content.cloneNode(true)                      
                             const dt = clone.querySelector('dt')
-                            const dd = clone.querySelector('dd')                            
+                            const dd = clone.querySelector('dd')                        
                             const div1 = clone.querySelectorAll('div')[0]
                             const div2 = clone.querySelectorAll('div')[1]
                             const eg = div1.querySelector('span')
@@ -615,10 +616,29 @@ const startLesson = () => {
                             }
 
                             parent = parentClone.querySelector('dl')
-                            parent.appendChild(clone)                            
+                            parent.appendChild(clone)                    
                         })
                         speciesParent.appendChild(parent)
                     break
+                    case 'annotation':
+                        const annotations = getAnnotations(fieldNotes[1].observations)
+
+                        annotations.forEach(annotation => {
+                            const clone = templateToClone.content.cloneNode(true)
+                            const dt = clone.querySelector('dt')
+                            const dd = clone.querySelector('dd')
+                            const control = inatControls.find(ctrl => ctrl.id === annotation.controlled_attribute_id)
+                            const value = control.values.find(value => value.id === annotation.controlled_value_id)
+
+                            dt.textContent = `${control.label}: ${value.label}`
+                            dd.textContent = annotation.species.map(s => s.name).join(', ')
+
+                            parent = parentClone.querySelector('dl')
+                            parent.appendChild(clone)
+                        })
+                        speciesParent.appendChild(parent)
+                    break
+
                 }
             })
         })
@@ -667,9 +687,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
         })
 
         g.species = mapInatSpeciesToLTP(g.count)
-
-        const annotations = getAnnotations(fieldNotes[1].observations)
-        console.log(annotations)
     
         startLesson()
 
