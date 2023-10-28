@@ -98,7 +98,7 @@ h2 label::first-letter, label.text-initial::first-letter {
 }
 
 h3 {
-  margin: var(--d) 0 0 0;
+  margin: var(--d) 0;
   font-family: Elena, "PT Serif", serif;
   font-size: var(--s5);
   letter-spacing: calc(var(--d) / 10);
@@ -313,7 +313,7 @@ fieldset {
   margin: 0 0 calc(var(--d) * 2) 0;
   border: 1px dashed var(--c2);
   padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 2) calc(var(--d) * 2);
-  background-color: var(--c0);
+  background-color: var(--c0);  
 }
 
 fieldset.fieldset-reset {
@@ -557,6 +557,12 @@ th, td {
 .centred-block {
   display: flex;
   align-items: center;
+}
+
+.double-centred-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .box {

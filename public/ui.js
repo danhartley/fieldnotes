@@ -526,7 +526,7 @@ const startLesson = () => {
                 parentClone = template.content.cloneNode(true)
                 templateToClone = document.getElementById(t.id)
 
-                let clone, h3, h4 
+                let clone, h3, h4, iframe
                 switch(t.type) {
                     case 'h3-header':
                         clone = templateToClone.content.cloneNode(true)
@@ -536,10 +536,43 @@ const startLesson = () => {
                         parent.appendChild(clone)
                         speciesParent.appendChild(parent)
                     break
+                    case 'author':
+                        clone = templateToClone.content.cloneNode(true)
+                        h3 = clone.querySelector('h3')
+                        h3.textContent = t.author
+                        parent = parentClone.querySelector('div')
+                        parent.appendChild(clone)
+                        speciesParent.appendChild(parent)
+                    break
+                    case 'xeno-canto':
+                        clone = templateToClone.content.cloneNode(true)
+                        iframe = clone.querySelector('iframe')
+                        iframe.src = `https://xeno-canto.org/${t.recordingId}/embed?simple=1`
+                        parent = parentClone.querySelector('div')
+                        parent.appendChild(clone)
+                        speciesParent.appendChild(parent)
+                    break
                     case 'h4-header':
                         clone = templateToClone.content.cloneNode(true)
                         h4 = clone.querySelector('h4')
                         h4.textContent = t.h4
+                        parent = parentClone.querySelector('div')
+                        parent.appendChild(clone)
+                        speciesParent.appendChild(parent)
+                    break
+                    case 'date-header':
+                        clone = templateToClone.content.cloneNode(true)
+                        h3 = clone.querySelector('h3')
+                        h3.textContent = new Date(t.date).toDateString()
+                        parent = parentClone.querySelector('div')
+                        parent.appendChild(clone)
+                        speciesParent.appendChild(parent)
+                    break
+                    case 'location':
+                        clone = templateToClone.content.cloneNode(true)
+                        h3 = clone.querySelector('h3')
+                        h3.textContent = t.place_guess
+                        // h3.textContent = t.location // geo lookup
                         parent = parentClone.querySelector('div')
                         parent.appendChild(clone)
                         speciesParent.appendChild(parent)
@@ -621,7 +654,7 @@ const startLesson = () => {
                         speciesParent.appendChild(parent)
                     break
                     case 'annotation':
-                        const annotations = getAnnotations(fieldNotes[1].observations)
+                        const annotations = getAnnotations(fieldNotes[0].observations)
 
                         annotations.forEach(annotation => {
                             const clone = templateToClone.content.cloneNode(true)
@@ -638,7 +671,6 @@ const startLesson = () => {
                         })
                         speciesParent.appendChild(parent)
                     break
-
                 }
             })
         })

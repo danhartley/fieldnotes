@@ -81,3 +81,32 @@ export const annotation = {
   type: 'annotation',                 
   annotations: [],
 }
+
+export const date = {
+  id: 'title-h3-template',
+  parent: 'non-grid-template',
+  type: 'date-header',
+  date: 'date',
+}
+
+export const location = {
+  id: 'title-h3-template',
+  parent: 'non-grid-template',
+  type: 'location',
+  location: 'location',
+  place_guess: 'place_guess',
+}
+
+export const author = {
+  id: 'title-h3-template',
+  parent: 'non-grid-template',
+  type: 'author',
+  author: 'author',
+}
+
+export const xenocanto = {
+  id: 'xeno-canto-template',
+  parent: 'non-grid-template',
+  type: 'xeno-canto',
+  recordingId: 'id',
+}
