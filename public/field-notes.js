@@ -1848,23 +1848,33 @@ export const fieldNotes = [
                     },
                   ]
                 },
+                { ...h3, h3: 'Observations (specimens)' },
                 {
                   ...image,
                   imgs: [
                     {
-                      src: 'https://inaturalist-open-data.s3.amazonaws.com/photos/225727222/medium.jpeg',
-                      alt: 'Damson leaves',
+                      src: 'https://inaturalist-open-data.s3.amazonaws.com/photos/225724924/medium.jpeg',
+                      alt: 'Chicory',
                     },
                     {
                       src: 'https://inaturalist-open-data.s3.amazonaws.com/photos/225727251/medium.jpeg',
-                      alt: 'Damson thorns',
+                      alt: 'Southern Gatekeeper',
                     },
                     {
-                      src: 'https://inaturalist-open-data.s3.amazonaws.com/photos/225727200/medium.jpeg',
-                      alt: 'Damson fruit',
+                      src: 'https://inaturalist-open-data.s3.amazonaws.com/photos/225724946/medium.jpeg',
+                      alt: 'Hare\'s Tail Grass',
                     },
                   ]
                 },
+                { ...h3, h3: 'Type specimens (iNaturalist)' },
+                {
+                    ...species,
+                    species: [
+                        'Cichorium intybus',
+                        'Pyronia cecilia',
+                        'Lagurus ovatus',                    
+                    ],
+                  },
                 { ...h3,  h3: 'Physical habitat' },
                 { ...text,
                   texts: [
