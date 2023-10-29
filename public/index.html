@@ -3,6 +3,7 @@
 
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Learn the planet fieldnotes</title>
     <link rel="stylesheet" href="./styles.css">
     <link rel="icon" href="./favicon.ico" />
@@ -43,7 +44,7 @@
       <section>
         <fieldset id="curatedGuideMain" class="flex-row hidden">
           <legend>Fieldnotes</legend>
-          <p class="mt0 mb1 small">Journals, species lists and species accounts.</p>
+          <p class="mt0 mb1 small">Field journal, species lists and species accounts.</p>
           <div id="guide-group" class="grid"></div>
         </fieldset>
       </section>
@@ -63,7 +64,7 @@
 
               <div class="grid">
                 <div>
-                    <label for="inat-autocomplete">User, place or project</label>
+                    <label for="inat-autocomplete">User, place or project.</label>
                     <input id="inat-autocomplete" list="inat-autocomplete-list" type="text" class="p" autocomplete="off" placeholder="Start typing a username or user ID…">
                     <datalist id="inat-autocomplete-list"></datalist>
                 </div>
@@ -77,16 +78,34 @@
                 <label for="species-count" class="mb0 mr">Number of species</label>
                 <input id="species-count" type="number" value="0" min="1" max="200" class="mr p">
                 <div class="small">(up to 200)</div>
-              </div>
+              </div>              
+            </fieldset>
 
+            <fieldset class="fieldset-reset p0">
+              <legend class="as-p mt0">User species or observations (may include the same species more than once).</legend>
               <div id="inat-use-observations-species-count-group" class="grid mb2"></div>
+            </fieldset>
 
-              <div class="box mb2">
-                <label for="observations-start-date" class="mr">Observations start date</label>
-                <input type="date" id="observations-start-date" name="observations-start-date" class="mr" />
-
-                <label for="observations-end-date" class="mr">Observations end date</label>
-                <input type="date" id="observations-end-date" name="observations-end-date" />
+            <fieldset id="observation-dates" class="fieldset-reset p0">
+              <legend class="as-p mt0">When the observations were made.</legend>
+              <div class="box mb4">
+                <div class="centred-block mb2">
+                  <input id="rbDateRange" type="radio" name="rbDate" value="range" checked />               
+                  <label for="observations-start-date" class="block mr">From</label>
+                  <input type="date" id="observations-start-date" name="observations-start-date" class="mr" />
+  
+                  <label for="observations-end-date" class="mr">to</label>
+                  <input type="date" id="observations-end-date" name="observations-end-date" class="mr" />
+                </div>
+                <div class="centred-block mb2">
+                  <input id="rbSingleDate" type="radio" name="rbDate" value="single" />               
+                  <label for="observations-date" class="block mr">Date</label>
+                  <input type="date" id="observations-date" name="observations-date" class="mr" />
+                </div>
+                <div class="centred-block mb">
+                  <input id="rbnoDate" type="radio" name="rbDate" value="none" />
+                  <label>Any time.</label>
+                </div>
               </div>
             </fieldset>
 
@@ -269,7 +288,9 @@
     </template>
 
     <template id="dl-template">
-      <dl></dl>
+      <div class="double-centred-block">
+        <dl></dl>
+      </div>
     </template>
 
     <template id="term-template">

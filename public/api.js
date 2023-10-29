@@ -25,8 +25,11 @@ export const getInatObservations = async ({
     params = iconic_taxa ? params + `&iconic_taxa=${iconic_taxa.map(taxon => taxon.name).join(',')}` : params
     params = params + `&page=${page}&per_page=${per_page}`
     params = params + `&locale=${locale}`
-    params = params + `&d1=${d1}`
-    params = params + `&d2=${d2}`
+
+    if(!!d1 & !!d2) {
+      params = params + `&d1=${d1}`
+      params = params + `&d2=${d2}`
+    }
     
     const base = species_count
         ? 'https://api.inaturalist.org/v1/observations/species_counts'
@@ -923,7 +926,8 @@ export const g = {
         place: null,
     },
     matches: [],    
-    useObservationsSpeciesCountOptions: [{name:'Observations', id: "false"}, {name:'Species by taxa', id: "true"}],
+    useObservationsSpeciesCountOptions: [{name:'Species', id: "true"}, {name:'Observations', id: "false"}],
+    dateOption: 'none',
 }
 
 export const inatControls = [

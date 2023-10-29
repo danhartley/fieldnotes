@@ -13,7 +13,7 @@ import { fieldNotes, getAnnotations } from './field-notes.js'
 Object.assign(g, {
     taxa: g.ICONIC_TAXA,
     language: g.LANGUAGES[1],
-    useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[1],
+    useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0],
 })
 
 const debounce = (func, wait) => {
@@ -30,7 +30,21 @@ const debounce = (func, wait) => {
     }
 }
 
-const getInatSpecies = async ({user, place}) => {    
+const getInatSpecies = async ({user, place}) => {
+
+    let d1 = null
+    let d2 = null
+
+    switch(g.dateOption) {
+        case 'single':
+            d2 = d1 = singleDate.value
+        break
+        case 'range':
+            d1 = startDate.value
+            d2 = endDate.value
+        break
+    }
+
     return await getInatObservations({ 
         user_id: user ? user.id : null,
         place_id: place ? place.id : null,
@@ -38,8 +52,8 @@ const getInatSpecies = async ({user, place}) => {
         per_page: g.count + 10,
         locale: g.language.id,
         species_count: (g.useObservationsSpeciesCount.id === "true"),
-        d1: startDate.value,
-        d2: endDate.value,
+        d1,
+        d2,
     })
 }
 
@@ -157,6 +171,8 @@ const fetchInatSpeciesBtn = document.getElementById('fetch-inat-species-btn')
 const fetchInatSpeciesNotification = document.getElementById('fetch-inat-species-notification')
 const startDate = document.getElementById('observations-start-date')
 const endDate = document.getElementById('observations-end-date')
+const singleDate = document.getElementById('observations-date')
+const rbDateGroup = document.querySelectorAll('input[name="rbDate"]')
 
 let rbGuideGroup, rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup
 
@@ -679,7 +695,13 @@ const startLesson = () => {
     addImgClickEventHandlers()
 
     lessonCtrl.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
-}       
+}     
+
+rbDateGroup.forEach(date => {
+    date.addEventListener('click', e => {
+        g.dateOption = e.target.value
+    }, true)
+})
 
 document.addEventListener("DOMContentLoaded", (event) => {
 
@@ -853,6 +875,7 @@ const init = () => {
     const date = new Date()
     const today = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
 
+    singleDate.value = today
     startDate.value = today
     endDate.value = today
 }

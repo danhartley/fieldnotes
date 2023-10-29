@@ -59,18 +59,6 @@ main {
   max-width: 60ch;
 }
 
-@media (orientation: landscape) {
-  main {
-    margin: auto;
-    max-width: 80ch; 
-  }
-
-  header {
-    margin: 0 calc(var(--d) * 3) 0 calc(var(--d) * 3);
-    justify-content: flex-end;
-  }
-}
-
 h1 {
   font-size: var(--s3);
   text-transform: uppercase;
@@ -149,7 +137,7 @@ button.submit:focus-visible {
 }
 
 label {
-  width: 100%;
+  /* width: 100%; */
   font-size: var(--s3);
   -webkit-font-smoothing: antialiased;
 }
@@ -158,7 +146,7 @@ label:has(+ input) {
   width: initial;
 }
 
-div > label {
+.grid > div > label {
   margin: 0 0 calc(var(--d) * .75);
 }
 
@@ -397,28 +385,6 @@ th, td {
   font-weight: normal;
 }
 
-/* MEDIA */
-
-@media screen {
-  img {
-    aspect-ratio: 1/1;
-    object-fit: cover;
-    max-height: var(--img-min-width);
-  }
-} 
-
-@media (orientation: landscape) {
-  #header span {
-    top: calc(var(--d) * 1);
-  }
-
-  dl {
-    margin: 0 auto calc(var(--d) * 4) auto;
-    border: 1px solid var(--c3);
-    padding: calc(var(--d) * 2) calc(var(--d) * 2) 0 calc(var(--d) * 2);
-  }
-}
-
 /* ASPECT-RATIO */
 
 @supports (aspect-ratio: 1) {
@@ -509,7 +475,7 @@ th, td {
 
 .non-grid {
   margin: 0 auto calc(var(--d) * 4) auto;
-  max-width: 60ch;
+  max-width: 30ch;
 }
 
 .non-grid:has(h3) {
@@ -553,6 +519,10 @@ th, td {
 }
 
 /* ENTITIES */
+
+.block {
+  display: inline-block;
+}
 
 .centred-block {
   display: flex;
@@ -617,6 +587,14 @@ th, td {
   -webkit-font-smoothing: antialiased;
 }
 
+#observation-dates > div > label:nth-child(2) {
+  width: calc(var(--d) * 4);
+}
+
+#observation-dates div:nth-child(4) > label:nth-child(2) {
+  width: initial;
+}
+
 /* SPACING */
 
 .m {
@@ -659,6 +637,10 @@ th, td {
   margin-bottom: calc(var(--d) * 2);
 }
 
+.mb4 {
+  margin-bottom: calc(var(--d) * 4);
+}
+
 .p {
   padding: var(--d);
 }
@@ -691,4 +673,42 @@ th, td {
 
 .r1 {  
   right: var(--d);
+}
+
+/* MEDIA */
+
+@media screen {
+  img {
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    max-height: var(--img-min-width);
+  }
+} 
+
+@media (orientation: landscape) {
+  main {
+    margin: auto;
+    max-width: 80ch; 
+  }
+
+  header {
+    margin: 0 calc(var(--d) * 3) 0 calc(var(--d) * 3);
+    justify-content: flex-end;
+  }
+
+  #header span {
+    top: calc(var(--d) * 1);
+  }
+
+  dl {
+    margin: 0 auto calc(var(--d) * 4) auto;
+    border: 1px solid var(--c3);
+    padding: calc(var(--d) * 2) calc(var(--d) * 2) 0 calc(var(--d) * 2);
+  }
+}
+
+@media screen and (min-width: 414px){
+  .non-grid {
+    max-width: 60ch;
+  }
 }

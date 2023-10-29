@@ -1757,7 +1757,7 @@ export const fieldNotes = [
     templates: [              
         {
           id: 'introduction-to-fire-prone-ecosystems-template',
-          name: 'Journal',
+          name: 'Field journal',
           parent: 'non-grid-template',
           type: 'guide',
           isTest: false,                
