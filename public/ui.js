@@ -552,6 +552,14 @@ const startLesson = () => {
                         parent.appendChild(clone)
                         speciesParent.appendChild(parent)
                     break
+                    case 'h4-header':
+                        clone = templateToClone.content.cloneNode(true)
+                        h4 = clone.querySelector('h4')
+                        h4.textContent = t.h4
+                        parent = parentClone.querySelector('div')
+                        parent.appendChild(clone)
+                        speciesParent.appendChild(parent)
+                    break
                     case 'author':
                         clone = templateToClone.content.cloneNode(true)
                         h3 = clone.querySelector('h3')

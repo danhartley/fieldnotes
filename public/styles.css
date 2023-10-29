@@ -94,7 +94,7 @@ h3 {
 }
 
 h4 {
-  margin: var(--d) 0 0 0;
+  margin: var(--d) 0;
   font-family: Elena, "PT Serif", serif;
   font-size: var(--s3);
   letter-spacing: calc(var(--d) / 10);
@@ -364,7 +364,7 @@ a.info span:nth-child(2) {
 }
 
 figure {
-  margin: var(--d) 0;
+  margin: 0 0 var(--d) 0;
   text-align: center;
   border: 1px solid var(--c2);
 }
@@ -478,8 +478,12 @@ th, td {
   max-width: 30ch;
 }
 
-.non-grid:has(h3) {
+.non-grid:has(h3), .non-grid:has(h4) {
   margin-bottom: 0;
+}
+
+.non-grid:has(h4) {
+  margin: initial;
 }
 
 .non-grid p {

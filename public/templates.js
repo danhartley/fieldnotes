@@ -43,6 +43,13 @@ export const h3 = {
   h3: 'title',
 }
 
+export const h4 = {
+  id: 'title-h4-template',
+  parent: 'non-grid-template',
+  type: 'h4-header',
+  h4: 'title',
+}
+
 export const text = {
   id: 'text-template',
   name: 'text',

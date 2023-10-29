@@ -1,6 +1,7 @@
 import { 
   templates
 , h3
+, h4
 , date
 , location
 , text
@@ -1848,7 +1849,7 @@ export const fieldNotes = [
                     },
                   ]
                 },
-                { ...h3, h3: 'Observations (specimens)' },
+                { ...h4, h4: 'Observations (specimens)' },
                 {
                   ...image,
                   imgs: [
@@ -1865,8 +1866,15 @@ export const fieldNotes = [
                       alt: 'Hare\'s Tail Grass',
                     },
                   ]
+                },                
+                { ...text,
+                    texts: [
+                        {
+                            text: 'Comparison (above) between species observed on location and the type specimens (below) used by iNaturalist.'
+                        }
+                    ]
                 },
-                { ...h3, h3: 'Type specimens (iNaturalist)' },
+                { ...h4, h4: 'Type specimens (iNaturalist)' },
                 {
                     ...species,
                     species: [
