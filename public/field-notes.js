@@ -1772,13 +1772,13 @@ export const fieldNotes = [
                     ...text,
                     texts: [
                         {
-                            text: 'Journal: A chronological diary of field trips with localilty, descriptions, weather and species lists'
+                            text: 'My observations were made in the Serra do Louro within the Arrábida Natural Park (Parque Natural da Arrábida), a protected area in the district of Setúbal which lies about twenty kilometres south of Lisbon.'
                         },
                         {
-                            text: 'Catalogue: List of specimens collected with all appropriate locality and measurement data'
+                            text: 'I followed a number of paths (trilos in Portuguese), the Cabeço das Vacas, the Trilho do Fio das Vacas and the Trilho dos Moinhos da Sapec which follow the line of the escarpment.'
                         },
                         {
-                            text: 'Species accounts: Detailed notes on particular species'
+                            text: 'The day was clear and bright, around 18ºC, which is not aypical for the time of year. On the south facing slope sheltered from a light westerly breeze, it felt three or four degrees warmer.'
                         },
                     ]
                 },
