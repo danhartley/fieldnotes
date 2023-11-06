@@ -8,7 +8,7 @@ import {
 } from './api.js'
 
 import { templates } from './templates.js'
-import { fieldNotes, getAnnotations } from './field-notes.js'
+import { fieldnotes, getAnnotations } from './field-notes.js'
 
 Object.assign(g, {
     taxa: g.ICONIC_TAXA,
@@ -535,7 +535,7 @@ const startLesson = () => {
         break
     }
     
-    if(g.template.type === 'guide') {
+    if(g.template.type === 'guide' || g.template.type === 'fieldnotes') {
         g.template.sections.forEach(section => {            
             section.templates.forEach(t => {
                 template = document.getElementById(t.parent)
@@ -678,7 +678,7 @@ const startLesson = () => {
                         speciesParent.appendChild(parent)
                     break
                     case 'annotation':
-                        const annotations = getAnnotations(fieldNotes[0].observations)
+                        const annotations = getAnnotations(fieldnotes[0].observations)
 
                         annotations.forEach(annotation => {
                             const clone = templateToClone.content.cloneNode(true)

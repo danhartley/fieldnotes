@@ -13,7 +13,7 @@ import {
 , author
 } from './templates.js'
 
-export const fieldNotes = [
+export const fieldnotes = [
     {
     id: 'template-for-fieldnotes',
     name: 'template for fieldnotes',
@@ -1760,7 +1760,7 @@ export const fieldNotes = [
           id: 'introduction-to-fire-prone-ecosystems-template',
           name: 'Field journal',
           parent: 'non-grid-template',
-          type: 'guide',
+          type: 'fieldnotes',
           isTest: false,                
           sections: [
             {

@@ -1,5 +1,5 @@
 import { guides } from "./guides.js"
-import { fieldNotes } from './field-notes.js'
+import { fieldnotes } from './field-notes.js'
 import { templates } from './templates.js'
 
 // INAT API
@@ -886,7 +886,7 @@ export const g = {
     templates: templates,
     count: 12,
     species: null,
-    guides: [ ...guides, ...fieldNotes],
+    guides: [ ...guides, ...fieldnotes],
     terms: terms,
     inatSpecies: [],
     inatAutocompleteOptions: [
