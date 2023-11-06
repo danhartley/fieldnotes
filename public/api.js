@@ -1,5 +1,5 @@
 import { guides } from "./guides.js"
-import { fieldnotes } from './field-notes.js'
+import { fieldnotes } from './fieldnotes.js'
 import { templates } from './templates.js'
 
 // INAT API

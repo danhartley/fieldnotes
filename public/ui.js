@@ -8,7 +8,7 @@ import {
 } from './api.js'
 
 import { templates } from './templates.js'
-import { fieldnotes, getAnnotations } from './field-notes.js'
+import { fieldnotes, getAnnotations } from './fieldnotes.js'
 
 Object.assign(g, {
     taxa: g.ICONIC_TAXA,
