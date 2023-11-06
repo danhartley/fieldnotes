@@ -679,7 +679,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     const fetchInatSpecies = async () => {
         const filters = Array.from(document.getElementById('iconic-taxa').querySelectorAll('input'))
-        const f = filters.filter(t => t.checked)
         
         g.taxa = g.ICONIC_TAXA.filter(taxon => filters.filter(t => t.checked).map(t => t.id.toLowerCase()).includes(taxon.name))
         
@@ -690,7 +689,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         fetchInatSpeciesBtn.classList.toggle('disabled')
 
         g.inatSpecies = await getInatSpecies({
-            user: user.isActive ? user.user : null
+              user: user.isActive ? user.user : null
             , place: place.isActive ? place.place : null
         })
 

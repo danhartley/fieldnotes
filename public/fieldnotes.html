@@ -15,26 +15,37 @@
       <h1>Learn the planet</h1>
     </header>
 
-    <main>
+    <main class="mt2">
+      <h2>Fieldnotes</h2>
       <section>
-        <fieldset class="fieldset-reset p0">
-          <legend class="as-p pt">iNaturalist user.</legend>
-          <div id="inat-autocomplete-group" class="grid mb2"></div>
-  
-          <div class="grid">
-            <div>
-                <label for="inat-autocomplete-input-text">User.</label>
-                <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" placeholder="Start typing a username or user ID…">
-                <datalist id="inat-autocomplete-data-list"></datalist>
-            </div>                      
-            <div class="flex-row">                  
-              <input type="checkbox" id="persist-user-input-check-box" name="" />
-              <label for="persist-user-input-check-box">Remember this user</label>      
-            </div>
+        <fieldset class="mt2">
+          <legend>iNaturalist settings</legend>
+          <p class="mt0 small">If you are basing your fieldnotes on iNaturalist observations, lookup your user account and select the date of your field trip.</p>
+          <div class="centred-block">
+              <label for="inat-autocomplete-input-text" class="mr">User</label>
+              <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing a username or user ID…">
+              <datalist id="inat-autocomplete-data-list"></datalist>
+          </div>
+          <div id="inat-params-input-check-box-group" class="grid mt2"></div>
+          <div class="centred-block mt2">
+            <label for="observations-date" class="mr">Date</label>
+            <input type="date" id="observations-date" name="observations-date" class="mr" />
           </div>
         </fieldset>
       </section>
+
+      <div class="centred-block">
+        <button id="fetch-inat-species-btn" class="submit mr">Search iNaturalist for species</button>
+        <div id="fetch-inat-species-notification" class="small hidden">Waiting for response from iNaturalist…</div>
+      </div>
     </main>
+
+    <template id="checkbox-template">
+      <div class="flex-row">                  
+        <input type="checkbox" id="" name="" />
+        <label for=""></label>      
+      </div>
+    </template>
   </body>
 
   </html>

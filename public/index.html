@@ -65,11 +65,11 @@
               <div class="grid">
                 <div>
                     <label for="inat-autocomplete-input-text">User, place or project.</label>
-                    <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" placeholder="Start typing a username or user ID…">
+                    <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing a username or user ID…">
                     <datalist id="inat-autocomplete-data-list"></datalist>
                 </div>
               </div>
-              <div id="inat-params" class="grid mb2"></div>
+              <div id="inat-params-input-check-box-group" class="grid mb2"></div>
             </fieldset>
 
             <fieldset class="fieldset-reset p0">
@@ -110,9 +110,7 @@
             </fieldset>
 
             <div class="centred-block">
-              <button id="fetch-inat-species-btn" class="submit mr">
-                Search iNaturalist for species
-              </button>
+              <button id="fetch-inat-species-btn" class="submit mr">Search iNaturalist for species</button>
               <div id="fetch-inat-species-notification" class="small hidden">Waiting for response from iNaturalist…</div>
             </div>
           </fieldset>

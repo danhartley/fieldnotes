@@ -32,7 +32,7 @@ const attachListenersToInatParams = g => {
 }
 
 export const createInatParamsCheckboxGroup = g => {
-  const parent = document.getElementById('inat-params')
+  const parent = document.getElementById('inat-params-input-check-box-group')
   const t = document.getElementById('checkbox-template')
 
   parent.innerHTML = ''
@@ -92,7 +92,7 @@ inputText.addEventListener('change', e => {
     if(match) {
         const option = g.inatAutocompleteOptions.find(option => option.id === id)
         option[name] = g.matches.find(m => m[prop] === match)
-
+console.log(g)
         createInatParamsCheckboxGroup(g)
     }
 })
