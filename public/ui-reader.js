@@ -7,6 +7,8 @@ import {
     , g
 } from './api.js'
 
+import { handleInatAutocomplete, createInatParamsCheckboxGroup } from './ui-actions.js'
+
 import { templates } from './templates.js'
 import { fieldnotes, getAnnotations } from './fieldnotes.js'
 
@@ -15,20 +17,6 @@ Object.assign(g, {
     language: g.LANGUAGES[1],
     useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0],
 })
-
-const debounce = (func, wait) => {
-    let timeout
-
-    return function executedFunction(...args) {
-        const later = () => {
-        clearTimeout(timeout)
-        func(...args)
-        }
-
-        clearTimeout(timeout)
-        timeout = setTimeout(later, wait)
-    }
-}
 
 const getInatSpecies = async ({user, place}) => {
 
@@ -156,8 +144,8 @@ const inatAutocompleteGroup = document.getElementById('inat-autocomplete-group')
 const inatUseObservationSpeciesCountGroup = document.getElementById('inat-use-observations-species-count-group')
 const display = document.getElementById('species-display')
 const targetGroup = document.getElementById('target-group')
-const iNatAutocompleteInput = document.getElementById('inat-autocomplete')
-const iNatAutocompleteDatalist = document.getElementById('inat-autocomplete-list')
+const iNatAutocompleteInputText = document.getElementById('inat-autocomplete-input-text')
+const iNatAutocompleteDatalist = document.getElementById('inat-autocomplete-data-list')
 const inatSearchCtrl = document.getElementById('inatSearchCtrl')
 const curatedGuideCtrl = document.getElementById('curatedGuideCtrl')
 const lessonCtrl = document.getElementById('lessonCtrl')
@@ -312,47 +300,6 @@ const createTaxaCheckboxGroup = () => {
     
         parent.appendChild(clone)
     })
-}
-
-const attachListenersToInatParams = () => {
-    const cbInatParamGroup = document.querySelectorAll('input[name="inat-param"]')
-
-    cbInatParamGroup.forEach(cb => {
-        cb.addEventListener('click', e => {
-            const name = e.target.value
-            g.inatAutocompleteOptions.forEach(option => {
-                if(option.name === name) {
-                    option.isActive = !option.isActive
-                }
-            })
-        })
-    })
-}
-
-const createInatParamsCheckboxGroup = () => {
-    const parent = document.getElementById('inat-params')
-    const t = document.getElementById('checkbox-template')
-
-    parent.innerHTML = ''
-
-    g.inatAutocompleteOptions.filter(param => param.isActive).forEach(param => {
-        const clone = t.content.cloneNode(true)
-
-        const input = clone.querySelector('input')
-        const label = clone.querySelector('label')
-        label.setAttribute('class', 'text-initial')
-    
-        input.setAttribute('name', 'inat-param')
-        input.id = param.id
-        if(param.isActive) input.setAttribute('checked', true)
-        input.value = param.name
-        label.textContent = param[param.name][param.prop]
-        label.htmlFor = input.id
-
-        parent.appendChild(clone)
-    })
-
-    attachListenersToInatParams()
 }
 
 const createRadioBtnTemplateGroup = () => {
@@ -764,8 +711,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
         rb.addEventListener('change', e => {
             g.inatAutocomplete = g.inatAutocompleteOptions.find(o => o.id === e.target.value)
 
-            iNatAutocompleteInput.value = ''
-            iNatAutocompleteInput.setAttribute('placeholder', g.inatAutocomplete.placeholder)
+            iNatAutocompleteInputText.value = ''
+            iNatAutocompleteInputText.setAttribute('placeholder', g.inatAutocomplete.placeholder)
         })
     })
 
@@ -830,44 +777,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     addImgClickEventHandlers()
 
-    iNatAutocompleteInput.addEventListener('input', debounce(async (e) => {
-        while (iNatAutocompleteDatalist.firstChild) {
-            iNatAutocompleteDatalist.removeChild(iNatAutocompleteDatalist.firstChild)
-        }
-
-        const { id, prop } = g.inatAutocomplete
-        const strToComplete = e.target.value
-
-        if(strToComplete.length < 3) return
-
-        const data = await getByAutocomplete({ by: id, toComplete: strToComplete })
-        
-        g.matches = data.results
-        
-        g.matches.forEach(match => {
-            const option = document.createElement('option')
-            option.value = match[prop]
-            iNatAutocompleteDatalist.appendChild(option)
-        })   
-    }, 350))
-
-    iNatAutocompleteInput.addEventListener('change', e => {
-        const { id, name, prop } = g.inatAutocomplete
-        const match = e.target.value
-
-        g.inatAutocompleteOptions.forEach(option => {
-            if(option.id === id) {
-                option.isActive = true
-            }
-        })
-
-        if(match) {
-            const option = g.inatAutocompleteOptions.find(option => option.id === id)
-            option[name] = g.matches.find(m => m[prop] === match)
-
-            createInatParamsCheckboxGroup()
-        }
-    })
+    handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g})
 })
 
 const init = () => {
@@ -878,7 +788,7 @@ const init = () => {
 
     createTaxaCheckboxGroup()
     createRadioBtnTemplateGroup()
-    createInatParamsCheckboxGroup()
+    createInatParamsCheckboxGroup(g)
 
     const date = new Date()
     const today = `${date.getFullYear()}-${date.getMonth() + 1}-${("0" + date.getDate()).slice(-2)}`

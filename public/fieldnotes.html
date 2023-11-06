@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Learn the planet fieldnotes writer</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="icon" href="./favicon.ico" />
+    <script src="./ui-writer.js" type="module"></script>
+  </head>
+
+  <body>  
+    <header>
+      <h1>Learn the planet</h1>
+    </header>
+
+    <main>
+      <section>
+        <fieldset class="fieldset-reset p0">
+          <legend class="as-p pt">iNaturalist user.</legend>
+          <div id="inat-autocomplete-group" class="grid mb2"></div>
+  
+          <div class="grid">
+            <div>
+                <label for="inat-autocomplete-input-text">User.</label>
+                <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" placeholder="Start typing a username or user ID…">
+                <datalist id="inat-autocomplete-data-list"></datalist>
+            </div>                      
+            <div class="flex-row">                  
+              <input type="checkbox" id="persist-user-input-check-box" name="" />
+              <label for="persist-user-input-check-box">Remember this user</label>      
+            </div>
+          </div>
+        </fieldset>
+      </section>
+    </main>
+  </body>
+
+  </html>

@@ -517,7 +517,7 @@ th, td {
   font-size: var(--s3);
 }
 
-#inat-autocomplete::placeholder {
+#inat-autocomplete-input-text::placeholder {
   font-family: Elena, "PT Serif", serif;
   opacity: 1;
 }
