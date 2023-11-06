@@ -881,7 +881,7 @@ const init = () => {
     createInatParamsCheckboxGroup()
 
     const date = new Date()
-    const today = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    const today = `${date.getFullYear()}-${date.getMonth() + 1}-${("0" + date.getDate()).slice(-2)}`
 
     singleDate.value = today
     startDate.value = today
