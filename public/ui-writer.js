@@ -12,6 +12,8 @@ language: g.LANGUAGES[1],
 useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0],
 })
 
+import { handleInatAutocomplete, createInatParamsCheckboxGroup } from './ui-actions.js'
+
 const persistUserInputCheckBox = document.getElementById('persist-user-input-check-box')
 
 

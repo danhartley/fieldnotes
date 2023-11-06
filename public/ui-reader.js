@@ -1,6 +1,5 @@
 import { 
       snapSpeciesTraits
-    , getByAutocomplete
     , getInatObservations
     , getInatTaxa
     , inatControls
