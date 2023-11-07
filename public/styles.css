@@ -608,6 +608,13 @@ th, td {
   width: initial;
 }
 
+/* VIEWS */
+
+#edit-view * {
+  width: initial;
+  max-width: initial;
+}
+
 /* SPACING */
 
 .m {

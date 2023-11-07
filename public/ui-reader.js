@@ -152,10 +152,10 @@ const displayCtrl = document.getElementById('displayCtrl')
 const progress = document.getElementById('progress')
 const progressCtrl = document.getElementById('progressCtrl')
 const preferencesCtrl = document.getElementById('preferencesCtrl')
-const testbtn = document.getElementById('show-test-btn')
+const showTestBtn = document.getElementById('show-test-btn')
 const targets = document.getElementById('targets')
 const fetchInatSpeciesBtn = document.getElementById('fetch-inat-species-btn')
-const fetchInatSpeciesNotification = document.getElementById('fetch-inat-species-notification')
+const fetchInatSpeciesNotificationText = document.getElementById('fetch-inat-species-notification-text')
 const startDate = document.getElementById('observations-start-date')
 const endDate = document.getElementById('observations-end-date')
 const singleDate = document.getElementById('observations-date')
@@ -265,10 +265,10 @@ const resetTestOptions = () => {
     testSubmitBtn.classList.add(cssClass)
 
     if(g.template.isTestable) {
-        testbtn.classList.remove(cssClass)
-        testbtn.innerText = 'SHOW TESTS'
+        showTestBtn.classList.remove(cssClass)
+        showTestBtn.innerText = 'SHOW TESTS'
     } else {
-        testbtn.classList.add(cssClass)
+        showTestBtn.classList.add(cssClass)
         targets.classList.add(cssClass)
     }
 }
@@ -330,11 +330,11 @@ const createRadioBtnTemplateGroup = () => {
                     }
 
                     if(g.template.isTest) {
-                        testbtn.innerText = 'HIDE TESTS'                
+                        showTestBtn.innerText = 'HIDE TESTS'                
                         testSubmitBtn.classList.remove('hidden')                        
                     } 
                     else {
-                        testbtn.innerText = 'SHOW TESTS'                  
+                        showTestBtn.innerText = 'SHOW TESTS'                  
                         testSubmitBtn.classList.add('hidden')
                     }
 
@@ -343,7 +343,7 @@ const createRadioBtnTemplateGroup = () => {
                     startLesson()
                 }
 
-                testbtn.addEventListener('click', toggleTestableTemplate, true)
+                showTestBtn.addEventListener('click', toggleTestableTemplate, true)
                             
                 startLesson()                
             })
@@ -685,7 +685,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         const user = g.inatAutocompleteOptions.find(o => o.id === 'users')
         const place = g.inatAutocompleteOptions.find(o => o.id === 'places')        
 
-        fetchInatSpeciesNotification.classList.toggle('hidden')
+        fetchInatSpeciesNotificationText.classList.toggle('hidden')
         fetchInatSpeciesBtn.classList.toggle('disabled')
 
         g.inatSpecies = await getInatSpecies({
@@ -697,8 +697,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
     
         startLesson()
 
+        fetchInatSpeciesNotificationText.classList.toggle('hidden')
         fetchInatSpeciesBtn.classList.toggle('disabled')
-        fetchInatSpeciesNotification.classList.toggle('hidden')
         display.classList.toggle('disabled')
         display.querySelector('input').click()
     }

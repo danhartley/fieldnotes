@@ -16,7 +16,30 @@
     </header>
 
     <main class="mt2">
-      <h2>Fieldnotes</h2>
+      <fieldset class="fieldset-reset">
+        <legend class="hidden">Preview or edit fieldnotes</legend>
+        <section>
+          <div class="section-header section-group">
+            <h2>              
+              <input id="edit-ctrl-input-radio" type="radio" name="author-mode" value="edit" checked>
+              <label for="edit-ctrl-input-radio">
+                Edit mode
+              </label>
+            </h2>
+          </div>        
+        </section> 
+        <section>
+          <div class="section-header section-group">
+            <h2>              
+              <input id="preview-ctrl-input-radio" type="radio" name="author-mode" value="preview">
+              <label for="preview-ctrl-input-radio">
+                Preview mode
+              </label>
+            </h2>
+          </div>      
+        </section>       
+      </fieldset>
+
       <section>
         <fieldset class="mt2">
           <legend>iNaturalist settings</legend>
@@ -31,13 +54,45 @@
             <label for="observations-date" class="mr">Date</label>
             <input type="date" id="observations-date" name="observations-date" class="mr" />
           </div>
+
+          <div class="centred-block mt2">
+            <button id="fetch-inat-species-btn" class="submit mr">Search iNaturalist for species</button>
+            <div id="fetch-inat-species-notification-text" class="small hidden">Waiting for response from iNaturalist…</div>
+          </div>
         </fieldset>
       </section>
 
-      <div class="centred-block">
-        <button id="fetch-inat-species-btn" class="submit mr">Search iNaturalist for species</button>
-        <div id="fetch-inat-species-notification" class="small hidden">Waiting for response from iNaturalist…</div>
-      </div>
+      <article id="edit-view">
+        <section id="meta-data-section">
+          <fieldset>
+            <legend>Field trip</legend>
+            <div class="small mb2">Meta data derived from your iNaturalist observations.</div>
+            <dl id="inat-meta-data-dl">
+              <dt>Author</dt><dd>Your iNaturalist username</dd>
+              <dt>Date</dt><dd>The day of your field trip</dd>
+              <dt>Location</dt><dd>Where you were</dd>
+            </dl>
+          </fieldset>
+        </section>
+
+        <section id="select-section-type-section">
+          <fieldset>
+            <legend>Choose the type of entry you want to make</legend>
+            <button type="button" value="h2" class="mb">H2</button>
+            <button type="button" value="h3" class="mb">H3</button>
+            <button type="button" value="h4" class="mb">H4</button>
+            <button type="button" value="p" class="mb">P</button>
+            <button type="button" value="species-observations" class="mb">Species observations</button>
+            <button type="button" value="images" class="mb">Images</button>
+            <button type="button" value="terms" class="mb">Terms</button>
+            <button type="button" value="birdsong" class="mb">Birdsong</button>
+          </fieldset>
+        </section>
+      </article>
+
+      <article id="preview-view" class="hidden">
+        Preview mode…
+      </article>
     </main>
 
     <template id="checkbox-template">
@@ -45,6 +100,25 @@
         <input type="checkbox" id="" name="" />
         <label for=""></label>      
       </div>
+    </template>
+
+    <template id="section-template">
+      <section>
+        <fieldset class="mt2">
+          <legend></legend>
+          <div></div>      
+          <button id="addSectionBtn" class="small mt2 disabled">Add</button>
+          <button id="deleteSectionBtn" class="small mt2 disabled">Delete</button>
+        </fieldset>
+      </section>
+    </template>
+
+    <template id="h2-template">
+      <input type="text" class="p" />
+    </template>
+    
+    <template id="h3-template">
+      <input type="text" class="p" />
     </template>
   </body>
 
