@@ -56,13 +56,13 @@ export const guides = [
               templates: [
                 { ...h3, h3: 'Mediterranean Climate Regions' },
                 { 
-                  ...text, texts: [
+                  ...text, paras: [
                     {
-                      text: `
+                      p: `
                       The Mediterranean has a subtropical climate with hot summers and mild winters. Precipitation is concentrated in the winter.`,
                     },
                     {
-                      text: 'The subtropics fall outside of the tropics of Cancer (in the northern hemisphere) and Capricorn (southern hemisphere).',
+                      p: 'The subtropics fall outside of the tropics of Cancer (in the northern hemisphere) and Capricorn (southern hemisphere).',
                     },
                   ]
                 },
@@ -86,15 +86,15 @@ export const guides = [
                   ]
                 },
                 { 
-                  ...text, texts: [
+                  ...text, paras: [
                     {
-                      text: 'The typical Mediterranean landscape is a mosaic of diverse plant communities characterised by biodiversity.',
+                      p: 'The typical Mediterranean landscape is a mosaic of diverse plant communities characterised by biodiversity.',
                     },
                     {
-                      text: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics, adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
+                      p: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics, adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
                     },
                     {
-                      text: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
+                      p: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
                     },                        
                   ]
                 },
@@ -104,9 +104,9 @@ export const guides = [
                   'Conifer',
                   ]
                 },
-                { ...text, texts: [
+                { ...text, paras: [
                     {
-                      text: 'Much of Portugal has a Mediterranean climate.',
+                      p: 'Much of Portugal has a Mediterranean climate.',
                     },
                   ]
                 },
@@ -143,21 +143,21 @@ export const guides = [
                   ]
                 },
                 { ...h3,  h3: 'Mediterranean climate and vegetation' },           
-                { ...text, texts: [
+                { ...text, paras: [
                   {
-                    text: 'The Mediterranean is characterised by mild and rainy winters and hot and dry summers.',
+                    p: 'The Mediterranean is characterised by mild and rainy winters and hot and dry summers.',
                   },
                   {
-                    text: 'MCRs are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
+                    p: 'MCRs are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
                   },
                   {
-                    text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the restricted summer rainfall when temperatures reach their maximum.',
+                    p: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the restricted summer rainfall when temperatures reach their maximum.',
                   },
                   {
-                    text: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics, adapting their morphology and metabolism to survive during drought, and to resprout after wildfires.',
+                    p: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics, adapting their morphology and metabolism to survive during drought, and to resprout after wildfires.',
                   },
                   {
-                    text: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
+                    p: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
                   },   
                 ] },
                 { ...term, terms: [
@@ -168,9 +168,9 @@ export const guides = [
                 },
                 {
                   ...text,
-                  texts: [
+                  paras: [
                     {
-                      text: `
+                      p: `
                       Quercus *ilex*, Myrtus *communis*, Arbutus *unedo*, Olea *europaea*, Laurus *nobilis*, and Rhamnus *alaternus* are sclerophyllic, a typical adaptation to areas with low rainfall or seasonal droughts.`,
                     },
                   ]
@@ -194,21 +194,21 @@ export const guides = [
               templates: [
                 { ...h3,  h3: 'Human impact' },
                 { ...text,
-                  texts: [
+                  paras: [
                     {
-                      text: 'Matorrals can be considered as different vegetation types developed on disturbed or altered sites where forest species form the natural potential vegetation and its vegetation series.',
+                      p: 'Matorrals can be considered as different vegetation types developed on disturbed or altered sites where forest species form the natural potential vegetation and its vegetation series.',
                     },
                     {
-                      text: 'Most of the food crops cultivated in the area were originated in the Mediterranean Basin and in Middle Eastern regions. Wheat, barley, legumes (such as lentils and chickpeas), vegetables (such as artichokes, asparagus, cabbage, leeks, onions and garlic), and fruits and seeds (such as grapes, olives, almonds and acorns).',
+                      p: 'Most of the food crops cultivated in the area were originated in the Mediterranean Basin and in Middle Eastern regions. Wheat, barley, legumes (such as lentils and chickpeas), vegetables (such as artichokes, asparagus, cabbage, leeks, onions and garlic), and fruits and seeds (such as grapes, olives, almonds and acorns).',
                     },
                     {
-                      text: 'The present Mediterranean landscape is the complex result of human activity in the management of nature for its own benefit.'
+                      p: 'The present Mediterranean landscape is the complex result of human activity in the management of nature for its own benefit.'
                     },                  
                     {
-                      text: 'The pristine Mediterranean vegetation was transformed through human intervention. This was not only due to agriculture, livestock and the building of cities but also due to mining for metals, a key activity throughout its history.'
+                      p: 'The pristine Mediterranean vegetation was transformed through human intervention. This was not only due to agriculture, livestock and the building of cities but also due to mining for metals, a key activity throughout its history.'
                     },                
                     {
-                      text: 'Natural woods and bushes were transformed into a new cultural space where crops and grasslands could be identified with boundaries defining their ownership.'
+                      p: 'Natural woods and bushes were transformed into a new cultural space where crops and grasslands could be identified with boundaries defining their ownership.'
                     },
                   ]
                 },
@@ -267,7 +267,7 @@ export const guides = [
           rank: 10,
           description: [
             {
-              text: 'At its best in early spring when the plant has developed its basal leaves and before the growth of the flowering stems.'
+              p: 'At its best in early spring when the plant has developed its basal leaves and before the growth of the flowering stems.'
             }
           ]
         },
@@ -277,7 +277,7 @@ export const guides = [
           rank: 10,
           description: [
             {
-              text: 'The young shoots are collected in mid-spring.'
+              p: 'The young shoots are collected in mid-spring.'
             }
           ]
         },
@@ -312,7 +312,7 @@ export const guides = [
           rank: 20,
           description: [
             {
-              text: 'Have been used as stewed vegetables.'
+              p: 'Have been used as stewed vegetables.'
             }
           ]
         },
@@ -337,7 +337,7 @@ export const guides = [
           rank: 10,
           description: [
             {
-              text: 'These flowers, which typically appear in May–July, are edible and attract bees.'
+              p: 'These flowers, which typically appear in May–July, are edible and attract bees.'
             }
           ]
         },
@@ -347,7 +347,7 @@ export const guides = [
           rank: 10,
           description: [
             {
-              text: 'Consumed in salads or eaten raw.'
+              p: 'Consumed in salads or eaten raw.'
             }
           ]
         },
@@ -357,7 +357,7 @@ export const guides = [
           rank: 10,
           description: [
             {
-              text: 'Consumed in salads or eaten raw.'
+              p: 'Consumed in salads or eaten raw.'
             }
           ]
         },
@@ -367,7 +367,7 @@ export const guides = [
           rank: 10,
           description: [
             {
-              text: 'Consumed in salads or eaten raw.'
+              p: 'Consumed in salads or eaten raw.'
             }
           ]
         },
@@ -377,7 +377,7 @@ export const guides = [
           rank: 10,
           description: [
             {
-              text: 'Consumed in salads or eaten raw.'
+              p: 'Consumed in salads or eaten raw.'
             }
           ]
         },
@@ -387,7 +387,7 @@ export const guides = [
           rank: 10,
           description: [
             {
-              text: ''
+              p: ''
             }
           ]
         },
@@ -405,33 +405,33 @@ export const guides = [
                 { ...h3,  h3: 'The Mediterranean landscape' },
                 {
                   ...text,
-                  texts: [
+                  paras: [
                     {
-                      text: 'The typical Mediterranean landscape is a mosaic of diverse plant communities characterised by biodiversity.',
+                      p: 'The typical Mediterranean landscape is a mosaic of diverse plant communities characterised by biodiversity.',
                     },
                     {
-                      text: 'These complexes are home to an important group of edible plants and plants that provide wild edible fruits, as well as aromatic plants used as seasoning in human nutrition.',
+                      p: 'These complexes are home to an important group of edible plants and plants that provide wild edible fruits, as well as aromatic plants used as seasoning in human nutrition.',
                     },
                     {
-                      text: 'Mild and rainy winters contrasting with hot and dry summers.',
+                      p: 'Mild and rainy winters contrasting with hot and dry summers.',
                     },
                     {
-                      text: 'The Mediterranean macrobioclimate is shared with southern and south-western territories on all the continents.',
+                      p: 'The Mediterranean macrobioclimate is shared with southern and south-western territories on all the continents.',
                     },
                     {
-                      text: 'The lands in these regions around the world are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
+                      p: 'The lands in these regions around the world are covered by characteristic vegetation types involving dense forests, woodlands and thickets of woody shrubby plants of varying density, generally with evergreen sclerophyllous leaves.',
                     },
                     {
-                      text: 'Wild plants were a major source of food and a key nutritional complement to the animal proteins obtained from hunting and fishing. Knowledge of wild edible plants has survived in more advanced farming and livestock societies, and in times of hardship, such as war and famine, it has once again served as a vital source of food and medicinal resources.',
+                      p: 'Wild plants were a major source of food and a key nutritional complement to the animal proteins obtained from hunting and fishing. Knowledge of wild edible plants has survived in more advanced farming and livestock societies, and in times of hardship, such as war and famine, it has once again served as a vital source of food and medicinal resources.',
                     },
                     {
-                      text: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the restricted summer rainfall when temperatures reach their maximum.',
+                      p: 'The most notable aspect of the Mediterranean macrobioclimate affecting its main vegetation types is the restricted summer rainfall when temperatures reach their maximum.',
                     },
                     {
-                      text: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
+                      p: 'Plants that have developed and diversified in areas with a Mediterranean macroclimate have acquired special characteristics adapting their morphology and metabolism to survive during the drought period and to resprout after wildfires.',
                     },
                     {
-                      text: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
+                      p: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
                     },                        
                   ]
                 },
@@ -488,54 +488,54 @@ export const guides = [
                 { ...h3,  h3: 'title…' },
                 {
                   ...text,
-                  texts: [
+                  paras: [
                     {
-                      text: 'Matorrals can be considered as different vegetation types developed on disturbed or altered sites where forest species form the natural potential vegetation and its vegetation series.',
+                      p: 'Matorrals can be considered as different vegetation types developed on disturbed or altered sites where forest species form the natural potential vegetation and its vegetation series.',
                     },
                     {
-                      text: 'Most of the food crops cultivated in the area were originated in the Mediterranean Basin and in Middle Eastern regions. Wheat, barley, legumes (such as lentils and chickpeas), vegetables (such as artichokes, asparagus, cabbage, leeks, onions and garlic), and fruits and seeds (such as grapes, olives, almonds and acorns).',
+                      p: 'Most of the food crops cultivated in the area were originated in the Mediterranean Basin and in Middle Eastern regions. Wheat, barley, legumes (such as lentils and chickpeas), vegetables (such as artichokes, asparagus, cabbage, leeks, onions and garlic), and fruits and seeds (such as grapes, olives, almonds and acorns).',
                     },
                     {
-                      text: 'The present Mediterranean landscape is the complex result of human activity in the management of nature for its own benefit.'
+                      p: 'The present Mediterranean landscape is the complex result of human activity in the management of nature for its own benefit.'
                     },                  
                     {
-                      text: 'The pristine Mediterranean vegetation was transformed through human intervention. This was not only due to agriculture, livestock and the building of cities but also due to mining for metals, a key activity throughout its history.'
+                      p: 'The pristine Mediterranean vegetation was transformed through human intervention. This was not only due to agriculture, livestock and the building of cities but also due to mining for metals, a key activity throughout its history.'
                     },                
                     {
-                      text: 'Natural woods and bushes were transformed into a new cultural space where crops and grasslands could be identified with boundaries defining their ownership.'
+                      p: 'Natural woods and bushes were transformed into a new cultural space where crops and grasslands could be identified with boundaries defining their ownership.'
                     },                
                     {
-                      text: 'Changes promoted nitrogen-loving (nitrophilous) plants. Many are as-sociated with farmlands and cultivated plants (weeds), and others grow near places of human habitation (ruderals) or live along the borders of paths, roads or cattle tracks, carried by man and domestic animals in their seasonal migration.'
+                      p: 'Changes promoted nitrogen-loving (nitrophilous) plants. Many are as-sociated with farmlands and cultivated plants (weeds), and others grow near places of human habitation (ruderals) or live along the borders of paths, roads or cattle tracks, carried by man and domestic animals in their seasonal migration.'
                     },                
                     {
-                      text: 'Numerous weeds and ruderal plants are used and collected as wild vegetables in the Iberian Peninsula, such as Scolymus hispanicus (Asteraceae), Silene vulgaris, Garcke (Caryophyllaceae) and Silybum marianum.'
+                      p: 'Numerous weeds and ruderal plants are used and collected as wild vegetables in the Iberian Peninsula, such as Scolymus hispanicus (Asteraceae), Silene vulgaris, Garcke (Caryophyllaceae) and Silybum marianum.'
                     },          
                     {
-                      text: 'Late winter, and especially spring, is in general the best time to collect vegetables that reach their higher development while being still tender, though de-pending on the local climatic conditions, they could be collected in other parts of the year.'
+                      p: 'Late winter, and especially spring, is in general the best time to collect vegetables that reach their higher development while being still tender, though de-pending on the local climatic conditions, they could be collected in other parts of the year.'
                     },       
                     {
-                      text: 'Seasonality is a very determinant condition for the life in the Mediterranean areas.'
+                      p: 'Seasonality is a very determinant condition for the life in the Mediterranean areas.'
                     },       
                     {
-                      text: 'Very dry autumns in Spanish continental sites signal the beginning of a bad year for collecting wild vegetables which develop during this season and produce their stems and leaves in late winter and spring.'
+                      p: 'Very dry autumns in Spanish continental sites signal the beginning of a bad year for collecting wild vegetables which develop during this season and produce their stems and leaves in late winter and spring.'
                     },       
                     {
-                      text: 'Asparagus acutifolius — which grows in oak forest communities, in olive groves and, in the past, inside rain-fed farm crops — has very tough underground organs like tuberous roots, and in dry years also produces new shoots or asparagus.'
+                      p: 'Asparagus acutifolius — which grows in oak forest communities, in olive groves and, in the past, inside rain-fed farm crops — has very tough underground organs like tuberous roots, and in dry years also produces new shoots or asparagus.'
                     },      
                     {
-                      text: 'There are also species that are not so dependent on the yearly climatic variation, such as watercress (Nasturtium officinale) that always grow where there are permanent waters.'
+                      p: 'There are also species that are not so dependent on the yearly climatic variation, such as watercress (Nasturtium officinale) that always grow where there are permanent waters.'
                     },    
                     {
-                      text: 'Late spring and summer is the season of aromatic plants used for seasoning. The diverse floras of the Mediterranean Basin countries provide numerous highly scented species. Chemical compounds from the essential oils are produced in the secondary metabolism of all these plants and are present in the small uni- or multicellular dots that are transformed hairs located on the epidermis of leaves and flowers.'
+                      p: 'Late spring and summer is the season of aromatic plants used for seasoning. The diverse floras of the Mediterranean Basin countries provide numerous highly scented species. Chemical compounds from the essential oils are produced in the secondary metabolism of all these plants and are present in the small uni- or multicellular dots that are transformed hairs located on the epidermis of leaves and flowers.'
                     },
                     {
-                      text: 'These tiny dots burst, and the essential oil evap-orates into the air producing their pleasant aromas, even when the plants are dried. One of the biological advantages of the presence of these chemical compounds is that plants are protected from being eaten by large animals or phytophagous insects and from bacterial infections.'
+                      p: 'These tiny dots burst, and the essential oil evap-orates into the air producing their pleasant aromas, even when the plants are dried. One of the biological advantages of the presence of these chemical compounds is that plants are protected from being eaten by large animals or phytophagous insects and from bacterial infections.'
                     },
                     {
-                      text: 'One of the biological advantages of the presence of these chemical compounds is that plants are protected from being eaten by large animals or phytophagous insects and from bacterial infections.'
+                      p: 'One of the biological advantages of the presence of these chemical compounds is that plants are protected from being eaten by large animals or phytophagous insects and from bacterial infections.'
                     },
                     {
-                      text: 'There is a high biodiversity within the group of species used for cooking, flavouring and preserving. Lamiaceae, Apiaceae and Asteraceae are the main aromatic plant families in the territories of the Mediterranean Basin.'
+                      p: 'There is a high biodiversity within the group of species used for cooking, flavouring and preserving. Lamiaceae, Apiaceae and Asteraceae are the main aromatic plant families in the territories of the Mediterranean Basin.'
                     },
                   ]
                 },
@@ -876,18 +876,18 @@ export const guides = [
               templates: [
                 {
                   ...text,
-                  texts: [
+                  paras: [
                     {
-                      text: 'Mediterranean vegetation is among the most fire-prone and fire-shaped in the world.',
+                      p: 'Mediterranean vegetation is among the most fire-prone and fire-shaped in the world.',
                     },
                     {
-                      text: 'Sclerophyllous evergreen shrublands with widespread adaptations to intense fire. (Maquis)',
+                      p: 'Sclerophyllous evergreen shrublands with widespread adaptations to intense fire. (Maquis)',
                     },
                     {
-                      text: 'Lower, more xeric, sometimes drought-deciduous shrublands. (Garrigue)',
+                      p: 'Lower, more xeric, sometimes drought-deciduous shrublands. (Garrigue)',
                     },
                     {
-                      text: 'It is found on limestone soils in southern France and around the Mediterranean Basin, generally near the coast where the moderated Mediterranean climate provides annual summer drought. It is an anthropogenic degradation and succession form of former evergreen oak forests that existed until around 2500 years BC.'
+                      p: 'It is found on limestone soils in southern France and around the Mediterranean Basin, generally near the coast where the moderated Mediterranean climate provides annual summer drought. It is an anthropogenic degradation and succession form of former evergreen oak forests that existed until around 2500 years BC.'
                     },                                                  
                   ]
                 },

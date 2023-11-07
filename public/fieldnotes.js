@@ -1770,15 +1770,15 @@ export const fieldnotes = [
                 { ...author,  author: 'Daniel Hartley' },
                 {
                     ...text,
-                    texts: [
+                    paras: [
                         {
-                            text: 'My observations were made in the Serra do Louro within the Arrábida Natural Park (Parque Natural da Arrábida), a protected area in the district of Setúbal which lies about twenty kilometres south of Lisbon.'
+                            p: 'My observations were made in the Serra do Louro within the Arrábida Natural Park (Parque Natural da Arrábida), a protected area in the district of Setúbal which lies about twenty kilometres south of Lisbon.'
                         },
                         {
-                            text: 'I followed a number of paths (trilos in Portuguese), the Cabeço das Vacas, the Trilho do Fio das Vacas and the Trilho dos Moinhos da Sapec which follow the line of the escarpment.'
+                            p: 'I followed a number of paths (trilos in Portuguese), the Cabeço das Vacas, the Trilho do Fio das Vacas and the Trilho dos Moinhos da Sapec which follow the line of the escarpment.'
                         },
                         {
-                            text: 'The day was clear and bright, around 18ºC, which is not aypical for the time of year. On the south facing slope sheltered from a light westerly breeze, it felt three or four degrees warmer.'
+                            p: 'The day was clear and bright, around 18ºC, which is not aypical for the time of year. On the south facing slope sheltered from a light westerly breeze, it felt three or four degrees warmer.'
                         },
                     ]
                 },
@@ -1808,18 +1808,18 @@ export const fieldnotes = [
                 { ...h3,  h3: 'Grinnell method of note-taking' },
                 {
                   ...text,
-                  texts: [
+                  paras: [
                     {
-                      text: 'A field-worthy notebook where one records direct observations as they are being observed.',
+                      p: 'A field-worthy notebook where one records direct observations as they are being observed.',
                     },
                     {
-                      text: 'A larger more substantial journal containing written entries on observations and information, transcribed from the smaller field notebook as soon as possible.',
+                      p: 'A larger more substantial journal containing written entries on observations and information, transcribed from the smaller field notebook as soon as possible.',
                     },
                     {
-                      text: 'Species accounts of the notes taken on specific species.',
+                      p: 'Species accounts of the notes taken on specific species.',
                     },
                     {
-                      text: 'A catalogue to record the location and date of collected specimens.',
+                      p: 'A catalogue to record the location and date of collected specimens.',
                     },
                   ]
                 },
@@ -1834,18 +1834,18 @@ export const fieldnotes = [
                 { ...h3,  h3: 'Biological habitat' },
                 {
                   ...text,
-                  texts: [
+                  paras: [
                     {
-                      text: 'The other types of plants growing around your specimen.',
+                      p: 'The other types of plants growing around your specimen.',
                     },
                     {
-                      text: 'What kind of plant community is it growing in (open forest, opening in forest, closed forest, grassland, shrub-steppe, disturbed roadside).',
+                      p: 'What kind of plant community is it growing in (open forest, opening in forest, closed forest, grassland, shrub-steppe, disturbed roadside).',
                     },
                     {
-                      text: 'If you know the identification (even to genus or family) of any other plants growing in the immediate surroundings of your collection, record them here.',
+                      p: 'If you know the identification (even to genus or family) of any other plants growing in the immediate surroundings of your collection, record them here.',
                     },
                     {
-                      text: 'This information can help researchers assess what type of habitat is present at this location.',
+                      p: 'This information can help researchers assess what type of habitat is present at this location.',
                     },
                   ]
                 },
@@ -1868,9 +1868,9 @@ export const fieldnotes = [
                   ]
                 },                
                 { ...text,
-                    texts: [
+                    paras: [
                         {
-                            text: 'Comparison (above) between species observed on location and the type specimens (below) used by iNaturalist.'
+                            p: 'Comparison (above) between species observed on location and the type specimens (below) used by iNaturalist.'
                         }
                     ]
                 },
@@ -1885,15 +1885,15 @@ export const fieldnotes = [
                   },
                 { ...h3,  h3: 'Physical habitat' },
                 { ...text,
-                  texts: [
+                  paras: [
                     {
-                      text: 'The type of soil, rocks, slope, elevation, aspect, moisture (for instance, whether the site is continuously wet)',
+                      p: 'The type of soil, rocks, slope, elevation, aspect, moisture (for instance, whether the site is continuously wet)',
                     },
                     {
-                      text: 'Record anything you know about soil type (sand, clay, loam), topography, slope, exposure, amount of sun, proximity to water sources such as streams or lakes, etc. Describe the site to the best of your ability.',
+                      p: 'Record anything you know about soil type (sand, clay, loam), topography, slope, exposure, amount of sun, proximity to water sources such as streams or lakes, etc. Describe the site to the best of your ability.',
                     },
                     {
-                      text: 'You can also include information about the level of disturbance of the habitat, e.g. does the area appear to be naturally forested? In agricultural use?',
+                      p: 'You can also include information about the level of disturbance of the habitat, e.g. does the area appear to be naturally forested? In agricultural use?',
                     },
                   ]
                 },
@@ -1917,15 +1917,15 @@ export const fieldnotes = [
                 { ...h3, h3: 'Description' },
                 {
                     ...text,
-                    texts: [
+                    paras: [
                       {
-                        text: 'Record features that may not be preserved in the pressed specimen, such as colour, odor, sap or latex, height, diameter, etc.',
+                        p: 'Record features that may not be preserved in the pressed specimen, such as colour, odor, sap or latex, height, diameter, etc.',
                       },
                       {
-                        text: 'Particular attention should be paid to phenology – is tree in fruit or flower? If so, what color are flowers? You can also describe the plant’s habit – is the plant a tree, shrub, or vine?',
+                        p: 'Particular attention should be paid to phenology – is tree in fruit or flower? If so, what color are flowers? You can also describe the plant’s habit – is the plant a tree, shrub, or vine?',
                       },
                       {
-                        text: 'If you have reason to believe a specimen is cultivated or offspring of a cultivated specimen that has “escaped,” that information should be recorded as such.',
+                        p: 'If you have reason to believe a specimen is cultivated or offspring of a cultivated specimen that has “escaped,” that information should be recorded as such.',
                       },                                                  
                     ]
                 },

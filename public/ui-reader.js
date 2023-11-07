@@ -563,11 +563,11 @@ const startLesson = () => {
                         speciesParent.appendChild(parent)
                     break
                     case 'text':
-                        t.texts.forEach(text => {
+                        t.paras.forEach(text => {
                             const clone = templateToClone.content.cloneNode(true)                      
                             const md = clone.querySelector('p')
                             // const md = clone.querySelector('md-block')
-                            md.textContent = text.text                            
+                            md.textContent = text.p                            
                             parent = parentClone.querySelector('div')
                             parent.appendChild(clone)
                         })

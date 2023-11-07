@@ -55,7 +55,7 @@ export const text = {
   name: 'text',
   parent: 'non-grid-template',
   type: 'text',
-  texts: [],
+  paras: [],
 }
 
 export const term = {
