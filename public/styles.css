@@ -441,7 +441,7 @@ th, td {
   background-color: var(--c0);
 }
 
-#guide-group.grid {
+#guide-group-container.grid {
   grid-template-columns: 1fr;
 }
 
@@ -469,7 +469,7 @@ th, td {
   background-color: var(--c1);
 }
 
-#inat-autocomplete-group .flex-row {
+#inat-autocomplete-group-container .flex-row {
   background-color: var(--inactive-bg-light);
 }
 
@@ -593,7 +593,7 @@ th, td {
 
 /* CONTROLS */
 
-#displayCtrl, #lessonCtrl, #progressCtrl, #preferencesCtrl {
+#display-toggle-visibility-btn, #lesson-toggle-visibility-btn, #progress-toggle-visibility-btn, #preferences-toggle-visibility-btn {
   padding-right: 0;
   border: none;
   font-size: var(--s2);
@@ -678,7 +678,7 @@ th, td {
 }
 
 .p0 {
-  padding: 0 !important;
+  padding: 0;
 }
 
 /* SIZE */

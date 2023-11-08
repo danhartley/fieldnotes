@@ -117,43 +117,43 @@ const toggleLessonStyle = (({ ctrl, fieldsetId }) => {
 
             switch(ctrl.value) {
                 case 'Guides':
-                    altFieldset = document.getElementById('inatSearchMain')
+                    altFieldset = document.getElementById('inat-search-container')
                     altFieldset.classList.toggle('hidden')                    
                     break
                 case 'iNaturalist':
-                    altFieldset = document.getElementById('curatedGuideMain')
+                    altFieldset = document.getElementById('fieldnotes-container')
                     altFieldset.classList.toggle('hidden')
                     g.templates = templates
                     break
             }
         }
-        display.classList.add('disabled')
+        speciesDisplayContainer.classList.add('disabled')
         g.templates = templates
         createRadioBtnTemplateGroup()
     })    
 })
 
-const lessonLegend = document.querySelector('#lesson > legend')
-const speciesParent = document.getElementById('species-parent')
+const inatSearchInputRb = document.getElementById('inat-search-input-rb')
+const fieldnotesInputRb = document.getElementById('fieldnotes-input-rb')
+const lessonToggleVisibilityBtn = document.getElementById('lesson-toggle-visibility-btn')
+const displayToggleVisibilityBtn = document.getElementById('display-toggle-visibility-btn')
+const progressFieldset = document.getElementById('progress-fieldset')
+const progressToggleVisibilityBtn = document.getElementById('progress-toggle-visibility-btn')
+const preferencesToggleVisibilityBtn = document.getElementById('preferences-toggle-visibility-btn')
+const lessonFieldsetLegend = document.querySelector('#lesson-fieldset > legend')
+const article = document.getElementById('article')
 const rbTemplate = document.getElementById('radio-button-template')
 const testSubmitBtn = document.getElementById('check-answers-btn')
-const guideGroup = document.getElementById('guide-group')
-const languageGroup = document.getElementById('language-group')
-const inatAutocompleteGroup = document.getElementById('inat-autocomplete-group')
-const inatUseObservationSpeciesCountGroup = document.getElementById('inat-use-observations-species-count-group')
-const display = document.getElementById('species-display')
-const targetGroup = document.getElementById('target-group')
+const guideGroupContainer = document.getElementById('guide-group-container')
+const languageGroupContainer = document.getElementById('language-group-container')
+const inatAutocompleteGroupContainer = document.getElementById('inat-autocomplete-group-container')
+const inatUseObservationSpeciesCountGroupContainer = document.getElementById('inat-use-observations-species-count-group-container')
+const targetGroupContainer = document.getElementById('target-group-container')
+const targetsFieldset = document.getElementById('targets-fieldset')
+const speciesDisplayContainer = document.getElementById('species-display-container')
 const iNatAutocompleteInputText = document.getElementById('inat-autocomplete-input-text')
 const iNatAutocompleteDatalist = document.getElementById('inat-autocomplete-data-list')
-const inatSearchCtrl = document.getElementById('inatSearchCtrl')
-const curatedGuideCtrl = document.getElementById('curatedGuideCtrl')
-const lessonCtrl = document.getElementById('lessonCtrl')
-const displayCtrl = document.getElementById('displayCtrl')
-const progress = document.getElementById('progress')
-const progressCtrl = document.getElementById('progressCtrl')
-const preferencesCtrl = document.getElementById('preferencesCtrl')
 const showTestBtn = document.getElementById('show-test-btn')
-const targets = document.getElementById('targets')
 const fetchInatSpeciesBtn = document.getElementById('fetch-inat-species-btn')
 const fetchInatSpeciesNotificationText = document.getElementById('fetch-inat-species-notification-text')
 const startDate = document.getElementById('observations-start-date')
@@ -269,12 +269,12 @@ const resetTestOptions = () => {
         showTestBtn.innerText = 'SHOW TESTS'
     } else {
         showTestBtn.classList.add(cssClass)
-        targets.classList.add(cssClass)
+        targetsFieldset.classList.add(cssClass)
     }
 }
 
 const createTaxaCheckboxGroup = () => {
-    const parent = document.getElementById('iconic-taxa')
+    const parent = document.getElementById('iconic-taxa-container')
     const t = document.getElementById('checkbox-template')
     
     g.ICONIC_TAXA.forEach(taxon => {
@@ -316,10 +316,10 @@ const createRadioBtnTemplateGroup = () => {
                     g.template = g.templates.find(t => t.id === g.template.pairedTemplateId)
 
                     if(g.template.targets) {
-                        targetGroup.innerHTML = ''
-                        targets.classList.remove('hidden')
+                        targetGroupContainer.innerHTML = ''
+                        targetsFieldset.classList.remove('hidden')
                         g.target = g.template.targets[0]
-                        rbTestForGroup = createRadioBtnGroup({collection: g.template.targets, checked:g.target, rbGroup:'target', parent:targetGroup})
+                        rbTestForGroup = createRadioBtnGroup({collection: g.template.targets, checked:g.target, rbGroup:'target', parent:targetGroupContainer})
                         rbTestForGroup.forEach(test => {
                             test.addEventListener('change', e => {
                                 const testId = e.target.value
@@ -338,7 +338,7 @@ const createRadioBtnTemplateGroup = () => {
                         testSubmitBtn.classList.add('hidden')
                     }
 
-                    progress.classList.toggle('disabled')
+                    progressFieldset.classList.toggle('disabled')
 
                     startLesson()
                 }
@@ -350,7 +350,7 @@ const createRadioBtnTemplateGroup = () => {
         })
     }
     
-    display.innerHTML = ''
+    speciesDisplayContainer.innerHTML = ''
 
     g.templates.filter(t => !t.isTest).forEach(t => {
         const clone = rbTemplate.content.cloneNode(true)
@@ -358,7 +358,7 @@ const createRadioBtnTemplateGroup = () => {
         const input = clone.querySelector('input')
         const label = clone.querySelector('label')
 
-        display.classList.add('disabled')
+        speciesDisplayContainer.classList.add('disabled')
     
         input.setAttribute('name', 'template')
         input.id = t.name
@@ -371,7 +371,7 @@ const createRadioBtnTemplateGroup = () => {
             input.setAttribute('checked', true)
         }
     
-        display.appendChild(clone)
+        speciesDisplayContainer.appendChild(clone)
     })
 
     addHandlers()
@@ -411,9 +411,9 @@ const startLesson = () => {
     let templateToClone = document.getElementById(g.template.id) 
     let parent = null
         
-    lessonLegend.innerText = g.template.name.replaceAll('-', ' ')
+    lessonFieldsetLegend.innerText = g.template.name.replaceAll('-', ' ')
 
-    if(g.species) speciesParent.innerHTML = ''
+    if(g.species) article.innerHTML = ''
 
     switch(g.template.id) {
     case 'species-card-template':
@@ -422,7 +422,7 @@ const startLesson = () => {
             parent = parentClone.querySelector('div')          
             parent.appendChild(clone)
         })
-        speciesParent.appendChild(parent)
+        article.appendChild(parent)
         break
     case 'species-list-template':            
         g.species.forEach(sp => {
@@ -434,7 +434,7 @@ const startLesson = () => {
           parent = parentClone.querySelector('div')          
           parent.appendChild(clone)
         })
-        speciesParent.appendChild(parent)
+        article.appendChild(parent)
         break
     case 'species-card-test-template':
         g.species.forEach((sp, i) => {
@@ -477,7 +477,7 @@ const startLesson = () => {
             parent = parentClone.querySelector('div')          
             parent.appendChild(clone)
         })
-        speciesParent.appendChild(parent)
+        article.appendChild(parent)
         break
     }
     
@@ -496,7 +496,7 @@ const startLesson = () => {
                         h3.textContent = t.h3
                         parent = parentClone.querySelector('div')
                         parent.appendChild(clone)
-                        speciesParent.appendChild(parent)
+                        article.appendChild(parent)
                     break
                     case 'h4-header':
                         clone = templateToClone.content.cloneNode(true)
@@ -504,7 +504,7 @@ const startLesson = () => {
                         h4.textContent = t.h4
                         parent = parentClone.querySelector('div')
                         parent.appendChild(clone)
-                        speciesParent.appendChild(parent)
+                        article.appendChild(parent)
                     break
                     case 'author':
                         clone = templateToClone.content.cloneNode(true)
@@ -512,7 +512,7 @@ const startLesson = () => {
                         h3.textContent = t.author
                         parent = parentClone.querySelector('div')
                         parent.appendChild(clone)
-                        speciesParent.appendChild(parent)
+                        article.appendChild(parent)
                     break
                     case 'xeno-canto':
                         clone = templateToClone.content.cloneNode(true)
@@ -520,7 +520,7 @@ const startLesson = () => {
                         iframe.src = `https://xeno-canto.org/${t.recordingId}/embed?simple=1`
                         parent = parentClone.querySelector('div')
                         parent.appendChild(clone)
-                        speciesParent.appendChild(parent)
+                        article.appendChild(parent)
                     break
                     case 'h4-header':
                         clone = templateToClone.content.cloneNode(true)
@@ -528,7 +528,7 @@ const startLesson = () => {
                         h4.textContent = t.h4
                         parent = parentClone.querySelector('div')
                         parent.appendChild(clone)
-                        speciesParent.appendChild(parent)
+                        article.appendChild(parent)
                     break
                     case 'date-header':
                         clone = templateToClone.content.cloneNode(true)
@@ -536,7 +536,7 @@ const startLesson = () => {
                         h3.textContent = new Date(t.date).toDateString()
                         parent = parentClone.querySelector('div')
                         parent.appendChild(clone)
-                        speciesParent.appendChild(parent)
+                        article.appendChild(parent)
                     break
                     case 'location':
                         clone = templateToClone.content.cloneNode(true)
@@ -545,7 +545,7 @@ const startLesson = () => {
                         // h3.textContent = t.location // geo lookup
                         parent = parentClone.querySelector('div')
                         parent.appendChild(clone)
-                        speciesParent.appendChild(parent)
+                        article.appendChild(parent)
                     break
                     case 'img':
                         t.imgs.forEach(img => {
@@ -560,7 +560,7 @@ const startLesson = () => {
                             parent = parentClone.querySelector('div')
                             parent.appendChild(clone)
                         })
-                        speciesParent.appendChild(parent)
+                        article.appendChild(parent)
                     break
                     case 'text':
                         t.paras.forEach(text => {
@@ -571,7 +571,7 @@ const startLesson = () => {
                             parent = parentClone.querySelector('div')
                             parent.appendChild(clone)
                         })
-                        speciesParent.appendChild(parent)
+                        article.appendChild(parent)
                         break
                     case 'species':
                         t.species.forEach((sp, i) => {
@@ -585,7 +585,7 @@ const startLesson = () => {
                                 console.log(e)
                             }
                         })
-                        speciesParent.appendChild(parent)
+                        article.appendChild(parent)
                     break
                     case 'term':
                         t.terms.forEach(term => {
@@ -621,7 +621,7 @@ const startLesson = () => {
                             parent = parentClone.querySelector('dl')
                             parent.appendChild(clone)                    
                         })
-                        speciesParent.appendChild(parent)
+                        article.appendChild(parent)
                     break
                     case 'annotation':
                         const annotations = getAnnotations(fieldnotes[0].observations)
@@ -639,7 +639,7 @@ const startLesson = () => {
                             parent = parentClone.querySelector('dl')
                             parent.appendChild(clone)
                         })
-                        speciesParent.appendChild(parent)
+                        article.appendChild(parent)
                     break
                 }
             })
@@ -648,7 +648,7 @@ const startLesson = () => {
 
     addImgClickEventHandlers()
 
-    lessonCtrl.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
+    lessonToggleVisibilityBtn.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
 }     
 
 rbDateGroup.forEach(date => {
@@ -660,17 +660,16 @@ rbDateGroup.forEach(date => {
 document.addEventListener("DOMContentLoaded", (event) => {
 
     const updateScore = () => {
-        const scoreCount = document.getElementById('score-count')
-        scoreCount.innerText = g.species.length
-        const scoreCorrect = document.getElementById('score-correct')
-        scoreCorrect.innerText = g.template.score
-        const scoreIncorrect = document.getElementById('score-incorrect')
-        scoreIncorrect.innerText = g.species.length - g.template.score
+        const scoreCountTd = document.getElementById('score-count-td')
+        scoreCountTd.innerText = g.species.length
+        const scoreCorrectTd = document.getElementById('score-correct-td')
+        scoreCorrectTd.innerText = g.template.score
+        const scoreIncorrectTd = document.getElementById('score-incorrect-td')
+        scoreIncorrectTd.innerText = g.species.length - g.template.score
     }
 
     const scoreHandler = () => {
-        const parent = document.getElementById('species-parent')
-        const answers = Array.from(parent.getElementsByTagName('input'))          
+        const answers = Array.from(article.getElementsByTagName('input'))          
         scoreLesson(answers)
         updateScore()
     }
@@ -678,7 +677,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     testSubmitBtn.addEventListener('click', scoreHandler, false)
 
     const fetchInatSpecies = async () => {
-        const filters = Array.from(document.getElementById('iconic-taxa').querySelectorAll('input'))
+        const filters = Array.from(document.getElementById('iconic-taxa-container').querySelectorAll('input'))
         
         g.taxa = g.ICONIC_TAXA.filter(taxon => filters.filter(t => t.checked).map(t => t.id.toLowerCase()).includes(taxon.name))
         
@@ -699,8 +698,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
         fetchInatSpeciesNotificationText.classList.toggle('hidden')
         fetchInatSpeciesBtn.classList.toggle('disabled')
-        display.classList.toggle('disabled')
-        display.querySelector('input').click()
+        speciesDisplayContainer.classList.toggle('disabled')
+        speciesDisplayContainer.querySelector('input').click()
     }
 
     fetchInatSpeciesBtn.addEventListener('click', fetchInatSpecies, false)
@@ -742,19 +741,19 @@ document.addEventListener("DOMContentLoaded", (event) => {
     
                 
             createRadioBtnTemplateGroup()
-            display.classList.remove('disabled')
+            speciesDisplayContainer.classList.remove('disabled')
             startLesson()
         })
     }
 
     rbGuideGroup.forEach(rb => rbGuideGroupEventHander(rb))
 
-    const speciesCount = document.getElementById('species-count')
+    const speciesCountInputNumber = document.getElementById('species-count-input-number')
 
-    speciesCount.value = g.count
+    speciesCountInputNumber.value = g.count
 
-    speciesCount.addEventListener('change', () => {
-        g.count = Number(speciesCount.value)
+    speciesCountInputNumber.addEventListener('change', () => {
+        g.count = Number(speciesCountInputNumber.value)
     })
 
     rbLanguageGroup.forEach(rb => {
@@ -765,13 +764,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
         rb.addEventListener('change', () => g.useObservationsSpeciesCount = g.useObservationsSpeciesCountOptions.find(o => o.id === rb.value))
     })
 
-    toggleLessonStyle({ ctrl: inatSearchCtrl, fieldsetId: 'inatSearchMain' })
-    toggleLessonStyle({ ctrl: curatedGuideCtrl, fieldsetId: 'curatedGuideMain' })
+    toggleLessonStyle({ ctrl: inatSearchInputRb, fieldsetId: 'inat-search-container' })
+    toggleLessonStyle({ ctrl: fieldnotesInputRb, fieldsetId: 'fieldnotes-container' })
 
-    toggleFilterCtrl({ ctrl: displayCtrl, fieldsetId: 'display' })
-    toggleFilterCtrl({ ctrl: lessonCtrl, fieldsetId: 'lesson' })
-    toggleFilterCtrl({ ctrl: progressCtrl, fieldsetId: 'progress' })
-    toggleFilterCtrl({ ctrl: preferencesCtrl, fieldsetId: 'preferences' })
+    toggleFilterCtrl({ ctrl: displayToggleVisibilityBtn, fieldsetId: 'display-fieldset' })
+    toggleFilterCtrl({ ctrl: lessonToggleVisibilityBtn, fieldsetId: 'lesson-fieldset' })
+    toggleFilterCtrl({ ctrl: progressToggleVisibilityBtn, fieldsetId: 'progress-fieldset' })
+    toggleFilterCtrl({ ctrl: preferencesToggleVisibilityBtn, fieldsetId: 'preferences' })
 
     addImgClickEventHandlers()
 
@@ -779,10 +778,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
 })
 
 const init = () => {
-    rbInatAutocompleteGroup = createRadioBtnGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroup})    
-    rbGuideGroup = createRadioBtnGroup({collection: g.guides, checked:g.guide, rbGroup:'guide', parent:guideGroup})
-    rbLanguageGroup = createRadioBtnGroup({collection: g.LANGUAGES, checked:g.language, rbGroup:'language', parent:languageGroup})
-    rbInatUseObservationSpeciesCountGroup = createRadioBtnGroup({collection: g.useObservationsSpeciesCountOptions, checked:g.useObservationsSpeciesCount, rbGroup:'inat-use-observations-species-count-group', parent:inatUseObservationSpeciesCountGroup})
+    rbInatAutocompleteGroup = createRadioBtnGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroupContainer})    
+    rbGuideGroup = createRadioBtnGroup({collection: g.guides, checked:g.guide, rbGroup:'guide', parent:guideGroupContainer})
+    rbLanguageGroup = createRadioBtnGroup({collection: g.LANGUAGES, checked:g.language, rbGroup:'language', parent:languageGroupContainer})
+    rbInatUseObservationSpeciesCountGroup = createRadioBtnGroup({collection: g.useObservationsSpeciesCountOptions, checked:g.useObservationsSpeciesCount, rbGroup:'inat-use-observations-species-count', parent:inatUseObservationSpeciesCountGroupContainer})
 
     createTaxaCheckboxGroup()
     createRadioBtnTemplateGroup()
