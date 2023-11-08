@@ -168,7 +168,7 @@ const init = () => {
     const parent = sectionTemplate.content.cloneNode(true)
     const legend = parent.querySelector('legend')
     const container = parent.querySelector('div')
-    const addSectionBtn = parent.getElementById('addSectionBtn')
+    const addSectionBtn = parent.getElementById('add-section-btn')
 
     const typeId = e.target.value
     const typeTemplate = document.getElementById(`${typeId}-template`)
