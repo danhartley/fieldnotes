@@ -75,13 +75,21 @@
           </fieldset>
         </section>
 
+        <section>    
+          <fieldset>
+            <legend>Title</legend>
+              <div class="small mb2">Make the title specific to your field trip.</div>
+              <label for="title-input-text">Title</label>      
+              <input id="title-input-text" type="text">
+          </fieldset>
+        </section>
+
         <section id="select-section-type-section">
           <fieldset>
             <legend>Choose the type of entry you want to make</legend>
-            <button type="button" value="h2" class="mb">H2</button>
             <button type="button" value="h3" class="mb">H3</button>
             <button type="button" value="h4" class="mb">H4</button>
-            <button type="button" value="p" class="mb">P</button>
+            <button type="button" value="textarea" class="mb">Text block</button>
             <button type="button" value="species-observations" class="mb">Species observations</button>
             <button type="button" value="images" class="mb">Images</button>
             <button type="button" value="terms" class="mb">Terms</button>
@@ -119,6 +127,10 @@
     
     <template id="h3-template">
       <input type="text" class="p" />
+    </template>
+    
+    <template id="textarea-template">
+      <textarea type="textarea" class="p"></textarea>
     </template>
   </body>
 
