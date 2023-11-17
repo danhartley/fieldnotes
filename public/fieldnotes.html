@@ -89,8 +89,8 @@
         <section id="select-section-type-section">
           <fieldset>
             <legend>Choose the type of entry you want to make</legend>
-            <button type="button" value="h3" class="mb">H3</button>
-            <button type="button" value="h4" class="mb">H4</button>
+            <button type="button" value="h3-input" class="mb">H3</button>
+            <button type="button" value="h4-input" class="mb">H4</button>
             <button type="button" value="textarea" class="mb">Text block</button>
             <button type="button" value="species-observations" class="mb">Species observations</button>
             <button type="button" value="images" class="mb">Images</button>
@@ -113,7 +113,7 @@
     </template>
 
     <template id="section-template">
-      <section>
+      <section draggable="true" class="draggable">
         <fieldset class="mt2">
           <legend></legend>
           <div></div>      
@@ -124,13 +124,13 @@
       </section>
     </template>
 
-    <template id="h2-template">
-      <input type="text" class="p" />
+    <template id="h3-input-template">
+      <input type="text" class="p add" />
       <div class="edit hidden"></div>
     </template>
     
-    <template id="h3-template">
-      <input type="text" class="p" />
+    <template id="h4-input-template">
+      <input type="text" class="p add" />
       <div class="edit hidden"></div>
     </template>
     
@@ -139,9 +139,17 @@
       <div class="edit hidden"></div>
     </template>
 
+    <template id="h3-template">
+      <h3></h3>
+    </template>
+
+    <template id="h4-template">
+      <h4></h4>
+    </template>
+
     <template id="text-template">      
       <p></p>
-    </template>      
+    </template>
   </body>
 
   </html>

@@ -37,14 +37,14 @@ export const templates = [
 // TEMPLATES
 
 export const h3 = {
-  id: 'title-h3-template',
+  id: 'title-h3-input-template',
   parent: 'non-grid-template',
   type: 'h3-header',
   h3: 'title',
 }
 
 export const h4 = {
-  id: 'title-h4-template',
+  id: 'title-h4-input-template',
   parent: 'non-grid-template',
   type: 'h4-header',
   h4: 'title',
@@ -90,14 +90,14 @@ export const annotation = {
 }
 
 export const date = {
-  id: 'title-h3-template',
+  id: 'title-h3-input-template',
   parent: 'non-grid-template',
   type: 'date-header',
   date: 'date',
 }
 
 export const location = {
-  id: 'title-h3-template',
+  id: 'title-h3-input-template',
   parent: 'non-grid-template',
   type: 'location',
   location: 'location',
@@ -105,7 +105,7 @@ export const location = {
 }
 
 export const author = {
-  id: 'title-h3-template',
+  id: 'title-h3-input-template',
   parent: 'non-grid-template',
   type: 'author',
   author: 'author',

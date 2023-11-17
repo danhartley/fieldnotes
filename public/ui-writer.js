@@ -46,6 +46,29 @@ const inatMetaDataDl = document.getElementById('inat-meta-data-dl')
 const selectSectionTypeSection = document.getElementById('select-section-type-section')
 const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
 
+const dragstartHandler = ev => {
+  ev.dataTransfer.setData("text/plain", ev.target.id)
+}
+
+const dragoverHandler = ev => {
+  ev.preventDefault()
+  ev.dataTransfer.dropEffect = "move"
+}
+const dropHandler = ev => {
+  ev.preventDefault()
+  // Get the id of the target and add the moved element to the target's DOM
+  const data = ev.dataTransfer.getData("text/plain")
+
+  if(ev.target.type === 'fieldset') {
+    editView.insertBefore(document.getElementById(data), ev.target.parentNode)
+  }
+}
+
+editView.addEventListener('dragover', dragoverHandler)
+editView.addEventListener('drop', dropHandler)
+
+let sectionIndex = 0
+
 const toggleView = () => {
   editView.classList.toggle('hidden')
   previewView.classList.toggle('hidden')
@@ -138,12 +161,24 @@ const init = () => {
   const addSection = ({e, typeId, typeValue, previewContainer}) => {
     previewContainer.innerHTML = ''
 
+    let t, clone, header = null
+
     switch(typeId) {
-      case 'h3':
+      case 'h3-input':        
         globalWrite.templates.push({ ...h3,  h3: typeValue },)
+        t = document.getElementById('h3-template')
+        clone = t.content.cloneNode(true)
+        header = clone.querySelector('h3')
+        header.textContent = typeValue
+        previewContainer.appendChild(clone)
         break
-      case 'h4':
+      case 'h4-input':
         globalWrite.templates.push({ ...h4,  h4: typeValue },)
+        t = document.getElementById('h4-template')
+        clone = t.content.cloneNode(true)
+        header = clone.querySelector('h4')
+        header.textContent = typeValue
+        previewContainer.appendChild(clone)
         break
       case 'textarea':
         const ps = typeValue.split('\n').filter(p => p.length > 0)
@@ -161,20 +196,19 @@ const init = () => {
           p.textContent = text.p    
           previewContainer.appendChild(clone)
         })
-        const parent = e.target.parentElement
-        Array.from(parent.getElementsByClassName('edit')).forEach(el => el.classList.remove('hidden'))
-        Array.from(parent.getElementsByClassName('add')).forEach(el => el.classList.add('hidden'))
         break
     }
-    console.log(globalWrite)
+    const parent = e.target.parentElement
+    Array.from(parent.getElementsByClassName('edit')).forEach(el => el.classList.remove('hidden'))
+    Array.from(parent.getElementsByClassName('add')).forEach(el => el.classList.add('hidden'))
   }
 
   const editSection = ({e}) => {
     const parent = e.target.parentElement
+    parent.querySelector('#add-section-btn').innerText = 'Save changes'
+
     Array.from(parent.getElementsByClassName('edit')).forEach(el => el.classList.add('hidden'))
     Array.from(parent.getElementsByClassName('add')).forEach(el => el.classList.remove('hidden'))
-    const addSectionBtn = parent.querySelector('#add-section-btn')
-    addSectionBtn.innerText = 'Save changes'
   }
   
   const deleteSection = ({e}) => {}
@@ -198,6 +232,11 @@ const init = () => {
     const editSectionBtn = parent.getElementById('edit-section-btn')
     const deleteSectionBtn = parent.getElementById('delete-section-btn')
 
+
+    const sectionContainer = parent.querySelector('section')
+    sectionContainer.setAttribute('id', `section-${sectionIndex++}`)
+    sectionContainer.addEventListener('dragstart', dragstartHandler)
+    
     const typeTemplate = document.getElementById(`${typeId}-template`)
     const type = typeTemplate.content.cloneNode(true)
 
@@ -206,24 +245,25 @@ const init = () => {
     previewContainer = type.querySelector('div')
 
     switch(typeId) {
-      case 'h3':
+      case 'h3-input':
         input = type.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
-        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value. previewContainer}), true)
+        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer}), true)
         break
-      case 'h4':
+      case 'h4-input':
         input = type.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
-        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value. previewContainer}), true)
+        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer}), true)
         break
       case 'textarea':
         texarea = type.querySelector('textarea')        
         texarea.addEventListener('input', e => handleTextareaChangeEvent(e, addSectionBtn), true)
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:texarea.value, previewContainer}), true)
-        editSectionBtn.addEventListener('click', e => editSection({e}), true)
-        deleteSectionBtn.addEventListener('click', e => deleteSection({e}), true)        
         break
     }  
+
+    editSectionBtn.addEventListener('click', e => editSection({e}), true)
+    deleteSectionBtn.addEventListener('click', e => deleteSection({e}), true)
     
     legend.innerText = typeText        
     parentContainer.appendChild(type)

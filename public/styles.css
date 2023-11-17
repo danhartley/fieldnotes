@@ -431,6 +431,10 @@ th, td {
   object-fit: contain; 
 }
 
+.draggable {
+  cursor: pointer;
+}
+
 /* RULES */
 
 .grid {
