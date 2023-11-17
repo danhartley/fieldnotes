@@ -135,10 +135,15 @@ const init = () => {
     : btn.classList.add('disabled')
   }
 
-  const addSection = ({typeId, typeValue}) => {
+  const addSection = ({e, typeId, typeValue, previewContainer}) => {
+    previewContainer.innerHTML = ''
+
     switch(typeId) {
       case 'h3':
         globalWrite.templates.push({ ...h3,  h3: typeValue },)
+        break
+      case 'h4':
+        globalWrite.templates.push({ ...h4,  h4: typeValue },)
         break
       case 'textarea':
         const ps = typeValue.split('\n').filter(p => p.length > 0)
@@ -147,11 +152,32 @@ const init = () => {
             p
           }
         })
-        globalWrite.templates.push({...text, paras})        
+        globalWrite.templates.push({...text, paras})
+
+        paras.forEach(text => {
+          const t = document.getElementById('text-template')
+          const clone = t.content.cloneNode(true)
+          const p = clone.querySelector('p')
+          p.textContent = text.p    
+          previewContainer.appendChild(clone)
+        })
+        const parent = e.target.parentElement
+        Array.from(parent.getElementsByClassName('edit')).forEach(el => el.classList.remove('hidden'))
+        Array.from(parent.getElementsByClassName('add')).forEach(el => el.classList.add('hidden'))
         break
     }
     console.log(globalWrite)
   }
+
+  const editSection = ({e}) => {
+    const parent = e.target.parentElement
+    Array.from(parent.getElementsByClassName('edit')).forEach(el => el.classList.add('hidden'))
+    Array.from(parent.getElementsByClassName('add')).forEach(el => el.classList.remove('hidden'))
+    const addSectionBtn = parent.querySelector('#add-section-btn')
+    addSectionBtn.innerText = 'Save changes'
+  }
+  
+  const deleteSection = ({e}) => {}
 
   const handleInputChangeEvent = (e, addBtn) => {
     const inputValue = e.target.value
@@ -163,44 +189,50 @@ const init = () => {
     updateAddBtnState({str: textareaValue, btn: addBtn})
   }
 
-  const selectType = e => {
+  const selectType = ({typeId, typeText}) => {
     const sectionTemplate = document.getElementById('section-template')
     const parent = sectionTemplate.content.cloneNode(true)
     const legend = parent.querySelector('legend')
-    const container = parent.querySelector('div')
+    const parentContainer = parent.querySelector('div')
     const addSectionBtn = parent.getElementById('add-section-btn')
+    const editSectionBtn = parent.getElementById('edit-section-btn')
+    const deleteSectionBtn = parent.getElementById('delete-section-btn')
 
-    const typeId = e.target.value
     const typeTemplate = document.getElementById(`${typeId}-template`)
     const type = typeTemplate.content.cloneNode(true)
 
-    let input, texarea = null
+    let input, texarea, previewContainer = null
+
+    previewContainer = type.querySelector('div')
 
     switch(typeId) {
       case 'h3':
         input = type.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
-        addSectionBtn.addEventListener('click', () => addSection({typeId, typeValue:input.value}), true)
+        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value. previewContainer}), true)
         break
       case 'h4':
         input = type.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
+        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value. previewContainer}), true)
         break
       case 'textarea':
-        texarea = type.querySelector('textarea')
+        texarea = type.querySelector('textarea')        
         texarea.addEventListener('input', e => handleTextareaChangeEvent(e, addSectionBtn), true)
-        addSectionBtn.addEventListener('click', () => addSection({typeId, typeValue:texarea.value}), true)
+        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:texarea.value, previewContainer}), true)
+        editSectionBtn.addEventListener('click', e => editSection({e}), true)
+        deleteSectionBtn.addEventListener('click', e => deleteSection({e}), true)        
         break
     }  
     
-    legend.innerText = typeId        
-    container.appendChild(type)
+    legend.innerText = typeText        
+    parentContainer.appendChild(type)
 
     editView.appendChild(parent)
     editView.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })    
   }
 
-  selectionTypeBtns.forEach(btn => btn.addEventListener('click', selectType, true))
+  selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => selectType({typeId: e.target.value, typeText: e.target.innerText}), true))
 }
 
 init()

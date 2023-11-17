@@ -59,41 +59,67 @@ export const createInatParamsCheckboxGroup = g => {
 
 export const handleInatAutocomplete = ({inputText, dataList, g}) => {
   inputText.addEventListener('input', debounce(async (e) => {
-    while (dataList.firstChild) {
-        dataList.removeChild(dataList.firstChild)
-    }
+        while (dataList.firstChild) {
+            dataList.removeChild(dataList.firstChild)
+        }
 
-    const { id, prop } = g.inatAutocomplete
-    const strToComplete = e.target.value
+        const { id, prop } = g.inatAutocomplete
+        const strToComplete = e.target.value
 
-    if(strToComplete.length < 3) return
+        if(strToComplete.length < 3) return
 
-    const data = await getByAutocomplete({ by: id, toComplete: strToComplete })
-    
-    g.matches = data.results
-    
-    g.matches.forEach(match => {
-        const option = document.createElement('option')
-        option.value = match[prop]
-        dataList.appendChild(option)
-    })   
-}, 350))
+        const data = await getByAutocomplete({ by: id, toComplete: strToComplete })
+        
+        g.matches = data.results
+        
+        g.matches.forEach(match => {
+            const option = document.createElement('option')
+            option.value = match[prop]
+            dataList.appendChild(option)
+        })
+    }, 350))
 
-inputText.addEventListener('change', e => {
-    const { id, name, prop } = g.inatAutocomplete
-    const match = e.target.value
+    inputText.addEventListener('change', e => {
+        const { id, name, prop } = g.inatAutocomplete
+        const match = e.target.value
 
-    g.inatAutocompleteOptions.forEach(option => {
-        if(option.id === id) {
-            option.isActive = true
+        g.inatAutocompleteOptions.forEach(option => {
+            if(option.id === id) {
+                option.isActive = true
+            }
+        })
+
+        if(match) {
+            const option = g.inatAutocompleteOptions.find(option => option.id === id)
+            option[name] = g.matches.find(m => m[prop] === match)
+            createInatParamsCheckboxGroup(g)
         }
     })
+}
 
-    if(match) {
-        const option = g.inatAutocompleteOptions.find(option => option.id === id)
-        option[name] = g.matches.find(m => m[prop] === match)
-console.log(g)
-        createInatParamsCheckboxGroup(g)
+
+export const mapTaxon = ({taxon}) => {
+    return {
+        iconic_taxon_id: taxon.iconic_taxon_id,
+        name: taxon.name,
+        id: taxon.id,
+        default_photo: taxon.default_photo,
+        iconic_taxon_name: taxon.iconic_taxon_name,
+        preferred_common_name: taxon.preferred_common_name || '-'
     }
-})
+}
+
+export const mapInatSpeciesToLTP = ({species, count, taxa}) => {
+    return species
+        .filter(sp => sp.taxon)
+        .filter(sp => sp.taxon.preferred_common_name || sp.taxon.name)
+        .filter(sp => sp.taxon.default_photo)
+        .filter(sp => taxa.map(t => t.name).includes(sp.taxon.iconic_taxon_name.toLowerCase()))
+        .slice(0,count)
+        .map(sp => {
+            return {
+                count: sp.count || 0,
+                taxon: mapTaxon({taxon: sp.taxon})
+            }
+        })
 }

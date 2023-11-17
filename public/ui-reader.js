@@ -6,7 +6,12 @@ import {
     , g
 } from './api.js'
 
-import { handleInatAutocomplete, createInatParamsCheckboxGroup } from './ui-actions.js'
+import { 
+      handleInatAutocomplete
+    , createInatParamsCheckboxGroup
+    , mapInatSpeciesToLTP
+    , mapTaxon
+} from './ui-actions.js'
 
 import { templates } from './templates.js'
 import { fieldnotes, getAnnotations } from './fieldnotes.js'
@@ -42,32 +47,6 @@ const getInatSpecies = async ({user, place}) => {
         d1,
         d2,
     })
-}
-
-const mapTaxon = taxon => {
-    return {
-        iconic_taxon_id: taxon.iconic_taxon_id,
-        name: taxon.name,
-        id: taxon.id,
-        default_photo: taxon.default_photo,
-        iconic_taxon_name: taxon.iconic_taxon_name,
-        preferred_common_name: taxon.preferred_common_name || '-'
-    }
-}
-
-const mapInatSpeciesToLTP = count => {
-    return g.inatSpecies
-        .filter(sp => sp.taxon)
-        .filter(sp => sp.taxon.preferred_common_name || sp.taxon.name)
-        .filter(sp => sp.taxon.default_photo)
-        .filter(sp => g.taxa.map(t => t.name).includes(sp.taxon.iconic_taxon_name.toLowerCase()))
-        .slice(0,count)
-        .map(sp => {
-            return {
-                count: sp.count || 0,
-                taxon: mapTaxon(sp.taxon)
-            }
-        })
 }
 
 const scoreLesson = answers => {
@@ -692,7 +671,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             , place: place.isActive ? place.place : null
         })
 
-        g.species = mapInatSpeciesToLTP(g.count)
+        g.species = mapInatSpeciesToLTP({species: g.inatSpecies, count: g.count, taxa: g.taxa})
     
         startLesson()
 
@@ -733,7 +712,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                      */
                     if(taxaNames.includes(t.name)) {
                         return {
-                            taxon: mapTaxon(t)
+                            taxon: mapTaxon({taxon: t})
                         }
                     }
                 })

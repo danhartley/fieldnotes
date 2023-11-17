@@ -79,8 +79,10 @@
           <fieldset>
             <legend>Title</legend>
               <div class="small mb2">Make the title specific to your field trip.</div>
-              <label for="title-input-text">Title</label>      
-              <input id="title-input-text" type="text">
+              <div class="centred-block">
+                <label for="title-input-text">Title</label>      
+                <input id="title-input-text" type="text" class="p">
+              </div>
           </fieldset>
         </section>
 
@@ -115,23 +117,31 @@
         <fieldset class="mt2">
           <legend></legend>
           <div></div>      
-          <button id="add-section-btn" class="small mt2 disabled">Add</button>
-          <button id="delete-section-btn" class="small mt2 disabled">Delete</button>
+          <button id="add-section-btn" class="small mt2 disabled add">Add</button>
+          <button id="edit-section-btn" class="small mt2 edit hidden">Edit</button>
+          <button id="delete-section-btn" class="small mt2 edit hidden">Delete</button>
         </fieldset>
       </section>
     </template>
 
     <template id="h2-template">
       <input type="text" class="p" />
+      <div class="edit hidden"></div>
     </template>
     
     <template id="h3-template">
       <input type="text" class="p" />
+      <div class="edit hidden"></div>
     </template>
     
     <template id="textarea-template">
-      <textarea type="textarea" class="p"></textarea>
+      <textarea type="textarea" class="p add"></textarea>
+      <div class="edit hidden"></div>
     </template>
+
+    <template id="text-template">      
+      <p></p>
+    </template>      
   </body>
 
   </html>
