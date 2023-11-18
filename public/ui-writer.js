@@ -36,6 +36,7 @@ import { handleInatAutocomplete } from './ui-actions.js'
 const editCtrlInputRadio = document.getElementById('edit-ctrl-input-radio')
 const previewCtrlInputRadio = document.getElementById('preview-ctrl-input-radio')
 const editView = document.getElementById('edit-view')
+const draggableSections = document.getElementById('draggable-sections')
 const previewView = document.getElementById('preview-view')
 const iNatAutocompleteInputText = document.getElementById('inat-autocomplete-input-text')
 const iNatAutocompleteDatalist = document.getElementById('inat-autocomplete-data-list')
@@ -54,18 +55,29 @@ const dragoverHandler = ev => {
   ev.preventDefault()
   ev.dataTransfer.dropEffect = "move"
 }
+
 const dropHandler = ev => {
   ev.preventDefault()
   // Get the id of the target and add the moved element to the target's DOM
   const data = ev.dataTransfer.getData("text/plain")
 
   if(ev.target.type === 'fieldset') {
-    editView.insertBefore(document.getElementById(data), ev.target.parentNode)
+    // Update the position of the section visually
+    draggableSections.insertBefore(document.getElementById(data), ev.target.parentNode)
+    
+    // Update the position of the section in the templates array
+    const sectionToMoveId = document.getElementById(data).id
+    const sectionBeforeId = ev.target.parentNode.id
+    const indexBefore = globalWrite.templates.findIndex(t => t.id === sectionBeforeId)
+    const sectionToMove = globalWrite.templates.find(t => t.id === sectionToMoveId)
+
+    globalWrite.templates = globalWrite.templates.filter(t => t.id !== sectionToMoveId)
+    globalWrite.templates.splice(indexBefore, 0, sectionToMove)
   }
 }
 
-editView.addEventListener('dragover', dragoverHandler)
-editView.addEventListener('drop', dropHandler)
+draggableSections.addEventListener('dragover', dragoverHandler)
+draggableSections.addEventListener('drop', dropHandler)
 
 let sectionIndex = 0
 
@@ -117,9 +129,7 @@ const fetchInatSpecies = async () => {
 
   globalWrite.templates.push({...author, author: meta.author})
   globalWrite.templates.push({...date, date: meta.date})
-  globalWrite.templates.push({...location, location: meta.location})
-  
-  console.log(globalWrite)
+  globalWrite.templates.push({...location, location: meta.location})  
 }
 
 fetchInatSpeciesBtn.addEventListener('click', fetchInatSpecies, false)
@@ -158,14 +168,14 @@ const init = () => {
     : btn.classList.add('disabled')
   }
 
-  const addSection = ({e, typeId, typeValue, previewContainer}) => {
+  const addSection = ({e, typeId, typeValue, previewContainer, sectionId}) => {
     previewContainer.innerHTML = ''
 
     let t, clone, header = null
 
     switch(typeId) {
       case 'h3-input':        
-        globalWrite.templates.push({ ...h3,  h3: typeValue },)
+        globalWrite.templates.push({ ...h3, id: sectionId, h3: typeValue },)
         t = document.getElementById('h3-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h3')
@@ -173,7 +183,7 @@ const init = () => {
         previewContainer.appendChild(clone)
         break
       case 'h4-input':
-        globalWrite.templates.push({ ...h4,  h4: typeValue },)
+        globalWrite.templates.push({ ...h4, id: sectionId, h4: typeValue },)
         t = document.getElementById('h4-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h4')
@@ -187,7 +197,7 @@ const init = () => {
             p
           }
         })
-        globalWrite.templates.push({...text, paras})
+        globalWrite.templates.push({...text, id: sectionId, paras})
 
         paras.forEach(text => {
           const t = document.getElementById('text-template')
@@ -231,10 +241,10 @@ const init = () => {
     const addSectionBtn = parent.getElementById('add-section-btn')
     const editSectionBtn = parent.getElementById('edit-section-btn')
     const deleteSectionBtn = parent.getElementById('delete-section-btn')
-
-
+    const sectionId = `section-${sectionIndex++}`
     const sectionContainer = parent.querySelector('section')
-    sectionContainer.setAttribute('id', `section-${sectionIndex++}`)
+
+    sectionContainer.setAttribute('id', sectionId)
     sectionContainer.addEventListener('dragstart', dragstartHandler)
     
     const typeTemplate = document.getElementById(`${typeId}-template`)
@@ -248,17 +258,17 @@ const init = () => {
       case 'h3-input':
         input = type.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
-        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer}), true)
+        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer, sectionId}), true)
         break
       case 'h4-input':
         input = type.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
-        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer}), true)
+        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer, sectionId}), true)
         break
       case 'textarea':
         texarea = type.querySelector('textarea')        
         texarea.addEventListener('input', e => handleTextareaChangeEvent(e, addSectionBtn), true)
-        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:texarea.value, previewContainer}), true)
+        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:texarea.value, previewContainer, sectionId}), true)
         break
     }  
 
@@ -268,8 +278,8 @@ const init = () => {
     legend.innerText = typeText        
     parentContainer.appendChild(type)
 
-    editView.appendChild(parent)
-    editView.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })    
+    draggableSections.appendChild(parent)
+    draggableSections.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })    
   }
 
   selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => selectType({typeId: e.target.value, typeText: e.target.innerText}), true))
