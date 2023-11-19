@@ -11,6 +11,7 @@ import {
     , createInatParamsCheckboxGroup
     , mapInatSpeciesToLTP
     , mapTaxon
+    , bgColour
 } from './ui-actions.js'
 
 import { templates } from './templates.js'
@@ -357,11 +358,7 @@ const init = () => {
         })
     
         addHandlers()
-    }
-    
-    const bgColour = taxon => {
-        return getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
-    }
+    }    
     
     const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) => {
         const clone = templateToClone.content.cloneNode(true)

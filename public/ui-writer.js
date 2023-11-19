@@ -21,7 +21,10 @@ import {
 , author
 } from './templates.js'
 
-import { handleInatAutocomplete } from './ui-actions.js'
+import { 
+    handleInatAutocomplete 
+  , bgColour
+} from './ui-actions.js'
 
 const init = () => {
 
@@ -235,6 +238,49 @@ const init = () => {
     updateAddBtnState({str: textareaValue, btn: addBtn})
   }
 
+  const handleSpeciesCheckState = ({e, sectionId}) => {
+    const name = e.target.value
+    const section = globalWrite.templates.find(t => t.id === sectionId)
+    if(section) {
+      section.species.find(sp => sp === name) 
+        ? section.species = section.species.filter(sp => sp !== name)
+        : section.species.push(name)
+    } else {
+      const sp = [ name ]
+      globalWrite.templates.push({...species, species: sp, id: sectionId })
+    }
+  }
+
+  const cloneImageTemplate = ({species, index, sectionId}) => {
+    const templateToClone = d.getElementById('img-template')
+    const clone = templateToClone.content.cloneNode(true)
+
+    const spans = clone.querySelectorAll('span')
+    const img = clone.querySelector('img')      
+    const figure = clone.querySelector('figure')
+    const checkbox = clone.querySelector('input')
+    const label = clone.querySelector('label')
+ 
+    figure.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
+
+    img.src = species.taxon.default_photo.medium_url
+    img.alt = species.taxon.name
+    img.id = species.taxon.id
+    img.setAttribute('data-i', index + 1)
+    img.setAttribute('loading', 'lazy')
+
+    spans[0].textContent = species.taxon.preferred_common_name
+    spans[1].textContent = species.taxon.name
+    spans[1].classList.add('latin')
+    
+    checkbox.id = species.id
+    checkbox.value = species.taxon.name
+    checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionId}), true)
+    label.htmlFor = checkbox.id
+
+    return clone
+}
+
   const selectType = ({typeId, typeText}) => {
     const sectionTemplate = d.getElementById('section-template')
     const parent = sectionTemplate.content.cloneNode(true)
@@ -268,9 +314,18 @@ const init = () => {
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer, sectionId}), true)
         break
       case 'textarea':
-        texarea = type.querySelector('textarea')        
+        texarea = type.querySelector('textarea')
         texarea.addEventListener('input', e => handleTextareaChangeEvent(e, addSectionBtn), true)
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:texarea.value, previewContainer, sectionId}), true)
+        break
+      case 'observations':
+        if(globalWrite.species.length > 0) {
+          const parent = type.querySelector('div')
+          globalWrite.species.forEach((species, index) => {
+            const clone = cloneImageTemplate({species, index, sectionId})
+            parent.appendChild(clone)
+          })
+        }
         break
     }  
 

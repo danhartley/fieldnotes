@@ -159,6 +159,8 @@ input {
 
 input[type='checkbox'], input[type='radio'] {
   margin: 0 calc(var(--d) * .5) 0 0;
+  min-width: 16px;
+  min-height: 16px;
 }
 
 input[type='radio'] {
@@ -550,6 +552,15 @@ th, td {
   align-items: center;
 }
 
+.flex-columns {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-columns > * {
+  flex: 1;
+}
+
 .double-centred-block {
   display: flex;
   align-items: center;
@@ -621,6 +632,12 @@ th, td {
 #edit-view *:not(input, textarea) {
   width: initial;
   max-width: initial;
+}
+
+/* POSITIONING */
+
+.text-left {
+  text-align: left;
 }
 
 /* SPACING */

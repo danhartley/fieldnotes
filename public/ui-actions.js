@@ -124,3 +124,7 @@ export const mapInatSpeciesToLTP = ({species, count, taxa}) => {
             }
         })
 }
+
+export const bgColour = taxon => {
+    return getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
+}
