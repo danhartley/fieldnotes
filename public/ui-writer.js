@@ -21,120 +21,122 @@ import {
 , author
 } from './templates.js'
 
-let globalWrite = {}
-
-Object.assign(globalWrite, {
-  taxa: g.ICONIC_TAXA,
-  language: g.LANGUAGES[1],
-  useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0],
-  species: [],
-  templates: [],
-})
-
 import { handleInatAutocomplete } from './ui-actions.js'
 
-const editCtrlInputRadio = document.getElementById('edit-ctrl-input-radio')
-const previewCtrlInputRadio = document.getElementById('preview-ctrl-input-radio')
-const editView = document.getElementById('edit-view')
-const draggableSections = document.getElementById('draggable-sections')
-const previewView = document.getElementById('preview-view')
-const iNatAutocompleteInputText = document.getElementById('inat-autocomplete-input-text')
-const iNatAutocompleteDatalist = document.getElementById('inat-autocomplete-data-list')
-const singleDate = document.getElementById('observations-date')
-const fetchInatSpeciesBtn = document.getElementById('fetch-inat-species-btn')
-const fetchInatSpeciesNotificationText = document.getElementById('fetch-inat-species-notification-text')
-const inatMetaDataDl = document.getElementById('inat-meta-data-dl')
-const selectSectionTypeSection = document.getElementById('select-section-type-section')
-const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
+const init = () => {
 
-const dragstartHandler = ev => {
-  ev.dataTransfer.setData("text/plain", ev.target.id)
-}
+  let globalWrite = {}
 
-const dragoverHandler = ev => {
-  ev.preventDefault()
-  ev.dataTransfer.dropEffect = "move"
-}
-
-const dropHandler = ev => {
-  ev.preventDefault()
-  // Get the id of the target and add the moved element to the target's DOM
-  const data = ev.dataTransfer.getData("text/plain")
-
-  if(ev.target.type === 'fieldset') {
-    // Update the position of the section visually
-    draggableSections.insertBefore(document.getElementById(data), ev.target.parentNode)
-    
-    // Update the position of the section in the templates array
-    const sectionToMoveId = document.getElementById(data).id
-    const sectionBeforeId = ev.target.parentNode.id
-    const indexBefore = globalWrite.templates.findIndex(t => t.id === sectionBeforeId)
-    const sectionToMove = globalWrite.templates.find(t => t.id === sectionToMoveId)
-
-    globalWrite.templates = globalWrite.templates.filter(t => t.id !== sectionToMoveId)
-    globalWrite.templates.splice(indexBefore, 0, sectionToMove)
-  }
-}
-
-draggableSections.addEventListener('dragover', dragoverHandler)
-draggableSections.addEventListener('drop', dropHandler)
-
-let sectionIndex = 0
-
-const toggleView = () => {
-  editView.classList.toggle('hidden')
-  previewView.classList.toggle('hidden')
-}
-
-editCtrlInputRadio.addEventListener('click', toggleView, true)
-previewCtrlInputRadio.addEventListener('click', toggleView, true)
-
-const fetchInatSpecies = async () => {
-  fetchInatSpeciesNotificationText.classList.toggle('hidden')
-  fetchInatSpeciesBtn.classList.toggle('disabled')
-
-  const user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')
-
-  globalWrite.species = await getInatObservations({ 
-      user_id: user.user.id,
-      place_id: null,
-      iconic_taxa: globalWrite.taxa,
-      per_page: 200,
-      locale: globalWrite.language.id,
-      species_count: false,
-      d1: singleDate.value,
-      d2: singleDate.value,
+  Object.assign(globalWrite, {
+    taxa: g.ICONIC_TAXA,
+    language: g.LANGUAGES[1],
+    useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0],
+    species: [],
+    templates: [],
   })
 
-  fetchInatSpeciesNotificationText.classList.toggle('hidden')
-  fetchInatSpeciesBtn.classList.toggle('disabled')
+  const d = document
+  const editCtrlInputRadio = d.getElementById('edit-ctrl-input-radio')
+  const previewCtrlInputRadio = d.getElementById('preview-ctrl-input-radio')
+  const editView = d.getElementById('edit-view')
+  const draggableSections = d.getElementById('draggable-sections')
+  const previewView = d.getElementById('preview-view')
+  const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
+  const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
+  const singleDate = d.getElementById('observations-date')
+  const fetchInatSpeciesBtn = d.getElementById('fetch-inat-species-btn')
+  const fetchInatSpeciesNotificationText = d.getElementById('fetch-inat-species-notification-text')
+  const inatMetaDataDl = d.getElementById('inat-meta-data-dl')
+  const selectSectionTypeSection = d.getElementById('select-section-type-section')
+  const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
 
-  if(globalWrite.species.length === 0) return
+  const dragstartHandler = ev => {
+    ev.dataTransfer.setData("text/plain", ev.target.id)
+  }
 
-  const ddAuthor = inatMetaDataDl.querySelector('dd:nth-child(2)')
-  const ddDate = inatMetaDataDl.querySelector('dd:nth-child(4)')
-  const ddLocation = inatMetaDataDl.querySelector('dd:nth-child(6)')
+  const dragoverHandler = ev => {
+    ev.preventDefault()
+    ev.dataTransfer.dropEffect = "move"
+  }
 
-  const meta = {
-    author: globalWrite.species[0].user.name,
-    date: globalWrite.species[0].observed_on,
-    location: {
-      location: globalWrite.species[0].location, place_guess: globalWrite.species[0].place_guess
+  const dropHandler = ev => {
+    ev.preventDefault()
+    // Get the id of the target and add the moved element to the target's DOM
+    const data = ev.dataTransfer.getData("text/plain")
+
+    if(ev.target.type === 'fieldset') {
+      // Update the position of the section visually
+      draggableSections.insertBefore(d.getElementById(data), ev.target.parentNode)
+      
+      // Update the position of the section in the templates array
+      const sectionToMoveId = d.getElementById(data).id
+      const sectionBeforeId = ev.target.parentNode.id
+      const indexBefore = globalWrite.templates.findIndex(t => t.id === sectionBeforeId)
+      const sectionToMove = globalWrite.templates.find(t => t.id === sectionToMoveId)
+
+      globalWrite.templates = globalWrite.templates.filter(t => t.id !== sectionToMoveId)
+      globalWrite.templates.splice(indexBefore, 0, sectionToMove)
     }
   }
 
-  ddAuthor.innerText = meta.author
-  ddDate.innerText = meta.date
-  ddLocation.innerText = meta.location.place_guess
+  draggableSections.addEventListener('dragover', dragoverHandler)
+  draggableSections.addEventListener('drop', dropHandler)
 
-  globalWrite.templates.push({...author, author: meta.author})
-  globalWrite.templates.push({...date, date: meta.date})
-  globalWrite.templates.push({...location, location: meta.location})  
-}
+  let sectionIndex = 0
 
-fetchInatSpeciesBtn.addEventListener('click', fetchInatSpecies, false)
+  const toggleView = () => {
+    editView.classList.toggle('hidden')
+    previewView.classList.toggle('hidden')
+  }
 
-const init = () => {
+  editCtrlInputRadio.addEventListener('click', toggleView, true)
+  previewCtrlInputRadio.addEventListener('click', toggleView, true)
+
+  const fetchInatSpecies = async () => {
+    fetchInatSpeciesNotificationText.classList.toggle('hidden')
+    fetchInatSpeciesBtn.classList.toggle('disabled')
+
+    const user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')
+
+    globalWrite.species = await getInatObservations({ 
+        user_id: user.user.id,
+        place_id: null,
+        iconic_taxa: globalWrite.taxa,
+        per_page: 200,
+        locale: globalWrite.language.id,
+        species_count: false,
+        d1: singleDate.value,
+        d2: singleDate.value,
+    })
+
+    fetchInatSpeciesNotificationText.classList.toggle('hidden')
+    fetchInatSpeciesBtn.classList.toggle('disabled')
+
+    if(globalWrite.species.length === 0) return
+
+    const ddAuthor = inatMetaDataDl.querySelector('dd:nth-child(2)')
+    const ddDate = inatMetaDataDl.querySelector('dd:nth-child(4)')
+    const ddLocation = inatMetaDataDl.querySelector('dd:nth-child(6)')
+
+    const meta = {
+      author: globalWrite.species[0].user.name,
+      date: globalWrite.species[0].observed_on,
+      location: {
+        location: globalWrite.species[0].location, place_guess: globalWrite.species[0].place_guess
+      }
+    }
+
+    ddAuthor.innerText = meta.author
+    ddDate.innerText = meta.date
+    ddLocation.innerText = meta.location.place_guess
+
+    globalWrite.templates.push({...author, author: meta.author})
+    globalWrite.templates.push({...date, date: meta.date})
+    globalWrite.templates.push({...location, location: meta.location})  
+  }
+
+  fetchInatSpeciesBtn.addEventListener('click', fetchInatSpecies, false)
+
 
   globalWrite = {
     ...globalWrite,
@@ -176,7 +178,7 @@ const init = () => {
     switch(typeId) {
       case 'h3-input':        
         globalWrite.templates.push({ ...h3, id: sectionId, h3: typeValue },)
-        t = document.getElementById('h3-template')
+        t = d.getElementById('h3-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h3')
         header.textContent = typeValue
@@ -184,7 +186,7 @@ const init = () => {
         break
       case 'h4-input':
         globalWrite.templates.push({ ...h4, id: sectionId, h4: typeValue },)
-        t = document.getElementById('h4-template')
+        t = d.getElementById('h4-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h4')
         header.textContent = typeValue
@@ -200,7 +202,7 @@ const init = () => {
         globalWrite.templates.push({...text, id: sectionId, paras})
 
         paras.forEach(text => {
-          const t = document.getElementById('text-template')
+          const t = d.getElementById('text-template')
           const clone = t.content.cloneNode(true)
           const p = clone.querySelector('p')
           p.textContent = text.p    
@@ -234,7 +236,7 @@ const init = () => {
   }
 
   const selectType = ({typeId, typeText}) => {
-    const sectionTemplate = document.getElementById('section-template')
+    const sectionTemplate = d.getElementById('section-template')
     const parent = sectionTemplate.content.cloneNode(true)
     const legend = parent.querySelector('legend')
     const parentContainer = parent.querySelector('div')
@@ -247,7 +249,7 @@ const init = () => {
     sectionContainer.setAttribute('id', sectionId)
     sectionContainer.addEventListener('dragstart', dragstartHandler)
     
-    const typeTemplate = document.getElementById(`${typeId}-template`)
+    const typeTemplate = d.getElementById(`${typeId}-template`)
     const type = typeTemplate.content.cloneNode(true)
 
     let input, texarea, previewContainer = null

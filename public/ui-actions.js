@@ -2,6 +2,8 @@ import {
   getByAutocomplete
 } from './api.js'
 
+const d = document
+
 const debounce = (func, wait) => {
   let timeout
 
@@ -17,7 +19,7 @@ const debounce = (func, wait) => {
 }
 
 const attachListenersToInatParams = g => {
-  const cbInatParamGroup = document.querySelectorAll('input[name="inat-param"]')
+  const cbInatParamGroup = d.querySelectorAll('input[name="inat-param"]')
 
   cbInatParamGroup.forEach(cb => {
       cb.addEventListener('click', e => {
@@ -32,8 +34,8 @@ const attachListenersToInatParams = g => {
 }
 
 export const createInatParamsCheckboxGroup = g => {
-  const parent = document.getElementById('inat-params-input-check-box-group')
-  const t = document.getElementById('checkbox-template')
+  const parent = d.getElementById('inat-params-input-check-box-group')
+  const t = d.getElementById('checkbox-template')
 
   parent.innerHTML = ''
 
@@ -73,7 +75,7 @@ export const handleInatAutocomplete = ({inputText, dataList, g}) => {
         g.matches = data.results
         
         g.matches.forEach(match => {
-            const option = document.createElement('option')
+            const option = d.createElement('option')
             option.value = match[prop]
             dataList.appendChild(option)
         })
@@ -96,7 +98,6 @@ export const handleInatAutocomplete = ({inputText, dataList, g}) => {
         }
     })
 }
-
 
 export const mapTaxon = ({taxon}) => {
     return {
