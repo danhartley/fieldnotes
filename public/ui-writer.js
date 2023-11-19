@@ -251,7 +251,7 @@ const init = () => {
     }
   }
 
-  const cloneImageTemplate = ({species, index, sectionId}) => {
+  const cloneImageTemplate = ({species, index, sectionId, imgUrl}) => {
     const templateToClone = d.getElementById('img-template')
     const clone = templateToClone.content.cloneNode(true)
 
@@ -263,7 +263,7 @@ const init = () => {
  
     figure.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
 
-    img.src = species.taxon.default_photo.medium_url
+    img.src = imgUrl
     img.alt = species.taxon.name
     img.id = species.taxon.id
     img.setAttribute('data-i', index + 1)
@@ -322,7 +322,16 @@ const init = () => {
         if(globalWrite.species.length > 0) {
           const parent = type.querySelector('div')
           globalWrite.species.forEach((species, index) => {
-            const clone = cloneImageTemplate({species, index, sectionId})
+            const clone = cloneImageTemplate({species, index, sectionId, imgUrl: species.photos[0].url})            
+            parent.appendChild(clone)
+          })
+        }
+        break
+      case 'species':
+        if(globalWrite.species.length > 0) {
+          const parent = type.querySelector('div')
+          globalWrite.species.forEach((species, index) => {
+            const clone = cloneImageTemplate({species, index, sectionId, imgUrl: species.taxon.default_photo.medium_url})
             parent.appendChild(clone)
           })
         }
