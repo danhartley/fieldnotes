@@ -53,6 +53,8 @@ const init = () => {
   const inatMetaDataDl = d.getElementById('inat-meta-data-dl')
   const selectSectionTypeSection = d.getElementById('select-section-type-section')
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
+  const titleInputText = d.getElementById('title-input-text')
+  const saveFieldNotesBtn = d.getElementById('save-field-notes-btn')
 
   const dragstartHandler = ev => {
     ev.dataTransfer.setData("text/plain", ev.target.id)
@@ -206,7 +208,13 @@ const init = () => {
             p
           }
         })
-        globalWrite.templates.push({...text, id: sectionId, paras})
+        const section = globalWrite.templates.find(t => t.id === sectionId)
+        if(section) {
+          const sectionIndex = globalWrite.templates.findIndex(t => t.id === sectionId)
+          globalWrite.templates[sectionIndex] = {...text, id: sectionId, paras}
+        } else {
+          globalWrite.templates.push({...text, id: sectionId, paras})
+        }
 
         paras.forEach(text => {
           const t = d.getElementById('text-template')
@@ -361,6 +369,27 @@ const init = () => {
   }
 
   selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => selectType({typeId: e.target.value, typeText: e.target.innerText}), true))
+
+  titleInputText.addEventListener('blur', e => {
+    globalWrite.title = e.target.value
+  })
+
+  const saveFieldNotes = () => {
+    const notes = {}
+
+    Object.assign(notes, {
+      id: globalWrite.title.replace(' ', '-'),
+      title: globalWrite.title,
+      author: globalWrite.author,
+      d1: globalWrite.d1,
+      d2: globalWrite.d2,
+      taxa: globalWrite.taxa,
+      templates: globalWrite.templates,
+    })
+    console.log(notes)
+  }
+
+  saveFieldNotesBtn.addEventListener('click', saveFieldNotes, true)
 }
 
 init()
