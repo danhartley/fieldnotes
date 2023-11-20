@@ -238,7 +238,11 @@ const init = () => {
     Array.from(parent.getElementsByClassName('add')).forEach(el => el.classList.remove('hidden'))
   }
   
-  const deleteSection = ({e}) => {}
+  const deleteSection = ({e, sectionId}) => {
+    const element = d.getElementById(sectionId)
+    element.remove()
+    globalWrite.templates = globalWrite.templates.filter(t => t.id !== sectionId)
+  }
 
   const handleInputChangeEvent = (e, addBtn) => {
     const inputValue = e.target.value
@@ -359,7 +363,7 @@ const init = () => {
     }  
 
     editSectionBtn.addEventListener('click', e => editSection({e}), true)
-    deleteSectionBtn.addEventListener('click', e => deleteSection({e}), true)
+    deleteSectionBtn.addEventListener('click', e => deleteSection({e, sectionId}), true)
     
     legend.innerText = typeText        
     parentContainer.appendChild(type)
