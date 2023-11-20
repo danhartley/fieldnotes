@@ -139,9 +139,9 @@ const init = () => {
     globalWrite.author = meta.author
     globalWrite.d1 = meta.date
     globalWrite.d2 = meta.date
-    // globalWrite.templates.push({...author, author: meta.author})
-    // globalWrite.templates.push({...date, date: meta.date})
-    // globalWrite.templates.push({...location, location: meta.location})
+    globalWrite.templates.push({...author, author: meta.author})
+    globalWrite.templates.push({...date, date: meta.date})
+    globalWrite.templates.push({...location, location: meta.location})
   }
 
   fetchInatSpeciesBtn.addEventListener('click', fetchInatSpecies, false)
@@ -186,7 +186,7 @@ const init = () => {
 
     switch(typeId) {
       case 'h3-input':        
-        globalWrite.templates.push({ ...h3, id: sectionId, h3: typeValue },)
+        globalWrite.templates.push({ ...h3, templateId: h3.id, id: sectionId, h3: typeValue },)
         t = d.getElementById('h3-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h3')
@@ -194,7 +194,7 @@ const init = () => {
         previewContainer.appendChild(clone)
         break
       case 'h4-input':
-        globalWrite.templates.push({ ...h4, id: sectionId, h4: typeValue },)
+        globalWrite.templates.push({ ...h4, templateId: h4.id, id: sectionId, h4: typeValue },)
         t = d.getElementById('h4-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h4')
@@ -211,9 +211,9 @@ const init = () => {
         const section = globalWrite.templates.find(t => t.id === sectionId)
         if(section) {
           const sectionIndex = globalWrite.templates.findIndex(t => t.id === sectionId)
-          globalWrite.templates[sectionIndex] = {...text, id: sectionId, paras}
+          globalWrite.templates[sectionIndex] = {...text, templateId: text.id, id: sectionId, paras}
         } else {
-          globalWrite.templates.push({...text, id: sectionId, paras})
+          globalWrite.templates.push({...text, templateId: text.id, id: sectionId, paras})
         }
 
         paras.forEach(text => {
@@ -263,7 +263,7 @@ const init = () => {
         : section.species.push(name)
     } else {
       const sp = [ name ]
-      globalWrite.templates.push({...species, species: sp, id: sectionId })
+      globalWrite.templates.push({...species, species: sp, templateId: species.id, id: sectionId })
     }
     // We should check also if a taxon needs to be removed from the list i.e. it appears in no species or observation section
     // But for now, we will content ourselves with addding taxon (which is harmless)
@@ -388,7 +388,20 @@ const init = () => {
       d1: globalWrite.d1,
       d2: globalWrite.d2,
       taxa: globalWrite.taxa,
-      templates: globalWrite.templates,
+      templates: [{
+        id: `${globalWrite.title.replace(' ', '-')}-template`,
+        name: 'Field journal',
+        parent: 'non-grid-template',
+        type: 'fieldnotes',
+        isTest: false,  
+        sections: globalWrite.templates.map(t => {
+          const {templateId, ...validProps} = t
+          return {
+            ...validProps,
+            id: t.templateId || t.id,
+          }
+        }),
+      }],
     })
     console.log(notes)
   }
