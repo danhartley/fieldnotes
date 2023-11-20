@@ -35,6 +35,7 @@ const init = () => {
     language: g.LANGUAGES[1],
     useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0],
     species: [],
+    taxa: [],
     templates: [],
   })
 
@@ -251,6 +252,14 @@ const init = () => {
     } else {
       const sp = [ name ]
       globalWrite.templates.push({...species, species: sp, id: sectionId })
+    }
+    // We should check also if a taxon needs to be removed from the list i.e. it appears in no species or observation section
+    // But for now, we will content ourselves with addding taxon (which is harmless)
+    if(!globalWrite.taxa.find(t => t.name === name)) {
+      globalWrite.taxa.push({
+        id: globalWrite.species.find(sp => sp.taxon.name === name)?.id,
+        name
+      })
     }
   }
 
