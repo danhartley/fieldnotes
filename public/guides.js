@@ -10,7 +10,7 @@ import {
 export const guides = [
   {
       id: 'mediterranean-climate-regions-guide',
-      name: 'Mediterranean climate regions',
+      title: 'Mediterranean climate regions',
       author: 'danielhartley',
       taxa: [
         {
@@ -233,7 +233,7 @@ export const guides = [
   },
   {
       id: 'wild-edible-plants-of-the-mediterranean-guide',
-      name: 'Wild edible plants of the Mediterranean',
+      title: 'Wild edible plants of the Mediterranean',
       author: 'danielhartley',
       taxa: [
         {
@@ -580,7 +580,7 @@ export const guides = [
   },
   {
       id: 'fire-prone-ecosystems-guide',
-      name: 'Fire-prone ecosystems',
+      title: 'Fire-prone ecosystems',
       author: 'danielhartley',
       taxa: [
         {

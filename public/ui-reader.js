@@ -19,7 +19,7 @@ import { fieldnotes, getAnnotations } from './fieldnotes.js'
 
 const init = () => {    
     Object.assign(g, {
-        taxa: g.ICONIC_TAXA,
+        iconicTaxa: g.ICONIC_TAXA,
         language: g.LANGUAGES[1],
         useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0],
     })
@@ -44,7 +44,7 @@ const init = () => {
         return await getInatObservations({ 
             user_id: user ? user.id : null,
             place_id: place ? place.id : null,
-            iconic_taxa: g.taxa,
+            iconic_taxa: g.iconicTaxa,
             per_page: g.count + 10,
             locale: g.language.id,
             species_count: (g.useObservationsSpeciesCount.id === "true"),
@@ -154,9 +154,9 @@ const init = () => {
             const label = clone.querySelector('label')
     
             input.setAttribute('name', rbGroup)
-            input.id = item.name
+            input.id = item.name || item.title
             input.value = item.id
-            label.textContent = item.name
+            label.textContent = item.name || item.title
             label.htmlFor = input.id
             label.setAttribute('position', 'absolute')
             
@@ -273,7 +273,7 @@ const init = () => {
             label.textContent = taxon.name
             label.htmlFor = input.id
         
-            if(g.taxa.map(t => t.name).includes(taxon.name)) {
+            if(g.iconicTaxa.map(t => t.name).includes(taxon.name)) {
                 input.setAttribute('checked', true)
             }
         
@@ -658,7 +658,7 @@ const init = () => {
         const fetchInatSpecies = async () => {
             const filters = Array.from(d.getElementById('iconic-taxa-container').querySelectorAll('input'))
             
-            g.taxa = g.ICONIC_TAXA.filter(taxon => filters.filter(t => t.checked).map(t => t.id.toLowerCase()).includes(taxon.name))
+            g.iconicTaxa = g.ICONIC_TAXA.filter(taxon => filters.filter(t => t.checked).map(t => t.id.toLowerCase()).includes(taxon.name))
             
             const user = g.inatAutocompleteOptions.find(o => o.id === 'users')
             const place = g.inatAutocompleteOptions.find(o => o.id === 'places')        
@@ -671,7 +671,7 @@ const init = () => {
                 , place: place.isActive ? place.place : null
             })
     
-            g.species = mapInatSpeciesToLTP({species: g.inatSpecies, count: g.count, taxa: g.taxa})
+            g.species = mapInatSpeciesToLTP({species: g.inatSpecies, count: g.count, taxa: g.iconicTaxa})
         
             startLesson()
     

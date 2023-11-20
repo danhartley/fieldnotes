@@ -31,7 +31,7 @@ const init = () => {
   let globalWrite = {}
 
   Object.assign(globalWrite, {
-    taxa: g.ICONIC_TAXA,
+    iconicTaxa: g.ICONIC_TAXA,
     language: g.LANGUAGES[1],
     useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0],
     species: [],
@@ -104,7 +104,7 @@ const init = () => {
     globalWrite.species = await getInatObservations({ 
         user_id: user.user.id,
         place_id: null,
-        iconic_taxa: globalWrite.taxa,
+        iconic_taxa: globalWrite.iconicTaxa,
         per_page: 200,
         locale: globalWrite.language.id,
         species_count: false,
@@ -133,9 +133,12 @@ const init = () => {
     ddDate.innerText = meta.date
     ddLocation.innerText = meta.location.place_guess
 
-    globalWrite.templates.push({...author, author: meta.author})
-    globalWrite.templates.push({...date, date: meta.date})
-    globalWrite.templates.push({...location, location: meta.location})  
+    globalWrite.author = meta.author
+    globalWrite.d1 = meta.date
+    globalWrite.d2 = meta.date
+    // globalWrite.templates.push({...author, author: meta.author})
+    // globalWrite.templates.push({...date, date: meta.date})
+    // globalWrite.templates.push({...location, location: meta.location})
   }
 
   fetchInatSpeciesBtn.addEventListener('click', fetchInatSpecies, false)
