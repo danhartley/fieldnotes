@@ -54,11 +54,6 @@ header {
   border-bottom: 1px dashed var(--c8);  
 }
 
-main {
-  margin: auto var(--d);
-  max-width: 60ch;
-}
-
 h1 {
   font-size: var(--s3);
   text-transform: uppercase;
@@ -330,7 +325,11 @@ fieldset.fieldset-reset fieldset {
   border-top: none;
 }
 
-legend {
+fieldset.drop-before {
+  background-color: var(--inactive-bg);
+}
+
+legend, #section-include-template button {
   position: absolute;
   top: 0;
   left: var(--d);
@@ -340,6 +339,11 @@ legend {
   font-weight: bold;
   letter-spacing: calc(var(--d) * .05);
   color: var(--c8);
+}
+
+#section-include-template button {
+  left: initial;
+  right: var(--d);
 }
 
 a {
@@ -435,6 +439,10 @@ th, td {
 
 .draggable {
   cursor: pointer;
+}
+
+.moveable {
+  cursor: move;
 }
 
 /* RULES */

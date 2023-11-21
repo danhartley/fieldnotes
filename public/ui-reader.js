@@ -234,7 +234,7 @@ const init = () => {
     
             endOfRowContainer.after(panel)       
             
-            panel.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" })
+            panel.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
         }
     
         speciesImages.forEach(img => {

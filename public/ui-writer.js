@@ -58,11 +58,21 @@ const init = () => {
 
   const dragstartHandler = ev => {
     ev.dataTransfer.setData("text/plain", ev.target.id)
+    const section = d.getElementById(ev.target.id)
+    section.classList.add('moveable')
   }
 
   const dragoverHandler = ev => {
     ev.preventDefault()
     ev.dataTransfer.dropEffect = "move"
+    
+    if(ev.target.type === 'fieldset') {
+      const sectionBeforeId = ev.target.parentNode.id
+      const sectiontoJump = d.getElementById(sectionBeforeId)
+      Array.from(d.getElementsByTagName('fieldset')).forEach(fs => fs.classList.remove('drop-before'))
+      sectiontoJump.getElementsByTagName('fieldset')[0].classList.add('drop-before')
+      sectiontoJump.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
+    }
   }
 
   const dropHandler = ev => {
@@ -78,6 +88,12 @@ const init = () => {
       const sectionToMoveId = d.getElementById(data).id
       const sectionBeforeId = ev.target.parentNode.id
       const indexBefore = globalWrite.templates.findIndex(t => t.id === sectionBeforeId)
+
+      const sectiontoJump = d.getElementById(sectionBeforeId)
+      sectiontoJump.getElementsByTagName('fieldset')[0].classList.remove('drop-before')
+
+      if(!indexBefore) return
+
       const sectionToMove = globalWrite.templates.find(t => t.id === sectionToMoveId)
 
       globalWrite.templates = globalWrite.templates.filter(t => t.id !== sectionToMoveId)
@@ -247,7 +263,7 @@ const init = () => {
   const deleteSection = ({e, sectionId}) => {
     const element = d.getElementById(sectionId)
     element.remove()
-    globalWrite.templates = globalWrite.templates.filter(t => t.id !== sectionId)
+    globalWrite.templates = globalWrite.templates.filter(t => t.id !== sectionId) // check exits there first…
   }
 
   const handleInputChangeEvent = (e, addBtn) => {
@@ -311,8 +327,7 @@ const init = () => {
     return clone
 }
 
-  const selectType = ({typeId, typeText}) => {
-    const sectionTemplate = d.getElementById('section-template')
+  const selectType = ({typeId, typeText, sectionTemplate}) => {
     const parent = sectionTemplate.content.cloneNode(true)
     const legend = parent.querySelector('legend')
     const parentContainer = parent.querySelector('div')
@@ -334,19 +349,17 @@ const init = () => {
 
     switch(typeId) {
       case 'h3-input':
-        input = type.querySelector('input')
-        input.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
-        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer, sectionId}), true)
-        break
       case 'h4-input':
         input = type.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer, sectionId}), true)
+        editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
       case 'textarea':
         texarea = type.querySelector('textarea')
         texarea.addEventListener('input', e => handleTextareaChangeEvent(e, addSectionBtn), true)
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:texarea.value, previewContainer, sectionId}), true)
+        editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
       case 'observations':
         if(globalWrite.species.length > 0) {
@@ -367,8 +380,7 @@ const init = () => {
         }
         break
     }  
-
-    editSectionBtn.addEventListener('click', e => editSection({e}), true)
+    
     deleteSectionBtn.addEventListener('click', e => deleteSection({e, sectionId}), true)
     
     legend.innerText = typeText        
@@ -378,7 +390,23 @@ const init = () => {
     draggableSections.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })    
   }
 
-  selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => selectType({typeId: e.target.value, typeText: e.target.innerText}), true))
+  selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { 
+    const typeId = e.target.value
+    const typeText = e.target.innerText
+
+    let sectionTemplate = null
+
+    switch(typeId) {
+      case 'species':
+      case 'observations':
+        sectionTemplate = d.getElementById('section-include-template')
+        break
+      default:
+        sectionTemplate = d.getElementById('section-template')
+    }
+
+    selectType({typeId, typeText, sectionTemplate})
+  }, true))
 
   titleInputText.addEventListener('blur', e => {
     globalWrite.title = e.target.value
@@ -415,6 +443,37 @@ const init = () => {
   }
 
   saveFieldNotesBtn.addEventListener('click', saveFieldNotes, true)
+
+  let startY, scrollTop, isDown
+
+  const body = d.getElementsByTagName('body')[0]
+
+  function mouseIsDown(e) {
+    isDown = true;
+    startY = e.pageY - body.offsetTop;
+    scrollTop = body.scrollTop;
+  }
+  function mouseUp(e) {
+    isDown = false;
+  }
+  function mouseLeave(e) {
+    isDown = false;
+  }
+  function mouseMove(e) {
+    if (isDown) {
+      e.preventDefault();
+      //Move vertcally
+      const y = e.pageY - body.offsetTop;
+      const walkY = (y - startY) * 5;
+      body.scrollTop = scrollTop - walkY;
+    }
+  }
+
+  // body.addEventListener("mousedown", (e) => mouseIsDown(e))
+  // body.addEventListener("mouseup", (e) => mouseUp(e))
+  // body.addEventListener("mouseleave", (e) => mouseLeave(e))
+  // body.addEventListener("mousemove", (e) => mouseMove(e))
+  
 }
 
 init()
