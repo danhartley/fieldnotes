@@ -329,7 +329,7 @@ fieldset.drop-before {
   background-color: var(--inactive-bg);
 }
 
-legend, #section-include-template button {
+legend, .species-list button#show-include-only-btn {
   position: absolute;
   top: 0;
   left: var(--d);
@@ -341,9 +341,16 @@ legend, #section-include-template button {
   color: var(--c8);
 }
 
-#section-include-template button {
+.species-list button#show-include-only-btn {
   left: initial;
   right: var(--d);
+  width: initial;
+  border: none;
+  font-size: var(--s2);
+  font-weight: initial;
+  text-transform: uppercase;
+  color: var(--c5);
+  background-color: var(--c0);
 }
 
 a {
@@ -414,7 +421,7 @@ th, td {
 /* STATES */
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .invisible {

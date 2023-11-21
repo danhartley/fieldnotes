@@ -327,9 +327,29 @@ const init = () => {
     return clone
 }
 
+const toggleSpeciesList = ({e, fieldset}) => {
+  {
+    const btn = e.target
+
+    if(btn.innerText.toLowerCase() === 'show only included') {
+       fieldset.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(input => {
+         input.closest('figure').classList.add('hidden')
+       })
+       btn.innerText = 'show all'
+     } else {
+      fieldset.querySelectorAll('input[type="checkbox"]').forEach(input => {
+         input.closest('figure').classList.remove('hidden')
+       })
+      btn.innerText = 'show only included'
+     }
+  }
+}
+
   const selectType = ({typeId, typeText, sectionTemplate}) => {
     const parent = sectionTemplate.content.cloneNode(true)
+    const fieldset = parent.querySelector('fieldset')
     const legend = parent.querySelector('legend')
+    const showIncludeOnlyBtn = parent.querySelector('#show-include-only-btn')
     const parentContainer = parent.querySelector('div')
     const addSectionBtn = parent.getElementById('add-section-btn')
     const editSectionBtn = parent.getElementById('edit-section-btn')
@@ -362,32 +382,28 @@ const init = () => {
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
       case 'observations':
+      case 'species':                
         if(globalWrite.species.length > 0) {
           const parent = type.querySelector('div')
           globalWrite.species.forEach((species, index) => {
-            const clone = cloneImageTemplate({species, index, sectionId, imgUrl: species.photos[0].url})            
+            const imgUrl = typeId === 'observations'
+              ? species.photos[0].url
+              : species.taxon.default_photo.medium_url
+            const clone = cloneImageTemplate({species, index, sectionId, imgUrl})            
             parent.appendChild(clone)
           })
         }
         break
-      case 'species':
-        if(globalWrite.species.length > 0) {
-          const parent = type.querySelector('div')
-          globalWrite.species.forEach((species, index) => {
-            const clone = cloneImageTemplate({species, index, sectionId, imgUrl: species.taxon.default_photo.medium_url})
-            parent.appendChild(clone)
-          })
-        }
-        break
-    }  
-    
-    deleteSectionBtn.addEventListener('click', e => deleteSection({e, sectionId}), true)
+    }
+        
+    if(showIncludeOnlyBtn) showIncludeOnlyBtn.addEventListener('click', e => toggleSpeciesList({e, fieldset}))
+    deleteSectionBtn.addEventListener('click', e => deleteSection({e, sectionId}), true)    
     
     legend.innerText = typeText        
     parentContainer.appendChild(type)
 
     draggableSections.appendChild(parent)
-    draggableSections.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })    
+    draggableSections.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })
   }
 
   selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { 
@@ -443,37 +459,6 @@ const init = () => {
   }
 
   saveFieldNotesBtn.addEventListener('click', saveFieldNotes, true)
-
-  let startY, scrollTop, isDown
-
-  const body = d.getElementsByTagName('body')[0]
-
-  function mouseIsDown(e) {
-    isDown = true;
-    startY = e.pageY - body.offsetTop;
-    scrollTop = body.scrollTop;
-  }
-  function mouseUp(e) {
-    isDown = false;
-  }
-  function mouseLeave(e) {
-    isDown = false;
-  }
-  function mouseMove(e) {
-    if (isDown) {
-      e.preventDefault();
-      //Move vertcally
-      const y = e.pageY - body.offsetTop;
-      const walkY = (y - startY) * 5;
-      body.scrollTop = scrollTop - walkY;
-    }
-  }
-
-  // body.addEventListener("mousedown", (e) => mouseIsDown(e))
-  // body.addEventListener("mouseup", (e) => mouseUp(e))
-  // body.addEventListener("mouseleave", (e) => mouseLeave(e))
-  // body.addEventListener("mousemove", (e) => mouseMove(e))
-  
 }
 
 init()
