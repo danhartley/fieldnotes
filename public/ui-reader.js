@@ -373,7 +373,7 @@ const init = () => {
         spans[1].textContent = species.taxon.name
         spans[1].classList.add('latin')
         
-        img.src = species.taxon.default_photo.medium_url
+        img.src = species.taxon.default_photo.medium_url // or observation…
         img.alt = species.taxon.name
         img.id = species.taxon.id
         img.setAttribute('data-i', index + 1)
@@ -565,6 +565,20 @@ const init = () => {
                         })
                         article.appendChild(parent)
                     break
+                    case 'observations':
+                        section.species.forEach((sp, i) => {
+                            try{
+                                const s = g.species.find(s => s.taxon.name === sp)
+                                const clone = cloneSpeciesCardFromTemplate({templateToClone, species: s, index: i})
+                                parent = parentClone.querySelector('div')
+                                parent.appendChild(clone)
+                            } catch (e) {
+                                console.log('species', sp)
+                                console.log(e)
+                            }
+                        })
+                        article.appendChild(parent)
+                    break
                     case 'term':
                         section.terms.forEach(term => {
                             const clone = templateToClone.content.cloneNode(true)                      
@@ -601,24 +615,24 @@ const init = () => {
                         })
                         article.appendChild(parent)
                     break
-                    case 'annotation':
-                        const annotations = getAnnotations(fieldnotes[0].observations)
+                    // case 'annotation':
+                    //     const annotations = getAnnotations(fieldnotes[0].observations)
 
-                        annotations.forEach(annotation => {
-                            const clone = templateToClone.content.cloneNode(true)
-                            const dt = clone.querySelector('dt')
-                            const dd = clone.querySelector('dd')
-                            const control = inatControls.find(ctrl => ctrl.id === annotation.controlled_attribute_id)
-                            const value = control.values.find(value => value.id === annotation.controlled_value_id)
+                    //     annotations.forEach(annotation => {
+                    //         const clone = templateToClone.content.cloneNode(true)
+                    //         const dt = clone.querySelector('dt')
+                    //         const dd = clone.querySelector('dd')
+                    //         const control = inatControls.find(ctrl => ctrl.id === annotation.controlled_attribute_id)
+                    //         const value = control.values.find(value => value.id === annotation.controlled_value_id)
 
-                            dt.textContent = `${control.label}: ${value.label}`
-                            dd.textContent = annotation.species.map(s => s.name).join(', ')
+                    //         dt.textContent = `${control.label}: ${value.label}`
+                    //         dd.textContent = annotation.species.map(s => s.name).join(', ')
 
-                            parent = parentClone.querySelector('dl')
-                            parent.appendChild(clone)
-                        })
-                        article.appendChild(parent)
-                    break
+                    //         parent = parentClone.querySelector('dl')
+                    //         parent.appendChild(clone)
+                    //     })
+                    //     article.appendChild(parent)
+                    // break
                 }
             })
         }

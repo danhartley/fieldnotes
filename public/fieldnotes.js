@@ -275,7 +275,7 @@ export const fieldnotes = [
                     'Pinus halepensis',
                     'Olea europaea',                    
                 ],
-                },
+            },
             { ...h3,  h3: 'Physical habitat' },
             { ...text,
                 paras: [
@@ -345,6 +345,121 @@ export const fieldnotes = [
         ...templates,
     ],
   },
+  {
+    id: "My-field trip",
+    title: "My field trip",
+    author: "danhartleybcn",
+    d1: "2023-11-09",
+    d2: "2023-11-09",
+    taxa: [
+      {
+        id: 82722,
+        name: "Pinus halepensis"
+      },
+      {
+        id: 63621,
+        name: "Pinus pinea"
+      },
+      {
+        id: 57140,
+        name: "Olea europaea"
+      }
+    ],
+    templates: [
+      {
+        id: "My-field trip-template",
+        name: "Field journal",
+        parent: "non-grid-template",
+        type: "fieldnotes",
+        isTest: false,
+        sections: [
+          {
+            id: "title-h3-input-template",
+            parent: "non-grid-template",
+            type: "author",
+            author: "danhartleybcn"
+          },
+          {
+            id: "title-h3-input-template",
+            parent: "non-grid-template",
+            type: "date-header",
+            date: "2023-11-09"
+          },
+          {
+            id: "title-h3-input-template",
+            parent: "non-grid-template",
+            type: "location",
+            location: {
+              location: "38.5296472222,-8.9822055556",
+              place_guess: "São Simão, Portugal"
+            },
+            place_guess: "place_guess"
+          },
+          {
+            id: "species-card-template",
+            name: "Species-cards",
+            parent: "grid-template",
+            type: "species",
+            species: [
+              "Pinus halepensis",
+              "Pinus pinea",
+              "Olea europaea"
+            ]
+          },
+          {
+            id: "title-h3-input-template",
+            parent: "non-grid-template",
+            type: "h3-header",
+            h3: "Species header"
+          },
+          {
+            id: "text-template",
+            name: "text",
+            parent: "non-grid-template",
+            type: "text",
+            paras: [
+              {
+                p: "Some text…"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: "species-card-test-template",
+        name: "Species-card-tests",
+        parent: "grid-template",
+        pairedTemplateId: "species-card-template",
+        isTest: true,
+        targets: [
+          {
+            id: "common",
+            name: "common name"
+          },
+          {
+            id: "latin",
+            name: "latin name"
+          }
+        ],
+        score: 0,
+        scores: []
+      },
+      {
+        id: "species-card-template",
+        name: "Species-cards",
+        parent: "grid-template",
+        pairedTemplateId: "species-card-test-template",
+        isTest: false,
+        isTestable: true
+      },
+      {
+        id: "species-list-template",
+        name: "Species-list",
+        parent: "grid-template",
+        isTest: false
+      }
+    ]
+  }
 ]
 
 export const getAnnotations = observations => {

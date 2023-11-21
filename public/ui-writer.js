@@ -114,9 +114,15 @@ const init = () => {
         d1: singleDate.value,
         d2: singleDate.value,
     })
-
-    fetchInatSpeciesNotificationText.classList.toggle('hidden')
+    
     fetchInatSpeciesBtn.classList.toggle('disabled')
+
+    fetchInatSpeciesNotificationText.innerText = 'Search complete'
+
+    setTimeout(() => {
+      fetchInatSpeciesNotificationText.classList.toggle('hidden')
+      fetchInatSpeciesNotificationText.innerText = 'Waiting for response from iNaturalist…'
+    },1500)
 
     if(globalWrite.species.length === 0) return
 
@@ -269,7 +275,7 @@ const init = () => {
     // But for now, we will content ourselves with addding taxon (which is harmless)
     if(!globalWrite.taxa.find(t => t.name === name)) {
       globalWrite.taxa.push({
-        id: globalWrite.species.find(sp => sp.taxon.name === name)?.id,
+        id: globalWrite.species.find(sp => sp.taxon.name === name)?.taxon?.id,
         name
       })
     }
@@ -401,7 +407,9 @@ const init = () => {
             id: t.templateId || t.id,
           }
         }),
-      }],
+      },
+      ...templates,
+    ],
     })
     console.log(notes)
   }

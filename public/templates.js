@@ -74,6 +74,14 @@ export const species = {
   species: [],
 }
 
+export const observations = {
+  id: 'species-card-template',
+  name: 'Species-cards',
+  parent: 'grid-template',
+  type: 'observations',
+  species: [],
+}
+
 export const image = {
   id: 'img-template',
   parent: 'grid-template',
