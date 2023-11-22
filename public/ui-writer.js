@@ -204,7 +204,7 @@ const init = () => {
   const addSection = ({e, typeId, typeValue, previewContainer, sectionId}) => {
     previewContainer.innerHTML = ''
 
-    let t, clone, header = null
+    let t, clone, header, input = null
 
     switch(typeId) {
       case 'h3-input':        
@@ -221,6 +221,14 @@ const init = () => {
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h4')
         header.textContent = typeValue
+        previewContainer.appendChild(clone)
+        break
+      case 'birdsong-input':
+        globalWrite.templates.push({ ...xenocanto, templateId: xenocanto.id, id: sectionId, xenocanto: typeValue },)
+        t = d.getElementById('xenocanto-template')
+        clone = t.content.cloneNode(true)
+        input = clone.querySelector('input')
+        input.value = typeValue
         previewContainer.appendChild(clone)
         break
       case 'textarea':
@@ -370,13 +378,14 @@ const toggleSpeciesList = ({e, fieldset}) => {
     switch(typeId) {
       case 'h3-input':
       case 'h4-input':
+      case 'birdsong-input':
         input = type.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer, sectionId}), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
       case 'textarea':
-        texarea = type.querySelector('textarea')
+        texarea = type.querySelector('textarea')        
         texarea.addEventListener('input', e => handleTextareaChangeEvent(e, addSectionBtn), true)
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:texarea.value, previewContainer, sectionId}), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
@@ -404,6 +413,10 @@ const toggleSpeciesList = ({e, fieldset}) => {
 
     draggableSections.appendChild(parent)
     draggableSections.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })
+
+    if(typeId === 'textarea') {
+      Array.from(fieldset.getElementsByTagName('textarea'))[0]?.focus()
+    }
   }
 
   selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { 
