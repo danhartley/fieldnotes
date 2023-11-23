@@ -4,6 +4,7 @@ import {
 , getInatTaxa
 , inatControls
 , g
+, getTerms
 } from './api.js'
 
 import { 
@@ -22,7 +23,8 @@ import {
 } from './templates.js'
 
 import { 
-    handleInatAutocomplete 
+    handleInatAutocomplete
+  , handleTermAutocomplete
   , bgColour
 } from './ui-actions.js'
 
@@ -371,7 +373,7 @@ const toggleSpeciesList = ({e, fieldset}) => {
     const typeTemplate = d.getElementById(`${typeId}-template`)
     const type = typeTemplate.content.cloneNode(true)
 
-    let input, texarea, previewContainer = null
+    let input, label, texarea, datalist, previewContainer = null
 
     previewContainer = type.querySelector('div')
 
@@ -403,12 +405,23 @@ const toggleSpeciesList = ({e, fieldset}) => {
           })
         }
         break
+      case 'terms':
+        datalist = type.querySelector('datalist')
+        datalist.id = `${sectionId}-dl-list`
+        input = type.querySelector('input')
+        input.id = `${sectionId}-dl-input-text`
+        input.setAttribute('list', datalist.id)
+        label = type.querySelector('label')
+        label.htmlFor = input.id        
+        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer, sectionId}), true)
+        editSectionBtn.addEventListener('click', e => editSection({e}), true)
+        break
     }
         
     if(showIncludeOnlyBtn) showIncludeOnlyBtn.addEventListener('click', e => toggleSpeciesList({e, fieldset}))
     deleteSectionBtn.addEventListener('click', e => deleteSection({e, sectionId}), true)    
     
-    legend.innerText = typeText        
+    legend.innerText = typeText
     parentContainer.appendChild(type)
 
     draggableSections.appendChild(parent)
@@ -416,6 +429,9 @@ const toggleSpeciesList = ({e, fieldset}) => {
 
     if(typeId === 'textarea') {
       Array.from(fieldset.getElementsByTagName('textarea'))[0]?.focus()
+    } else if(typeId === 'terms') {
+      const parent = fieldset.querySelector('#selected-term')
+      handleTermAutocomplete({ inputText: input, dataList: datalist, g: globalWrite, data: getTerms(), parent})
     }
   }
 

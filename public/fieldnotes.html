@@ -78,7 +78,7 @@
         <section>    
           <fieldset>
             <legend>Title</legend>
-              <div class="small mb2">Make the title specific to your field trip.</div>
+              <div class="small mb2">It helps others if the title is specific to your field trip.</div>
               <div class="centred-block">
                 <label for="title-input-text">Title</label>      
                 <input id="title-input-text" type="text" class="p" autocomplete="off">
@@ -115,6 +115,8 @@
       </section>
     </main>
 
+    <!-- Add templates -->
+
     <template id="checkbox-template">
       <div class="flex-row">                  
         <input type="checkbox" id="" name="" />
@@ -127,9 +129,9 @@
         <fieldset class="mt2">
           <legend></legend>
           <div></div>      
-          <button id="add-section-btn" class="small mt2 disabled add">Add</button>
-          <button id="edit-section-btn" class="small mt2 edit hidden">Edit</button>
-          <button id="delete-section-btn" class="small mt2 edit">Delete</button>
+          <button id="add-section-btn" class="small mt2 disabled add">Add section</button>
+          <button id="edit-section-btn" class="small mt2 edit hidden">Edit section</button>
+          <button id="delete-section-btn" class="small mt2 edit">Delete section</button>
         </fieldset>
       </section>
     </template>
@@ -161,9 +163,62 @@
     </template>
     
     <template id="textarea-template">
-      <textarea type="textarea" class="p add"></textarea>
+      <textarea type="textarea" class="p add" rows="10"></textarea>
       <div class="edit hidden"></div>
     </template>
+
+    <template id="terms-template">
+      <div id="terms">
+        <div class="box">
+          <div class="centred-block mb">
+            <label for="">Term</label>
+            <input name="" id="" spellcheck="false" autocomplete="off" placeholder="Start typing a term…" class="p" type="text"></input>
+            <datalist id=""></datalist>  
+          </div>
+          <div id="selected-term">
+            <div class="centred-block mb">
+              <span>Definition</span><span>---</span>
+            </div>
+            <div class="centred-block mb">
+              <span>Source</span><span>---</span>
+            </div>
+            <div class="centred-block mb">
+              <span>Author</span><span>---</span>
+            </div>
+            <div class="centred-block mb">
+              <span>Examples</span><span>---</span>
+            </div>
+          </div>
+        </div>
+        <button id="add-selected-term" class="small disabled add mt">Add selected term</button>
+        <div class="mt2 mb2 small">Select an exisiting term, or create a new one…</div>
+        <div class="box">
+          <div class="centred-block mb">
+            <label for="inputTerm">Term</label>
+            <input id= "inputTerm" type="text" class="p">
+            <datalist id="autocomplete-term-list"></datalist>
+          </div>
+          <div class="centred-block mb">
+            <label for="inputDefinition">Definition</label>
+            <textarea name="" id="inputDefinition" rows="3"></textarea>
+          </div>
+          <div class="centred-block mb">
+            <label for="inputSource">Source</label>
+            <input id= "inputSource" type="text" class="p">
+          </div>
+          <div class="centred-block mb">
+            <label for="inputAuthor">Author</label>
+            <input id= "inputAuthor" type="text" class="p">
+          </div>
+          <div class="centred-block mb">
+            <label for="inputExamples">Examples</label>
+            <input id= "inputExamples" type="text" class="p">
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- Preview templates -->
 
     <template id="h3-template">
       <h3></h3>

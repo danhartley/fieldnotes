@@ -838,6 +838,8 @@ const terms = [
   },
 ]
 
+export const getTerms = () => terms
+
 const keys = [
   {
     key: 'mediterranean',

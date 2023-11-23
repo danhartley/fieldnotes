@@ -99,6 +99,41 @@ export const handleInatAutocomplete = ({inputText, dataList, g}) => {
     })
 }
 
+export const handleTermAutocomplete = ({inputText, dataList, g, data, parent}) => {
+  inputText.addEventListener('input', debounce(async (e) => {
+        while (dataList.firstChild) {
+            dataList.removeChild(dataList.firstChild)
+        }
+
+        const strToComplete = e.target.value
+
+        if(strToComplete.length < 3) return
+
+        g.matches = data.filter(item => item.dt.toLowerCase().startsWith(strToComplete.toLowerCase()))
+                
+        g.matches.forEach(match => {
+            const option = d.createElement('option')
+            option.value = match['dt']
+            dataList.appendChild(option)
+        })
+    }, 0))
+
+    inputText.addEventListener('change', e => {
+        const match = e.target.value
+
+        if(match) {
+            const term = data.find(option => option.dt === match)            
+            const spans = parent.querySelectorAll('.centred-block > span:nth-child(2)')
+
+            spans[0].innerText = term.dt
+            spans[1].innerText = term.dd
+            spans[2].innerText = term.ds
+            spans[3].innerText = term.da
+            if(spans[4]) spans[4].innerText = term.dx || '--'
+        }
+    })
+}
+
 export const mapTaxon = ({taxon}) => {
     return {
         iconic_taxon_id: taxon.iconic_taxon_id,

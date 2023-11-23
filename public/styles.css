@@ -226,7 +226,7 @@ input[type='text'], textarea {
 }
 
 textarea {
-  height: 200px;
+  resize: none;
 }
 
 label:has(+ input[type='text']), label:has(+ input[type='date']) {
@@ -554,6 +554,14 @@ th, td {
 #inat-autocomplete-input-text::placeholder {
   font-family: Elena, "PT Serif", serif;
   opacity: 1;
+}
+
+#selected-term {
+  font-size: var(--s3);  
+}
+
+#terms label, #selected-term span:nth-child(1){
+  min-width: calc(var(--d) * 10);
 }
 
 /* ENTITIES */
