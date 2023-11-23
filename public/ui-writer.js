@@ -197,13 +197,28 @@ const init = () => {
 
   handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g: globalWrite})
 
-  const updateAddBtnState = ({str, btn}) => {
+  const updateBtnState = ({str, btn}) => {
     str.length > 0
     ? btn.classList.remove('disabled')
     : btn.classList.add('disabled')
   }
 
-  const addSection = ({e, typeId, typeValue, previewContainer, sectionId}) => {
+  const addTermToList = ({selectedTerms, selectedTerm, selectedTermsList}) => {
+    
+    if(selectedTerm) {
+      if(selectedTerms.findIndex(item => item.dt === selectedTerm.dt) === -1) selectedTerms.push(selectedTerm)
+    }
+    
+    selectedTermsList.innerHTML = ''
+    
+    selectedTerms.forEach(term => {
+      const li = document.createElement('li')
+      li.innerText = term.dt
+      selectedTermsList.appendChild(li)
+    })
+  }
+
+  const addSection = ({e, typeId, typeValue, previewContainer, sectionId, selectedTerms}) => {
     previewContainer.innerHTML = ''
 
     let t, clone, header, input = null
@@ -218,7 +233,7 @@ const init = () => {
         previewContainer.appendChild(clone)
         break
       case 'h4-input':
-        globalWrite.templates.push({ ...h4, templateId: h4.id, id: sectionId, h4: typeValue },)
+        globalWrite.templates.push({ ...h4, templateId: h4.id, id: sectionId, h4: typeValue })
         t = d.getElementById('h4-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h4')
@@ -226,7 +241,7 @@ const init = () => {
         previewContainer.appendChild(clone)
         break
       case 'birdsong-input':
-        globalWrite.templates.push({ ...xenocanto, templateId: xenocanto.id, id: sectionId, xenocanto: typeValue },)
+        globalWrite.templates.push({ ...xenocanto, templateId: xenocanto.id, id: sectionId, xenocanto: typeValue })
         t = d.getElementById('xenocanto-template')
         clone = t.content.cloneNode(true)
         input = clone.querySelector('input')
@@ -256,10 +271,16 @@ const init = () => {
           previewContainer.appendChild(clone)
         })
         break
+      case 'terms':        
+        globalWrite.templates.push({ ...term, templateId: term.id, id: sectionId, terms: selectedTerms })
+        addTermToList({selectedTerms, selectedTerm: null, selectedTermsList: previewContainer})
+        console.log(globalWrite.templates)
+        break
     }
     const parent = e.target.parentElement
     Array.from(parent.getElementsByClassName('edit')).forEach(el => el.classList.remove('hidden'))
     Array.from(parent.getElementsByClassName('add')).forEach(el => el.classList.add('hidden'))
+    console.log(globalWrite.templates)
   }
 
   const editSection = ({e}) => {
@@ -278,12 +299,12 @@ const init = () => {
 
   const handleInputChangeEvent = (e, addBtn) => {
     const inputValue = e.target.value
-    updateAddBtnState({str: inputValue, btn: addBtn})
+    updateBtnState({str: inputValue, btn: addBtn})
   }
 
   const handleTextareaChangeEvent = (e, addBtn) => {
     const textareaValue = e.target.value
-    updateAddBtnState({str: textareaValue, btn: addBtn})
+    updateBtnState({str: textareaValue, btn: addBtn})
   }
 
   const handleSpeciesCheckState = ({e, sectionId}) => {
@@ -373,9 +394,11 @@ const toggleSpeciesList = ({e, fieldset}) => {
     const typeTemplate = d.getElementById(`${typeId}-template`)
     const type = typeTemplate.content.cloneNode(true)
 
-    let input, label, texarea, datalist, previewContainer = null
+    let input, label, texarea, datalist, previewContainer, selectedTerms = null
 
-    previewContainer = type.querySelector('div')
+    legend.innerText = typeText
+
+    previewContainer = type.querySelector('.edit')
 
     switch(typeId) {
       case 'h3-input':
@@ -412,26 +435,68 @@ const toggleSpeciesList = ({e, fieldset}) => {
         input.id = `${sectionId}-dl-input-text`
         input.setAttribute('list', datalist.id)
         label = type.querySelector('label')
-        label.htmlFor = input.id        
-        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer, sectionId}), true)
+        label.htmlFor = input.id                        
+        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer, sectionId, selectedTerms}), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
     }
-        
-    if(showIncludeOnlyBtn) showIncludeOnlyBtn.addEventListener('click', e => toggleSpeciesList({e, fieldset}))
-    deleteSectionBtn.addEventListener('click', e => deleteSection({e, sectionId}), true)    
     
-    legend.innerText = typeText
+    // Add the child to its parent container
     parentContainer.appendChild(type)
 
+    // Add the parent container (the HTML cloned fragment) to the DOM
     draggableSections.appendChild(parent)
     draggableSections.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })
+    
+    deleteSectionBtn.addEventListener('click', e => deleteSection({e, sectionId}), true)
 
-    if(typeId === 'textarea') {
-      Array.from(fieldset.getElementsByTagName('textarea'))[0]?.focus()
-    } else if(typeId === 'terms') {
-      const parent = fieldset.querySelector('#selected-term')
-      handleTermAutocomplete({ inputText: input, dataList: datalist, g: globalWrite, data: getTerms(), parent})
+    // Add additional functionality once the DOM has been updated
+    switch(typeId) {
+      case 'species':
+      case 'observations':
+        showIncludeOnlyBtn.addEventListener('click', e => toggleSpeciesList({e, fieldset}))
+        break
+      case 'textarea':
+        Array.from(fieldset.getElementsByTagName('textarea'))[0]?.focus()
+        break
+      case 'terms':
+        const parent = fieldset.querySelector('#selected-term')
+        const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
+        const addNewTermBtn = fieldset.querySelector('#add-new-term-btn')
+        const selectedTermsList = fieldset.querySelector('#selected-terms-list')
+        
+        // Add a pre-existing term
+        selectedTerms = []
+        const handleAddSelectedTerm = ({e, selectedTerm}) => {
+          addTermToList({selectedTerms, selectedTerm, selectedTermsList})
+          addSectionBtn.classList.remove('disabled')          
+        }
+        handleTermAutocomplete({ inputText: input, dataList: datalist, g: globalWrite, data: getTerms(), parent, addSelectedTermBtn, handleAddSelectedTerm})
+
+        // Create a new term
+        const dt = fieldset.querySelector('#input-dt')
+        const dd = fieldset.querySelector('#input-dd')
+        const ds = fieldset.querySelector('#input-ds')
+        const da = fieldset.querySelector('#input-da')
+        const dx = fieldset.querySelector('#input-dx')
+        
+        dt.addEventListener('change', e => {
+          updateBtnState({str: e.target.value, btn: addNewTermBtn })          
+        })
+
+        addNewTermBtn.addEventListener('click', e => {
+          const newTerm = Object.assign({}, {
+            dt: dt.value,
+            dd: dd.value,
+            ds: ds.value,
+            da: da.value,
+            dx: dx.value,
+          })
+          
+          handleAddSelectedTerm({selectedTerm: newTerm})
+        })
+
+        break
     }
   }
 

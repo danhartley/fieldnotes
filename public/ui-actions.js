@@ -99,7 +99,7 @@ export const handleInatAutocomplete = ({inputText, dataList, g}) => {
     })
 }
 
-export const handleTermAutocomplete = ({inputText, dataList, g, data, parent}) => {
+export const handleTermAutocomplete = ({inputText, dataList, g, data, parent, addSelectedTermBtn, handleAddSelectedTerm}) => {
   inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
@@ -130,6 +130,9 @@ export const handleTermAutocomplete = ({inputText, dataList, g, data, parent}) =
             spans[2].innerText = term.ds
             spans[3].innerText = term.da
             if(spans[4]) spans[4].innerText = term.dx || '--'
+
+            addSelectedTermBtn.classList.remove('disabled')
+            addSelectedTermBtn.addEventListener('click', e => handleAddSelectedTerm({e,selectedTerm: term}), true)
         }
     })
 }

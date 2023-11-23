@@ -98,6 +98,7 @@ h4 {
 
 ul {
   margin: 0;
+  padding-inline-start: 0;
 }
 
 li {
@@ -148,9 +149,9 @@ input[type='radio'] + label::first-letter {
   text-transform: uppercase;
 }
 
-input {  
+/* input {  
   border: 1px solid var(--c3);
-}
+} */
 
 input[type='checkbox'], input[type='radio'] {
   margin: 0 calc(var(--d) * .5) 0 0;
@@ -198,7 +199,7 @@ input[type='checkbox']::before {
   background-color: var(--c6);
 }
 
-input:focus-visible {
+input:focus-visible, textarea:focus-visible {
   outline: 1px solid var(--c6);
 }
 
@@ -223,6 +224,7 @@ input[type='checkbox'] + label {
 
 input[type='text'], textarea {
   width: calc(100% - var(--d) * 2);
+  border: 1px solid var(--c3);
 }
 
 textarea {

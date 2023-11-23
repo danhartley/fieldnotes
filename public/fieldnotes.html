@@ -168,9 +168,9 @@
     </template>
 
     <template id="terms-template">
-      <div id="terms">
-        <div class="box">
-          <div class="centred-block mb">
+      <div id="terms" class="add">
+        <div class="box mb2">
+          <div class="centred-block mb2">
             <label for="">Term</label>
             <input name="" id="" spellcheck="false" autocomplete="off" placeholder="Start typing a term…" class="p" type="text"></input>
             <datalist id=""></datalist>  
@@ -190,32 +190,37 @@
             </div>
           </div>
         </div>
-        <button id="add-selected-term" class="small disabled add mt">Add selected term</button>
-        <div class="mt2 mb2 small">Select an exisiting term, or create a new one…</div>
+        <button id="add-selected-term-btn" class="small disabled add">Add selected term</button>
+        <div class="mt2 mb2 small">Select an exisiting term, <em>or create a new one…</em></div>
         <div class="box">
           <div class="centred-block mb">
-            <label for="inputTerm">Term</label>
-            <input id= "inputTerm" type="text" class="p">
+            <label for="input-dt">Term</label>
+            <input id= "input-dt" type="text" class="p">
             <datalist id="autocomplete-term-list"></datalist>
           </div>
           <div class="centred-block mb">
-            <label for="inputDefinition">Definition</label>
-            <textarea name="" id="inputDefinition" rows="3"></textarea>
+            <label for="input-dd">Definition</label>
+            <textarea name="" id="input-dd" rows="3"></textarea>
           </div>
           <div class="centred-block mb">
-            <label for="inputSource">Source</label>
-            <input id= "inputSource" type="text" class="p">
+            <label for="input-ds">Source</label>
+            <input id= "input-ds" type="text" class="p">
           </div>
           <div class="centred-block mb">
-            <label for="inputAuthor">Author</label>
-            <input id= "inputAuthor" type="text" class="p">
+            <label for="input-da">Author</label>
+            <input id= "input-da" type="text" class="p">
           </div>
           <div class="centred-block mb">
-            <label for="inputExamples">Examples</label>
-            <input id= "inputExamples" type="text" class="p">
+            <label for="input-dx">Examples</label>
+            <input id= "input-dx" type="text" class="p">
           </div>
         </div>
+        <button id="add-new-term-btn" class="small disabled add mt">Add new term</button>
       </div>
+      <h4 class="mt2">Section terms</h4>
+      <ul id="selected-terms-list" class="small edit">
+        <li>Please select or create a term</li>
+      </ul>
     </template>
 
     <!-- Preview templates -->
