@@ -564,6 +564,10 @@ th, td {
   min-width: calc(var(--d) * 10);
 }
 
+#selected-terms-list li {
+  margin: var(--d) 0;
+}
+
 /* ALL-PURPOSE RULES */
 
 .block {
