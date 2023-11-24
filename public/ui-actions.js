@@ -35,6 +35,9 @@ const attachListenersToInatParams = g => {
 
 export const createInatParamsCheckboxGroup = g => {
   const parent = d.getElementById('inat-params-input-check-box-group')
+  
+  if(!parent) return
+
   const t = d.getElementById('checkbox-template')
 
   parent.innerHTML = ''
@@ -99,7 +102,7 @@ export const handleInatAutocomplete = ({inputText, dataList, g}) => {
     })
 }
 
-export const handleTermAutocomplete = ({inputText, dataList, g, data, parent, addSelectedTermBtn, handleAddSelectedTerm}) => {
+export const handleTermAutocomplete = ({inputText, selectedTerms, dataList, g, data, parent, addSelectedTermBtn, handleAddSelectedTerm}) => {
   inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
@@ -130,6 +133,8 @@ export const handleTermAutocomplete = ({inputText, dataList, g, data, parent, ad
             spans[2].innerText = term.ds
             spans[3].innerText = term.da
             if(spans[4]) spans[4].innerText = term.dx || '--'
+
+            if(selectedTerms.find(t => t.dt.toLowerCase() === match.toLowerCase())) return 
 
             addSelectedTermBtn.classList.remove('disabled')
             addSelectedTermBtn.addEventListener('click', e => handleAddSelectedTerm({e,selectedTerm: term}), true)

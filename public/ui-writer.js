@@ -52,7 +52,9 @@ const init = () => {
   const singleDate = d.getElementById('observations-date')
   const fetchInatSpeciesBtn = d.getElementById('fetch-inat-species-btn')
   const fetchInatSpeciesNotificationText = d.getElementById('fetch-inat-species-notification-text')
-  const inatMetaDataDl = d.getElementById('inat-meta-data-dl')
+  const authorInputText = d.getElementById('author-input-text')
+  const dateInputText = d.getElementById('date-input-text')
+  const placeInputText = d.getElementById('place-input-text')
   const selectSectionTypeSection = d.getElementById('select-section-type-section')
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
   const titleInputText = d.getElementById('title-input-text')
@@ -144,10 +146,6 @@ const init = () => {
 
     if(globalWrite.species.length === 0) return
 
-    const ddAuthor = inatMetaDataDl.querySelector('dd:nth-child(2)')
-    const ddDate = inatMetaDataDl.querySelector('dd:nth-child(4)')
-    const ddLocation = inatMetaDataDl.querySelector('dd:nth-child(6)')
-
     const meta = {
       author: globalWrite.species[0].user.name,
       date: globalWrite.species[0].observed_on,
@@ -156,9 +154,9 @@ const init = () => {
       }
     }
 
-    ddAuthor.innerText = meta.author
-    ddDate.innerText = meta.date
-    ddLocation.innerText = meta.location.place_guess
+    authorInputText.value = meta.author
+    dateInputText.value = meta.date
+    placeInputText.value = meta.location.place_guess
 
     globalWrite.author = meta.author
     globalWrite.d1 = meta.date
@@ -221,7 +219,7 @@ const init = () => {
   const addSection = ({e, typeId, typeValue, previewContainer, sectionId, selectedTerms}) => {
     previewContainer.innerHTML = ''
 
-    let t, clone, header, input = null
+    let t, clone, header, input, section = null
 
     switch(typeId) {
       case 'h3-input':        
@@ -255,7 +253,7 @@ const init = () => {
             p
           }
         })
-        const section = globalWrite.templates.find(t => t.id === sectionId)
+        section = globalWrite.templates.find(t => t.id === sectionId)
         if(section) {
           const sectionIndex = globalWrite.templates.findIndex(t => t.id === sectionId)
           globalWrite.templates[sectionIndex] = {...text, templateId: text.id, id: sectionId, paras}
@@ -271,24 +269,28 @@ const init = () => {
           previewContainer.appendChild(clone)
         })
         break
-      case 'terms':        
-        globalWrite.templates.push({ ...term, templateId: term.id, id: sectionId, terms: selectedTerms })
-        addTermToList({selectedTerms, selectedTerm: null, selectedTermsList: previewContainer})
-        console.log(globalWrite.templates)
+      case 'terms':
+        section = globalWrite.templates.find(t => t.id === sectionId)
+        if(section) {
+          const sectionIndex = globalWrite.templates.findIndex(t => t.id === sectionId)
+          globalWrite.templates[sectionIndex] = {...term, templateId: term.id, id: sectionId, terms: selectedTerms}
+        } else {
+          globalWrite.templates.push({ ...term, templateId: term.id, id: sectionId, terms: selectedTerms })
+        }        
+        addTermToList({selectedTerms, selectedTerm: null, selectedTermsList: previewContainer})        
         break
     }
     const parent = e.target.parentElement
-    Array.from(parent.getElementsByClassName('edit')).forEach(el => el.classList.remove('hidden'))
-    Array.from(parent.getElementsByClassName('add')).forEach(el => el.classList.add('hidden'))
-    console.log(globalWrite.templates)
+    Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
+    Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
   }
 
   const editSection = ({e}) => {
     const parent = e.target.parentElement
     parent.querySelector('#add-section-btn').innerText = 'Save changes'
 
-    Array.from(parent.getElementsByClassName('edit')).forEach(el => el.classList.add('hidden'))
-    Array.from(parent.getElementsByClassName('add')).forEach(el => el.classList.remove('hidden'))
+    Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
+    Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
   }
   
   const deleteSection = ({e, sectionId}) => {
@@ -469,9 +471,11 @@ const toggleSpeciesList = ({e, fieldset}) => {
         selectedTerms = []
         const handleAddSelectedTerm = ({e, selectedTerm}) => {
           addTermToList({selectedTerms, selectedTerm, selectedTermsList})
-          addSectionBtn.classList.remove('disabled')          
+          addSelectedTermBtn.classList.add('disabled')
+          addSectionBtn.classList.remove('disabled')
+          input.value = ''             
         }
-        handleTermAutocomplete({ inputText: input, dataList: datalist, g: globalWrite, data: getTerms(), parent, addSelectedTermBtn, handleAddSelectedTerm})
+        handleTermAutocomplete({ inputText: input, selectedTerms, dataList: datalist, g: globalWrite, data: getTerms(), parent, addSelectedTermBtn, handleAddSelectedTerm})
 
         // Create a new term
         const dt = fieldset.querySelector('#input-dt')

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Learn the planet fieldnotes writer</title>
+    <title>Paths through the forest are without number</title>
     <link rel="stylesheet" href="./styles.css">
     <link rel="icon" href="./favicon.ico" />
     <script src="./ui-writer.js" type="module"></script>
@@ -43,15 +43,15 @@
       <section>
         <fieldset class="mt2">
           <legend>iNaturalist settings</legend>
-          <p class="mt0 small">If you are basing your fieldnotes on iNaturalist observations, lookup your user account and select the date of your field trip.</p>
+          <p class="mt0 small">If you are using iNaturalist observations, filter by user account and the date of your field trip.</p>
           <div class="centred-block">
-              <label for="inat-autocomplete-input-text" class="mr">User</label>
+              <label for="inat-autocomplete-input-text">User</label>
               <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing a username or user ID…">
               <datalist id="inat-autocomplete-data-list"></datalist>
           </div>
-          <div id="inat-params-input-check-box-group" class="grid mt2"></div>
+          <!-- <div id="inat-params-input-check-box-group" class="grid mt2"></div> -->
           <div class="centred-block mt2">
-            <label for="observations-date" class="mr">Date</label>
+            <label for="observations-date">Date</label>
             <input type="date" id="observations-date" name="observations-date" class="mr" />
           </div>
 
@@ -65,23 +65,30 @@
       <article id="edit-view">
         <section id="meta-data-section">
           <fieldset>
-            <legend>Field trip</legend>
-            <div class="small mb2">Meta data derived from your iNaturalist observations.</div>
-            <dl id="inat-meta-data-dl">
-              <dt>Author</dt><dd>Your iNaturalist username</dd>
-              <dt>Date</dt><dd>The day of your field trip</dd>
-              <dt>Location</dt><dd>Where you were</dd>
-            </dl>
+            <legend>Field trip overview</legend>
+            <div class="small mb2">If you are using iNaturalist observations, these data are derived from the date of your field trip.</div>
+            <div class="centred-block">
+              <label for="author-input-text">Author</label>      
+              <input id="author-input-text" type="text" class="p" autocomplete="off">
+            </div>
+            <div class="centred-block mt2">
+              <label for="date-input-text">Date</label>      
+              <input id="date-input-text" type="text" class="p" autocomplete="off">
+            </div>
+            <div class="centred-block mt2">
+              <label for="place-input-text">Place</label>      
+              <input id="place-input-text" type="text" class="p" autocomplete="off">
+            </div>
           </fieldset>
         </section>
 
         <section>    
           <fieldset>
             <legend>Title</legend>
-              <div class="small mb2">It helps others if the title is specific to your field trip.</div>
+              <div class="small mb2">It helps others if the title you choose is specific to your field trip.</div>
               <div class="centred-block">
                 <label for="title-input-text">Title</label>      
-                <input id="title-input-text" type="text" class="p" autocomplete="off">
+                <input id="title-input-text" type="text" class="p" autocomplete="off" placeholder="e.g. Simien Mountains National Park January 27 2020">
               </div>
           </fieldset>
         </section>
@@ -89,30 +96,32 @@
         <section id="select-section-type-section">
           <fieldset>
             <legend>Choose the type of entry you want to make</legend>
-            <button type="button" value="h3-input" class="mb">H3</button>
-            <button type="button" value="h4-input" class="mb">H4</button>
+            <button type="button" value="h3-input" class="mb">Header</button>
+            <button type="button" value="h4-input" class="mb">Subheader</button>
             <button type="button" value="textarea" class="mb">Text block</button>
             <button type="button" value="observations" class="mb">Observations</button>
             <button type="button" value="species" class="mb">Species</button>
             <button type="button" value="images" class="mb">Images</button>
             <button type="button" value="terms" class="mb">Terms</button>
             <button type="button" value="birdsong-input" class="mb">Birdsong</button>
+            <div class="small mt2"><em>You can make multiple entries of each type.</em></div>
           </fieldset>
         </section>
 
         <div id="draggable-sections"></div>
+
+        <section>
+          <fieldset>
+            <legend>Save your field notes</legend>
+            <div class="small mt"><em>Save your field notes to the database.</em></div>
+            <button id="save-field-notes-btn" class="mt2 p">Save field notes</button>
+          </fieldset>
+        </section>
       </article>
 
       <article id="preview-view" class="hidden">
         Preview mode…
       </article>
-
-      <section>
-        <fieldset>
-          <legend>Save your field notes</legend>
-          <button id="save-field-notes-btn" class="p">Save field notes</button>
-        </fieldset>
-      </section>
     </main>
 
     <!-- Add templates -->
@@ -169,14 +178,17 @@
 
     <template id="terms-template">
       <div id="terms" class="add">
-        <div class="box mb2">
+        <div class="box">
           <div class="centred-block mb2">
             <label for="">Term</label>
             <input name="" id="" spellcheck="false" autocomplete="off" placeholder="Start typing a term…" class="p" type="text"></input>
             <datalist id=""></datalist>  
           </div>
           <div id="selected-term">
-            <div class="centred-block mb">
+            <div class="centred-block double-height mb">
+              <span>Term</span><span>---</span>
+            </div>
+            <div class="centred-block double-height mb">
               <span>Definition</span><span>---</span>
             </div>
             <div class="centred-block mb">
@@ -190,7 +202,7 @@
             </div>
           </div>
         </div>
-        <button id="add-selected-term-btn" class="small disabled add">Add selected term</button>
+        <button id="add-selected-term-btn" class="small disabled add mt">Add selected term</button>
         <div class="mt2 mb2 small">Select an exisiting term, <em>or create a new one…</em></div>
         <div class="box">
           <div class="centred-block mb">
@@ -217,9 +229,8 @@
         </div>
         <button id="add-new-term-btn" class="small disabled add mt">Add new term</button>
       </div>
-      <h4 class="mt2">Section terms</h4>
-      <ul id="selected-terms-list" class="small edit">
-        <li>Please select or create a term</li>
+      <ul id="selected-terms-list" class="small add edit">
+        <li><em>Please select or create a term for this section.</em></li>
       </ul>
     </template>
 
