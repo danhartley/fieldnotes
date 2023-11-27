@@ -247,15 +247,15 @@ export const fieldnotes = [
                 ...image,
                 imgs: [
                 {
-                    src: 'https://inaturalist-open-data.s3.amazonaws.com/photos/225724924/medium.jpeg',
+                    src: 'https://inaturalist-open-data.s3.amazonaws.com/photos/225724924/small.jpeg',
                     alt: 'Chicory',
                 },
                 {
-                    src: 'https://inaturalist-open-data.s3.amazonaws.com/photos/225727251/medium.jpeg',
+                    src: 'https://inaturalist-open-data.s3.amazonaws.com/photos/225727251/small.jpeg',
                     alt: 'Southern Gatekeeper',
                 },
                 {
-                    src: 'https://inaturalist-open-data.s3.amazonaws.com/photos/225724946/medium.jpeg',
+                    src: 'https://inaturalist-open-data.s3.amazonaws.com/photos/225724946/small.jpeg',
                     alt: 'Hare\'s Tail Grass',
                 },
                 ]
@@ -346,28 +346,64 @@ export const fieldnotes = [
     ],
   },
   {
-    id: "My-field trip",
-    title: "My field trip",
+    id: "Arrábida-November 2023",
+    title: "Arrábida November 2023",
     author: "danhartleybcn",
     d1: "2023-11-09",
     d2: "2023-11-09",
     taxa: [
       {
-        id: 82722,
-        name: "Pinus halepensis"
-      },
-      {
         id: 63621,
         name: "Pinus pinea"
       },
       {
-        id: 57140,
-        name: "Olea europaea"
+        id: 82722,
+        name: "Pinus halepensis"
+      },
+      {
+        id: 82856,
+        name: "Rhamnus alaternus"
+      },
+      {
+        id: 82942,
+        name: "Quercus coccifera"
+      },
+      {
+        id: 82600,
+        name: "Pistacia lentiscus"
+      },
+      {
+        id: 47574,
+        name: "Juniperus"
+      },
+      {
+        id: 76363,
+        name: "Cistus monspeliensis"
+      },
+      {
+        id: 60271,
+        name: "Asparagus"
+      },
+      {
+        id: 82836,
+        name: "Daphne gnidium"
+      },
+      {
+        id: 49490,
+        name: "Cladonia"
+      },
+      {
+        id: 179065,
+        name: "Suillus granulatus"
+      },
+      {
+        id: 64021,
+        name: "Omphalotus olearius"
       }
     ],
     templates: [
       {
-        id: "My-field trip-template",
+        id: "Arrábida-November 2023-template",
         name: "Field journal",
         parent: "non-grid-template",
         type: "fieldnotes",
@@ -396,21 +432,28 @@ export const fieldnotes = [
             place_guess: "place_guess"
           },
           {
+            id: "text-template",
+            name: "text",
+            parent: "non-grid-template",
+            type: "text",
+            paras: [
+              {
+                p: "My observations were made in the Serra do Louro within the Arrábida Natural Park (Parque Natural da Arrábida), a protected area in the district of Setúbal which lies about twenty kilometres south of Lisbon."
+              },
+              {
+                p: "The day was clear and bright, between 18º and 20ºC, not unusual for the time of year. On the south and east facing slopes of the serra, where there is shelter from westerly breezes, it felt three or four degrees warmer. The ground, however, was wet due to overnight rain of which there has been a great deal in recent weeks."
+              }
+            ]
+          },
+          {
             id: "species-card-template",
             name: "Species-cards",
             parent: "grid-template",
             type: "species",
             species: [
-              "Pinus halepensis",
               "Pinus pinea",
-              "Olea europaea"
+              "Pinus halepensis"
             ]
-          },
-          {
-            id: "title-h3-input-template",
-            parent: "non-grid-template",
-            type: "h3-header",
-            h3: "Species header"
           },
           {
             id: "text-template",
@@ -419,7 +462,119 @@ export const fieldnotes = [
             type: "text",
             paras: [
               {
-                p: "Some text…"
+                p: "I began the day at the Capela das Necessidades which is situated on the left (top or north) side of the Vale dos Barris, in the freguesia (parish) of São Simão."
+              },
+              {
+                p: "My intention was to observe the common native trees I would expect to find and to separate out the various oaks (Kermes, Holm, Cork and Portuguese) and pines (Umbrella or Stone, Maritime and Aleppo) which grow in the park."
+              },
+              {
+                p: "A Stone Pine on the escarpment above the chapel caught my attention almost at once, and I decided to scramble up the small bluff that led to it. It took an hour to catalogue it as best I could and to record the species that lay within twenty or so feet of it."
+              },
+              {
+                p: "Of the other trees in the vicinity, there were several Kermes oaks, junipers and an olive tree. The uncultivated slopes and lower slopes of the serra is maquis so I was not surprised to see Mediterranean Buckthorn, asparagus, rosemary, mastic, Flax-leaved Daphne, everlasting-flowers and cistus (Montpellier cistus)."
+              }
+            ]
+          },
+          {
+            id: "species-card-template",
+            name: "Species-cards",
+            parent: "grid-template",
+            type: "species",
+            species: [
+              "Rhamnus alaternus",
+              "Quercus coccifera",
+              "Pistacia lentiscus",
+              "Juniperus",
+              "Cistus monspeliensis",
+              "Asparagus",
+              "Daphne gnidium"
+            ]
+          },
+          {
+            id: "text-template",
+            name: "text",
+            parent: "non-grid-template",
+            type: "text",
+            paras: [
+              {
+                p: "After the fire that had affected 400 hectares two years earlier, a great many Sea Squills had sprung up. I saw one dead adult but numerous rosettes of green which are quite different in appearance to that of the mature plant. Their leaves are dark green and leathery in texture."
+              },
+              {
+                p: "Among the species I was unable to record were a dozen or so butterflies though I believe I recognised several Clouded Yellows and Green-striped Whites among them."
+              }
+            ]
+          },
+          {
+            id: "species-card-template",
+            name: "Species-cards",
+            parent: "grid-template",
+            type: "species",
+            species: [
+              "Cladonia",
+              "Suillus granulatus",
+              "Omphalotus olearius"
+            ]
+          },
+          {
+            id: "text-template",
+            name: "text",
+            parent: "non-grid-template",
+            type: "text",
+            paras: [
+              {
+                p: "After completing my study - and without battery life to continue recording - I followed the gentle curve of the serra as it banked north and east towards Palmela. Instead of taking the upper path or dropping down to the unmetalled road I commonly take, I followed an unmarked path through relatively clear wood."
+              },
+              {
+                p: "Many of the trees were pine saplings but I was not sure if they were Maritime or Aleppo pines. When young their bark was smooth and light grey and as they matured the lower bark grew darker and fissured. The cones were sessile. I recorded them as Aleppo pines."
+              },
+              {
+                p: "There was an abundance of Slippery Jacks (I could see 14 from where I took photos of one specimen) both alongside the path and scattered among the trees. There were also a great many flies which had not troubled me on previous trips and may have been due to the presence of wild boar."
+              },
+              {
+                p: "Their scat was everywhere and they appeared to have eaten the berries of mastic which were in fruit on the lower part of the escarpment where the trees thinned. It is likely the paths I was following had been made by them as they criss-crossed the slopes, and where they descended in search of food and water."
+              }
+            ]
+          },
+          {
+            id: "term-template",
+            name: "term",
+            parent: "dl-template",
+            type: "term",
+            terms: [
+              {
+                dt: "Maquis",
+                dd: "A shrubland biome in the Mediterranean region, typically consisting of densely growing evergreen shrubs.",
+                ds: "https://en.wikipedia.org/wiki/Maquis_shrubland",
+                da: "Wikipedia"
+              },
+              {
+                dt: "Garrigue",
+                dd: "A type of low scrubland ecoregion and plant community in the Mediterranean forests, woodlands, and scrub biome.",
+                ds: "https://en.wikipedia.org/wiki/Garrigue",
+                da: "Wikipedia"
+              },
+              {
+                dt: "Ecological succession",
+                dd: "The process of change in the species that make up an ecological community over time. Primary succession is the initial state of a new habitat.",
+                ds: "https://en.wikipedia.org/wiki/Ecological_succession",
+                da: "Wikipedia"
+              }
+            ]
+          },
+          {
+            id: "text-template",
+            name: "text",
+            parent: "non-grid-template",
+            type: "text",
+            paras: [
+              {
+                p: "After stopping for lunch, I took a path that brought me to the road/track which is flanked on the lower side by vineyards and on the upper by an abandoned fig orchard. I observed two dead fire salamanders, killed by vehicles. Because of the recent rains there were puddles on the track and water in the ditches which may have drawn them out. Where the track became the road proper, I followed the steep path which ascends the southern flank of the Serra do Louro."
+              },
+              {
+                p: "I rejoined the Roteiro dos Moinhos da Serra do Louro at Cabeço das Vacas, and continued along it to my endpoint in Palmela. Notable were the birds of prey that twice overflew me and which may have been Peregrine falcons."
+              },
+              {
+                p: "As always on this path, I was accompanied by butterflies and nomads. Today there were Red Admirals, A Swallowtail, Small Coppers, and what may have been a Painted Lady or Speckled Wood. The ground often came alive as Blue-winged Grasshoppers, startled by my presence, scattered. The vegetation on the top of the serra is garrigue and on either side of the path I saw wild thyme and lavender from which characteristic fragrances could be raised by a sweep of the hand."
               }
             ]
           }

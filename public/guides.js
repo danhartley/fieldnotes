@@ -76,14 +76,12 @@ export const guides = [
                   alt: 'Subtropical regions on Earth',
                   width: 640,
                   height: 296,
-                  contain: true,
                 },                          
                 // {
                 //   src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Roman_Empire_Trajan_117AD.png/320px-Roman_Empire_Trajan_117AD.png',
                 //   alt: 'Roman Empire under Trajan 117AD',
                 //   width: 640,
                 //   height: 408,
-                //   contain: true,
                 // },                          
               ]
             },
@@ -126,21 +124,18 @@ export const guides = [
                   alt: 'Costa Vicentina, Portugal',
                   width: 220,
                   height: 165,
-                  contain: true,
                 },
                 {
                   src: 'https://drive.google.com/thumbnail?id=1dhlGp_xaVeb67RriGjdXbeY9I8DEhb5C',
                   alt: 'Costa Vicentina, Portugal',
                   width: 220,
                   height: 165,
-                  contain: true,
                 },
                 {
                   src: 'https://drive.google.com/thumbnail?id=11ckREuDuCyHqKkfwNRLV9zTR7TVyezKN',
                   alt: 'Constância, Portugal',
                   width: 220,
                   height: 165,
-                  contain: true,
                 },
               ]
             },
@@ -445,21 +440,18 @@ export const guides = [
                   alt: 'Costa Vicentina, Portugal',
                   width: 220,
                   height: 165,
-                  contain: true,
                 },
                 {
                   src: 'https://drive.google.com/thumbnail?id=1dhlGp_xaVeb67RriGjdXbeY9I8DEhb5C',
                   alt: 'Costa Vicentina, Portugal',
                   width: 220,
                   height: 165,
-                  contain: true,
                 },
                 {
                   src: 'https://drive.google.com/thumbnail?id=11ckREuDuCyHqKkfwNRLV9zTR7TVyezKN',
                   alt: 'Constância, Portugal',
                   width: 220,
                   height: 165,
-                  contain: true,
                 },
               ]
             },

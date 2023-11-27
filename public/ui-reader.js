@@ -362,17 +362,17 @@ const init = () => {
     const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) => {
         const clone = templateToClone.content.cloneNode(true)
     
-        const spans = clone.querySelectorAll('span')
         const img = clone.querySelector('img')      
-        const div = clone.querySelector('img + div')
+        const figcaption = clone.querySelector('figcaption')
+        const spans = figcaption.querySelectorAll('span')
      
-        div.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
+        figcaption.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
     
         spans[0].textContent = species.taxon.preferred_common_name
         spans[1].textContent = species.taxon.name
         spans[1].classList.add('latin')
         
-        img.src = species.taxon.default_photo.medium_url // or observation…
+        img.src = species.taxon.default_photo.square_url.replace('square', 'small') // or observation…
         img.alt = species.taxon.name
         img.id = species.taxon.id
         img.setAttribute('data-i', index + 1)
@@ -397,7 +397,7 @@ const init = () => {
         case 'species-card-template':
             g.species.forEach((sp, i) => {
                 const clone = cloneSpeciesCardFromTemplate({templateToClone, species: sp, index: i})
-                parent = parentClone.querySelector('div')          
+                parent = parentClone.querySelector('div')
                 parent.appendChild(clone)
             })
             article.appendChild(parent)
@@ -446,7 +446,7 @@ const init = () => {
                     break
                 }
                 
-                img.src = sp.taxon.default_photo.medium_url
+                img.src = sp.taxon.default_photo.square_url
                 img.alt = sp.taxon.name
                 img.id = sp.taxon.id
                 img.setAttribute('data-i', i + 1)
@@ -530,7 +530,6 @@ const init = () => {
                             const image = clone.querySelector('img')
                             const caption = clone.querySelector('figcaption')
                             image.src = img.src
-                            if(img.contain) image.classList.add('object-fit-contain')
                             image.setAttribute('alt', img.alt)
                             image.setAttribute('loading', 'eager')
                             caption.textContent = img.alt
@@ -589,7 +588,7 @@ const init = () => {
                             const dx = div1.querySelector('em')
                             const ds = div2.querySelector('a')
 
-                            const def = g.terms.find(t => t.dt === term)
+                            const def = g.terms.find(t => t.dt === term || term.dt)
                             
                             dt.textContent = def.dt
                             dd.textContent = def.dd
