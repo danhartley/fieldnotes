@@ -234,6 +234,35 @@
       </ul>
     </template>
 
+    <template id="images-template">
+      <div class="small">Add up to 3 images per section</div>
+      <div class="centred-block mt2">
+        <label for="image-url-input-one">1 Link</label>
+        <input id="image-url-input-one" placeholder="Insert your image link here" class="p" type="text" data-key="src"></input>
+      </div>
+      <div class="centred-block mt">
+        <label for="image-title-input-one">1 Title</label>
+        <input id="image-title-input-one" placeholder="Insert your image title here" class="p" type="text" minlength="2" maxlength="60" data-key="alt"></input>
+      </div>
+      <div class="centred-block mt2">
+        <label for="image-url-input-two">2 Link</label>
+        <input id="image-url-input-two" placeholder="e.g. https://drive.google.com/thumbnail?id={image id 2}" class="p" type="text" data-key="src"></input>
+      </div>
+      <div class="centred-block mt">
+        <label for="image-title-input-two">2 Title</label>
+        <input id="image-title-input-two" placeholder="Minium 2 characters, maximum 60 characters in length" class="p" type="text" minlength="2" maxlength="60" data-key="alt"></input>
+      </div>
+      <div class="centred-block mt2">
+        <label for="image-url-input-three">3 Link</label>
+        <input id="image-url-input-three" placeholder="e.g. https://drive.google.com/thumbnail?id={image id 3}" class="p" type="text" data-key="src"></input>
+      </div>
+      <div class="centred-block mt">
+        <label for="image-title-input-three">3 Title</label>
+        <input id="image-title-input-three" placeholder="e.g. Mount Ras Dashen, Simien Mountains" class="p" type="text" minlength="2" maxlength="60" data-key="alt"></input>
+      </div>
+      <div class="edit hidden"></div>
+    </template>
+
     <!-- Preview templates -->
 
     <template id="h3-template">

@@ -1,8 +1,6 @@
-import { 
-  getByAutocomplete
-, getInatObservations
+import {   
+  getInatObservations
 , getInatTaxa
-, inatControls
 , g
 , getTerms
 } from './api.js'
@@ -216,10 +214,14 @@ const init = () => {
     })
   }
 
-  const addSection = ({e, typeId, typeValue, previewContainer, sectionId, selectedTerms}) => {
+  const addSection = ({e, typeId, typeValue, previewContainer, sectionId}) => {
     previewContainer.innerHTML = ''
 
-    let t, clone, header, input, section = null
+    let t, clone, header, input, section, sectionIndex = null
+
+    section = globalWrite.templates.find(t => t.id === sectionId)
+
+    if(section) sectionIndex = globalWrite.templates.findIndex(t => t.id === sectionId)
 
     switch(typeId) {
       case 'h3-input':        
@@ -253,13 +255,9 @@ const init = () => {
             p
           }
         })
-        section = globalWrite.templates.find(t => t.id === sectionId)
-        if(section) {
-          const sectionIndex = globalWrite.templates.findIndex(t => t.id === sectionId)
-          globalWrite.templates[sectionIndex] = {...text, templateId: text.id, id: sectionId, paras}
-        } else {
-          globalWrite.templates.push({...text, templateId: text.id, id: sectionId, paras})
-        }
+        section      
+          ? globalWrite.templates[sectionIndex] = {...text, templateId: text.id, id: sectionId, paras}
+          : globalWrite.templates.push({...text, templateId: text.id, id: sectionId, paras})        
 
         paras.forEach(text => {
           const t = d.getElementById('text-template')
@@ -269,15 +267,17 @@ const init = () => {
           previewContainer.appendChild(clone)
         })
         break
-      case 'terms':
-        section = globalWrite.templates.find(t => t.id === sectionId)
-        if(section) {
-          const sectionIndex = globalWrite.templates.findIndex(t => t.id === sectionId)
-          globalWrite.templates[sectionIndex] = {...term, templateId: term.id, id: sectionId, terms: selectedTerms}
-        } else {
-          globalWrite.templates.push({ ...term, templateId: term.id, id: sectionId, terms: selectedTerms })
-        }        
-        addTermToList({selectedTerms, selectedTerm: null, selectedTermsList: previewContainer})        
+      case 'terms':        
+        section
+          ? globalWrite.templates[sectionIndex] = {...term, templateId: term.id, id: sectionId, selectedTerms: typeValue}
+          : globalWrite.templates.push({ ...term, templateId: term.id, id: sectionId, terms: typeValue })
+
+        addTermToList({selectedTerms: typeValue, selectedTerm: null, selectedTermsList: previewContainer})        
+        break
+      case 'images':
+        section
+          ? globalWrite.templates[sectionIndex] = {...image, templateId: image.id, id: sectionId, imgs: typeValue}
+          : globalWrite.templates.push({ ...image, templateId: image.id, id: sectionId, imgs: typeValue })        
         break
     }
     const parent = e.target.parentElement
@@ -300,13 +300,13 @@ const init = () => {
   }
 
   const handleInputChangeEvent = (e, addBtn) => {
-    const inputValue = e.target.value
-    updateBtnState({str: inputValue, btn: addBtn})
+    updateBtnState({str: e.target.value, btn: addBtn})
   }
 
-  const handleTextareaChangeEvent = (e, addBtn) => {
-    const textareaValue = e.target.value
-    updateBtnState({str: textareaValue, btn: addBtn})
+  const handleImageInputChangeEvent = ({e, addBtn, url1, title1}) => {
+    (url1.value.length >= 5 && title1.value.length >= 2)
+      ? addBtn.classList.remove('disabled')
+      : addBtn.classList.add('disabled')    
   }
 
   const handleSpeciesCheckState = ({e, sectionId}) => {
@@ -378,7 +378,7 @@ const toggleSpeciesList = ({e, fieldset}) => {
   }
 }
 
-  const selectType = ({typeId, typeText, sectionTemplate}) => {
+  const handleSelectType = ({typeId, typeText, sectionTemplate}) => {
     const parent = sectionTemplate.content.cloneNode(true)
     const fieldset = parent.querySelector('fieldset')
     const legend = parent.querySelector('legend')
@@ -396,7 +396,7 @@ const toggleSpeciesList = ({e, fieldset}) => {
     const typeTemplate = d.getElementById(`${typeId}-template`)
     const type = typeTemplate.content.cloneNode(true)
 
-    let input, label, texarea, datalist, previewContainer, selectedTerms = null
+    let input, label, texarea, datalist, previewContainer, selectedTerms, images = null
 
     legend.innerText = typeText
 
@@ -413,7 +413,7 @@ const toggleSpeciesList = ({e, fieldset}) => {
         break
       case 'textarea':
         texarea = type.querySelector('textarea')        
-        texarea.addEventListener('input', e => handleTextareaChangeEvent(e, addSectionBtn), true)
+        texarea.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:texarea.value, previewContainer, sectionId}), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
@@ -438,7 +438,16 @@ const toggleSpeciesList = ({e, fieldset}) => {
         input.setAttribute('list', datalist.id)
         label = type.querySelector('label')
         label.htmlFor = input.id                        
-        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer, sectionId, selectedTerms}), true)
+        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:selectedTerms, previewContainer, sectionId }), true)
+        editSectionBtn.addEventListener('click', e => editSection({e}), true)
+        break
+      case 'images':
+        const url1 = type.getElementById('image-url-input-one')
+        const title1 = type.getElementById('image-title-input-one')
+        url1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addSectionBtn, url1, title1}), true)
+        title1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addSectionBtn, url1, title1}), true)
+        
+        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:images, previewContainer, sectionId}), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
     }
@@ -499,8 +508,43 @@ const toggleSpeciesList = ({e, fieldset}) => {
           
           handleAddSelectedTerm({selectedTerm: newTerm})
         })
-
         break
+        case 'images':
+          const url1 = fieldset.querySelector('#image-url-input-one')
+          const title1 = fieldset.querySelector('#image-title-input-one')
+          const url2 = fieldset.querySelector('#image-url-input-two')
+          const title2 = fieldset.querySelector('#image-title-input-two')
+          const url3 = fieldset.querySelector('#image-url-input-three')
+          const title3 = fieldset.querySelector('#image-title-input-three')
+
+          const handleImageTextChange = ({images, index, strValue, property}) => {
+            const image = images[index]
+            if(image) {
+              image[property] = strValue
+              images[index] = image
+            } else {
+              images.push({
+                [property]: strValue
+              })
+            }
+          }
+
+          const calcIndex = (index) => {
+            return (index % 2 === 0)
+              ? index / 2
+              : ((index -1) / 2)
+          }
+
+          images = []
+
+          for (let i = 0; i < 3; i++) {
+            images.push({src:'', alt:''})
+          }
+
+          [url1, title1, url2, title2, url3, title3].forEach((input, index) => {
+            input.addEventListener('input', e => handleImageTextChange({images, strValue:e.target.value, index: calcIndex(index), property:input.dataset.key}), true)
+          })
+          break
     }
   }
 
@@ -519,7 +563,7 @@ const toggleSpeciesList = ({e, fieldset}) => {
         sectionTemplate = d.getElementById('section-template')
     }
 
-    selectType({typeId, typeText, sectionTemplate})
+    handleSelectType({typeId, typeText, sectionTemplate})
   }, true))
 
   titleInputText.addEventListener('blur', e => {

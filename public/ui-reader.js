@@ -2,7 +2,6 @@ import {
       snapSpeciesTraits
     , getInatObservations
     , getInatTaxa
-    , inatControls
     , g
 } from './api.js'
 
@@ -96,16 +95,16 @@ const init = () => {
                 
                 fieldset.classList.toggle('hidden')
     
-                let altFieldset
+                let searchFilters
     
                 switch(ctrl.value) {
                     case 'Guides':
-                        altFieldset = d.getElementById('inat-search-container')
-                        altFieldset.classList.toggle('hidden')                    
+                        searchFilters = d.getElementById('inat-search-container')
+                        searchFilters.classList.toggle('hidden')                    
                         break
                     case 'iNaturalist':
-                        altFieldset = d.getElementById('fieldnotes-container')
-                        altFieldset.classList.toggle('hidden')
+                        searchFilters = d.getElementById('fieldnotes-search-container')
+                        searchFilters.classList.toggle('hidden')
                         g.templates = templates
                         break
                 }
@@ -756,7 +755,7 @@ const init = () => {
         })
     
         toggleLessonStyle({ ctrl: inatSearchInputRb, fieldsetId: 'inat-search-container' })
-        toggleLessonStyle({ ctrl: fieldnotesInputRb, fieldsetId: 'fieldnotes-container' })
+        toggleLessonStyle({ ctrl: fieldnotesInputRb, fieldsetId: 'fieldnotes-search-container' })
     
         toggleFilterCtrl({ ctrl: displayToggleVisibilityBtn, fieldsetId: 'display-fieldset' })
         toggleFilterCtrl({ ctrl: lessonToggleVisibilityBtn, fieldsetId: 'lesson-fieldset' })
