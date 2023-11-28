@@ -410,19 +410,19 @@ export const fieldnotes = [
         isTest: false,
         sections: [
           {
-            id: "title-h3-input-template",
+            id: "h3-input-template",
             parent: "non-grid-template",
             type: "author",
             author: "danhartleybcn"
           },
           {
-            id: "title-h3-input-template",
+            id: "h3-input-template",
             parent: "non-grid-template",
             type: "date-header",
             date: "2023-11-09"
           },
           {
-            id: "title-h3-input-template",
+            id: "h3-input-template",
             parent: "non-grid-template",
             type: "location",
             location: {

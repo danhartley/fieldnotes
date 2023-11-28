@@ -57,6 +57,7 @@ const init = () => {
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
   const titleInputText = d.getElementById('title-input-text')
   const saveFieldNotesBtn = d.getElementById('save-field-notes-btn')
+  const fetchFieldtripBtn = d.getElementById('fetch-fieldtrip-btn')
 
   const dragstartHandler = ev => {
     ev.dataTransfer.setData("text/plain", ev.target.id)
@@ -378,7 +379,7 @@ const toggleSpeciesList = ({e, fieldset}) => {
   }
 }
 
-  const handleSelectType = ({typeId, typeText, sectionTemplate}) => {
+  const handleSelectType = ({typeId, typeText, typeTemplateName, sectionTemplate}) => {
     const parent = sectionTemplate.content.cloneNode(true)
     const fieldset = parent.querySelector('fieldset')
     const legend = parent.querySelector('legend')
@@ -388,12 +389,12 @@ const toggleSpeciesList = ({e, fieldset}) => {
     const editSectionBtn = parent.getElementById('edit-section-btn')
     const deleteSectionBtn = parent.getElementById('delete-section-btn')
     const sectionId = `section-${sectionIndex++}`
-    const sectionContainer = parent.querySelector('section')
+    const sectionContainer = parent.querySelector('section')    
 
     sectionContainer.setAttribute('id', sectionId)
     sectionContainer.addEventListener('dragstart', dragstartHandler)
     
-    const typeTemplate = d.getElementById(`${typeId}-template`)
+    const typeTemplate = d.getElementById(typeTemplateName)
     const type = typeTemplate.content.cloneNode(true)
 
     let input, label, texarea, datalist, previewContainer, selectedTerms, images = null
@@ -563,7 +564,7 @@ const toggleSpeciesList = ({e, fieldset}) => {
         sectionTemplate = d.getElementById('section-template')
     }
 
-    handleSelectType({typeId, typeText, sectionTemplate})
+    handleSelectType({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate})
   }, true))
 
   titleInputText.addEventListener('blur', e => {
@@ -601,6 +602,14 @@ const toggleSpeciesList = ({e, fieldset}) => {
   }
 
   saveFieldNotesBtn.addEventListener('click', saveFieldNotes, true)
+  
+  const createSectionsForExistingFieldtrip = () => {
+    const sections = g.guides[4].templates[0].sections
+
+
+  }
+
+  fetchFieldtripBtn.addEventListener('click', createSectionsForExistingFieldtrip, true)
 }
 
 init()
