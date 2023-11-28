@@ -281,7 +281,7 @@ const init = () => {
           ? globalWrite.templates[sectionIndex] = {...term, templateId: term.id, id: sectionId, selectedTerms: typeValue}
           : globalWrite.templates.push({ ...term, templateId: term.id, id: sectionId, terms: typeValue })
 
-        addTermToList({selectedTerms: typeValue, selectedTerm: null, selectedTermsList: previewContainer})        
+        addTermToList({selectedTerms: typeValue, selectedTerm: null, selectedTermsList: previewContainer})  
         break
       case 'images':
         section
@@ -387,6 +387,19 @@ const toggleSpeciesList = ({e, fieldset}) => {
   }
 }
 
+const getSectionTemplate = ({typeId}) => {
+  let sectionTemplate = null
+  switch (typeId) {
+    case 'species':
+    case 'observations':
+      sectionTemplate = d.getElementById('section-include-template')
+      break
+    default:
+      sectionTemplate = d.getElementById('section-template')
+  }
+  return sectionTemplate
+}
+
   const handleSelectType = ({typeId, typeText, typeTemplateName, sectionTemplate}) => {
     const parent = sectionTemplate.content.cloneNode(true)
     const fieldset = parent.querySelector('fieldset')
@@ -402,8 +415,15 @@ const toggleSpeciesList = ({e, fieldset}) => {
     sectionContainer.setAttribute('id', sectionId)
     sectionContainer.addEventListener('dragstart', dragstartHandler)
     
+    let type
+
     const typeTemplate = d.getElementById(typeTemplateName)
-    const type = typeTemplate.content.cloneNode(true)
+    try {
+      type = typeTemplate.content.cloneNode(true)
+    } catch (e) {
+      console.log(typeTemplateName)
+      return 
+    }
 
     let input, label, texarea, datalist, previewContainer, selectedTerms, images = null
 
@@ -555,24 +575,15 @@ const toggleSpeciesList = ({e, fieldset}) => {
           })
           break
     }
+
+    return sectionContainer
   }
 
   selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { 
     const typeId = e.target.value
     const typeText = e.target.innerText
-
-    let sectionTemplate = null
-
-    switch(typeId) {
-      case 'species':
-      case 'observations':
-        sectionTemplate = d.getElementById('section-include-template')
-        break
-      default:
-        sectionTemplate = d.getElementById('section-template')
-    }
-
-    handleSelectType({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate})
+    
+    handleSelectType({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate: getSectionTemplate({typeId})})
   }, true))
 
   titleInputText.addEventListener('blur', e => globalWrite.title = e.target.value)
@@ -644,7 +655,44 @@ const toggleSpeciesList = ({e, fieldset}) => {
       d1,
       d2,
     })
+
+    globalWrite.templates[0].sections.forEach(section => {
+      const sectionContainer = handleSelectType({
+          typeId: section.id.replace('-template', '')
+        , typeText: section.type
+        , typeTemplateName: section.id
+        , sectionTemplate: getSectionTemplate({typeId: section.type})              
+      })
+
+      const addSectionBtn = sectionContainer.querySelector('#add-section-btn')
+      const editSectionBtn = sectionContainer.querySelector('#edit-section-btn')      
+
+      if(addSectionBtn) addSectionBtn.classList.add('hidden')
+      if(editSectionBtn) editSectionBtn.classList.remove('hidden')
+
+      let target
+
+      switch(section.type) {
+        case 'text':
+          target = sectionContainer.querySelector('p')    
+          target.innerText = section.paras.map(para => para.p).join('\n\n')
+          break
+        case 'species':
+          const speciesCheckboxes = sectionContainer.querySelectorAll('input')
+          speciesCheckboxes.forEach(checkbox => {
+            if(section.species.includes(checkbox.value)) {
+              checkbox.setAttribute('checked', true)
+            }
+          })            
+          break
+        case 'terms':
+          const selectedTermsList = sectionContainer.querySelector('#selected-terms-list')
+          addTermToList({selectedTerms: section.terms, selectedTerm: null, selectedTermsList})
+      }
+    })
+
     console.log(globalWrite)
+    console.log(globalWrite.templates[0].sections)
   }
 
   fetchFieldtripBtn.addEventListener('click', createSectionsForExistingFieldtrip, true)  

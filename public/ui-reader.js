@@ -91,7 +91,7 @@ const init = () => {
         ctrl.addEventListener('click', () => {
             const fieldset = d.getElementById(fieldsetId)
     
-            if(fieldset.classList.contains('hidden')) {
+            if(fieldset.classList.includes('hidden')) {
                 
                 fieldset.classList.toggle('hidden')
     

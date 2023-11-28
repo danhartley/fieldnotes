@@ -451,7 +451,7 @@ export const fieldnotes = [
             ]
           },
           {
-            id: "species-card-template",
+            id: "species-template",
             name: "Species-cards",
             parent: "grid-template",
             type: "species",
@@ -481,7 +481,7 @@ export const fieldnotes = [
             ]
           },
           {
-            id: "species-card-template",
+            id: "species-template",
             name: "Species-cards",
             parent: "grid-template",
             type: "species",
@@ -510,7 +510,7 @@ export const fieldnotes = [
             ]
           },
           {
-            id: "species-card-template",
+            id: "species-template",
             name: "Species-cards",
             parent: "grid-template",
             type: "species",
@@ -541,10 +541,10 @@ export const fieldnotes = [
             ]
           },
           {
-            id: "term-template",
-            name: "term",
+            id: "terms-template",
+            name: "terms",
             parent: "dl-template",
-            type: "term",
+            type: "terms",
             terms: [
               {
                 dt: "Maquis",
