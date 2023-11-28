@@ -507,7 +507,7 @@ const init = () => {
                         parent.appendChild(clone)
                         article.appendChild(parent)
                     break
-                    case 'date-header':
+                    case 'date':
                         clone = templateToClone.content.cloneNode(true)
                         h3 = clone.querySelector('h3')
                         h3.textContent = new Date(section.date).toDateString()

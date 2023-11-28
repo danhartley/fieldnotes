@@ -100,7 +100,7 @@ export const annotation = {
 export const date = {
   id: 'h3-input-template',
   parent: 'non-grid-template',
-  type: 'date-header',
+  type: 'date',
   date: 'date',
 }
 

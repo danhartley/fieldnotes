@@ -24,6 +24,7 @@ import {
     handleInatAutocomplete
   , handleTermAutocomplete
   , bgColour
+  , mapTaxon
 } from './ui-actions.js'
 
 const init = () => {
@@ -117,7 +118,17 @@ const init = () => {
   editCtrlInputRadio.addEventListener('click', toggleView, true)
   previewCtrlInputRadio.addEventListener('click', toggleView, true)
 
-  const fetchInatSpecies = async () => {
+  const getMeta = ({species}) => {
+    return {
+      author: species[0].user.name,
+      date: species[0].observed_on,
+      location: {
+        location: species[0].location, place_guess: species[0].place_guess
+      }
+    }
+  }
+
+  const fetchInatSpecies = async ({userId}) => {
     fetchInatSpeciesNotificationText.classList.toggle('hidden')
     fetchInatSpeciesBtn.classList.toggle('disabled')
 
@@ -145,52 +156,49 @@ const init = () => {
 
     if(globalWrite.species.length === 0) return
 
-    const meta = {
-      author: globalWrite.species[0].user.name,
-      date: globalWrite.species[0].observed_on,
-      location: {
-        location: globalWrite.species[0].location, place_guess: globalWrite.species[0].place_guess
-      }
-    }
+    const { author, date, location } = getMeta({species: globalWrite.species})
 
-    authorInputText.value = meta.author
-    dateInputText.value = meta.date
-    placeInputText.value = meta.location.place_guess
+    authorInputText.value = author
+    dateInputText.value = date
+    placeInputText.value = location.place_guess
 
-    globalWrite.author = meta.author
-    globalWrite.d1 = meta.date
-    globalWrite.d2 = meta.date
-    globalWrite.templates.push({...author, author: meta.author})
-    globalWrite.templates.push({...date, date: meta.date})
-    globalWrite.templates.push({...location, location: meta.location})
+    globalWrite.author = author
+    globalWrite.d1 = date
+    globalWrite.d2 = date
+    globalWrite.templates.push({...author, author})
+    globalWrite.templates.push({...date, date})
+    globalWrite.templates.push({...location, location})
   }
 
   fetchInatSpeciesBtn.addEventListener('click', fetchInatSpecies, false)
 
-
-  globalWrite = {
-    ...globalWrite,
-    inatAutocompleteOptions: [
-      {
+  const initGlobalWrite = () => {
+    globalWrite = {
+      ...globalWrite,
+      inatAutocompleteOptions: [
+        {
+          id: 'users',
+          name: 'user',
+          prop: 'login',
+          placeholder: 'Start typing a username or user ID…',
+          isActive: false,
+          user: null,
+        },
+      ],
+      inatAutocomplete: {
         id: 'users',
         name: 'user',
         prop: 'login',
-        placeholder: 'Start typing a username or user ID…',
+        placeholder: 'Username or user ID',
         isActive: false,
         user: null,
+        project: null,
+        place: null,
       },
-    ],
-    inatAutocomplete: {
-      id: 'users',
-      name: 'user',
-      prop: 'login',
-      placeholder: 'Username or user ID',
-      isActive: false,
-      user: null,
-      project: null,
-      place: null,
-    },
+    }
   }
+
+  initGlobalWrite()
 
   handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g: globalWrite})
 
@@ -567,9 +575,14 @@ const toggleSpeciesList = ({e, fieldset}) => {
     handleSelectType({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate})
   }, true))
 
-  titleInputText.addEventListener('blur', e => {
-    globalWrite.title = e.target.value
+  titleInputText.addEventListener('blur', e => globalWrite.title = e.target.value)
+  authorInputText.addEventListener('blur', e => globalWrite.author = e.target.value)
+  dateInputText.addEventListener('blur', e => {
+    globalWrite.d1 = e.target.value
+    globalWrite.d2 = e.target.value
   })
+  placeInputText.addEventListener('blur', e => globalWrite.location.place_guess = e.target.value)
+
 
   const saveFieldNotes = () => {
     const notes = {}
@@ -580,6 +593,8 @@ const toggleSpeciesList = ({e, fieldset}) => {
       author: globalWrite.author,
       d1: globalWrite.d1,
       d2: globalWrite.d2,
+      location: globalWrite.location,
+      language: globalWrite.language,
       taxa: globalWrite.taxa,
       templates: [{
         id: `${globalWrite.title.replace(' ', '-')}-template`,
@@ -603,14 +618,36 @@ const toggleSpeciesList = ({e, fieldset}) => {
 
   saveFieldNotesBtn.addEventListener('click', saveFieldNotes, true)
   
-  const createSectionsForExistingFieldtrip = () => {
-    const sections = g.guides[4].templates[0].sections
+  const createSectionsForExistingFieldtrip = async () => {
+    const guide = g.guides[4] // temp hack
 
+    Object.assign(globalWrite, {
+      iconicTaxa: g.ICONIC_TAXA,
+      language: g.LANGUAGES[1],
+      ...guide
+    })
 
+    const { title, author, d1, d2, location } = globalWrite
+
+    titleInputText.value = title
+    authorInputText.value = author
+    dateInputText.value = d1
+    placeInputText.value = location.place_guess
+
+    globalWrite.species = await getInatObservations({ 
+      user_id: globalWrite.inatUserId,
+      place_id: null,
+      iconic_taxa: globalWrite.iconicTaxa,
+      per_page: 200,
+      locale: globalWrite.language.id,
+      species_count: false,
+      d1,
+      d2,
+    })
+    console.log(globalWrite)
   }
 
-  fetchFieldtripBtn.addEventListener('click', createSectionsForExistingFieldtrip, true)
+  fetchFieldtripBtn.addEventListener('click', createSectionsForExistingFieldtrip, true)  
 }
 
 init()
-

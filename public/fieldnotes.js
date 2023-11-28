@@ -349,8 +349,13 @@ export const fieldnotes = [
     id: "Arrábida-November 2023",
     title: "Arrábida November 2023",
     author: "danhartleybcn",
+    inatUserId: "19829",
     d1: "2023-11-09",
     d2: "2023-11-09",
+    location: {
+      location: "38.5296472222,-8.9822055556",
+      place_guess: "São Simão, Portugal"
+    },
     taxa: [
       {
         id: 63621,
@@ -418,7 +423,7 @@ export const fieldnotes = [
           {
             id: "h3-input-template",
             parent: "non-grid-template",
-            type: "date-header",
+            type: "date",
             date: "2023-11-09"
           },
           {
