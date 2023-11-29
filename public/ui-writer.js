@@ -214,11 +214,25 @@ const init = () => {
       if(selectedTerms.findIndex(item => item.dt === selectedTerm.dt) === -1) selectedTerms.push(selectedTerm)
     }
     
+    const removeTermFromList = ({e, li}) => {
+      const checkbox = e.target
+      if(!checkbox.checked) li.remove()
+    }
+
     selectedTermsList.innerHTML = ''
     
     selectedTerms.forEach(term => {
-      const li = document.createElement('li')      
-      li.innerText = term.dt
+      const li = d.createElement('li')
+      const checkbox = d.createElement('input')
+      checkbox.type = 'checkbox'
+      checkbox.id = term.dt
+      checkbox.setAttribute('checked', true)
+      checkbox.classList.add('fl')
+      checkbox.addEventListener('change', e => removeTermFromList({e, li}), true)
+      const span = d.createElement('span')
+      span.innerText = term.dt
+      li.appendChild(checkbox)
+      li.appendChild(span)
       selectedTermsList.appendChild(li)
     })
   }

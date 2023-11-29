@@ -628,6 +628,10 @@ th, td {
   height: calc(var(--d) * 4);
 }
 
+.fl {
+  float: left;
+}
+
 /* CONTROLS */
 
 #display-toggle-visibility-btn, #lesson-toggle-visibility-btn, #progress-toggle-visibility-btn, #preferences-toggle-visibility-btn {
