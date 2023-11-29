@@ -414,7 +414,7 @@ const init = () => {
             })
             article.appendChild(parent)
             break
-        case 'species-card-test-template':
+        case 'species-test-template':
             g.species.forEach((sp, i) => {
                 const clone = templateToClone.content.cloneNode(true)
     
@@ -465,7 +465,7 @@ const init = () => {
                 parentClone = template.content.cloneNode(true)
                 templateToClone = d.getElementById(section.id)
 
-                let clone, h3, h4, iframe
+                let clone, h3, h4, iframe, a
                 switch(section.type) {
                     case 'h3-header':
                         clone = templateToClone.content.cloneNode(true)
@@ -517,9 +517,9 @@ const init = () => {
                     break
                     case 'location':
                         clone = templateToClone.content.cloneNode(true)
-                        h3 = clone.querySelector('h3')
-                        h3.textContent = section.place_guess
-                        // h3.textContent = section.location // geo lookup
+                        a = clone.querySelector('a')
+                        a.textContent = section.location.place_guess
+                        a.setAttribute('href', `https://www.google.com/maps/place/${section.location.location}`)
                         parent = parentClone.querySelector('div')
                         parent.appendChild(clone)
                         article.appendChild(parent)

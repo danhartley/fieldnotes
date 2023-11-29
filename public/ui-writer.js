@@ -217,7 +217,7 @@ const init = () => {
     selectedTermsList.innerHTML = ''
     
     selectedTerms.forEach(term => {
-      const li = document.createElement('li')
+      const li = document.createElement('li')      
       li.innerText = term.dt
       selectedTermsList.appendChild(li)
     })

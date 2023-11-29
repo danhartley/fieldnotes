@@ -586,7 +586,7 @@ export const fieldnotes = [
         ]
       },
       {
-        id: "species-card-test-template",
+        id: "species-test-template",
         name: "Species-card-tests",
         parent: "grid-template",
         pairedTemplateId: "species-template",
@@ -608,7 +608,7 @@ export const fieldnotes = [
         id: "species-template",
         name: "Species-cards",
         parent: "grid-template",
-        pairedTemplateId: "species-card-test-template",
+        pairedTemplateId: "species-test-template",
         isTest: false,
         isTestable: true
       },

@@ -228,7 +228,7 @@ textarea {
   font-family: inherit;
 }
 
-label:has(+ input[type='text']), label:has(+ input[type='date']) {
+label:has(+ input[type='text']):not(.ignore), label:has(+ input[type='date']):not(.ignore) {
   min-width: calc(var(--d) * 6);
 }
 
@@ -420,6 +420,8 @@ th, td {
 .invisible {
   opacity: 0;
   pointer-events: none;
+  width: 0;
+  min-width: 0;
 }
 
 .btn-reset {
