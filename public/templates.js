@@ -3,7 +3,7 @@ export const templates = [
       id: 'species-card-test-template',
       name: 'Species-card-tests',
       parent: 'grid-template',
-      pairedTemplateId: 'species-card-template',
+      pairedTemplateId: 'species-template',
       isTest: true,
       targets: [
         {
@@ -19,7 +19,7 @@ export const templates = [
       scores: [],
   },
   {
-      id: 'species-card-template',
+      id: 'species-template',
       name: 'Species-cards',
       parent: 'grid-template',
       pairedTemplateId: 'species-card-test-template',
@@ -67,7 +67,7 @@ export const term = {
 }
 
 export const species = {
-  id: 'species-card-template',
+  id: 'species-template',
   name: 'Species-cards',
   parent: 'grid-template',
   type: 'species',
@@ -75,7 +75,7 @@ export const species = {
 }
 
 export const observations = {
-  id: 'species-card-template',
+  id: 'species-template',
   name: 'Species-cards',
   parent: 'grid-template',
   type: 'observations',

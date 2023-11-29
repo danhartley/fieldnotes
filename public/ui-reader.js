@@ -91,7 +91,7 @@ const init = () => {
         ctrl.addEventListener('click', () => {
             const fieldset = d.getElementById(fieldsetId)
     
-            if(fieldset.classList.includes('hidden')) {
+            if(fieldset.classList.contains('hidden')) {
                 
                 fieldset.classList.toggle('hidden')
     
@@ -394,7 +394,7 @@ const init = () => {
         if(g.species) article.innerHTML = ''
     
         switch(g.template.id) {
-        case 'species-card-template':
+        case 'species-template':
             g.species.forEach((sp, i) => {
                 const clone = cloneSpeciesCardFromTemplate({templateToClone, species: sp, index: i})
                 parent = parentClone.querySelector('div')

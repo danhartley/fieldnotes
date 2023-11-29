@@ -589,7 +589,7 @@ export const fieldnotes = [
         id: "species-card-test-template",
         name: "Species-card-tests",
         parent: "grid-template",
-        pairedTemplateId: "species-card-template",
+        pairedTemplateId: "species-template",
         isTest: true,
         targets: [
           {
@@ -605,7 +605,7 @@ export const fieldnotes = [
         scores: []
       },
       {
-        id: "species-card-template",
+        id: "species-template",
         name: "Species-cards",
         parent: "grid-template",
         pairedTemplateId: "species-card-test-template",
