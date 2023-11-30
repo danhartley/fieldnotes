@@ -57,7 +57,7 @@ const init = () => {
   const selectSectionTypeSection = d.getElementById('select-section-type-section')
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
   const titleInputText = d.getElementById('title-input-text')
-  const saveFieldNotesBtn = d.getElementById('save-field-notes-btn')
+  const exportFieldNotesBtn = d.getElementById('save-field-notes-btn')
   const fetchFieldtripBtn = d.getElementById('fetch-fieldtrip-btn')
 
   const dragstartHandler = ev => {
@@ -91,16 +91,16 @@ const init = () => {
       // Update the position of the section in the templates array
       const sectionToMoveId = d.getElementById(data).id
       const sectionBeforeId = ev.target.parentNode.id
-      const indexBefore = globalWrite.templates.findIndex(t => t.id === sectionBeforeId)
+      const indexBefore = globalWrite.templates.findIndex(t => t.sectionId === sectionBeforeId)
 
       const sectiontoJump = d.getElementById(sectionBeforeId)
       sectiontoJump.getElementsByTagName('fieldset')[0].classList.remove('drop-before')
 
-      if(!indexBefore) return
+      if(indexBefore === -1) return
 
-      const sectionToMove = globalWrite.templates.find(t => t.id === sectionToMoveId)
+      const sectionToMove = globalWrite.templates.find(t => t.sectionId === sectionToMoveId)
 
-      globalWrite.templates = globalWrite.templates.filter(t => t.id !== sectionToMoveId)
+      globalWrite.templates = globalWrite.templates.filter(t => t.sectionId !== sectionToMoveId)
       globalWrite.templates.splice(indexBefore, 0, sectionToMove)
     }
   }
@@ -242,13 +242,13 @@ const init = () => {
 
     let t, clone, header, input, section, sectionIndex = null
 
-    section = globalWrite.templates.find(t => t.id === sectionId)
+    section = globalWrite.templates.find(t => t.sectionId === sectionId)
 
-    if(section) sectionIndex = globalWrite.templates.findIndex(t => t.id === sectionId)
+    if(section) sectionIndex = globalWrite.templates.findIndex(t => t.sectionId === sectionId)
 
     switch(typeId) {
       case 'h3-input':        
-        globalWrite.templates.push({ ...h3, templateId: h3.id, id: sectionId, h3: typeValue },)
+        globalWrite.templates.push({ ...h3, templateId: h3.id, sectionId, h3: typeValue },)
         t = d.getElementById('h3-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h3')
@@ -256,7 +256,7 @@ const init = () => {
         previewContainer.appendChild(clone)
         break
       case 'h4-input':
-        globalWrite.templates.push({ ...h4, templateId: h4.id, id: sectionId, h4: typeValue })
+        globalWrite.templates.push({ ...h4, templateId: h4.id, sectionId, h4: typeValue })
         t = d.getElementById('h4-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h4')
@@ -264,7 +264,7 @@ const init = () => {
         previewContainer.appendChild(clone)
         break
       case 'birdsong-input':
-        globalWrite.templates.push({ ...xenocanto, templateId: xenocanto.id, id: sectionId, xenocanto: typeValue })
+        globalWrite.templates.push({ ...xenocanto, templateId: xenocanto.id, sectionId, xenocanto: typeValue })
         t = d.getElementById('xenocanto-template')
         clone = t.content.cloneNode(true)
         input = clone.querySelector('input')
@@ -279,8 +279,8 @@ const init = () => {
           }
         })
         section      
-          ? globalWrite.templates[sectionIndex] = {...text, templateId: text.id, id: sectionId, paras}
-          : globalWrite.templates.push({...text, templateId: text.id, id: sectionId, paras})        
+          ? globalWrite.templates[sectionIndex] = {...text, templateId: text.id, sectionId, paras}
+          : globalWrite.templates.push({...text, templateId: text.id, sectionId, paras})        
 
         paras.forEach(text => {
           const t = d.getElementById('text-template')
@@ -292,15 +292,15 @@ const init = () => {
         break
       case 'terms':        
         section
-          ? globalWrite.templates[sectionIndex] = {...term, templateId: term.id, id: sectionId, selectedTerms: typeValue}
-          : globalWrite.templates.push({ ...term, templateId: term.id, id: sectionId, terms: typeValue })
+          ? globalWrite.templates[sectionIndex] = {...term, templateId: term.id, sectionId, selectedTerms: typeValue}
+          : globalWrite.templates.push({ ...term, templateId: term.id, sectionId, terms: typeValue })
 
         addTermToList({selectedTerms: typeValue, selectedTerm: null, selectedTermsList: previewContainer})  
         break
       case 'images':
         section
-          ? globalWrite.templates[sectionIndex] = {...image, templateId: image.id, id: sectionId, imgs: typeValue}
-          : globalWrite.templates.push({ ...image, templateId: image.id, id: sectionId, imgs: typeValue })        
+          ? globalWrite.templates[sectionIndex] = {...image, templateId: image.id, sectionId, imgs: typeValue}
+          : globalWrite.templates.push({ ...image, templateId: image.id, sectionId, imgs: typeValue })        
         break
     }
     const parent = e.target.parentElement
@@ -319,7 +319,7 @@ const init = () => {
   const deleteSection = ({e, sectionId}) => {
     const element = d.getElementById(sectionId)
     element.remove()
-    globalWrite.templates = globalWrite.templates.filter(t => t.id !== sectionId) // check exits there first…
+    globalWrite.templates = globalWrite.templates.filter(t => t.sectionId !== sectionId) // check exits there first…
   }
 
   const handleInputChangeEvent = (e, addBtn) => {
@@ -334,14 +334,14 @@ const init = () => {
 
   const handleSpeciesCheckState = ({e, sectionId}) => {
     const name = e.target.value
-    const section = globalWrite.templates.find(t => t.id === sectionId)
+    const section = globalWrite.templates.find(t => t.sectionId === sectionId)
     if(section) {
       section.species.find(sp => sp === name) 
         ? section.species = section.species.filter(sp => sp !== name)
         : section.species.push(name)
     } else {
       const sp = [ name ]
-      globalWrite.templates.push({...species, species: sp, templateId: species.id, id: sectionId })
+      globalWrite.templates.push({...species, species: sp, templateId: species.id, sectionId })
     }
     // We should check also if a taxon needs to be removed from the list i.e. it appears in no species or observation section
     // But for now, we will content ourselves with addding taxon (which is harmless)
@@ -589,7 +589,7 @@ const getSectionTemplate = ({typeId}) => {
           })
           break
     }
-
+    console.log(globalWrite.templates)
     return sectionContainer
   }
 
@@ -609,7 +609,7 @@ const getSectionTemplate = ({typeId}) => {
   placeInputText.addEventListener('blur', e => globalWrite.location.place_guess = e.target.value)
 
 
-  const saveFieldNotes = () => {
+  const exportFieldNotes = () => {
     const notes = {}
 
     Object.assign(notes, {
@@ -641,15 +641,16 @@ const getSectionTemplate = ({typeId}) => {
     console.log(notes)
   }
 
-  saveFieldNotesBtn.addEventListener('click', saveFieldNotes, true)
+  exportFieldNotesBtn.addEventListener('click', exportFieldNotes, true)
   
-  const createSectionsForExistingFieldtrip = async () => {
+  const importFieldnotes = async () => {
     const guide = g.guides[4] // temp hack
 
     Object.assign(globalWrite, {
       iconicTaxa: g.ICONIC_TAXA,
       language: g.LANGUAGES[1],
-      ...guide
+      ...guide,
+      templates: guide.templates[0].sections
     })
 
     const { title, author, d1, d2, location } = globalWrite
@@ -670,7 +671,8 @@ const getSectionTemplate = ({typeId}) => {
       d2,
     })
 
-    globalWrite.templates[0].sections.forEach(section => {
+    globalWrite.templates.forEach((section, index) => {
+      section.sectionId = `section-${index}`
       const sectionContainer = handleSelectType({
           typeId: section.id.replace('-template', '')
         , typeText: section.type
@@ -704,12 +706,9 @@ const getSectionTemplate = ({typeId}) => {
           addTermToList({selectedTerms: section.terms, selectedTerm: null, selectedTermsList})
       }
     })
-
-    console.log(globalWrite)
-    console.log(globalWrite.templates[0].sections)
   }
 
-  fetchFieldtripBtn.addEventListener('click', createSectionsForExistingFieldtrip, true)  
+  fetchFieldtripBtn.addEventListener('click', importFieldnotes, true)  
 }
 
 init()
