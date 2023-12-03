@@ -480,7 +480,7 @@ const getSectionTemplate = ({typeId}) => {
         input.id = `${sectionId}-dl-input-text`
         input.setAttribute('list', datalist.id)
         label = type.querySelector('label')
-        label.htmlFor = input.id                        
+        label.htmlFor = input.id                  
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:selectedTerms, previewContainer, sectionId }), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
@@ -506,6 +506,11 @@ const getSectionTemplate = ({typeId}) => {
 
     // Add additional functionality once the DOM has been updated
     switch(typeId) {
+      case 'h3-input':
+      case 'h4-input':
+      case 'birdsong-input':
+        Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
+        break
       case 'species':
       case 'observations':
         showIncludeOnlyBtn.addEventListener('click', e => toggleSpeciesList({e, fieldset}))
@@ -589,7 +594,6 @@ const getSectionTemplate = ({typeId}) => {
           })
           break
     }
-    console.log(globalWrite.templates)
     return sectionContainer
   }
 

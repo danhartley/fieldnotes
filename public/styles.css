@@ -218,9 +218,9 @@ input[type='checkbox'] + label {
   height: calc(var(--d) * 2 + 1px);
 }
 
-input[type='text'], textarea {
-  margin: var(--d);
+div > input[type='text'], textarea {
   border: 1px solid var(--c3);
+  width: 100%;
 }
 
 textarea {

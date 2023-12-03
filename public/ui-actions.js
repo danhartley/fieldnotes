@@ -37,7 +37,7 @@ export const createInatParamsCheckboxGroup = g => {
   const parent = d.getElementById('inat-params-input-check-box-group')
   
   if(!parent) return
-
+    console.log('createInatParamsCheckboxGroup')
   const t = d.getElementById('checkbox-template')
 
   parent.innerHTML = ''

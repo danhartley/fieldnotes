@@ -427,7 +427,6 @@ const init = () => {
                 label.htmlFor = input.id
     
                 div.style.setProperty("background-color", bgColour(sp.taxon.iconic_taxon_name))
-                console.log(sp.taxon.iconic_taxon_name)
                 
                 switch(g.target.name) {
                 case 'common name':
