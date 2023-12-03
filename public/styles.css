@@ -219,7 +219,7 @@ input[type='checkbox'] + label {
 }
 
 input[type='text'], textarea {
-  width: calc(100% - var(--d) * 2);
+  margin: var(--d);
   border: 1px solid var(--c3);
 }
 

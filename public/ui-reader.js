@@ -285,13 +285,13 @@ const init = () => {
     
     const createRadioBtnTemplateGroup = () => {
         const addHandlers = () => {
-            const rbGroupTemplate = d.querySelectorAll('input[name="template"]')        
+            const rbGroupTemplate = d.querySelectorAll('input[name="display-option-template"]')
     
             rbGroupTemplate.forEach(template => {
                 template.addEventListener('change', e => {
                     const templateId = e.target.value
                     g.template = g.templates.find(t => t.id === templateId) 
-                    
+                    console.log('templateId', templateId)                
                     resetTestOptions()
                     
                     const toggleTestableTemplate = () => {      
@@ -333,7 +333,7 @@ const init = () => {
         }
         
         speciesDisplayContainer.innerHTML = ''
-    
+  
         g.templates.filter(t => !t.isTest).forEach(t => {
             const clone = rbTemplate.content.cloneNode(true)
         
@@ -342,7 +342,7 @@ const init = () => {
     
             speciesDisplayContainer.classList.add('disabled')
         
-            input.setAttribute('name', 'template')
+            input.setAttribute('name', 'display-option-template')
             input.id = t.name
             input.value = t.id
         
@@ -383,7 +383,7 @@ const init = () => {
     
     const startLesson = () => {
         if(!g.template) return
-    
+
         let template = d.getElementById(g.template.parent)
         let parentClone = template.content.cloneNode(true)
         let templateToClone = d.getElementById(g.template.id) 
@@ -422,12 +422,13 @@ const init = () => {
                 const label = clone.querySelector('label')
                 const input = clone.querySelector('input')
                 const img = clone.querySelector('img')      
-                const div = clone.querySelector('img + div')
+                const div = clone.querySelector('img + figcaption')
     
                 input.id = sp.taxon.id
                 label.htmlFor = input.id
     
                 div.style.setProperty("background-color", bgColour(sp.taxon.iconic_taxon_name))
+                console.log(sp.taxon.iconic_taxon_name)
                 
                 switch(g.target.name) {
                 case 'common name':
@@ -446,7 +447,7 @@ const init = () => {
                     break
                 }
                 
-                img.src = sp.taxon.default_photo.square_url
+                img.src = species.taxon.default_photo.square_url.replace('square', 'small')
                 img.alt = sp.taxon.name
                 img.id = sp.taxon.id
                 img.setAttribute('data-i', i + 1)
@@ -731,7 +732,7 @@ const init = () => {
                     
                 createRadioBtnTemplateGroup()
                 speciesDisplayContainer.classList.remove('disabled')
-                startLesson()
+                article.innerHTML = ''                
             })
         }
     
@@ -781,6 +782,18 @@ const init = () => {
     singleDate.value = today
     startDate.value = today
     endDate.value = today
+
+    startDate.addEventListener('focus', () => {
+        d.getElementById('rbDateRange').checked = true
+    }, true)
+
+    endDate.addEventListener('focus', () => {
+        d.getElementById('rbDateRange').checked = true
+    }, true)
+
+    singleDate.addEventListener('focus', () => {
+        d.getElementById('rbSingleDate').checked = true
+    }, true)
 }
 
 init()
