@@ -64,7 +64,7 @@ h1 {
 h2 {
   display: flex;
   align-items: center;
-  margin: var(--d) 0 var(--d) 0;
+  margin: calc(var(--d) * 2) 0;
   width: 100%;
   font-size: var(--s5);
   letter-spacing: calc(var(--d) * .025);
@@ -635,7 +635,6 @@ th, td {
 /* CONTROLS */
 
 #display-toggle-visibility-btn, #lesson-toggle-visibility-btn, #progress-toggle-visibility-btn, #preferences-toggle-visibility-btn {
-  padding-right: 0;
   border: none;
   font-size: var(--s2);
   text-transform: uppercase;
@@ -643,6 +642,7 @@ th, td {
   background-color: var(--c1);
   cursor: pointer;
   -webkit-font-smoothing: antialiased;
+  max-height: 40.5px;
 }
 
 #observation-dates > div > label:nth-child(2) {

@@ -291,7 +291,6 @@ const init = () => {
                 template.addEventListener('change', e => {
                     const templateId = e.target.value
                     g.template = g.templates.find(t => t.id === templateId) 
-                    console.log('templateId', templateId)                
                     resetTestOptions()
                     
                     const toggleTestableTemplate = () => {      
@@ -447,7 +446,7 @@ const init = () => {
                     break
                 }
                 
-                img.src = species.taxon.default_photo.square_url.replace('square', 'small')
+                img.src = sp.taxon.default_photo.square_url.replace('square', 'small')
                 img.alt = sp.taxon.name
                 img.id = sp.taxon.id
                 img.setAttribute('data-i', i + 1)
@@ -774,7 +773,7 @@ const init = () => {
 
     createTaxaCheckboxGroup()
     createRadioBtnTemplateGroup()
-    createInatParamsCheckboxGroup(g)
+    // createInatParamsCheckboxGroup(g)
 
     const date = new Date()
     const today = `${date.getFullYear()}-${date.getMonth() + 1}-${("0" + date.getDate()).slice(-2)}`
@@ -783,16 +782,21 @@ const init = () => {
     startDate.value = today
     endDate.value = today
 
+    const setDateOption = date => {
+        date.checked = true
+        g.dateOption = date.value
+    }
+
     startDate.addEventListener('focus', () => {
-        d.getElementById('rbDateRange').checked = true
+        setDateOption(d.getElementById('rbDateRange'))
     }, true)
 
     endDate.addEventListener('focus', () => {
-        d.getElementById('rbDateRange').checked = true
+        setDateOption(d.getElementById('rbDateRange'))
     }, true)
 
     singleDate.addEventListener('focus', () => {
-        d.getElementById('rbSingleDate').checked = true
+        setDateOption(d.getElementById('rbSingleDate'))
     }, true)
 }
 
