@@ -651,6 +651,12 @@ const getSectionTemplate = ({typeId}) => {
   }
 
   exportFieldNotesBtn.addEventListener('click', exportFieldNotes, true)
+
+  titleInputText.addEventListener('blur', e => {
+    e.target.value.length > 0
+      ? exportFieldNotesBtn.classList.remove('disabled')
+      : exportFieldNotesBtn.classList.add('disabled')
+  })
   
   const importFieldnotes = async () => {
     const guide = g.guides[4] // temp hack
