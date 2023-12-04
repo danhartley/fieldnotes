@@ -653,7 +653,7 @@ const getSectionTemplate = ({typeId}) => {
   exportFieldNotesBtn.addEventListener('click', exportFieldNotes, true)
 
   titleInputText.addEventListener('blur', e => {
-    e.target.value.length > 0
+    e.target.value.length > 2
       ? exportFieldNotesBtn.classList.remove('disabled')
       : exportFieldNotesBtn.classList.add('disabled')
   })
