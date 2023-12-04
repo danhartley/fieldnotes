@@ -440,7 +440,7 @@ th, td {
 }
 
 .moveable {
-  cursor: move;
+  cursor: grabbing;
 }
 
 /* SELECTOR RULES */

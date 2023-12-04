@@ -83,10 +83,15 @@ const init = () => {
     ev.preventDefault()
     // Get the id of the target and add the moved element to the target's DOM
     const data = ev.dataTransfer.getData("text/plain")
+    const target = d.getElementById(data)
 
     if(ev.target.type === 'fieldset') {
       // Update the position of the section visually
-      draggableSections.insertBefore(d.getElementById(data), ev.target.parentNode)
+      draggableSections.insertBefore(target, ev.target.parentNode)
+
+      // Update the mouse icon
+      target.classList.remove('moveable')
+      target.classList.add('pointer')
       
       // Update the position of the section in the templates array
       const sectionToMoveId = d.getElementById(data).id
