@@ -22,7 +22,10 @@ import {
 
 import { 
     handleInatAutocomplete
+  , createInatParamsCheckboxGroup
+  , createTaxaGrid
   , handleTermAutocomplete
+  , cloneImages
   , bgColour
   , mapTaxon
 } from './ui-actions.js'
@@ -205,7 +208,8 @@ const init = () => {
 
   initGlobalWrite()
 
-  handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g: globalWrite})
+  const { id, prop } = g.inatAutocomplete
+  handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g: globalWrite, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})  
 
   const updateBtnState = ({str, btn}) => {
     str.length > 0
@@ -332,92 +336,42 @@ const init = () => {
   }
 
   const handleImageInputChangeEvent = ({e, addBtn, url1, title1}) => {
-    (url1.value.length >= 5 && title1.value.length >= 2)
-      ? addBtn.classList.remove('disabled')
-      : addBtn.classList.add('disabled')    
+      (url1.value.length >= 5 && title1.value.length >= 2)
+        ? addBtn.classList.remove('disabled')
+        : addBtn.classList.add('disabled')    
   }
 
-  const handleSpeciesCheckState = ({e, sectionId}) => {
-    const name = e.target.value
-    const section = globalWrite.templates.find(t => t.sectionId === sectionId)
-    if(section) {
-      section.species.find(sp => sp === name) 
-        ? section.species = section.species.filter(sp => sp !== name)
-        : section.species.push(name)
-    } else {
-      const sp = [ name ]
-      globalWrite.templates.push({...species, species: sp, templateId: species.id, sectionId })
-    }
-    // We should check also if a taxon needs to be removed from the list i.e. it appears in no species or observation section
-    // But for now, we will content ourselves with addding taxon (which is harmless)
-    if(!globalWrite.taxa.find(t => t.name === name)) {
-      globalWrite.taxa.push({
-        id: globalWrite.species.find(sp => sp.taxon.name === name)?.taxon?.id,
-        name
-      })
+  const toggleSpeciesList = ({e, fieldset}) => {
+    {
+      const btn = e.target
+
+      if(btn.innerText.toLowerCase() === 'show only included') {
+        fieldset.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(input => {
+          input.closest('figure').classList.add('hidden')
+        })
+        btn.innerText = 'show all'
+      } else {
+        fieldset.querySelectorAll('input[type="checkbox"]').forEach(input => {
+          input.closest('figure').classList.remove('hidden')
+        })
+        btn.innerText = 'show only included'
+      }
     }
   }
 
-  const cloneImageTemplate = ({species, index, sectionId, imgUrl}) => {
-    const templateToClone = d.getElementById('img-template')
-    const clone = templateToClone.content.cloneNode(true)
-
-    const spans = clone.querySelectorAll('span')
-    const img = clone.querySelector('img')      
-    const figure = clone.querySelector('figure')
-    const checkbox = clone.querySelector('input')
-    const label = clone.querySelector('label')
- 
-    figure.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
-
-    img.src = imgUrl
-    img.alt = species.taxon.name
-    img.id = species.taxon.id
-    img.setAttribute('data-i', index + 1)
-    img.setAttribute('loading', 'lazy')
-
-    spans[0].textContent = species.taxon.preferred_common_name
-    spans[1].textContent = species.taxon.name
-    spans[1].classList.add('latin')
-    
-    checkbox.id = `${sectionId}-${species.id}`
-    checkbox.value = species.taxon.name
-    checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionId}), true)
-    label.htmlFor = checkbox.id
-
-    return clone
-}
-
-const toggleSpeciesList = ({e, fieldset}) => {
-  {
-    const btn = e.target
-
-    if(btn.innerText.toLowerCase() === 'show only included') {
-       fieldset.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(input => {
-         input.closest('figure').classList.add('hidden')
-       })
-       btn.innerText = 'show all'
-     } else {
-      fieldset.querySelectorAll('input[type="checkbox"]').forEach(input => {
-         input.closest('figure').classList.remove('hidden')
-       })
-      btn.innerText = 'show only included'
-     }
+  const getSectionTemplate = ({typeId}) => {
+    let sectionTemplate = null
+    switch (typeId) {
+      case 'species':
+      case 'observations':
+      case 'inat-lookup':
+        sectionTemplate = d.getElementById('section-include-template')
+        break
+      default:
+        sectionTemplate = d.getElementById('section-template')
+    }
+    return sectionTemplate
   }
-}
-
-const getSectionTemplate = ({typeId}) => {
-  let sectionTemplate = null
-  switch (typeId) {
-    case 'species':
-    case 'observations':
-      sectionTemplate = d.getElementById('section-include-template')
-      break
-    default:
-      sectionTemplate = d.getElementById('section-template')
-  }
-  return sectionTemplate
-}
 
   const handleSelectType = ({typeId, typeText, typeTemplateName, sectionTemplate}) => {
     const parent = sectionTemplate.content.cloneNode(true)
@@ -459,6 +413,10 @@ const getSectionTemplate = ({typeId}) => {
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer, sectionId}), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
+      case 'inat-lookup':
+        // input = type.querySelector('input')
+        // input.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
+        break
       case 'textarea':
         texarea = type.querySelector('textarea')        
         texarea.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
@@ -467,16 +425,7 @@ const getSectionTemplate = ({typeId}) => {
         break
       case 'observations':
       case 'species':                
-        if(globalWrite.species.length > 0) {
-          const parent = type.querySelector('div')
-          globalWrite.species.forEach((species, index) => {
-            const imgUrl = typeId === 'observations'
-              ? species.photos[0].url
-              : species.taxon.default_photo.medium_url
-            const clone = cloneImageTemplate({species, index, sectionId, imgUrl})            
-            parent.appendChild(clone)
-          })
-        }
+        cloneImages({global:globalWrite, parent:type.querySelector('div'), typeId, sectionId })
         break
       case 'terms':
         datalist = type.querySelector('datalist')
@@ -517,15 +466,15 @@ const getSectionTemplate = ({typeId}) => {
         Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
         break
       case 'species':
-      case 'observations':
+      case 'observations':      
         showIncludeOnlyBtn.addEventListener('click', e => toggleSpeciesList({e, fieldset}))
         break
-      case 'textarea':
-        Array.from(fieldset.getElementsByTagName('textarea'))[0]?.focus()
-        break
-      case 'terms':
-        const parent = fieldset.querySelector('#selected-term')
-        const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
+        case 'textarea':
+          Array.from(fieldset.getElementsByTagName('textarea'))[0]?.focus()
+          break
+          case 'terms':
+            const parent = fieldset.querySelector('#selected-term')
+            const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
         const addNewTermBtn = fieldset.querySelector('#add-new-term-btn')
         const selectedTermsList = fieldset.querySelector('#selected-terms-list')
         
@@ -538,7 +487,7 @@ const getSectionTemplate = ({typeId}) => {
           input.value = ''             
         }
         handleTermAutocomplete({ inputText: input, selectedTerms, dataList: datalist, g: globalWrite, data: getTerms(), parent, addSelectedTermBtn, handleAddSelectedTerm})
-
+        
         // Create a new term
         const dt = fieldset.querySelector('#input-dt')
         const dd = fieldset.querySelector('#input-dd')
@@ -549,7 +498,7 @@ const getSectionTemplate = ({typeId}) => {
         dt.addEventListener('change', e => {
           updateBtnState({str: e.target.value, btn: addNewTermBtn })          
         })
-
+        
         addNewTermBtn.addEventListener('click', e => {
           const newTerm = Object.assign({}, {
             dt: dt.value,
@@ -569,7 +518,7 @@ const getSectionTemplate = ({typeId}) => {
           const title2 = fieldset.querySelector('#image-title-input-two')
           const url3 = fieldset.querySelector('#image-url-input-three')
           const title3 = fieldset.querySelector('#image-title-input-three')
-
+          
           const handleImageTextChange = ({images, index, strValue, property}) => {
             const image = images[index]
             if(image) {
@@ -581,23 +530,40 @@ const getSectionTemplate = ({typeId}) => {
               })
             }
           }
-
+          
           const calcIndex = (index) => {
             return (index % 2 === 0)
-              ? index / 2
-              : ((index -1) / 2)
+            ? index / 2
+            : ((index -1) / 2)
           }
-
+          
           images = []
-
+          
           for (let i = 0; i < 3; i++) {
             images.push({src:'', alt:''})
           }
-
+          
           [url1, title1, url2, title2, url3, title3].forEach((input, index) => {
             input.addEventListener('input', e => handleImageTextChange({images, strValue:e.target.value, index: calcIndex(index), property:input.dataset.key}), true)
           })
           break
+        case 'inat-lookup':
+            showIncludeOnlyBtn.addEventListener('click', e => toggleSpeciesList({e, fieldset}))
+            Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
+        const iNatTaxaAutocompleteInputText = d.getElementById('inat-autocomplete-taxa-input-text')
+        const iNatTaxaAutocompleteDatalist = d.getElementById('inat-autocomplete-taxa-data-list')
+        handleInatAutocomplete({ 
+            inputText: iNatTaxaAutocompleteInputText
+          , dataList: iNatTaxaAutocompleteDatalist
+          , g: globalWrite
+          , id: 'taxa'
+          , prop: 'name'
+          , callback: createTaxaGrid
+          , cbParent: d.getElementById('inat-lookup-group')
+          , typeId
+          , sectionId
+        })
+        break
     }
     return sectionContainer
   }
@@ -637,10 +603,10 @@ const getSectionTemplate = ({typeId}) => {
         type: 'fieldnotes',
         isTest: false,  
         sections: globalWrite.templates.map(t => {
-          const {templateId, ...validProps} = t
+          const {templateId, sectionId, ...validProps} = t
           return {
             ...validProps,
-            id: t.templateId || t.id,
+            // id: t.templateId || t.id,
           }
         }),
       },
@@ -648,6 +614,7 @@ const getSectionTemplate = ({typeId}) => {
     ],
     })
     console.log(notes)
+    console.log(notes.templates[0].sections)
   }
 
   exportFieldNotesBtn.addEventListener('click', exportFieldNotes, true)

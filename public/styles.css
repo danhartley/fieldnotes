@@ -724,6 +724,14 @@ th, td {
   padding-top: calc(var(--d) * 2);
 }
 
+.pr {
+  padding-right: var(--d);
+}
+
+.pr2 {
+  padding-right: calc(var(--d) * 2);
+}
+
 .p0 {
   padding: 0;
 }

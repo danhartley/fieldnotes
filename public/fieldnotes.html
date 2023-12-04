@@ -103,11 +103,13 @@
         <section id="select-section-type-section">
           <fieldset>
             <legend>Add a new section</legend>
+            <div class="small mb2">Observations and observation taxa are the taxa you recorded on your field trip. Use iNat lookup to find any taxa on iNaturalist.</div>
             <button type="button" value="h3-input" class="mb">Header</button>
             <button type="button" value="h4-input" class="mb">Subheader</button>
             <button type="button" value="textarea" class="mb">Text block</button>
             <button type="button" value="observations" class="mb">Observations</button>
-            <button type="button" value="species" class="mb">Species</button>
+            <button type="button" value="species" class="mb">Observation taxa</button>
+            <button type="button" value="inat-lookup" class="mb">iNat lookup</button>
             <button type="button" value="images" class="mb">Images</button>
             <button type="button" value="terms" class="mb">Terms</button>
             <button type="button" value="birdsong-input" class="mb">Birdsong</button>
@@ -158,7 +160,7 @@
           <legend></legend>
           <button id="show-include-only-btn">Show only included</button>
           <div></div>      
-          <button id="delete-section-btn" class="small mt2 edit">Delete</button>
+          <button id="delete-section-btn" class="small mt2 edit">Delete section</button>
         </fieldset>
       </section>
     </template>
@@ -177,6 +179,16 @@
       <div class="small mb2">You can embed recordings from <a href="https://xeno-canto.org/" target="_blank">xeno-canto</a>.</div>
       <input type="text" class="p add" placeholder="Enter a xeno-canto recording id e.g. 121910" />
       <div class="edit hidden"></div>
+    </template>
+
+    <template id="inat-lookup-template">
+      <p class="mt0 small">Look up taxa on iNaturalist.</p>
+      <div class="centred-block">
+          <label for="inat-autocomplete-taxa-input-text">Taxa</label>
+          <input id="inat-autocomplete-taxa-input-text" list="inat-autocomplete-taxa-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start tying the common or scientific name…">
+          <datalist id="inat-autocomplete-taxa-data-list"></datalist>
+      </div>
+      <div id="inat-lookup-group" class="mt2"></div>
     </template>
     
     <template id="textarea-template">

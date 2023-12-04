@@ -587,6 +587,109 @@ export const fieldnotes = [
       },
       ...templates
     ]
+  },
+  {
+    id: "lookups",
+    title: "lookups",
+    author: "danhartleybcn",
+    d1: "2023-11-09",
+    d2: "2023-11-09",
+    language: {
+      name: "English",
+      id: "en"
+    },
+    taxa: [
+      {
+        id: 363592,
+        name: "Suillus collinitus"
+      },
+      {
+        id: 57140,
+        name: "Olea europaea"
+      },
+      {
+        id: 63621,
+        name: "Pinus pinea"
+      },
+      {
+        id: 58722,
+        name: "Pinus sylvestris"
+      },
+      {
+        id: 48461,
+        name: "Pinus ponderosa"
+      },
+      {
+        id: 636795,
+        name: "Salvia rosmarinus"
+      }
+    ],
+    templates: [
+      {
+        id: "lookups-template",
+        name: "Field journal",
+        parent: "non-grid-template",
+        type: "fieldnotes",
+        isTest: false,
+        sections: [
+          {
+            id: "species-template",
+            name: "Species-cards",
+            parent: "grid-template",
+            type: "species",
+            species: [
+              "Suillus collinitus",
+              "Olea europaea",
+              "Salvia rosmarinus"
+            ]
+          },
+          {
+            id: "species-template",
+            name: "Species-cards",
+            parent: "grid-template",
+            type: "species",
+            species: [
+              "Pinus pinea",
+              "Pinus sylvestris",
+              "Pinus ponderosa"
+            ]
+          }
+        ]
+      },
+      {
+        id: "species-test-template",
+        name: "Species-card-tests",
+        parent: "grid-template",
+        pairedTemplateId: "species-template",
+        isTest: true,
+        targets: [
+          {
+            id: "common",
+            name: "common name"
+          },
+          {
+            id: "latin",
+            name: "latin name"
+          }
+        ],
+        score: 0,
+        scores: []
+      },
+      {
+        id: "species-template",
+        name: "Species-cards",
+        parent: "grid-template",
+        pairedTemplateId: "species-test-template",
+        isTest: false,
+        isTestable: true
+      },
+      {
+        id: "species-list-template",
+        name: "Species-list",
+        parent: "grid-template",
+        isTest: false
+      }
+    ]
   }
 ]
 

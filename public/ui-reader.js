@@ -762,7 +762,8 @@ const init = () => {
     
         addImgClickEventHandlers()
     
-        handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g})
+        const { id, prop } = g.inatAutocomplete
+        handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})
     })
 
     rbInatAutocompleteGroup = createRadioBtnGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroupContainer})    

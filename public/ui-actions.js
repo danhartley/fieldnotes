@@ -1,6 +1,10 @@
 import { 
-  getByAutocomplete
+    getIdByAutocomplete
 } from './api.js'
+
+import { 
+    species
+} from './templates.js'
 
 const d = document
 
@@ -33,47 +37,49 @@ const attachListenersToInatParams = g => {
   })
 }
 
-export const createInatParamsCheckboxGroup = g => {
-  const parent = d.getElementById('inat-params-input-check-box-group')
-  
-  if(!parent) return
-    console.log('createInatParamsCheckboxGroup')
-  const t = d.getElementById('checkbox-template')
+export const createInatParamsCheckboxGroup = ({g, parent, typeId, sectionId}) => {
+    
+    if(!parent) return
+    
+    const t = d.getElementById('checkbox-template')
 
-  parent.innerHTML = ''
+    parent.innerHTML = ''
 
-  g.inatAutocompleteOptions.filter(param => param.isActive).forEach(param => {
-      const clone = t.content.cloneNode(true)
+    g.inatAutocompleteOptions.filter(param => param.isActive).forEach(param => {
+        const clone = t.content.cloneNode(true)
 
-      const input = clone.querySelector('input')
-      const label = clone.querySelector('label')
-      label.setAttribute('class', 'text-initial')
-  
-      input.setAttribute('name', 'inat-param')
-      input.id = param.id
-      if(param.isActive) input.setAttribute('checked', true)
-      input.value = param.name
-      label.textContent = param[param.name][param.prop]
-      label.htmlFor = input.id
+        const input = clone.querySelector('input')
+        const label = clone.querySelector('label')
+        label.setAttribute('class', 'text-initial')
+    
+        input.setAttribute('name', 'inat-param')
+        input.id = param.id
+        if(param.isActive) input.setAttribute('checked', true)
+        input.value = param.name
+        label.textContent = param[param.name][param.prop]
+        label.htmlFor = input.id
 
-      parent.appendChild(clone)
-  })
+        parent.appendChild(clone)
+    })
 
-  attachListenersToInatParams(g)
+    attachListenersToInatParams(g)
 }
 
-export const handleInatAutocomplete = ({inputText, dataList, g}) => {
+export const createTaxaGrid = ({g, parent, typeId, sectionId}) => {
+    cloneImages({global:g, parent, typeId, sectionId})
+}
+
+export const handleInatAutocomplete = ({inputText, dataList, g, id, prop, callback, cbParent, typeId, sectionId}) => {
   inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
         }
 
-        const { id, prop } = g.inatAutocomplete
         const strToComplete = e.target.value
 
         if(strToComplete.length < 3) return
 
-        const data = await getByAutocomplete({ by: id, toComplete: strToComplete })
+        const data = await getIdByAutocomplete({ by: id, toComplete: strToComplete })
         
         g.matches = data.results
         
@@ -97,7 +103,8 @@ export const handleInatAutocomplete = ({inputText, dataList, g}) => {
         if(match) {
             const option = g.inatAutocompleteOptions.find(option => option.id === id)
             option[name] = g.matches.find(m => m[prop] === match)
-            createInatParamsCheckboxGroup(g)
+            g.match = match
+            callback({g, parent: cbParent, typeId, sectionId})
         }
     })
 }
@@ -171,3 +178,86 @@ export const mapInatSpeciesToLTP = ({species, count, taxa}) => {
 export const bgColour = taxon => {
     return getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
 }
+
+const handleSpeciesCheckState = ({e, sectionId, global}) => {
+    const name = e.target.value
+    const section = global.templates.find(t => t.sectionId === sectionId)
+    if(section) {
+      section.species.find(sp => sp === name) 
+        ? section.species = section.species.filter(sp => sp !== name)
+        : section.species.push(name)
+    } else {
+      const sp = [ name ]
+      global.templates.push({...species, species: sp, templateId: species.id, sectionId })
+    }
+    // We should check also if a taxon needs to be removed from the list i.e. it appears in no species or observation section
+    // But for now, we will content ourselves with addding taxon (which is harmless)
+    if(!global.taxa.find(t => t.name === name)) {
+      global.taxa.push({
+        id: global.species.find(sp => sp.taxon.name === name)?.taxon?.id,
+        name
+      })
+    }
+  }
+
+ export const cloneImages = ({global, parent, typeId, sectionId}) => {
+    switch(typeId) {
+        case 'species':
+        case 'observations':
+            if(global.species.length > 0) {
+            global.species.forEach((species, index) => {
+                const imgUrl = typeId === 'observations'
+                ? species.photos[0].url
+                : species.taxon.default_photo.medium_url
+                const clone = cloneImageTemplate({species, index, sectionId, imgUrl, global})            
+                parent.appendChild(clone)
+            })
+            } 
+            break
+        case 'inat-lookup':
+        if(global.match) {
+            const match = global.matches.find(match => match.name === global.match)
+            const imgUrl = match.default_photo.square_url
+            const clone = cloneImageTemplate({species: {taxon:match}, index: 0, sectionId, imgUrl, global})            
+            parent.appendChild(clone)
+
+            if(!global.taxa.find(taxon => taxon.id === match.id)) {                
+                global.taxa.push({
+                    id: match.id,
+                    name: match.name,
+                })
+            }
+        }
+        break
+    }
+  }
+
+  const cloneImageTemplate = ({species, index, sectionId, imgUrl, global}) => {
+      const templateToClone = d.getElementById('img-template')
+      const clone = templateToClone.content.cloneNode(true)
+
+      const spans = clone.querySelectorAll('span')
+      const img = clone.querySelector('img')      
+      const figure = clone.querySelector('figure')
+      const checkbox = clone.querySelector('input')
+      const label = clone.querySelector('label')
+  
+      figure.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
+
+      img.src = imgUrl
+      img.alt = species.taxon.name
+      img.id = species.taxon.id
+      img.setAttribute('data-i', index + 1)
+      img.setAttribute('loading', 'lazy')
+
+      spans[0].textContent = species.taxon.preferred_common_name
+      spans[1].textContent = species.taxon.name
+      spans[1].classList.add('latin')
+      
+      checkbox.id = `${sectionId}-${species.id}`
+      checkbox.value = species.taxon.name
+      checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionId, global}), true)
+      label.htmlFor = checkbox.id
+
+      return clone
+  }

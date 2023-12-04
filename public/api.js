@@ -42,7 +42,7 @@ export const getInatObservations = async ({
     return await observations
 }
 
-export const getByAutocomplete = async ({by, toComplete}) => {
+export const getIdByAutocomplete = async ({by, toComplete}) => {
     const url = `https://api.inaturalist.org/v1/${by}/autocomplete?q=${toComplete}&per_page=10`
     const response = await fetch(url)
     const json = await response.json()
@@ -926,6 +926,10 @@ export const g = {
         user: null,
         project: null,
         place: null,
+    },
+    inatTaxaAutocomplete: {
+        id: 'taxa',
+        name: 'name',
     },
     matches: [],    
     useObservationsSpeciesCountOptions: [{name:'Species', id: "true"}, {name:'Observations', id: "false"}],
