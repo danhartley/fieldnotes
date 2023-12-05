@@ -56,7 +56,7 @@
           </div>
 
           <div class="centred-block mt2">
-            <button id="fetch-inat-species-btn" class="submit mr">Search iNaturalist for observations </button>
+            <button id="fetch-inat-species-btn" class="submit mr disabled">Search iNaturalist for observations </button>
             <div id="fetch-inat-species-notification-text" class="small hidden">Waiting for response from iNaturalist…</div>
           </div>
         </fieldset>
@@ -73,7 +73,7 @@
         <section id="meta-data-section">
           <fieldset>
             <legend>Field trip overview</legend>
-            <div class="small mb2">If you are using iNaturalist observations, these data are derived from the date of your field trip.</div>
+            <div class="small mb2">If you are using iNaturalist observations, this information is derived from your field trip.</div>
             <div class="centred-block">
               <label for="author-input-text">Author</label>      
               <input id="author-input-text" type="text" class="p" autocomplete="off">
@@ -103,17 +103,17 @@
         <section id="select-section-type-section">
           <fieldset>
             <legend>Add a new section</legend>
-            <div class="small mb2">Observations and observation taxa are the taxa you recorded on your field trip. Use iNat lookup to find any taxa on iNaturalist.</div>
-            <button type="button" value="h3-input" class="mb">Header</button>
-            <button type="button" value="h4-input" class="mb">Subheader</button>
-            <button type="button" value="textarea" class="mb">Text block</button>
-            <button type="button" value="observations" class="mb">Observations</button>
-            <button type="button" value="species" class="mb">Observation taxa</button>
-            <button type="button" value="inat-lookup" class="mb">iNat lookup</button>
-            <button type="button" value="images" class="mb">Images</button>
-            <button type="button" value="terms" class="mb">Terms</button>
-            <button type="button" value="birdsong-input" class="mb">Birdsong</button>
-            <div class="small mt2"><em>You can create multiple sections of each type.</em></div>
+            <div class="small mb2">Observations are the photos you took on your field trip. Species are the default species photos from iNaturalist.</div>            
+            <button id="h3-input" type="button" value="h3-input" class="mb">Header</button>
+            <button id="h4-input" type="button" value="h4-input" class="mb">Subheader</button>
+            <button id="textarea" type="button" value="textarea" class="mb">Text block</button>
+            <button id="observations" type="button" value="observations" class="mb disabled">Observations</button>
+            <button id="species" type="button" value="species" class="mb disabled">Species</button>
+            <button id="inat-lookup" type="button" value="inat-lookup" class="mb">iNat species lookup</button>
+            <button id="images" type="button" value="images" class="mb">Context photos</button>
+            <button id="terms" type="button" value="terms" class="mb">Terms</button>
+            <button id="birdsong-input" type="button" value="birdsong-input" class="mb">Birdsong</button>
+            <div class="small mt2"><em>You can create multiple sections of each type, and change their order.</em></div>
           </fieldset>
         </section>
 
@@ -255,18 +255,18 @@
     </template>
 
     <template id="images-template">
-      <div class="small">Add up to 3 images per section</div>
+      <div class="small">Add up to 3 photos per section</div>
       <div class="centred-block mt2">
         <label for="image-url-input-one">1 Link</label>
-        <input id="image-url-input-one" placeholder="Insert your image link here" class="p" type="text" data-key="src"></input>
+        <input id="image-url-input-one" placeholder="Insert the link to your photo here" class="p" type="text" data-key="src"></input>
       </div>
       <div class="centred-block mt">
         <label for="image-title-input-one">1 Title</label>
-        <input id="image-title-input-one" placeholder="Insert your image title here" class="p" type="text" minlength="2" maxlength="60" data-key="alt"></input>
+        <input id="image-title-input-one" placeholder="Insert a title for your photo here" class="p" type="text" minlength="2" maxlength="60" data-key="alt"></input>
       </div>
       <div class="centred-block mt2">
         <label for="image-url-input-two">2 Link</label>
-        <input id="image-url-input-two" placeholder="e.g. https://drive.google.com/thumbnail?id={image id 2}" class="p" type="text" data-key="src"></input>
+        <input id="image-url-input-two" placeholder="e.g. https://drive.google.com/thumbnail?id={photo id 2}" class="p" type="text" data-key="src"></input>
       </div>
       <div class="centred-block mt">
         <label for="image-title-input-two">2 Title</label>
@@ -274,7 +274,7 @@
       </div>
       <div class="centred-block mt2">
         <label for="image-url-input-three">3 Link</label>
-        <input id="image-url-input-three" placeholder="e.g. https://drive.google.com/thumbnail?id={image id 3}" class="p" type="text" data-key="src"></input>
+        <input id="image-url-input-three" placeholder="e.g. https://drive.google.com/thumbnail?id={photo id 3}" class="p" type="text" data-key="src"></input>
       </div>
       <div class="centred-block mt">
         <label for="image-title-input-three">3 Title</label>

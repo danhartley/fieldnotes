@@ -176,6 +176,13 @@ const init = () => {
     globalWrite.templates.push({...author, author})
     globalWrite.templates.push({...date, date})
     globalWrite.templates.push({...location, location})
+
+    //Enable the create Observation and Species section buttons
+    const observations = selectSectionTypeSection.querySelector('#observations')
+    const species = selectSectionTypeSection.querySelector('#species')
+
+    observations.classList.remove('disabled')
+    species.classList.remove('disabled')
   }
 
   fetchInatSpeciesBtn.addEventListener('click', fetchInatSpecies, false)
@@ -582,7 +589,19 @@ const init = () => {
     globalWrite.d2 = e.target.value
   })
   placeInputText.addEventListener('blur', e => globalWrite.location.place_guess = e.target.value)
+  
+  const checkSearchBtnState = () => {
+    const hasUser = globalWrite.match && globalWrite.match.length > 0
+    const date = new Date(singleDate.value)
+    const hasDate = Object.prototype.toString.call(date) === '[object Date]'
 
+    hasUser && hasDate
+      ? fetchInatSpeciesBtn.classList.remove('disabled')
+      : fetchInatSpeciesBtn.classList.add('disabled')
+  }
+  
+  singleDate.addEventListener('blur', checkSearchBtnState, true)
+  iNatAutocompleteInputText.addEventListener('blur', checkSearchBtnState, true)
 
   const exportFieldNotes = () => {
     const notes = {}
@@ -606,7 +625,6 @@ const init = () => {
           const {templateId, sectionId, ...validProps} = t
           return {
             ...validProps,
-            // id: t.templateId || t.id,
           }
         }),
       },
