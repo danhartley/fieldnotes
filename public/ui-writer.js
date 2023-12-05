@@ -23,7 +23,7 @@ import {
 import { 
     handleInatAutocomplete
   , createInatParamsCheckboxGroup
-  , createTaxaGrid
+  , createInatLookups
   , handleTermAutocomplete
   , cloneImages
   , bgColour
@@ -173,9 +173,6 @@ const init = () => {
     globalWrite.author = author
     globalWrite.d1 = date
     globalWrite.d2 = date
-    globalWrite.templates.push({...author, author})
-    globalWrite.templates.push({...date, date})
-    globalWrite.templates.push({...location, location})
 
     //Enable the create Observation and Species section buttons
     const observations = selectSectionTypeSection.querySelector('#observations')
@@ -405,7 +402,7 @@ const init = () => {
       return 
     }
 
-    let input, label, texarea, datalist, previewContainer, selectedTerms, images = null
+    let input, label, texarea, datalist, previewContainer, selectedTerms, images, cbParent = null
 
     legend.innerText = typeText
 
@@ -419,10 +416,6 @@ const init = () => {
         input.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer, sectionId}), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
-        break
-      case 'inat-lookup':
-        // input = type.querySelector('input')
-        // input.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
         break
       case 'textarea':
         texarea = type.querySelector('textarea')        
@@ -454,6 +447,17 @@ const init = () => {
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:images, previewContainer, sectionId}), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
+      case 'inat-lookup':
+        datalist = type.querySelector('datalist')
+        datalist.id = `${sectionId}-dl-list`
+        input = type.querySelector('input')
+        input.id = `${sectionId}-dl-input-text`
+        input.setAttribute('list', datalist.id)
+        label = type.querySelector('label')
+        label.htmlFor = input.id
+        cbParent = type.querySelector('#inat-lookup-group')
+        cbParent.id = `${sectionId}-lookup-parent`
+        break
     }
     
     // Add the child to its parent container
@@ -474,14 +478,14 @@ const init = () => {
         break
       case 'species':
       case 'observations':      
-        showIncludeOnlyBtn.addEventListener('click', e => toggleSpeciesList({e, fieldset}))
+          showIncludeOnlyBtn.addEventListener('click', e => toggleSpeciesList({e, fieldset}))
+         break
+      case 'textarea':
+        Array.from(fieldset.getElementsByTagName('textarea'))[0]?.focus()
         break
-        case 'textarea':
-          Array.from(fieldset.getElementsByTagName('textarea'))[0]?.focus()
-          break
-          case 'terms':
-            const parent = fieldset.querySelector('#selected-term')
-            const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
+      case 'terms':
+        const parent = fieldset.querySelector('#selected-term')
+        const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
         const addNewTermBtn = fieldset.querySelector('#add-new-term-btn')
         const selectedTermsList = fieldset.querySelector('#selected-terms-list')
         
@@ -518,59 +522,58 @@ const init = () => {
           handleAddSelectedTerm({selectedTerm: newTerm})
         })
         break
-        case 'images':
-          const url1 = fieldset.querySelector('#image-url-input-one')
-          const title1 = fieldset.querySelector('#image-title-input-one')
-          const url2 = fieldset.querySelector('#image-url-input-two')
-          const title2 = fieldset.querySelector('#image-title-input-two')
-          const url3 = fieldset.querySelector('#image-url-input-three')
-          const title3 = fieldset.querySelector('#image-title-input-three')
-          
-          const handleImageTextChange = ({images, index, strValue, property}) => {
-            const image = images[index]
-            if(image) {
-              image[property] = strValue
-              images[index] = image
-            } else {
-              images.push({
-                [property]: strValue
-              })
-            }
+      case 'images':
+        const url1 = fieldset.querySelector('#image-url-input-one')
+        const title1 = fieldset.querySelector('#image-title-input-one')
+        const url2 = fieldset.querySelector('#image-url-input-two')
+        const title2 = fieldset.querySelector('#image-title-input-two')
+        const url3 = fieldset.querySelector('#image-url-input-three')
+        const title3 = fieldset.querySelector('#image-title-input-three')
+        
+        const handleImageTextChange = ({images, index, strValue, property}) => {
+          const image = images[index]
+          if(image) {
+            image[property] = strValue
+            images[index] = image
+          } else {
+            images.push({
+              [property]: strValue
+            })
           }
-          
-          const calcIndex = (index) => {
-            return (index % 2 === 0)
-            ? index / 2
-            : ((index -1) / 2)
-          }
-          
-          images = []
-          
-          for (let i = 0; i < 3; i++) {
-            images.push({src:'', alt:''})
-          }
-          
-          [url1, title1, url2, title2, url3, title3].forEach((input, index) => {
-            input.addEventListener('input', e => handleImageTextChange({images, strValue:e.target.value, index: calcIndex(index), property:input.dataset.key}), true)
-          })
-          break
-        case 'inat-lookup':
-            showIncludeOnlyBtn.addEventListener('click', e => toggleSpeciesList({e, fieldset}))
-            Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
-        const iNatTaxaAutocompleteInputText = d.getElementById('inat-autocomplete-taxa-input-text')
-        const iNatTaxaAutocompleteDatalist = d.getElementById('inat-autocomplete-taxa-data-list')
-        handleInatAutocomplete({ 
-            inputText: iNatTaxaAutocompleteInputText
-          , dataList: iNatTaxaAutocompleteDatalist
-          , g: globalWrite
-          , id: 'taxa'
-          , prop: 'name'
-          , callback: createTaxaGrid
-          , cbParent: d.getElementById('inat-lookup-group')
-          , typeId
-          , sectionId
+        }
+        
+        const calcIndex = (index) => {
+          return (index % 2 === 0)
+          ? index / 2
+          : ((index -1) / 2)
+        }
+        
+        images = []
+        
+        for (let i = 0; i < 3; i++) {
+          images.push({src:'', alt:''})
+        }
+        
+        [url1, title1, url2, title2, url3, title3].forEach((input, index) => {
+          input.addEventListener('input', e => handleImageTextChange({images, strValue:e.target.value, index: calcIndex(index), property:input.dataset.key}), true)
         })
         break
+      case 'inat-lookup':
+          showIncludeOnlyBtn.addEventListener('click', e => toggleSpeciesList({e, fieldset}))
+          Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
+
+          handleInatAutocomplete({ 
+              inputText: input
+            , dataList: datalist
+            , g: globalWrite
+            , id: 'taxa'
+            , prop: 'name'
+            , callback: createInatLookups
+            , cbParent
+            , typeId
+            , sectionId
+          })
+      break
     }
     return sectionContainer
   }
