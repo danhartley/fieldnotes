@@ -281,7 +281,7 @@ const handleSpeciesCheckState = ({e, sectionId, global}) => {
       spans[1].textContent = species.taxon.name
       spans[1].classList.add('latin')
       
-      checkbox.id = `${sectionId}-${species.taxon.id}`
+      checkbox.id = `${sectionId}-${species.id}`
       checkbox.value = species.taxon.name
       checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionId, global}), true)
       label.htmlFor = checkbox.id

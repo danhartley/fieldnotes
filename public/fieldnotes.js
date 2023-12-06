@@ -415,28 +415,6 @@ export const fieldnotes = [
         isTest: false,
         sections: [
           {
-            id: "h3-input-template",
-            parent: "non-grid-template",
-            type: "author",
-            author: "danhartleybcn"
-          },
-          {
-            id: "h3-input-template",
-            parent: "non-grid-template",
-            type: "date",
-            date: "2023-11-09"
-          },
-          {
-            id: "h3-input-template",
-            parent: "non-grid-template",
-            type: "location",
-            location: {
-              location: "38.5296472222,-8.9822055556",
-              place_guess: "São Simão, Portugal"
-            },
-            place_guess: "place_guess"
-          },
-          {
             id: "text-template",
             name: "text",
             parent: "non-grid-template",

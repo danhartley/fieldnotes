@@ -247,10 +247,11 @@ const init = () => {
       checkbox.setAttribute('checked', true)
       checkbox.classList.add('fl')
       checkbox.addEventListener('change', e => removeTermFromList({e, li}), true)
-      const span = d.createElement('span')
-      span.innerText = term.dt
+      const label = d.createElement('label')
+      label.innerText = term.dt
+      label.htmlFor = checkbox.id
       li.appendChild(checkbox)
-      li.appendChild(span)
+      li.appendChild(label)
       selectedTermsList.appendChild(li)
     })
   }
@@ -437,7 +438,7 @@ const init = () => {
         datalist.id = `${sectionId}-dl-list`
         input = type.querySelector('input')
         input.id = `${sectionId}-dl-input-text`
-        input.setAttribute('list', datalist.id)
+        input.setAttribute('list', datalist.id)        
         label = type.querySelector('label')
         label.htmlFor = input.id                  
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:selectedTerms, previewContainer, sectionId }), true)
@@ -502,6 +503,7 @@ const init = () => {
           addSectionBtn.classList.remove('disabled')
           input.value = ''             
         }
+        input.focus()
         handleTermAutocomplete({ inputText: input, selectedTerms, dataList: datalist, g: globalWrite, data: getTerms(), parent, addSelectedTermBtn, handleAddSelectedTerm})
         
         // Create a new term
@@ -510,6 +512,18 @@ const init = () => {
         const ds = fieldset.querySelector('#input-ds')
         const da = fieldset.querySelector('#input-da')
         const dx = fieldset.querySelector('#input-dx')
+
+        // Update the Ids so that they are unique in the DOM
+        dt.id = `${sectionId}-input-dt`
+        d.querySelector('label[for="input-dt"]').htmlFor = dt.id
+        dd.id = `${sectionId}-input-dd`
+        d.querySelector('label[for="input-dd"]').htmlFor = dd.id
+        ds.id = `${sectionId}-input-ds`
+        d.querySelector('label[for="input-ds"]').htmlFor = ds.id
+        da.id = `${sectionId}-input-da`
+        d.querySelector('label[for="input-da"]').htmlFor = da.id
+        dx.id = `${sectionId}-input-dx`
+        d.querySelector('label[for="input-dx"]').htmlFor = dx.id
         
         dt.addEventListener('change', e => {
           updateBtnState({str: e.target.value, btn: addNewTermBtn })          
