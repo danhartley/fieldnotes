@@ -149,7 +149,7 @@ export const handleTermAutocomplete = ({inputText, selectedTerms, dataList, g, d
     })
 }
 
-export const handleFieldsNotesAutocomplete = ({inputText, dataList, g, data, fetchFieldtripBtn}) => {
+export const handleFieldsNotesAutocomplete = ({inputText, dataList, g, data, fetchFieldnotesBtn}) => {
   inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
@@ -171,7 +171,7 @@ export const handleFieldsNotesAutocomplete = ({inputText, dataList, g, data, fet
 
         if(match) {
             g.fieldnote = data.find(option => option.title === match)
-            fetchFieldtripBtn.classList.remove('disabled')        
+            fetchFieldnotesBtn.classList.remove('disabled')        
         }
     })
 }

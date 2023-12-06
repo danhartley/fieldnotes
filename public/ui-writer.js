@@ -64,8 +64,8 @@ const init = () => {
   const selectSectionTypeSection = d.getElementById('select-section-type-section')
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
   const titleInputText = d.getElementById('title-input-text')
-  const exportFieldNotesBtn = d.getElementById('save-field-notes-btn')
-  const fetchFieldtripBtn = d.getElementById('fetch-fieldtrip-btn')
+  const saveFieldnotesBtn = d.getElementById('save-field-notes-btn')
+  const fetchFieldnotesBtn = d.getElementById('fetch-fieldnotes-btn')
 
   const dragstartHandler = ev => {
     ev.dataTransfer.setData("text/plain", ev.target.id)
@@ -179,11 +179,8 @@ const init = () => {
     globalWrite.d2 = date
 
     //Enable the create Observation and Species section buttons
-    const observations = selectSectionTypeSection.querySelector('#observations')
-    const species = selectSectionTypeSection.querySelector('#species')
-
-    observations.classList.remove('disabled')
-    species.classList.remove('disabled')
+    selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
+    selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
   }
 
   fetchInatSpeciesBtn.addEventListener('click', fetchInatSpecies, false)
@@ -218,7 +215,7 @@ const init = () => {
 
   const { id, prop } = g.inatAutocomplete
   handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g: globalWrite, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})  
-  handleFieldsNotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, g: globalWrite, data: getFieldNotes(), fetchFieldtripBtn}) 
+  handleFieldsNotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, g: globalWrite, data: getFieldNotes(), fetchFieldnotesBtn}) 
 
   const updateBtnState = ({str, btn}) => {
     str.length > 0
@@ -657,12 +654,12 @@ const init = () => {
     console.log(notes.templates[0].sections)
   }
 
-  exportFieldNotesBtn.addEventListener('click', exportFieldNotes, true)
+  saveFieldnotesBtn.addEventListener('click', exportFieldNotes, true)
 
   titleInputText.addEventListener('blur', e => {
     e.target.value.length > 2
-      ? exportFieldNotesBtn.classList.remove('disabled')
-      : exportFieldNotesBtn.classList.add('disabled')
+      ? saveFieldnotesBtn.classList.remove('disabled')
+      : saveFieldnotesBtn.classList.add('disabled')
   })
   
   const importFieldnotes = async () => {
@@ -727,9 +724,14 @@ const init = () => {
           addTermToList({selectedTerms: section.terms, selectedTerm: null, selectedTermsList})
       }
     })
+
+    //Enable the create Observation and Species section and save buttons
+    selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
+    selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
+    saveFieldnotesBtn.classList.remove('disabled')
   }
 
-  fetchFieldtripBtn.addEventListener('click', importFieldnotes, true)  
+  fetchFieldnotesBtn.addEventListener('click', importFieldnotes, true)  
 }
 
 init()
