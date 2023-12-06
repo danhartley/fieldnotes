@@ -61,6 +61,10 @@ export const getInatTaxa = async({
     return json
 }
 
+// LTP API
+
+export const getFieldNotes = () => fieldnotes
+
 // HARD-CODED DATA
 
 export const snapSpeciesTraits = [
@@ -838,7 +842,7 @@ const terms = [
   },
 ]
 
-export const getTerms = () => terms
+export const getTerms = () => terms // bump to API when able
 
 const keys = [
   {

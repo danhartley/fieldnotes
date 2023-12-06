@@ -3,6 +3,7 @@ import {
 , getInatTaxa
 , g
 , getTerms
+, getFieldNotes
 } from './api.js'
 
 import { 
@@ -25,6 +26,7 @@ import {
   , createInatParamsCheckboxGroup
   , createInatLookups
   , handleTermAutocomplete
+  , handleFieldsNotesAutocomplete
   , cloneImages
   , bgColour
   , mapTaxon
@@ -51,6 +53,8 @@ const init = () => {
   const previewView = d.getElementById('preview-view')
   const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
   const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
+  const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
+  const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
   const singleDate = d.getElementById('observations-date')
   const fetchInatSpeciesBtn = d.getElementById('fetch-inat-species-btn')
   const fetchInatSpeciesNotificationText = d.getElementById('fetch-inat-species-notification-text')
@@ -214,6 +218,7 @@ const init = () => {
 
   const { id, prop } = g.inatAutocomplete
   handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g: globalWrite, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})  
+  handleFieldsNotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, g: globalWrite, data: getFieldNotes(), fetchFieldtripBtn}) 
 
   const updateBtnState = ({str, btn}) => {
     str.length > 0
@@ -455,7 +460,7 @@ const init = () => {
         input.setAttribute('list', datalist.id)
         label = type.querySelector('label')
         label.htmlFor = input.id
-        cbParent = type.querySelector('#inat-lookup-group')
+        cbParent = type.querySelector('#inat-lookup-callback-parent')
         cbParent.id = `${sectionId}-lookup-parent`
         break
     }
@@ -594,9 +599,9 @@ const init = () => {
   placeInputText.addEventListener('blur', e => globalWrite.location.place_guess = e.target.value)
   
   const checkSearchBtnState = () => {
-    const hasUser = globalWrite.match && globalWrite.match.length > 0
+    const hasUser = globalWrite.login && globalWrite.login.length > 0
     const date = new Date(singleDate.value)
-    const hasDate = Object.prototype.toString.call(date) === '[object Date]'
+    const hasDate = singleDate.value .length > 0 && Object.prototype.toString.call(date) === '[object Date]'
 
     hasUser && hasDate
       ? fetchInatSpeciesBtn.classList.remove('disabled')
@@ -647,11 +652,10 @@ const init = () => {
   })
   
   const importFieldnotes = async () => {
-    const guide = g.guides[4] // temp hack
+    const guide = globalWrite.fieldnote
 
     Object.assign(globalWrite, {
       iconicTaxa: g.ICONIC_TAXA,
-      language: g.LANGUAGES[1],
       ...guide,
       templates: guide.templates[0].sections
     })

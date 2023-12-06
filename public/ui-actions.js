@@ -103,7 +103,7 @@ export const handleInatAutocomplete = ({inputText, dataList, g, id, prop, callba
         if(match) {
             const option = g.inatAutocompleteOptions.find(option => option.id === id)
             option[name] = g.matches.find(m => m[prop] === match)
-            g.match = match
+            g[prop] = match
             callback({g, parent: cbParent, typeId, sectionId})
         }
     })
@@ -145,6 +145,33 @@ export const handleTermAutocomplete = ({inputText, selectedTerms, dataList, g, d
 
             addSelectedTermBtn.classList.remove('disabled')
             addSelectedTermBtn.addEventListener('click', e => handleAddSelectedTerm({e,selectedTerm: term}), true)
+        }
+    })
+}
+
+export const handleFieldsNotesAutocomplete = ({inputText, dataList, g, data, fetchFieldtripBtn}) => {
+  inputText.addEventListener('input', debounce(async (e) => {
+        while (dataList.firstChild) {
+            dataList.removeChild(dataList.firstChild)
+        }
+
+        const strToComplete = e.target.value
+
+        g.matches = data.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
+                
+        g.matches.forEach(match => {
+            const option = d.createElement('option')
+            option.value = match['title']
+            dataList.appendChild(option)
+        })
+    }, 0))
+
+    inputText.addEventListener('change', e => {
+        const match = e.target.value
+
+        if(match) {
+            g.fieldnote = data.find(option => option.title === match)
+            fetchFieldtripBtn.classList.remove('disabled')        
         }
     })
 }

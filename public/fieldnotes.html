@@ -65,7 +65,15 @@
       <section>
         <fieldset>
           <legend>Edit existing field trip</legend>
-          <button id="fetch-fieldtrip-btn">Import field trip</button>
+          <p class="mt0 small">Find field notes to edit.</p>
+          <div class="centred-block">
+              <label for="ltp-autocomplete-title-input-text">Title</label>
+              <input id="ltp-autocomplete-title-input-text" list="ltp-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing the title of your field notes…">
+              <datalist id="ltp-autocomplete-title-data-list"></datalist>
+          </div>
+          <div id="field-notes-lookup-callback-parent" class="mt2"></div>
+          
+          <button id="fetch-fieldtrip-btn" class="mt2 disabled">Import field trip</button>
         </fieldset>
       </section>
 
@@ -137,7 +145,7 @@
 
     <template id="checkbox-template">
       <div class="flex-row">                  
-        <input type="checkbox" id="" name="" />
+        <input type="checkbox" id="" />
         <label for=""></label>
       </div>
     </template>
@@ -188,7 +196,7 @@
           <input id="" list="" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start tying the common or scientific name…">
           <datalist id=""></datalist>
       </div>
-      <div id="inat-lookup-group" class="mt2"></div>
+      <div id="inat-lookup-callback-parent" class="mt2"></div>
     </template>
     
     <template id="textarea-template">
