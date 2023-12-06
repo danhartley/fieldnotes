@@ -493,7 +493,7 @@ const init = () => {
         const selectedTermsList = fieldset.querySelector('#selected-terms-list')
         
         // Add a pre-existing term
-        selectedTerms = []
+        selectedTerms = globalWrite?.templates?.find(t => t.sectionId === sectionId)?.terms || []
         const handleAddSelectedTerm = ({e, selectedTerm}) => {
           addTermToList({selectedTerms, selectedTerm, selectedTermsList})
           addSelectedTermBtn.classList.add('disabled')
