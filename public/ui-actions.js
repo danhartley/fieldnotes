@@ -149,7 +149,7 @@ export const handleTermAutocomplete = ({inputText, selectedTerms, dataList, g, d
     })
 }
 
-export const handleFieldsNotesAutocomplete = ({inputText, dataList, g, data, fetchFieldnotesBtn}) => {
+export const handleFieldsNotesAutocomplete = ({inputText, dataList, g, data, importFieldTripBtn}) => {
   inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
@@ -171,7 +171,7 @@ export const handleFieldsNotesAutocomplete = ({inputText, dataList, g, data, fet
 
         if(match) {
             g.fieldnote = data.find(option => option.title === match)
-            fetchFieldnotesBtn.classList.remove('disabled')        
+            importFieldTripBtn.classList.remove('disabled')        
         }
     })
 }
@@ -288,3 +288,13 @@ const handleSpeciesCheckState = ({e, sectionId, global}) => {
 
       return clone
   }
+
+  export const toggleFilterCtrl = (({ ctrl, fieldsetId }) => {
+    ctrl.addEventListener('click', () => {
+        ctrl.classList.toggle('hide')
+        ctrl.innerText = ctrl.innerText === 'HIDE' ? 'SHOW' : 'HIDE'
+
+        const fieldset = d.getElementById(fieldsetId)
+        fieldset.classList.toggle('hidden')
+    })
+})

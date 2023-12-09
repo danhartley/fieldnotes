@@ -634,7 +634,7 @@ th, td {
 
 /* CONTROLS */
 
-#display-toggle-visibility-btn, #lesson-toggle-visibility-btn, #progress-toggle-visibility-btn, #preferences-toggle-visibility-btn {
+.show-hide {
   border: none;
   font-size: var(--s2);
   text-transform: uppercase;

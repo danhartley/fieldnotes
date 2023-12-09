@@ -11,6 +11,7 @@ import {
     , mapInatSpeciesToLTP
     , mapTaxon
     , bgColour
+    , toggleFilterCtrl
 } from './ui-actions.js'
 
 import { templates } from './templates.js'
@@ -76,16 +77,6 @@ const init = () => {
     
         g.template.score = g.template.scores.filter(score => score.isCorrect).length
     }
-    
-    const toggleFilterCtrl = (({ ctrl, fieldsetId }) => {
-        ctrl.addEventListener('click', () => {
-            ctrl.classList.toggle('hide')
-            ctrl.innerText = ctrl.innerText === 'HIDE' ? 'SHOW' : 'HIDE'
-    
-            const fieldset = d.getElementById(fieldsetId)
-            fieldset.classList.toggle('hidden')
-        })
-    })
     
     const toggleLessonStyle = (({ ctrl, fieldsetId }) => {
         ctrl.addEventListener('click', () => {
@@ -755,7 +746,7 @@ const init = () => {
         toggleLessonStyle({ ctrl: inatSearchInputRb, fieldsetId: 'inat-search-container' })
         toggleLessonStyle({ ctrl: fieldnotesInputRb, fieldsetId: 'fieldnotes-search-container' })
     
-        toggleFilterCtrl({ ctrl: displayToggleVisibilityBtn, fieldsetId: 'display-fieldset' })
+        toggleFilterCtrl({ ctrl: displayToggleVisibilityBtn, fieldsetId: 'display-fieldset' })        
         toggleFilterCtrl({ ctrl: lessonToggleVisibilityBtn, fieldsetId: 'lesson-fieldset' })
         toggleFilterCtrl({ ctrl: progressToggleVisibilityBtn, fieldsetId: 'progress-fieldset' })
         toggleFilterCtrl({ ctrl: preferencesToggleVisibilityBtn, fieldsetId: 'preferences' })

@@ -42,14 +42,13 @@
 
       <section>
         <fieldset class="mt2">
-          <legend>iNaturalist settings</legend>
-          <p class="mt0 small">If you are using iNaturalist observations, filter by user account and the date of your field trip.</p>
+          <legend>iNaturalist search</legend>
+          <p class="mt0 small">Filter your iNaturalist observations by user account and the date of your field trip.</p>
           <div class="centred-block">
               <label for="inat-autocomplete-input-text">User</label>
               <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing a username or user ID…">
               <datalist id="inat-autocomplete-data-list"></datalist>
           </div>
-          <!-- <div id="inat-params-input-check-box-group" class="grid mt2"></div> -->
           <div class="centred-block mt2">
             <label for="observations-date">Date</label>
             <input type="date" id="observations-date" name="observations-date" class="mr" />
@@ -63,26 +62,30 @@
       </section>
 
       <section>
-        <fieldset>
-          <legend>Edit existing field trip</legend>
-          <p class="mt0 small">Find field notes to edit.</p>
+        <fieldset id="edit-field-notes">
+          <legend>Field trip search</legend>
+          <p class="mt0 small">Edit an existing field trip.</p>
           <div class="centred-block">
               <label for="ltp-autocomplete-title-input-text">Title</label>
-              <input id="ltp-autocomplete-title-input-text" list="ltp-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing the title of your field notes…">
+              <input id="ltp-autocomplete-title-input-text" list="ltp-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Find an existing trip by its title">
               <datalist id="ltp-autocomplete-title-data-list"></datalist>
           </div>
           <div id="field-notes-lookup-callback-parent" class="mt2"></div>
           
-          <button id="fetch-fieldnotes-btn" class="mt2 disabled">Import field trip</button>
+          <button id="import-field-trip-btn" class="mt2 disabled">Import field trip</button>
         </fieldset>
       </section>
 
       <article id="edit-view">
         <section id="meta-data-section">
-          <fieldset>
+          <fieldset id="field-trip">
             <legend>Field trip overview</legend>
-            <div class="small mb2">If you are using iNaturalist observations, this information is derived from your field trip.</div>
+            <p class="mt0 small">If you are using iNaturalist observations, this information is derived from your iNaturalist account and photo metadata.</p>
             <div class="centred-block">
+              <label for="title-input-text">Title</label>      
+              <input id="title-input-text" type="text" class="p" autocomplete="off" placeholder="e.g. Simien Mountains January 27 2020">
+            </div>
+            <div class="centred-block mt2">
               <label for="author-input-text">Author</label>      
               <input id="author-input-text" type="text" class="p" autocomplete="off">
             </div>
@@ -94,34 +97,27 @@
               <label for="place-input-text">Place</label>      
               <input id="place-input-text" type="text" class="p" autocomplete="off">
             </div>
-          </fieldset>
-        </section>
-
-        <section>    
-          <fieldset>
-            <legend>Title</legend>
-              <div class="small mb2">It helps others if the title you choose is specific to your field trip.</div>
-              <div class="centred-block">
-                <label for="title-input-text">Title</label>      
-                <input id="title-input-text" type="text" class="p" autocomplete="off" placeholder="e.g. Simien Mountains National Park January 27 2020">
-              </div>
+            <div class="mt2 small"><em>You can edit these fields.</em></div>
           </fieldset>
         </section>
 
         <section id="select-section-type-section">
           <fieldset>
-            <legend>Add a new section</legend>
-            <div class="small mb2">Observations are the photos you took on your field trip. Species are the default species photos from iNaturalist.</div>            
+            <legend>Field journal</legend>
+            <p class="mt0 small">Add photos, technical terms and birdsong to your field notes.</p> 
             <button id="h3-input" type="button" value="h3-input" class="mb">Header</button>
             <button id="h4-input" type="button" value="h4-input" class="mb">Subheader</button>
             <button id="textarea" type="button" value="textarea" class="mb">Text block</button>
-            <button id="observations" type="button" value="observations" class="mb disabled">Observations</button>
-            <button id="species" type="button" value="species" class="mb disabled">Species</button>
             <button id="inat-lookup" type="button" value="inat-lookup" class="mb">iNat species lookup</button>
             <button id="images" type="button" value="images" class="mb">Context photos</button>
             <button id="terms" type="button" value="terms" class="mb">Terms</button>
             <button id="birdsong-input" type="button" value="birdsong-input" class="mb">Birdsong</button>
-            <div class="small mt2"><em>You can create multiple sections of each type, and change their order.</em></div>
+            
+            <p class="small">To add observations and species photos, you must first run an iNaturalist search.</p>
+
+            <button id="observations" type="button" value="observations" class="mb disabled">Observations</button>
+            <button id="species" type="button" value="species" class="mb disabled">Species</button>
+            <p class="small"><em>You can create multiple sections of each type, and change their order.</em></p>
           </fieldset>
         </section>
 
@@ -129,9 +125,8 @@
 
         <section>
           <fieldset>
-            <legend>Save your field notes</legend>
-            <div class="small mt">Save your field notes to the database.</div>
-            <button id="save-field-notes-btn" class="mt2 p disabled">Save field notes</button>
+            <legend>Save field trip</legend>
+            <button id="export-field-trip-btn" class="p disabled">Save trip</button>
           </fieldset>
         </section>
       </article>
