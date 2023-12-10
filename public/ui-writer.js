@@ -60,53 +60,98 @@ const init = () => {
   const exportFieldTripBtn = d.getElementById('export-field-trip-btn')
   const importFieldTripBtn = d.getElementById('import-field-trip-btn')
 
-  const dragstartHandler = ev => {
-    ev.dataTransfer.setData("text/plain", ev.target.id)
-    const section = d.getElementById(ev.target.id)
-    section.classList.add('moveable')
+  let sectionToMove = null
+
+  const dragstartHandler = e => {
+    // The event target is the dragged section
+    e.dataTransfer.setData("text/plain", e.target.id)
+    sectionToMove = d.getElementById(e.target.id)
+    sectionToMove.classList.add('moveable')
   }
 
-  const dragoverHandler = ev => {
-    ev.preventDefault()
-    ev.dataTransfer.dropEffect = "move"
-    
-    if(ev.target.type === 'fieldset') {
-      const sectionBeforeId = ev.target.parentNode.id
-      const sectiontoJump = d.getElementById(sectionBeforeId)
-      Array.from(d.getElementsByTagName('fieldset')).forEach(fs => fs.classList.remove('drop-before'))
-      sectiontoJump.getElementsByTagName('fieldset')[0].classList.add('drop-before')
-      sectiontoJump.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
+  const dragoverHandler = e => {
+    // The event target is the section over which the section to move jumps
+    e.preventDefault()
+    e.dataTransfer.dropEffect = "move"
+
+    if(e.target.type === 'fieldset') {
+      const sectionToJumpId = e.target.parentNode.id
+      const sectiontoJump = d.getElementById(sectionToJumpId)
+      
+      // Find the index in the DOM of the section being moved, and the section we are jumping over
+      const sectionToMoveDOMIndex = Array.from(d.querySelectorAll('.draggable')).findIndex(section => section.id === sectionToMove.id)
+      const sectionToJumpDOMIndex = Array.from(d.querySelectorAll('.draggable')).findIndex(section => section.id === sectiontoJump.id)
+      
+      if(sectionToMoveDOMIndex === sectionToJumpDOMIndex) return
+      
+      sectionToMoveDOMIndex > sectionToJumpDOMIndex
+        ? sectiontoJump.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' }) // Move up
+        : sectiontoJump.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' }) // Move down
     }
   }
 
-  const dropHandler = ev => {
-    ev.preventDefault()
-    // Get the id of the target and add the moved element to the target's DOM
-    const data = ev.dataTransfer.getData("text/plain")
-    const target = d.getElementById(data)
+  const dragenterHandler = e => {
+    // The event target is the section we are jumping over
+    e.preventDefault()    
+    if(e.target.type === 'fieldset') {
+      const fieldset = e.target
+      // We don't want to highlight the section we are moving
+      if(sectionToMove.id === fieldset.parentNode.id) return
+      const section = d.getElementById(fieldset.parentNode.id)
+      if(section) section.getElementsByTagName('fieldset')[0].classList.add('drop-before')
+    }
+  }
 
-    if(ev.target.type === 'fieldset') {
-      // Update the position of the section visually
-      draggableSections.insertBefore(target, ev.target.parentNode)
+  const dragleaveHandler = e => {
+    // The event target is the section we are jumping over
+    e.preventDefault()
+    if(e.target.type === 'fieldset') {
+      const fieldset = e.target
+      // We don't want to highlight the section we are moving
+      if(sectionToMove.id === fieldset.parentNode.id) return
+      const section = d.getElementById(fieldset.parentNode.id)
+      // Allow time for the target area to be apparent to the user
+      setTimeout(() => {
+        if(section) section.getElementsByTagName('fieldset')[0].classList.remove('drop-before')
+      }, 500)
+    }
+  }
+
+  const dropHandler = e => {
+    // The event target is the section being moved (dragged and dropped)
+    e.preventDefault()
+
+    if(e.target.type === 'fieldset') {
+      const sectionToDropId = sectionToMove.id
+      const sectionToJumpId = e.target.parentNode.id
+
+      // Find out whether we are moving the section up or down
+      const sectionToMoveDOMIndex = Array.from(d.querySelectorAll('.draggable')).findIndex(section => section.id === sectionToDropId)
+      const sectionToJumpDOMIndex = Array.from(d.querySelectorAll('.draggable')).findIndex(section => section.id === sectionToJumpId)
+      
+      if(sectionToMoveDOMIndex === sectionToJumpDOMIndex) return
+      
+      sectionToMoveDOMIndex > sectionToJumpDOMIndex
+        // Update the position of the section visually (in the DOM)
+        ? draggableSections.insertBefore(sectionToMove, e.target.parentNode) // Move up
+        : draggableSections.insertBefore(sectionToMove, e.target.parentNode.nextSibling) // Move down
 
       // Update the mouse icon
-      target.classList.remove('moveable')
-      target.classList.add('pointer')
+      sectionToMove.classList.remove('moveable')
+      sectionToMove.classList.add('pointer')
       
-      // Update the position of the section in the templates array
-      const sectionToMoveId = d.getElementById(data).id
-      const sectionBeforeId = ev.target.parentNode.id
-      const indexBefore = globalWrite.templates.findIndex(t => t.sectionId === sectionBeforeId)
+      // Finally update the position of the moved section template to correspond to its new position in the DOM
+      const indexOfJumpedSectionTemplate = globalWrite.templates.findIndex(t => t.sectionId === sectionToJumpId)
 
-      const sectiontoJump = d.getElementById(sectionBeforeId)
-      sectiontoJump.getElementsByTagName('fieldset')[0].classList.remove('drop-before')
+      if(indexOfJumpedSectionTemplate === -1) return // There is no such section, something went wrong
 
-      if(indexBefore === -1) return
+      const sectionTemplateToMove = globalWrite.templates.find(t => t.sectionId === sectionToDropId)
 
-      const sectionToMove = globalWrite.templates.find(t => t.sectionId === sectionToMoveId)
+      globalWrite.templates = globalWrite.templates.filter(t => t.sectionId !== sectionToDropId)
 
-      globalWrite.templates = globalWrite.templates.filter(t => t.sectionId !== sectionToMoveId)
-      globalWrite.templates.splice(indexBefore, 0, sectionToMove)
+      sectionToMoveDOMIndex > sectionToJumpDOMIndex
+        ? globalWrite.templates.splice(indexOfJumpedSectionTemplate, 0, sectionTemplateToMove) // Move up
+        : globalWrite.templates.splice(indexOfJumpedSectionTemplate + 1, 0, sectionTemplateToMove) // Move down
     }
   }
 
@@ -462,6 +507,12 @@ const init = () => {
 
     // Add the parent container (the HTML cloned fragment) to the DOM
     draggableSections.appendChild(parent)
+    // Listen for drag events
+    Array.from(draggableSections.getElementsByTagName('section')).forEach(section => {
+      section.addEventListener('dragenter', dragenterHandler)
+      section.addEventListener('dragenter', dragleaveHandler)
+    })
+
     draggableSections.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })
     
     deleteSectionBtn.addEventListener('click', e => deleteSection({e, sectionId}), true)

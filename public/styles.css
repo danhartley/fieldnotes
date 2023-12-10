@@ -324,7 +324,7 @@ fieldset.fieldset-reset fieldset {
   border-top: none;
 }
 
-fieldset.drop-before {
+.drop-before {
   background-color: var(--inactive-bg);
 }
 
