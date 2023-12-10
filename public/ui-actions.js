@@ -91,7 +91,8 @@ export const handleInatAutocomplete = ({inputText, dataList, g, id, prop, callba
     }, 350))
 
     inputText.addEventListener('change', e => {
-        const { id, name, prop } = g.inatAutocomplete
+        // const { id, name, prop } = g.inatAutocomplete
+        const { name } = g.inatAutocomplete
         const match = e.target.value
 
         g.inatAutocompleteOptions.forEach(option => {
@@ -102,7 +103,8 @@ export const handleInatAutocomplete = ({inputText, dataList, g, id, prop, callba
 
         if(match) {
             const option = g.inatAutocompleteOptions.find(option => option.id === id)
-            option[name] = g.matches.find(m => m[prop] === match)
+            if(option) option[name] = g.matches.find(m => m[prop] === match)
+            
             g[prop] = match
             callback({g, parent: cbParent, typeId, sectionId})
         }
@@ -242,8 +244,8 @@ const handleSpeciesCheckState = ({e, sectionId, global}) => {
             } 
             break
         case 'inat-lookup':
-        if(global.match) {
-            const match = global.matches.find(match => match.name === global.match)
+        if(global.name) {
+            const match = global.matches.find(match => match.name === global.name)
             const imgUrl = match.default_photo.square_url
             const clone = cloneImageTemplate({species: {taxon:match}, index: 0, sectionId, imgUrl, global})            
             parent.appendChild(clone)
