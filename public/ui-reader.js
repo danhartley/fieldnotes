@@ -131,7 +131,7 @@ const init = () => {
     const fetchInatSpeciesNotificationText = d.getElementById('fetch-inat-species-notification-text')
     const startDate = d.getElementById('observations-start-date')
     const endDate = d.getElementById('observations-end-date')
-    const singleDate = d.getElementById('observations-date')
+    const singleDate = d.getElementById('single-observations-input-date')
     const rbDateGroup = d.querySelectorAll('input[name="rbDate"]')
     
     let rbGuideGroup, rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup

@@ -91,7 +91,6 @@ export const handleInatAutocomplete = ({inputText, dataList, g, id, prop, callba
     }, 350))
 
     inputText.addEventListener('change', e => {
-        // const { id, name, prop } = g.inatAutocomplete
         const { name } = g.inatAutocomplete
         const match = e.target.value
 
@@ -151,7 +150,7 @@ export const handleTermAutocomplete = ({inputText, selectedTerms, dataList, g, d
     })
 }
 
-export const handleFieldsNotesAutocomplete = ({inputText, dataList, g, data, importFieldTripBtn}) => {
+export const handleFieldsNotesAutocomplete = ({inputText, dataList, g, data, importFieldNotesBtn}) => {
   inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
@@ -173,7 +172,7 @@ export const handleFieldsNotesAutocomplete = ({inputText, dataList, g, data, imp
 
         if(match) {
             g.fieldnote = data.find(option => option.title === match)
-            importFieldTripBtn.classList.remove('disabled')        
+            importFieldNotesBtn.classList.remove('disabled')        
         }
     })
 }

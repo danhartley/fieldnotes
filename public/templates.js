@@ -1,7 +1,7 @@
 export const templates = [
   {
       id: 'species-test-template',
-      name: 'Species-card-tests',
+      name: 'Species catalogue tests',
       parent: 'grid-template',
       pairedTemplateId: 'species-template',
       isTest: true,
@@ -20,7 +20,7 @@ export const templates = [
   },
   {
       id: 'species-template',
-      name: 'Species-cards',
+      name: 'Species catalogue',
       parent: 'grid-template',
       pairedTemplateId: 'species-test-template',
       isTest: false,
@@ -28,7 +28,7 @@ export const templates = [
   },
   {
     id: 'species-list-template',
-    name: 'Species-list',
+    name: 'Species list',
     parent: 'grid-template',
     isTest: false,
   },
@@ -38,6 +38,7 @@ export const templates = [
 
 export const h3 = {
   id: 'h3-input-template',
+  name: 'Header',
   parent: 'non-grid-template',
   type: 'h3-header',
   h3: 'title',
@@ -45,6 +46,7 @@ export const h3 = {
 
 export const h4 = {
   id: 'h4-input-template',
+  name: 'Subheader',
   parent: 'non-grid-template',
   type: 'h4-header',
   h4: 'title',
@@ -52,7 +54,7 @@ export const h4 = {
 
 export const text = {
   id: 'text-template',
-  name: 'text',
+  name: 'Text block',
   parent: 'non-grid-template',
   type: 'text',
   paras: [],
@@ -60,7 +62,7 @@ export const text = {
 
 export const term = {
   id: 'term-template',
-  name: 'term', 
+  name: 'Terms', 
   parent: 'dl-template',
   type: 'term',                 
   terms: [],
@@ -68,7 +70,7 @@ export const term = {
 
 export const species = {
   id: 'species-template',
-  name: 'Species-cards',
+  name: 'Species catalogue',
   parent: 'grid-template',
   type: 'species',
   species: [],
@@ -76,7 +78,7 @@ export const species = {
 
 export const observations = {
   id: 'species-template',
-  name: 'Species-cards',
+  name: 'Observations',
   parent: 'grid-template',
   type: 'observations',
   species: [],

@@ -48,7 +48,7 @@ const init = () => {
   const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
   const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
   const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
-  const singleDate = d.getElementById('observations-date')
+  const singleObservationsInputDate = d.getElementById('single-observations-input-date')
   const fetchInatSpeciesBtn = d.getElementById('fetch-inat-species-btn')
   const fetchInatSpeciesNotificationText = d.getElementById('fetch-inat-species-notification-text')
   const authorInputText = d.getElementById('author-input-text')
@@ -57,8 +57,9 @@ const init = () => {
   const selectSectionTypeSection = d.getElementById('select-section-type-section')
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
   const titleInputText = d.getElementById('title-input-text')
-  const exportFieldTripBtn = d.getElementById('export-field-trip-btn')
-  const importFieldTripBtn = d.getElementById('import-field-trip-btn')
+  const exportFieldNotesBtn = d.getElementById('export-fieldnotes-btn')
+  const importFieldNotesBtn = d.getElementById('import-fieldnotes-btn')
+  const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
 
   let sectionToMove = null
 
@@ -182,17 +183,17 @@ const init = () => {
     fetchInatSpeciesNotificationText.classList.toggle('hidden')
     fetchInatSpeciesBtn.classList.toggle('disabled')
 
-    const user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')
+    globalWrite.user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')?.user
 
     globalWrite.species = await getInatObservations({ 
-        user_id: user.user.id,
+        user_id: globalWrite.user.id,
         place_id: null,
         iconic_taxa: globalWrite.iconicTaxa,
         per_page: 200,
         locale: globalWrite.language.id,
         species_count: false,
-        d1: singleDate.value,
-        d2: singleDate.value,
+        d1: singleObservationsInputDate.value,
+        d2: singleObservationsInputDate.value,
     })
     
     fetchInatSpeciesBtn.classList.toggle('disabled')
@@ -217,9 +218,12 @@ const init = () => {
     globalWrite.d1 = date
     globalWrite.d2 = date
 
-    //Enable the create Observation and Species section buttons
+    // Enable the create observation and species section buttons
     selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
     selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
+
+    // Enable saving fieldnotes
+    exportFieldNotesBtn.classList.remove('disabled')
   }
 
   fetchInatSpeciesBtn.addEventListener('click', fetchInatSpecies, false)
@@ -254,7 +258,7 @@ const init = () => {
 
   const { id, prop } = g.inatAutocomplete
   handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g: globalWrite, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})  
-  handleFieldsNotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, g: globalWrite, data: getFieldNotes(), importFieldTripBtn}) 
+  handleFieldsNotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, g: globalWrite, data: getFieldNotes(), importFieldNotesBtn}) 
 
   const updateBtnState = ({str, btn}) => {
     str.length > 0
@@ -648,31 +652,39 @@ const init = () => {
   
   const checkSearchBtnState = () => {
     const hasUser = globalWrite.login && globalWrite.login.length > 0
-    const date = new Date(singleDate.value)
-    const hasDate = singleDate.value .length > 0 && Object.prototype.toString.call(date) === '[object Date]'
+    const date = new Date(singleObservationsInputDate.value)
+    const hasDate = singleObservationsInputDate.value .length > 0 && Object.prototype.toString.call(date) === '[object Date]'
 
     hasUser && hasDate
       ? fetchInatSpeciesBtn.classList.remove('disabled')
       : fetchInatSpeciesBtn.classList.add('disabled')
   }
   
-  singleDate.addEventListener('blur', checkSearchBtnState, true)
+  singleObservationsInputDate.addEventListener('blur', checkSearchBtnState, true)
   iNatAutocompleteInputText.addEventListener('blur', checkSearchBtnState, true)
 
-  const exportFieldTrip = () => {
+  const exportFieldNotes = () => {
     const notes = {}
 
     Object.assign(notes, {
-      id: globalWrite.title.replace(' ', '-'),
+      id: globalWrite.title,
       title: globalWrite.title,
       author: globalWrite.author,
+      user: {
+        id: globalWrite.user.id,
+        icon: globalWrite.user.icon,
+        identifications_count: globalWrite.user.identifications_count,
+        login: globalWrite.user.login,
+        observations_count: globalWrite.user.observations_count,
+        species_count: globalWrite.user.species_count,
+      },
       d1: globalWrite.d1,
       d2: globalWrite.d2,
       location: globalWrite.location,
       language: globalWrite.language,
       taxa: globalWrite.taxa,
       templates: [{
-        id: `${globalWrite.title.replace(' ', '-')}-template`,
+        id: globalWrite.title,
         name: 'Field journal',
         parent: 'non-grid-template',
         type: 'fieldnotes',
@@ -691,15 +703,17 @@ const init = () => {
     console.log(notes.templates[0].sections)
   }
 
-  exportFieldTripBtn.addEventListener('click', exportFieldTrip, true)
+  exportFieldNotesBtn.addEventListener('click', exportFieldNotes, true)
 
   titleInputText.addEventListener('blur', e => {
     e.target.value.length > 2
-      ? exportFieldTripBtn.classList.remove('disabled')
-      : exportFieldTripBtn.classList.add('disabled')
+      ? exportFieldNotesBtn.classList.remove('disabled')
+      : exportFieldNotesBtn.classList.add('disabled')
   })
   
-  const importFieldTrip = async () => {
+  const importFieldNotes = async () => {
+    importFieldNotesNotificationText.classList.remove('hidden')
+    
     const guide = globalWrite.fieldnote
 
     Object.assign(globalWrite, {
@@ -716,7 +730,7 @@ const init = () => {
     placeInputText.value = location.place_guess
 
     globalWrite.species = await getInatObservations({ 
-      user_id: globalWrite.inatUserId,
+      user_id: globalWrite.user.id,
       place_id: null,
       iconic_taxa: globalWrite.iconicTaxa,
       per_page: 200,
@@ -726,11 +740,13 @@ const init = () => {
       d2,
     })
 
+    importFieldNotesNotificationText.classList.add('hidden')
+
     globalWrite.templates.forEach((section, index) => {
       section.sectionId = `section-${index}`
       const sectionContainer = handleSelectType({
-          typeId: section.id.replace('-template', '')
-        , typeText: section.type
+          typeId: section.type
+        , typeText: section.name
         , typeTemplateName: section.id
         , sectionTemplate: getSectionTemplate({typeId: section.type})              
       })
@@ -762,13 +778,16 @@ const init = () => {
       }
     })
 
-    //Enable the create Observation and Species section and save buttons
+    // Enable the create observation and species section buttons
     selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
     selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
-    exportFieldTripBtn.classList.remove('disabled')
+    exportFieldNotesBtn.classList.remove('disabled')
+
+    // Enable saving fieldnotes
+    exportFieldNotesBtn.classList.remove('disabled')
   }
 
-  importFieldTripBtn.addEventListener('click', importFieldTrip, true)  
+  importFieldNotesBtn.addEventListener('click', importFieldNotes, true)  
 }
 
 init()

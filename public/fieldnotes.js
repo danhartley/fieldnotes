@@ -122,9 +122,6 @@ export const fieldnotes = [
           type: 'fieldnotes',
           isTest: false,                
           sections: [
-            { ...date,  date: '2023-11-09' },
-            { ...location,  location: '38.5445583333,-8.9318194444', place_guess: 'Arrábida Natural Park, Setúbal, Portugal' },
-            { ...author,  author: 'Daniel Hartley' },
             {
                 ...text,
                 paras: [
@@ -346,15 +343,26 @@ export const fieldnotes = [
     ],
   },
   {
-    id: "Arrábida-November 2023",
-    title: "Arrábida November 2023",
+    id: "São Simão, Portugal, Thu Nov 09 2023",
+    title: "São Simão, Portugal, Thu Nov 09 2023",
     author: "danhartleybcn",
-    inatUserId: "19829",
+    user: {      
+        id: 19829,
+        login: "danielhartley",
+        icon: "https://static.inaturalist.org/attachments/users/icons/19829/thumb.jpg?1525787411",
+        observations_count: 1185,
+        identifications_count: 20,
+        species_count: 559,    
+    },
     d1: "2023-11-09",
     d2: "2023-11-09",
     location: {
       location: "38.5296472222,-8.9822055556",
       place_guess: "São Simão, Portugal"
+    },
+    language: {
+      name: "English",
+      id: "en"
     },
     taxa: [
       {
@@ -366,6 +374,10 @@ export const fieldnotes = [
         name: "Pinus halepensis"
       },
       {
+        id: 82723,
+        name: "Pinus pinaster"
+      },
+      {
         id: 82856,
         name: "Rhamnus alaternus"
       },
@@ -374,41 +386,37 @@ export const fieldnotes = [
         name: "Quercus coccifera"
       },
       {
-        id: 82600,
-        name: "Pistacia lentiscus"
-      },
-      {
-        id: 47574,
-        name: "Juniperus"
-      },
-      {
-        id: 76363,
-        name: "Cistus monspeliensis"
-      },
-      {
         id: 60271,
         name: "Asparagus"
+      },
+      {
+        id: 82600,
+        name: "Pistacia lentiscus"
       },
       {
         id: 82836,
         name: "Daphne gnidium"
       },
       {
-        id: 49490,
-        name: "Cladonia"
+        id: 57140,
+        name: "Olea europaea"
+      },
+      {
+        id: 64021,
+        name: "Omphalotus olearius"
       },
       {
         id: 179065,
         name: "Suillus granulatus"
       },
       {
-        id: 64021,
-        name: "Omphalotus olearius"
+        id: 49490,
+        name: "Cladonia"
       }
     ],
     templates: [
       {
-        id: "Arrábida-November 2023-template",
+        id: "São Simão, Portugal, Thu Nov 09 2023",
         name: "Field journal",
         parent: "non-grid-template",
         type: "fieldnotes",
@@ -416,7 +424,7 @@ export const fieldnotes = [
         sections: [
           {
             id: "text-template",
-            name: "text",
+            name: "Text block",
             parent: "non-grid-template",
             type: "text",
             paras: [
@@ -430,17 +438,18 @@ export const fieldnotes = [
           },
           {
             id: "species-template",
-            name: "Species-cards",
+            name: "Species catalogue",
             parent: "grid-template",
             type: "species",
             species: [
               "Pinus pinea",
-              "Pinus halepensis"
+              "Pinus halepensis",
+              "Pinus pinaster"
             ]
           },
           {
             id: "text-template",
-            name: "text",
+            name: "Text block",
             parent: "non-grid-template",
             type: "text",
             paras: [
@@ -460,22 +469,21 @@ export const fieldnotes = [
           },
           {
             id: "species-template",
-            name: "Species-cards",
+            name: "Species catalogue",
             parent: "grid-template",
             type: "species",
             species: [
               "Rhamnus alaternus",
               "Quercus coccifera",
-              "Pistacia lentiscus",
-              "Juniperus",
-              "Cistus monspeliensis",
               "Asparagus",
-              "Daphne gnidium"
+              "Pistacia lentiscus",
+              "Daphne gnidium",
+              "Olea europaea"
             ]
           },
           {
             id: "text-template",
-            name: "text",
+            name: "Text block",
             parent: "non-grid-template",
             type: "text",
             paras: [
@@ -489,18 +497,18 @@ export const fieldnotes = [
           },
           {
             id: "species-template",
-            name: "Species-cards",
+            name: "Species catalogue",
             parent: "grid-template",
             type: "species",
             species: [
-              "Cladonia",
+              "Omphalotus olearius",
               "Suillus granulatus",
-              "Omphalotus olearius"
+              "Cladonia"
             ]
           },
           {
             id: "text-template",
-            name: "text",
+            name: "Text block",
             parent: "non-grid-template",
             type: "text",
             paras: [
@@ -515,121 +523,31 @@ export const fieldnotes = [
               },
               {
                 p: "Their scat was everywhere and they appeared to have eaten the berries of mastic which were in fruit on the lower part of the escarpment where the trees thinned. It is likely the paths I was following had been made by them as they criss-crossed the slopes, and where they descended in search of food and water."
-              }
-            ]
-          },
-          {
-            id: "terms-template",
-            name: "terms",
-            parent: "dl-template",
-            type: "terms",
-            terms: [
-              {
-                dt: "Maquis",
-                dd: "A shrubland biome in the Mediterranean region, typically consisting of densely growing evergreen shrubs.",
-                ds: "https://en.wikipedia.org/wiki/Maquis_shrubland",
-                da: "Wikipedia"
               },
-              {
-                dt: "Garrigue",
-                dd: "A type of low scrubland ecoregion and plant community in the Mediterranean forests, woodlands, and scrub biome.",
-                ds: "https://en.wikipedia.org/wiki/Garrigue",
-                da: "Wikipedia"
-              },
-              {
-                dt: "Ecological succession",
-                dd: "The process of change in the species that make up an ecological community over time. Primary succession is the initial state of a new habitat.",
-                ds: "https://en.wikipedia.org/wiki/Ecological_succession",
-                da: "Wikipedia"
-              }
-            ]
-          },
-          {
-            id: "text-template",
-            name: "text",
-            parent: "non-grid-template",
-            type: "text",
-            paras: [
               {
                 p: "After stopping for lunch, I took a path that brought me to the road/track which is flanked on the lower side by vineyards and on the upper by an abandoned fig orchard. I observed two dead fire salamanders, killed by vehicles. Because of the recent rains there were puddles on the track and water in the ditches which may have drawn them out. Where the track became the road proper, I followed the steep path which ascends the southern flank of the Serra do Louro."
               },
               {
                 p: "I rejoined the Roteiro dos Moinhos da Serra do Louro at Cabeço das Vacas, and continued along it to my endpoint in Palmela. Notable were the birds of prey that twice overflew me and which may have been Peregrine falcons."
-              },
-              {
-                p: "As always on this path, I was accompanied by butterflies and nomads. Today there were Red Admirals, A Swallowtail, Small Coppers, and what may have been a Painted Lady or Speckled Wood. The ground often came alive as Blue-winged Grasshoppers, startled by my presence, scattered. The vegetation on the top of the serra is garrigue and on either side of the path I saw wild thyme and lavender from which characteristic fragrances could be raised by a sweep of the hand."
               }
-            ]
-          }
-        ]
-      },
-      ...templates
-    ]
-  },
-  {
-    id: "lookups",
-    title: "lookups",
-    author: "danhartleybcn",
-    d1: "2023-11-09",
-    d2: "2023-11-09",
-    language: {
-      name: "English",
-      id: "en"
-    },
-    taxa: [
-      {
-        id: 363592,
-        name: "Suillus collinitus"
-      },
-      {
-        id: 57140,
-        name: "Olea europaea"
-      },
-      {
-        id: 63621,
-        name: "Pinus pinea"
-      },
-      {
-        id: 58722,
-        name: "Pinus sylvestris"
-      },
-      {
-        id: 48461,
-        name: "Pinus ponderosa"
-      },
-      {
-        id: 636795,
-        name: "Salvia rosmarinus"
-      }
-    ],
-    templates: [
-      {
-        id: "lookups-template",
-        name: "Field journal",
-        parent: "non-grid-template",
-        type: "fieldnotes",
-        isTest: false,
-        sections: [
-          {
-            id: "species-template",
-            name: "Species-cards",
-            parent: "grid-template",
-            type: "species",
-            species: [
-              "Suillus collinitus",
-              "Olea europaea",
-              "Salvia rosmarinus"
             ]
           },
           {
-            id: "species-template",
-            name: "Species-cards",
-            parent: "grid-template",
-            type: "species",
-            species: [
-              "Pinus pinea",
-              "Pinus sylvestris",
-              "Pinus ponderosa"
+            id: "h4-input-template",
+            name: "Subheader",
+            parent: "non-grid-template",
+            type: "h4-header",
+            h4: "Final reflections"
+          },
+          {
+            id: "text-template",
+            name: "Text block",
+            parent: "non-grid-template",
+            type: "text",
+            paras: [
+              {
+                p: "As always on this path, I was accompanied by butterflies and nomads. Today there were Red Admirals, A Swallowtail, Small Coppers, and what may have been a Painted Lady or Speckled Wood. The ground often came alive as Blue-winged Grasshoppers, startled by my presence, scattered. The vegetation on the top of the serra is garrigue and on either side of the path I saw wild thyme and lavender from which characteristic fragrances could be raised by a sweep of the hand."
+              }
             ]
           }
         ]
@@ -655,7 +573,7 @@ export const fieldnotes = [
       },
       {
         id: "species-template",
-        name: "Species-cards",
+        name: "Species catalogue",
         parent: "grid-template",
         pairedTemplateId: "species-test-template",
         isTest: false,

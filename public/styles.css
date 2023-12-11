@@ -653,6 +653,19 @@ th, td {
   width: initial;
 }
 
+#select-section-type-section {
+  position: sticky;
+  top: var(--d);
+  z-index: 1;
+  padding-bottom: var(--d);
+  background-color: var(--c0);
+}
+
+#select-section-type-section fieldset {
+  border-color: var(--c5);
+  border-style: solid;
+}
+
 /* VIEWS */
 
 #edit-view *:not(input, textarea) {
