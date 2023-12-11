@@ -430,20 +430,12 @@ const init = () => {
     const deleteSectionBtn = parent.getElementById('delete-section-btn')
     const sectionId = `section-${sectionIndex++}`
     const sectionContainer = parent.querySelector('section')    
+    const typeTemplate = d.getElementById(typeTemplateName)
+    const type = typeTemplate.content.cloneNode(true)
 
     sectionContainer.setAttribute('id', sectionId)
     sectionContainer.addEventListener('dragstart', dragstartHandler)
     
-    let type
-
-    const typeTemplate = d.getElementById(typeTemplateName)
-    try {
-      type = typeTemplate.content.cloneNode(true)
-    } catch (e) {
-      console.log(typeTemplateName)
-      return 
-    }
-
     let input, label, texarea, datalist, previewContainer, selectedTerms, images, cbParent = null
 
     legend.innerText = typeText
