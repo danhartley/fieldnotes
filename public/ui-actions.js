@@ -208,94 +208,189 @@ export const bgColour = taxon => {
 }
 
 const handleSpeciesCheckState = ({e, sectionId, global}) => {
-    const name = e.target.value
-    const section = global.templates.find(t => t.sectionId === sectionId)
-    if(section) {
-      section.species.find(sp => sp === name) 
-        ? section.species = section.species.filter(sp => sp !== name)
-        : section.species.push(name)
-    } else {
-      const sp = [ name ]
-      global.templates.push({...species, species: sp, templateId: species.id, sectionId })
-    }
-    // We should check also if a taxon needs to be removed from the list i.e. it appears in no species or observation section
-    // But for now, we will content ourselves with addding taxon (which is harmless)
-    if(!global.taxa.find(t => t.name === name)) {
-      global.taxa.push({
-        id: global.species.find(sp => sp.taxon.name === name)?.taxon?.id,
-        name
-      })
-    }
-  }
-
- export const cloneImages = ({global, parent, typeId, sectionId}) => {
-    switch(typeId) {
-        case 'species':
-        case 'observations':
-            if(global.species.length > 0) {
-            global.species.forEach((species, index) => {
-                const imgUrl = typeId === 'observations'
-                ? species.photos[0].url
-                : species.taxon.default_photo.medium_url
-                const clone = cloneImageTemplate({species, index, sectionId, imgUrl, global})            
-                parent.appendChild(clone)
-            })
-            } 
-            break
-        case 'inat-lookup':
-        if(global.name) {
-            const match = global.matches.find(match => match.name === global.name)
-            const imgUrl = match.default_photo.square_url
-            const clone = cloneImageTemplate({species: {taxon:match}, index: 0, sectionId, imgUrl, global})            
-            parent.appendChild(clone)
-
-            if(!global.taxa.find(taxon => taxon.id === match.id)) {                
-                global.taxa.push({
-                    id: match.id,
-                    name: match.name,
-                })
-            }
-        }
-        break
-    }
-  }
-
-  const cloneImageTemplate = ({species, index, sectionId, imgUrl, global}) => {
-      const templateToClone = d.getElementById('img-template')
-      const clone = templateToClone.content.cloneNode(true)
-
-      const spans = clone.querySelectorAll('span')
-      const img = clone.querySelector('img')      
-      const figure = clone.querySelector('figure')
-      const checkbox = clone.querySelector('input')
-      const label = clone.querySelector('label')
-  
-      figure.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
-
-      img.src = imgUrl
-      img.alt = species.taxon.name
-      img.id = species.taxon.id
-      img.setAttribute('data-i', index + 1)
-      img.setAttribute('loading', 'lazy')
-
-      spans[0].textContent = species.taxon.preferred_common_name
-      spans[1].textContent = species.taxon.name
-      spans[1].classList.add('latin')
-      
-      checkbox.id = `${sectionId}-${species.id}`
-      checkbox.value = species.taxon.name
-      checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionId, global}), true)
-      label.htmlFor = checkbox.id
-
-      return clone
-  }
-
-  export const toggleFilterCtrl = (({ ctrl, fieldsetId }) => {
-    ctrl.addEventListener('click', () => {
-        ctrl.classList.toggle('hide')
-        ctrl.innerText = ctrl.innerText === 'HIDE' ? 'SHOW' : 'HIDE'
-
-        const fieldset = d.getElementById(fieldsetId)
-        fieldset.classList.toggle('hidden')
+const name = e.target.value
+const section = global.templates.find(t => t.sectionId === sectionId)
+if(section) {
+    section.species.find(sp => sp === name) 
+    ? section.species = section.species.filter(sp => sp !== name)
+    : section.species.push(name)
+} else {
+    const sp = [ name ]
+    global.templates.push({...species, species: sp, templateId: species.id, sectionId })
+}
+// We should check also if a taxon needs to be removed from the list i.e. it appears in no species or observation section
+// But for now, we will content ourselves with addding taxon (which is harmless)
+if(!global.taxa.find(t => t.name === name)) {
+    global.taxa.push({
+    id: global.species.find(sp => sp.taxon.name === name)?.taxon?.id,
+    name
     })
+}
+}
+
+export const cloneImages = ({global, parent, typeId, sectionId}) => {
+switch(typeId) {
+    case 'species':
+    case 'observations':
+        if(global.species.length > 0) {
+        global.species.forEach((species, index) => {
+            const imgUrl = typeId === 'observations'
+            ? species.photos[0].url
+            : species.taxon.default_photo.medium_url
+            const clone = cloneImageTemplate({species, index, sectionId, imgUrl, global})            
+            parent.appendChild(clone)
+        })
+        } 
+        break
+    case 'inat-lookup':
+    if(global.name) {
+        const match = global.matches.find(match => match.name === global.name)
+        const imgUrl = match.default_photo.square_url
+        const clone = cloneImageTemplate({species: {taxon:match}, index: 0, sectionId, imgUrl, global})            
+        parent.appendChild(clone)
+
+        if(!global.taxa.find(taxon => taxon.id === match.id)) {                
+            global.taxa.push({
+                id: match.id,
+                name: match.name,
+            })
+        }
+    }
+    break
+}
+}
+
+const cloneImageTemplate = ({species, index, sectionId, imgUrl, global}) => {
+    const templateToClone = d.getElementById('img-template')
+    const clone = templateToClone.content.cloneNode(true)
+
+    const spans = clone.querySelectorAll('span')
+    const img = clone.querySelector('img')      
+    const figure = clone.querySelector('figure')
+    const checkbox = clone.querySelector('input')
+    const label = clone.querySelector('label')
+
+    figure.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
+
+    img.src = imgUrl
+    img.alt = species.taxon.name
+    img.id = species.taxon.id
+    img.setAttribute('data-i', index + 1)
+    img.setAttribute('loading', 'lazy')
+
+    spans[0].textContent = species.taxon.preferred_common_name
+    spans[1].textContent = species.taxon.name
+    spans[1].classList.add('latin')
+    
+    checkbox.id = `${sectionId}-${species.id}`
+    checkbox.value = species.taxon.name
+    checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionId, global}), true)
+    label.htmlFor = checkbox.id
+
+    return clone
+}
+
+export const toggleFilterCtrl = (({ ctrl, fieldsetId }) => {
+ctrl.addEventListener('click', () => {
+    ctrl.classList.toggle('hide')
+    ctrl.innerText = ctrl.innerText === 'HIDE' ? 'SHOW' : 'HIDE'
+
+    const fieldset = d.getElementById(fieldsetId)
+    fieldset.classList.toggle('hidden')
 })
+})
+
+let sectionToMove = null
+
+export const dragstartHandler = e => {
+  // The event target is the dragged section
+  e.dataTransfer.setData("text/plain", e.target.id)
+  sectionToMove = d.getElementById(e.target.id)
+  sectionToMove.classList.add('moveable')
+}
+
+export const dragoverHandler = e => {
+  // The event target is the section over which the section to move jumps
+  e.preventDefault()
+  e.dataTransfer.dropEffect = "move"
+
+  if(e.target.type === 'fieldset') {
+    const sectionToJumpId = e.target.parentNode.id
+    const sectiontoJump = d.getElementById(sectionToJumpId)
+    
+    // Find the index in the DOM of the section being moved, and the section we are jumping over
+    const sectionToMoveDOMIndex = Array.from(d.querySelectorAll('.draggable')).findIndex(section => section.id === sectionToMove.id)
+    const sectionToJumpDOMIndex = Array.from(d.querySelectorAll('.draggable')).findIndex(section => section.id === sectiontoJump.id)
+    
+    if(sectionToMoveDOMIndex === sectionToJumpDOMIndex) return
+    
+    sectionToMoveDOMIndex > sectionToJumpDOMIndex
+      ? sectiontoJump.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' }) // Move up
+      : sectiontoJump.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' }) // Move down
+  }
+}
+
+export const dragenterHandler = e => {
+  // The event target is the section we are jumping over
+  e.preventDefault()    
+  if(e.target.type === 'fieldset') {
+    const fieldset = e.target
+    // We don't want to highlight the section we are moving
+    if(sectionToMove.id === fieldset.parentNode.id) return
+    const section = d.getElementById(fieldset.parentNode.id)
+    if(section) section.getElementsByTagName('fieldset')[0].classList.add('drop-before')
+  }
+}
+
+export const dragleaveHandler = e => {
+  // The event target is the section we are jumping over
+  e.preventDefault()
+  if(e.target.type === 'fieldset') {
+    const fieldset = e.target
+    // We don't want to highlight the section we are moving
+    if(sectionToMove.id === fieldset.parentNode.id) return
+    const section = d.getElementById(fieldset.parentNode.id)
+    // Allow time for the target area to be apparent to the user
+    setTimeout(() => {
+      if(section) section.getElementsByTagName('fieldset')[0].classList.remove('drop-before')
+    }, 500)
+  }
+}
+
+export const dropHandler = ({e, globalWrite, draggableSections}) => {
+  // The event target is the section being moved (dragged and dropped)
+  e.preventDefault()
+
+  if(e.target.type === 'fieldset') {
+    const sectionToDropId = sectionToMove.id
+    const sectionToJumpId = e.target.parentNode.id
+
+    // Find out whether we are moving the section up or down
+    const sectionToMoveDOMIndex = Array.from(d.querySelectorAll('.draggable')).findIndex(section => section.id === sectionToDropId)
+    const sectionToJumpDOMIndex = Array.from(d.querySelectorAll('.draggable')).findIndex(section => section.id === sectionToJumpId)
+    
+    if(sectionToMoveDOMIndex === sectionToJumpDOMIndex) return
+    
+    sectionToMoveDOMIndex > sectionToJumpDOMIndex
+      // Update the position of the section visually (in the DOM)
+      ? draggableSections.insertBefore(sectionToMove, e.target.parentNode) // Move up
+      : draggableSections.insertBefore(sectionToMove, e.target.parentNode.nextSibling) // Move down
+
+    // Update the mouse icon
+    sectionToMove.classList.remove('moveable')
+    sectionToMove.classList.add('pointer')
+    
+    // Finally update the position of the moved section template to correspond to its new position in the DOM
+    const indexOfJumpedSectionTemplate = globalWrite.templates.findIndex(t => t.sectionId === sectionToJumpId)
+
+    if(indexOfJumpedSectionTemplate === -1) return // There is no such section, something went wrong
+
+    const sectionTemplateToMove = globalWrite.templates.find(t => t.sectionId === sectionToDropId)
+
+    globalWrite.templates = globalWrite.templates.filter(t => t.sectionId !== sectionToDropId)
+
+    sectionToMoveDOMIndex > sectionToJumpDOMIndex
+      ? globalWrite.templates.splice(indexOfJumpedSectionTemplate, 0, sectionTemplateToMove) // Move up
+      : globalWrite.templates.splice(indexOfJumpedSectionTemplate + 1, 0, sectionTemplateToMove) // Move down
+  }
+}
