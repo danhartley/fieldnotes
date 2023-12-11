@@ -391,10 +391,8 @@ const init = () => {
         : addBtn.classList.add('disabled')    
   }
 
-  const toggleSpeciesList = ({e, fieldset}) => {
+  const toggleAllOrIncludedInSpeciesList = ({btn, fieldset}) => {
     {
-      const btn = e.target
-
       if(btn.innerText.toLowerCase() === 'show only included') {
         fieldset.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(input => {
           input.closest('figure').classList.add('hidden')
@@ -427,7 +425,7 @@ const init = () => {
     const parent = sectionTemplate.content.cloneNode(true)
     const fieldset = parent.querySelector('fieldset')
     const legend = parent.querySelector('legend')
-    const showIncludeOnlyBtn = parent.querySelector('#show-include-only-btn')
+    const showAllOrIncludedBtn = parent.querySelector('.show-all-or-include-only-btn')
     const parentContainer = parent.querySelector('div')
     const addSectionBtn = parent.getElementById('add-section-btn')
     const editSectionBtn = parent.getElementById('edit-section-btn')
@@ -522,7 +520,7 @@ const init = () => {
         break
       case 'species':
       case 'observations':      
-          showIncludeOnlyBtn.addEventListener('click', e => toggleSpeciesList({e, fieldset}))
+          showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))
          break
       case 'textarea':
         Array.from(fieldset.getElementsByTagName('textarea'))[0]?.focus()
@@ -616,7 +614,7 @@ const init = () => {
         })
         break
       case 'inat-lookup':
-          showIncludeOnlyBtn.addEventListener('click', e => toggleSpeciesList({e, fieldset}))
+          showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))
           Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
 
           handleInatAutocomplete({ 
@@ -782,6 +780,14 @@ const init = () => {
     selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
     selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
     exportFieldNotesBtn.classList.remove('disabled')
+
+    // Hide all species that are not included
+    const btns = d.querySelectorAll('.show-all-or-include-only-btn')
+    btns.forEach(btn => {
+      btn.innerText = 'show only included'
+      const fieldset = btn.parentElement
+      toggleAllOrIncludedInSpeciesList({btn, fieldset})
+    })
 
     // Enable saving fieldnotes
     exportFieldNotesBtn.classList.remove('disabled')

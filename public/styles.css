@@ -328,7 +328,7 @@ fieldset.fieldset-reset fieldset {
   background-color: var(--inactive-bg);
 }
 
-legend, .species-list button#show-include-only-btn {
+legend, .species-list button.show-all-or-include-only-btn {
   position: absolute;
   top: 0;
   left: var(--d);
@@ -340,7 +340,7 @@ legend, .species-list button#show-include-only-btn {
   color: var(--c8);
 }
 
-.species-list button#show-include-only-btn {
+.species-list button.show-all-or-include-only-btn {
   left: initial;
   right: var(--d);
   width: initial;
@@ -662,6 +662,7 @@ th, td {
 }
 
 #select-section-type-section fieldset {
+  padding-block-start: calc(var(--d) * 4);
   border-color: var(--c5);
   border-style: solid;
 }
