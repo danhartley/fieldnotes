@@ -344,7 +344,7 @@ export const fieldnotes = [
   },
   {
     id: "São Simão, Portugal, Thu Nov 09 2023",
-    title: "São Simão, Portugal, Thu Nov 09 2023",
+    title: "Saved São Simão, Portugal, Thu Nov 09 2023",
     author: "danhartleybcn",
     user: {      
         id: 19829,

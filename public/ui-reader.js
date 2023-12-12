@@ -127,8 +127,8 @@ const init = () => {
     const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
     const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
     const showTestBtn = d.getElementById('show-test-btn')
-    const fetchInatSpeciesBtn = d.getElementById('fetch-inat-species-btn')
-    const fetchInatSpeciesNotificationText = d.getElementById('fetch-inat-species-notification-text')
+    const searchInatObservationsBtn = d.getElementById('search-inat-observations-btn')
+    const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
     const startDate = d.getElementById('observations-start-date')
     const endDate = d.getElementById('observations-end-date')
     const singleDate = d.getElementById('single-observations-input-date')
@@ -663,8 +663,8 @@ const init = () => {
             const user = g.inatAutocompleteOptions.find(o => o.id === 'users')
             const place = g.inatAutocompleteOptions.find(o => o.id === 'places')        
     
-            fetchInatSpeciesNotificationText.classList.toggle('hidden')
-            fetchInatSpeciesBtn.classList.toggle('disabled')
+            searchInatObservationsNotificationText.classList.toggle('hidden')
+            searchInatObservationsBtn.classList.toggle('disabled')
     
             g.inatSpecies = await getInatSpecies({
                   user: user.isActive ? user.user : null
@@ -675,13 +675,13 @@ const init = () => {
         
             startLesson()
     
-            fetchInatSpeciesNotificationText.classList.toggle('hidden')
-            fetchInatSpeciesBtn.classList.toggle('disabled')
+            searchInatObservationsNotificationText.classList.toggle('hidden')
+            searchInatObservationsBtn.classList.toggle('disabled')
             speciesDisplayContainer.classList.toggle('disabled')
             speciesDisplayContainer.querySelector('input').click()
         }
     
-        fetchInatSpeciesBtn.addEventListener('click', fetchInatSpecies, false)
+        searchInatObservationsBtn.addEventListener('click', fetchInatSpecies, false)
     
         rbInatAutocompleteGroup.forEach(rb => {
             rb.addEventListener('change', e => {

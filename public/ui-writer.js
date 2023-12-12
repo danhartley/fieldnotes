@@ -53,8 +53,8 @@ const init = () => {
   const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
   const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
   const singleObservationsInputDate = d.getElementById('single-observations-input-date')
-  const fetchInatSpeciesBtn = d.getElementById('fetch-inat-species-btn')
-  const fetchInatSpeciesNotificationText = d.getElementById('fetch-inat-species-notification-text')
+  const searchInatObservationsBtn = d.getElementById('search-inat-observations-btn')
+  const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
   const importFieldNotesBtn = d.getElementById('import-fieldnotes-btn')
   const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
   const titleInputText = d.getElementById('title-input-text')
@@ -88,9 +88,12 @@ const init = () => {
     }
   }
 
-  const fetchInatSpecies = async ({userId}) => {
-    fetchInatSpeciesNotificationText.classList.toggle('hidden')
-    fetchInatSpeciesBtn.classList.toggle('disabled')
+  const searchInatObservations = async ({userId}) => {
+    searchInatObservationsNotificationText.classList.toggle('hidden')
+    searchInatObservationsBtn.classList.toggle('disabled')
+
+    // Clear import search text to avoid confusion
+    ltpAutocompleteTitleInputText.value = ''
 
     globalWrite.user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')?.user
 
@@ -105,13 +108,13 @@ const init = () => {
         d2: singleObservationsInputDate.value,
     })
     
-    fetchInatSpeciesBtn.classList.toggle('disabled')
+    searchInatObservationsBtn.classList.toggle('disabled')
 
-    fetchInatSpeciesNotificationText.innerText = 'Search complete'
+    searchInatObservationsNotificationText.innerText = 'Search complete'
 
     setTimeout(() => {
-      fetchInatSpeciesNotificationText.classList.toggle('hidden')
-      fetchInatSpeciesNotificationText.innerText = 'Waiting for response from iNaturalist…'
+      searchInatObservationsNotificationText.classList.toggle('hidden')
+      searchInatObservationsNotificationText.innerText = 'Waiting for response from iNaturalist…'
     },1500)
 
     if(globalWrite.species.length === 0) return
@@ -135,7 +138,7 @@ const init = () => {
     exportFieldNotesBtn.classList.remove('disabled')
   }
 
-  fetchInatSpeciesBtn.addEventListener('click', fetchInatSpecies, false)
+  searchInatObservationsBtn.addEventListener('click', searchInatObservations, false)
 
   const initGlobalWrite = () => {
     globalWrite = {
@@ -363,7 +366,7 @@ const init = () => {
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
       case 'textarea':
-        texarea = type.querySelector('textarea')        
+        texarea = typeClone.querySelector('textarea')        
         texarea.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:texarea.value, previewContainer, sectionId}), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
@@ -373,19 +376,19 @@ const init = () => {
         cloneImages({global:globalWrite, parent:typeClone.querySelector('div'), typeId, sectionId })
         break
       case 'terms':
-        datalist = type.querySelector('datalist')
+        datalist = typeClone.querySelector('datalist')
         datalist.id = `${sectionId}-dl-list`
-        input = type.querySelector('input')
+        input = typeClone.querySelector('input')
         input.id = `${sectionId}-dl-input-text`
         input.setAttribute('list', datalist.id)        
-        label = type.querySelector('label')
+        label = typeClone.querySelector('label')
         label.htmlFor = input.id                  
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:selectedTerms, previewContainer, sectionId }), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
       case 'images':
-        const url1 = type.getElementById('image-url-input-one')
-        const title1 = type.getElementById('image-title-input-one')
+        const url1 = typeClone.getElementById('image-url-input-one')
+        const title1 = typeClone.getElementById('image-title-input-one')
         url1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addSectionBtn, url1, title1}), true)
         title1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addSectionBtn, url1, title1}), true)
         
@@ -572,8 +575,8 @@ const init = () => {
     const hasDate = singleObservationsInputDate.value .length > 0 && Object.prototype.toString.call(date) === '[object Date]'
 
     hasUser && hasDate
-      ? fetchInatSpeciesBtn.classList.remove('disabled')
-      : fetchInatSpeciesBtn.classList.add('disabled')
+      ? searchInatObservationsBtn.classList.remove('disabled')
+      : searchInatObservationsBtn.classList.add('disabled')
   }
   
   singleObservationsInputDate.addEventListener('blur', checkSearchBtnState, true)
