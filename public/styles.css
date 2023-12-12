@@ -56,6 +56,7 @@ header {
 
 h1 {
   font-size: var(--s3);
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: calc(var(--d) / 5);
   -webkit-font-smoothing: antialiased;
@@ -135,11 +136,14 @@ button:focus-visible {
 label {
   font-size: var(--s3);
   -webkit-font-smoothing: antialiased;
+  width: inherit;
+  min-width: calc(var(--d) * 6);
+  max-width: 500px;
 }
 
-label:has(+ input) {
-  width: initial;
-}
+/* label:has(+ input) {
+  min-width: calc(var(--d) * 6);
+} */
 
 .grid > div > label {
   margin: 0 0 calc(var(--d) * .75);
@@ -203,7 +207,6 @@ input[type='checkbox'] + label, input[type='radio'] + label {
   margin-bottom: 0;
   letter-spacing: calc(var(--d) * .025);
   cursor: pointer;
-  min-width: calc(var(--d) * 2);
 }
 
 input[type='checkbox'] + label, .flex-row input[type='radio'] + label {
@@ -228,18 +231,14 @@ textarea {
   font-family: inherit;
 }
 
-label:has(+ input[type='text']):not(.ignore), label:has(+ input[type='date']):not(.ignore) {
-  min-width: calc(var(--d) * 6);
-}
-
 h2 input[type='radio'] + label {
   position: relative;
 }
 
 @-moz-document url-prefix() {
-  label {
+  /* label {
     width: initial;
-  }
+  } */
   input[type='checkbox'] + label {
     top: 2px;
   }
@@ -324,10 +323,6 @@ fieldset.fieldset-reset fieldset {
   border-top: none;
 }
 
-.drop-before {
-  background-color: var(--inactive-bg);
-}
-
 legend, .species-list button.show-all-or-include-only-btn {
   position: absolute;
   top: 0;
@@ -409,6 +404,10 @@ th, td {
   font-weight: normal;
 }
 
+datalist {
+  display: block;
+}
+
 /* ASPECT-RATIO */
 
 /* STATES */
@@ -439,8 +438,16 @@ th, td {
   cursor: pointer;
 }
 
+.drop-before {
+  background-color: var(--inactive-bg);
+}
+
 .moveable {
   cursor: grabbing;
+}
+
+.initial-width {
+  min-width: initial;
 }
 
 /* SELECTOR RULES */
