@@ -55,15 +55,15 @@ const init = () => {
   const singleObservationsInputDate = d.getElementById('single-observations-input-date')
   const fetchInatSpeciesBtn = d.getElementById('fetch-inat-species-btn')
   const fetchInatSpeciesNotificationText = d.getElementById('fetch-inat-species-notification-text')
+  const importFieldNotesBtn = d.getElementById('import-fieldnotes-btn')
+  const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
+  const titleInputText = d.getElementById('title-input-text')
   const authorInputText = d.getElementById('author-input-text')
   const dateInputText = d.getElementById('date-input-text')
   const placeInputText = d.getElementById('place-input-text')
   const selectSectionTypeSection = d.getElementById('select-section-type-section')
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
-  const titleInputText = d.getElementById('title-input-text')
   const exportFieldNotesBtn = d.getElementById('export-fieldnotes-btn')
-  const importFieldNotesBtn = d.getElementById('import-fieldnotes-btn')
-  const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
 
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections}))
@@ -330,19 +330,19 @@ const init = () => {
     return sectionTemplate
   }
 
-  const handleSelectType = ({typeId, typeText, typeTemplateName, sectionTemplate}) => {
-    const parent = sectionTemplate.content.cloneNode(true)
-    const fieldset = parent.querySelector('fieldset')
-    const legend = parent.querySelector('legend')
-    const showAllOrIncludedBtn = parent.querySelector('.show-all-or-include-only-btn')
-    const parentContainer = parent.querySelector('div')
-    const addSectionBtn = parent.getElementById('add-section-btn')
-    const editSectionBtn = parent.getElementById('edit-section-btn')
-    const deleteSectionBtn = parent.getElementById('delete-section-btn')
+  const handleSelectSectionType = ({typeId, typeText, typeTemplateName, sectionTemplate}) => {
+    const sectionClone = sectionTemplate.content.cloneNode(true)
+    const fieldset = sectionClone.querySelector('fieldset')
+    const legend = sectionClone.querySelector('legend')
+    const showAllOrIncludedBtn = sectionClone.querySelector('.show-all-or-include-only-btn')
+    const parentContainer = sectionClone.querySelector('div')
+    const addSectionBtn = sectionClone.getElementById('add-section-btn')
+    const editSectionBtn = sectionClone.getElementById('edit-section-btn')
+    const deleteSectionBtn = sectionClone.getElementById('delete-section-btn')
     const sectionId = `section-${sectionIndex++}`
-    const sectionContainer = parent.querySelector('section')    
+    const sectionContainer = sectionClone.querySelector('section')    
     const typeTemplate = d.getElementById(typeTemplateName)
-    const type = typeTemplate.content.cloneNode(true)
+    const typeClone = typeTemplate.content.cloneNode(true)
 
     sectionContainer.setAttribute('id', sectionId)
     sectionContainer.addEventListener('dragstart', dragstartHandler)
@@ -351,13 +351,13 @@ const init = () => {
 
     legend.innerText = typeText
 
-    previewContainer = type.querySelector('.edit')
+    previewContainer = typeClone.querySelector('.edit')
 
     switch(typeId) {
       case 'h3-input':
       case 'h4-input':
       case 'birdsong-input':
-        input = type.querySelector('input')
+        input = typeClone.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
         addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer, sectionId}), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
@@ -370,7 +370,7 @@ const init = () => {
         break
       case 'observations':
       case 'species':                
-        cloneImages({global:globalWrite, parent:type.querySelector('div'), typeId, sectionId })
+        cloneImages({global:globalWrite, parent:typeClone.querySelector('div'), typeId, sectionId })
         break
       case 'terms':
         datalist = type.querySelector('datalist')
@@ -393,23 +393,24 @@ const init = () => {
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
       case 'inat-lookup':
-        datalist = type.querySelector('datalist')
+        datalist = typeClone.querySelector('datalist')
         datalist.id = `${sectionId}-dl-list`
-        input = type.querySelector('input')
+        input = typeClone.querySelector('input')
         input.id = `${sectionId}-dl-input-text`
         input.setAttribute('list', datalist.id)
-        label = type.querySelector('label')
+        label = typeClone.querySelector('label')
         label.htmlFor = input.id
-        cbParent = type.querySelector('#inat-lookup-callback-parent')
+        cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
         cbParent.id = `${sectionId}-lookup-parent`
         break
     }
     
     // Add the child to its parent container
-    parentContainer.appendChild(type)
+    parentContainer.appendChild(typeClone)
 
     // Add the parent container (the HTML cloned fragment) to the DOM
-    draggableSections.appendChild(parent)
+    draggableSections.appendChild(sectionClone)
+
     // Listen for drag events
     Array.from(draggableSections.getElementsByTagName('section')).forEach(section => {
       section.addEventListener('dragenter', dragenterHandler)
@@ -458,7 +459,7 @@ const init = () => {
         const da = fieldset.querySelector('#input-da')
         const dx = fieldset.querySelector('#input-dx')
 
-        // Update the Ids so that they are unique in the DOM
+        // Update the term ids so that they are unique in the DOM
         dt.id = `${sectionId}-input-dt`
         d.querySelector('label[for="input-dt"]').htmlFor = dt.id
         dd.id = `${sectionId}-input-dd`
@@ -542,14 +543,21 @@ const init = () => {
     return sectionContainer
   }
 
+  // Create a new type section when the user clicks on a type button
   selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { 
     const typeId = e.target.value
     const typeText = e.target.innerText
     
-    handleSelectType({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate: getSectionTemplate({typeId})})
+    handleSelectSectionType({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate: getSectionTemplate({typeId})})
   }, true))
 
-  titleInputText.addEventListener('blur', e => globalWrite.title = e.target.value)
+  // Persist updated metadata values to the fieldnotes object
+  titleInputText.addEventListener('blur', e => { 
+    globalWrite.title = e.target.value 
+    e.target.value.length > 2
+    ? exportFieldNotesBtn.classList.remove('disabled')
+    : exportFieldNotesBtn.classList.add('disabled')
+  })
   authorInputText.addEventListener('blur', e => globalWrite.author = e.target.value)
   dateInputText.addEventListener('blur', e => {
     globalWrite.d1 = e.target.value
@@ -557,6 +565,7 @@ const init = () => {
   })
   placeInputText.addEventListener('blur', e => globalWrite.location.place_guess = e.target.value)
   
+  // Check state of iNat search button (enabled or disabled)
   const checkSearchBtnState = () => {
     const hasUser = globalWrite.login && globalWrite.login.length > 0
     const date = new Date(singleObservationsInputDate.value)
@@ -570,6 +579,7 @@ const init = () => {
   singleObservationsInputDate.addEventListener('blur', checkSearchBtnState, true)
   iNatAutocompleteInputText.addEventListener('blur', checkSearchBtnState, true)
 
+  // Export fieldnots
   const exportFieldNotes = () => {
     const notes = {}
 
@@ -612,12 +622,7 @@ const init = () => {
 
   exportFieldNotesBtn.addEventListener('click', exportFieldNotes, true)
 
-  titleInputText.addEventListener('blur', e => {
-    e.target.value.length > 2
-      ? exportFieldNotesBtn.classList.remove('disabled')
-      : exportFieldNotesBtn.classList.add('disabled')
-  })
-  
+  // Import fieldnotes
   const importFieldNotes = async () => {
     importFieldNotesNotificationText.classList.remove('hidden')
     
@@ -651,7 +656,7 @@ const init = () => {
 
     globalWrite.templates.forEach((section, index) => {
       section.sectionId = `section-${index}`
-      const sectionContainer = handleSelectType({
+      const sectionContainer = handleSelectSectionType({
           typeId: section.type
         , typeText: section.name
         , typeTemplateName: section.id
