@@ -1,3 +1,12 @@
+// FIREBASE
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"
+import { getFirestore, collection, doc, getDocs, setDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-lite.js"
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"
+
+{/* <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script> */}
+
 import { guides } from "./guides.js"
 import { fieldnotes } from './fieldnotes.js'
 import { templates } from './templates.js'
@@ -63,7 +72,7 @@ export const getInatTaxa = async({
 
 // LTP API
 
-export const getFieldNotes = () => fieldnotes
+export const _getFieldnotes = () => fieldnotes
 
 // HARD-CODED DATA
 
@@ -1096,3 +1105,127 @@ export const inatControls = [
 //       }
 //   }
 // })
+
+const getApp = () => {
+  // Filestore's firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCqPaYK-BH0dD8i87VHrNN9L39-37N1ah0",
+    authDomain: "fieldnotes-13578.firebaseapp.com",
+    projectId: "fieldnotes-13578",
+    storageBucket: "fieldnotes-13578.appspot.com",
+    messagingSenderId: "46506549310",
+    appId: "1:46506549310:web:38fca524001c2e849fb16f"
+  }
+
+  // Initialise Firebase
+  const app = initializeApp(firebaseConfig)
+  console.log('app, app')
+
+  return app
+
+  // const auth = getAuth(app)
+
+  // onAuthStateChanged(auth, user => {
+  //   if(user !== null) {
+  //     console.log('logged in')
+  //   } else {
+  //     console.log('Not logged in')
+  //   }
+  // })
+}
+
+const getDb = () => {
+// Get an instance of the Firestore
+  return getFirestore(getApp())
+}
+
+const getFieldnotesCollectionRef = ({db}) => {
+  return collection(db, 'fieldnotes')
+}
+  
+const getFieldnotesStubsCollectionRef = ({db}) => {
+  return collection(db, 'fieldnotes-stubs')
+}
+
+export const getFieldnotes = async () => {   
+  const db = getDb()
+
+  const fieldNotesCollection = collection(db, 'fieldnotes')
+  const notesDocs = await getDocs((fieldNotesCollection))
+  const notesList = notesDocs.docs.map(doc => {
+    console.log(doc.data().fnId)
+    return doc.data()
+  })
+  console.log(notesList)
+  return notesList
+}
+
+export const addFieldnotes = async ({fieldnotes}) => {
+  // Add new fieldnotes to collection
+  const fieldnotesCollectionRef = getFieldnotesCollectionRef({db:getDb()})
+  const fieldNotesRef = doc(fieldnotesCollectionRef)
+  const id = fieldNotesRef.id
+  const fieldnotesData = { id, ...fieldnotes }
+  await setDoc(fieldNotesRef, fieldnotesData)
+
+  // Add new fieldnotes stub to collection
+  const fieldnotesStubCollectionRef = getFieldnotesStubsCollectionRef({db:getDb()})
+  const fieldNotesStubRef = doc(fieldnotesStubCollectionRef)
+  const stubId = fieldNotesStubRef.id
+  const fieldnotesStubData = { id, title: fieldnotes.title, author: fieldnotes.author }
+  await setDoc(fieldNotesStubRef, fieldnotesStubData)
+}
+
+export const updateFieldNote = async ({db, fieldnotes, data}) => {
+  const docRef = doc(db, 'fieldnotes', fieldnotes.id)  
+  updateDoc(docRef, data)
+}
+
+export const deleteFieldnoteProperty = async ({db, fieldnotes, prop}) => {
+  const docRef = doc(db, 'fieldnotes', fieldnotes.id)
+  const data = {
+    [prop]: deleteField()
+  }
+  updateDoc(docRef, data)
+}
+
+export const addElementToArray = async ({db, fieldnotes, array, element}) => {
+  const docRef = doc(db, 'fieldnotes', fieldnotes.id)
+  const data = {
+    [array]: arrayUnion(element)
+  }
+  updateDoc(docRef, data)
+}
+
+export const removeElementFromArray = async ({db, fieldnotes, array, element}) => {
+  const docRef = doc(db, 'fieldnotes', fieldnotes.id)
+  const data = {
+    [array]: arrayRemove(element)
+  }
+  updateDoc(docRef, data)
+}
+
+export const testConnection = async () => {
+  const db = getDb()
+
+
+  const notes = await getFieldnotes()
+  // addFieldnotes({fieldnotesCollectionRef: getFieldnotesCollectionRef({db}), fieldnotes: fieldnotes[2]})
+  // updateFieldNote({db, fieldnotes: notes[0], data: {
+  //   title: "UPDATED Arrábida, Portugal, Thu Nov 09 2023",
+  // }})
+
+  // deleteFieldnoteProperty({db, fieldnotes: notes[0], prop: 'title'})
+
+  const section = {
+    parent: "non-grid-template",
+    name: "Subheader",
+    id: "h4-input-template",
+    type: "h4-header",
+    h4: "Test subheader"
+  }
+  // addElementToArray({db, fieldnotes:notes[0], array:'sections', element: section})
+  // removeElementFromArray({db, fieldnotes:notes[0], array:'sections', element: section})
+  getFieldnotes()
+
+}

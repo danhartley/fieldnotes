@@ -2,7 +2,9 @@ import {
   getInatObservations
 , g
 , getTerms
-, getFieldNotes
+, _getFieldnotes
+, getFieldnotes
+, addFieldnotes
 } from './api.js'
 
 import { 
@@ -170,7 +172,7 @@ const init = () => {
 
   const { id, prop } = g.inatAutocomplete
   handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g: globalWrite, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})  
-  handleFieldsNotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, g: globalWrite, data: getFieldNotes(), importFieldNotesBtn}) 
+  handleFieldsNotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, g: globalWrite, data: _getFieldnotes(), importFieldNotesBtn}) 
 
   const updateBtnState = ({str, btn}) => {
     str.length > 0
@@ -587,7 +589,7 @@ const init = () => {
     const notes = {}
 
     Object.assign(notes, {
-      id: globalWrite.title,
+      fnId: globalWrite.title,
       title: globalWrite.title,
       author: globalWrite.author,
       user: {
@@ -603,24 +605,31 @@ const init = () => {
       location: globalWrite.location,
       language: globalWrite.language,
       taxa: globalWrite.taxa,
-      templates: [{
-        id: globalWrite.title,
-        name: 'Field journal',
-        parent: 'non-grid-template',
-        type: 'fieldnotes',
-        isTest: false,  
-        sections: globalWrite.templates.map(t => {
-          const {templateId, sectionId, ...validProps} = t
-          return {
-            ...validProps,
-          }
-        }),
-      },
-      ...templates,
-    ],
+      sections: globalWrite.templates.map(t => {
+        const {templateId, sectionId, ...validProps} = t
+        return {
+          ...validProps,
+        }
+      }),
+    //   templates: [{
+    //     id: globalWrite.title,
+    //     name: 'Field journal',
+    //     parent: 'non-grid-template',
+    //     type: 'fieldnotes',
+    //     isTest: false,  
+    //     sections: globalWrite.templates.map(t => {
+    //       const {templateId, sectionId, ...validProps} = t
+    //       return {
+    //         ...validProps,
+    //       }
+    //     }),
+    //   },
+    //   ...templates,
+    // ],
     })
     console.log(notes)
-    console.log(notes.templates[0].sections)
+    
+    addFieldnotes({fieldnotes: notes})
   }
 
   exportFieldNotesBtn.addEventListener('click', exportFieldNotes, true)
@@ -634,7 +643,7 @@ const init = () => {
     Object.assign(globalWrite, {
       iconicTaxa: g.ICONIC_TAXA,
       ...guide,
-      templates: guide.templates[0].sections
+      templates: guide.sections
     })
 
     const { title, author, d1, d2, location } = globalWrite
@@ -710,7 +719,9 @@ const init = () => {
     exportFieldNotesBtn.classList.remove('disabled')
   }
 
-  importFieldNotesBtn.addEventListener('click', importFieldNotes, true)  
+  importFieldNotesBtn.addEventListener('click', importFieldNotes, true)
+
+  // testConnection()
 }
 
 init()

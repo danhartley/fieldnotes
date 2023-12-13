@@ -145,12 +145,12 @@ const init = () => {
     
             input.setAttribute('name', rbGroup)
             input.id = item.name || item.title
-            input.value = item.id
+            input.value = item.fnId
             label.textContent = item.name || item.title
             label.htmlFor = input.id
             label.setAttribute('position', 'absolute')
             
-            if(!!checked && checked.id === item.id) {
+            if(!!checked && checked.id === item.fnId) {
                 input.setAttribute('checked', true)
             }
     
