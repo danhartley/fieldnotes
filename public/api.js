@@ -1,11 +1,8 @@
 // FIREBASE
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"
-import { getFirestore, collection, doc, getDocs, setDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-lite.js"
+import { getFirestore, collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-lite.js"
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"
-
-{/* <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script> */}
 
 import { guides } from "./guides.js"
 import { fieldnotes } from './fieldnotes.js'
@@ -75,533 +72,6 @@ export const getInatTaxa = async({
 export const _getFieldnotes = () => fieldnotes
 
 // HARD-CODED DATA
-
-export const snapSpeciesTraits = [
-    {
-        "behaviour": {
-            "value": [
-                "migratory"
-            ]
-        },
-        "caterpillar colour": {
-            "unit": "colour",
-            "value": [
-                "white",
-                " black"
-            ]
-        },
-        "caterpillar length": {
-            "unit": "cm",
-            "value": [
-                "2.5"
-            ]
-        },
-        "description": {
-            "value": [
-                "A medium-sized butterfly with black wings, orange to red bands, and white spots. It has a wingspan of about 5cm. \n\nTypically found in moist woodlands, the red admiral caterpillar's primary host plant is the stinging nettle (Urtica dioica); it can also be found on the false nettle (Boehmeria cylindrica). \n\nThe adult butterfly drinks from flowering plants (inc. Buddleia, blackthorn, crab apple, hawthorn, dogwood, bramble, ivy blossom, and wild cherry) and overripe fruit. \n\nThey roost head-downwards on the trunks or lower branches of oaks, larches and other trees, where the bark-like underside of the wings provides them with excellent camouflage. Male red admirals are highly territorial."
-            ]
-        },
-        "food": {
-            "value": [
-                "Buddleia",
-                "Rotten fruit"
-            ]
-        },
-        "habitat": {
-            "type": "commensalism",
-            "value": [
-                "hedera",
-                "woodland"
-            ]
-        },
-        "hibernating stage": {
-            "value": [
-                "adult"
-            ]
-        },
-        "name": "Vanessa atalanta",
-        "relationships": [{
-            "description": "Red admirals will lay a dozen or so eggs a sizeable patch of nettles (Urtica dioica), one per leaf.",
-            "symbiont": {
-                "name": "Urtica dioica",
-                "role": "Food source"
-            },
-            "type": "Predator",
-            "value": [
-                "Predation"
-            ]
-        }],
-        "wing span": {
-            "unit": "cm",
-            "value": [
-                "5.6",
-                "6.2"
-            ]
-        },
-    },
-    {
-        "cap height": {
-        "unit": "cm",
-        "value": [
-            "3-8"
-        ]
-        },
-        "cap shape": {
-        "value": [
-            "Conical",
-            "Ovate"
-        ]
-        },
-        "characteristic": {
-        "value": [
-            "Polymorphic"
-        ]
-        },
-        "description": {
-        "value": [
-            "Ridges darken with maturity. The pits and ridges are primarily vertically oriented.\n\nThe cap that is attached to the stem with a small but noticeable groove.\n\nIt may be both saprobic and mycorrhizal at different points in its life cycle. \n\nIt grows alone, or scattered, or gregariously under hardwoods, including white ash, green ash, and tulip tree. \n\nFound late winter to early spring. It is widely distributed east of the Rocky Mountains."
-        ]
-        },
-        "gill attachment": {
-        "value": [
-            "Decurrent"
-        ]
-        },
-        "how edible": {
-        "value": [
-            "Choice"
-        ]
-        },
-        "name": "Morchella angusticeps",
-        "tree ecology": {
-        "value": [
-            "Hardwoods"
-        ]
-        }
-    },
-    {
-        "cap colour": {
-          "value": [
-            "Orange",
-            "Yellow"
-          ]
-        },
-        "cap diameter": {
-          "unit": "cm",
-          "value": [
-            "2-9"
-          ]
-        },
-        "cap shape": {
-          "value": [
-            "Infundibuliform"
-          ]
-        },
-        "cap texture": {
-          "value": [
-            "Tomentose"
-          ]
-        },
-        "description": {
-          "value": [
-            "An ectomycorrhizal species of edible fungus in the mushroom family Cantharellaceae.\n\nThe fruit bodies of the fungus are brightly coloured yellow-orange, usually highly conspicuous against the soil. \n\nAt maturity, the mushroom resembles a filled funnel with the spore-bearing surface along the sloping outer sides. The texture of the fertile undersurface (hymenium) of the caps is a distinguishing characteristic: much smoother than the well-known golden chanterelle."
-          ]
-        },
-        "ecological type": {
-          "value": [
-            "Mycorrhizal"
-          ]
-        },
-        "gill attachment": {
-          "value": [
-            "Decurrent"
-          ]
-        },
-        "gill colour": {
-          "value": [
-            "Pale yellow"
-          ]
-        },
-        "how edible": {
-          "value": [
-            "Edible"
-          ]
-        },
-        "hymenium type": {
-          "value": [
-            "Ridges"
-          ]
-        },
-        "name": "Cantharellus lateritius",
-        "spore print colour": {
-          "value": [
-            "Cream",
-            "Mycorrhizal"
-          ]
-        },
-        "stem height": {
-          "unit": "cm",
-          "value": [
-            ".5-1.7"
-          ]
-        },
-        "stipe character": {
-          "value": [
-            "Bare"
-          ]
-        }
-    },
-    {
-        "cap shape": {
-          "value": [
-            "N/a"
-          ]
-        },
-        "description": {
-          "value": [
-            "The fruiting body is 8–16cm across, consisting of one, unbranched clump of 1-5cm long, soft spines hanging from a tough, hidden base that is attached to the tree. The spines are white, ageing to brown-yellow.\n\nThe species is saprobic and parasitic, usually growing alone or in pairs and fruiting from the wounds of living hardwoods (especially oaks) in late summer and autumn, and over winter and spring in warmer climates.\n\n"
-          ]
-        },
-        "ecological type": {
-          "value": [
-            "parasitic"
-          ]
-        },
-        "ecology": {
-          "value": [
-            "hardwoods",
-            " trunks",
-            " dead wood"
-          ]
-        },
-        "flesh": {
-          "unit": "colour",
-          "value": [
-            "white"
-          ]
-        },
-        "gill attachment": {
-          "value": [
-            "N/a"
-          ]
-        },
-        "how edible": {
-          "value": [
-            "choice"
-          ]
-        },
-        "hymenium type": {
-          "value": [
-            "teeth"
-          ]
-        },
-        "name": "Hericium erinaceus",
-        "spore print colour": {
-          "unit": "colour",
-          "value": [
-            "white"
-          ]
-        },
-        "stipe character": {
-          "value": [
-            "n/a"
-          ]
-        },
-        "symbionts": {
-          "value": [
-            "Fagus",
-            "Turkey oak"
-          ]
-        }
-    },
-    {
-        "cap colour": {
-          "value": [
-            "White",
-            "Grey",
-            "Grey-brown",
-            "Tan",
-            "Dark brown"
-          ]
-        },
-        "cap shape": {
-          "value": [
-            "offset"
-          ]
-        },
-        "cap width": {
-          "unit": "cm",
-          "value": [
-            "5-25"
-          ]
-        },
-        "collective": {
-          "value": [
-            "White"
-          ]
-        },
-        "description": {
-          "value": [
-            "The oyster mushroom is widespread in many temperate and subtropical forests. It is saprotrophic, mainly on deciduous trees, beech trees in particular. It appears not to be parasitic i.e. only acts on dead wood and dying trees.\n\nThe mushroom has a broad, fan or oyster-shaped cap spanning 5–25cm.\n\nThe cap is white to grey or tan to dark-brown; the flesh is white, firm, and varies in thickness due to stipe arrangement. The gills of the mushroom are white to cream, and descend on the stalk if present. If so, the stipe is off-centre with a lateral attachment to wood. The spore print of the mushroom is white to lilac-grey. \n\nThe cap margin is inrolled when young, and is smooth and often somewhat lobed or wavy (undulate). The mushroom's stipe is often absent. When present, it is short and thick (the Latin pleurotus - sideways - refers to the sideways growth of the stem with respect to the cap).\n\nIts mycelia can kill and digest nematodes, which is believed to be a way in which the mushroom obtains nitrogen. The oyster mushroom is one of the few known carnivorous mushrooms.\n"
-          ]
-        },
-        "ecological type": {
-          "value": [
-            "saprotrophic"
-          ]
-        },
-        "ecology": {
-          "value": [
-            "mixed woodland"
-          ]
-        },
-        "flesh": {
-          "unit": "colour",
-          "value": [
-            "white",
-            " tough in stem"
-          ]
-        },
-        "gill attachment": {
-          "value": [
-            "Decurrent"
-          ]
-        },
-        "grouping": {
-          "value": [
-            "large clusters"
-          ]
-        },
-        "how edible": {
-          "value": [
-            "choice"
-          ]
-        },
-        "hymenium type": {
-          "value": [
-            "gills"
-          ]
-        },
-        "look-alikes": {
-          "value": []
-        },
-        "name": "Pleurotus ostreatus",
-        "role": {
-          "value": [
-            "Mycoremediation"
-          ]
-        },
-        "smell": {
-          "unit": "odour",
-          "value": [
-            "mushroomy"
-          ]
-        },
-        "spore print colour": {
-          "value": [
-            "white",
-            " lilac"
-          ]
-        },
-        "stipe character": {
-          "value": [
-            "bare"
-          ]
-        },
-        "symbionts": {
-          "value": [
-            "Dead wood",
-            "Fagus",
-            "Deciduous",
-            "Nematode"
-          ]
-        },
-        "symbiosis": {
-          "value": [
-            "Predation"
-          ]
-        }
-    },
-    {
-        "cap shape": {
-          "value": [
-            "Infundibuliform"
-          ]
-        },
-        "description": {
-          "value": [
-            "Mycorrhizal with oaks, and possibly other hardwoods, spring to autumn and widely distributed east of the Rocky Mountains.\n\nVase-shaped fruiting body with fine scaly, grey-black upper surface and smooth or shallowly wrinkled outer surface;  initially black but develops yellow-orange shades as the spores mature.\n\nRecently established as a species distinct from Craterellus cornucopioides."
-          ]
-        },
-        "ecological type": {
-          "value": [
-            "Saprotrophic"
-          ]
-        },
-        "fruit height": {
-          "unit": "cm",
-          "value": [
-            "3-9"
-          ]
-        },
-        "fruit width": {
-          "unit": "cm",
-          "value": [
-            "1-5"
-          ]
-        },
-        "gill attachment": {
-          "value": [
-            "Decurrent"
-          ]
-        },
-        "how edible": {
-          "value": [
-            "Edible"
-          ]
-        },
-        "hymenium type": {
-          "value": [
-            "Ridges"
-          ]
-        },
-        "name": "Craterellus fallax",
-        "spore print colour": {
-          "value": [
-            "Orange-yellow"
-          ]
-        },
-        "stipe character": {
-          "value": [
-            "Bare"
-          ]
-        }
-    },
-    {
-        "cap colour": {
-          "value": [
-            "sulpur yellow",
-            " fading"
-          ]
-        },
-        "cap shape": {
-          "value": [
-            "flat"
-          ]
-        },
-        "cap texture": {
-          "value": [
-            "Smooth"
-          ]
-        },
-        "description": {
-          "value": [
-            "The fruiting body emerges directly from the trunk of a tree and is initially knob-shaped, but soon expands to fan-shaped shelves, typically growing in overlapping tiers. \n\nIt is sulphur-yellow to bright orange in colour, fading to tan or white. Soft when young, toughening with age. \n\nThe shelves are 5-60cm across and up to 4cm thick. The fertile surface is sulphur-yellow with small pores or tubes and produces a white spore print. \n\nWhen fresh, the flesh is succulent with a strong fungal aroma and exudes a yellow, transparent juice, but quickly becomes dry and brittle.\n\nParasitic and saprobic on living and dead oaks."
-          ]
-        },
-        "ecological type": {
-          "value": [
-            "saprotrophic",
-            " parasitic"
-          ]
-        },
-        "ecology": {
-          "value": [
-            "dead wood",
-            " hardwoods",
-            " trunks",
-            " stumps"
-          ]
-        },
-        "flesh": {
-          "unit": "colour",
-          "value": [
-            "yellow",
-            " orange",
-            " white"
-          ]
-        },
-        "gill attachment": {
-          "value": [
-            "N/a"
-          ]
-        },
-        "grouping": {
-          "value": [
-            "large groups"
-          ]
-        },
-        "how edible": {
-          "value": [
-            "choice"
-          ]
-        },
-        "hymenium type": {
-          "value": [
-            "pores"
-          ]
-        },
-        "lookalikes": [
-          {
-            "description": "The pore surface is bright yellow. Grows in shelves at the base of the tree. Favours oaks.",
-            "lookalike": {
-              "description": "The pore surface is cream/white. Grows away from the tree in a rosette of individual caps. Favours oaks.",
-              "name": "Laetiporus cincinnatus"
-            }
-          },
-          {
-            "description": "The pore surface is bright yellow. Grows in shelves at the base of the tree. Favours oaks.",
-            "lookalike": {
-              "description": "Commonly attached to dead logs or stumps at one point with a thick stem. Body can be yellow to brown with squamules (scales) on its upper side. On the underside are pores characteristic of the genus Cerioporus; made up of tubes packed closely together.",
-              "name": "Polyporus squamosus"
-            }
-          }
-        ],
-        "name": "Laetiporus sulphureus",
-        "role": {
-          "value": [
-            "Carbon dioxide production",
-            "Nutrient cycling",
-            "Bioindicator"
-          ]
-        },
-        "shelf thickness": {
-          "unit": "cm",
-          "value": [
-            "0.5-4"
-          ]
-        },
-        "shelf width": {
-          "unit": "cm",
-          "value": [
-            "5-60"
-          ]
-        },
-        "spore print colour": {
-          "value": [
-            "white",
-            "White"
-          ]
-        },
-        "stipe character": {
-          "value": [
-            "N/a"
-          ]
-        },
-        "symbionts": {
-          "value": [
-            "Fagus",
-            "Quercus",
-            "Prunus",
-            "Salix",
-            "Robinia",
-            "Eucalyptus",
-            "Ceratonia",
-            "Yew"
-          ]
-        }
-    }
-]
 
 const terms = [
   {
@@ -1087,25 +557,6 @@ export const inatControls = [
   }
 ]
 
-// export const observations = spp.map(sp => 
-//   { 
-//     return { 
-//         annotations: sp.annotations.map(a => {
-//           return { controlled_attribute_id: a.controlled_attribute_id, controlled_value_id: a.controlled_value_id, }
-//         })        
-//       , comments: sp.comments
-//       , id: sp.id, location: sp.location
-//       , observation_photos: sp.observation_photos
-//       , observed_on:sp.observed_on
-//       , place_guess: sp.place_guess
-//       , species_guess: sp.species_guess
-//       , tags: sp.tags
-//       , taxon: { 
-//           endemic: sp.taxon.endemic, iconic_taxon_id: sp.taxon.iconic_taxon_id, rank_level: sp.taxon.rank_level, introduced: sp.taxon.introduced, native: sp.taxon.native, name: sp.taxon.name, rank: sp.taxon.rank, id: sp.taxon.id, default_photo: sp.taxon.default_photo, observations_count: sp.taxon.observations_count, wikipedia_url: sp.taxon.wikipedia_url, iconic_taxon_name: sp.taxon.iconic_taxon_name, preferred_common_name: sp.taxon.preferred_common_name 
-//       }
-//   }
-// })
-
 const getApp = () => {
   // Filestore's firebase configuration
   const firebaseConfig = {
@@ -1119,7 +570,7 @@ const getApp = () => {
 
   // Initialise Firebase
   const app = initializeApp(firebaseConfig)
-  console.log('app, app')
+  console.log('app', app)
 
   return app
 
@@ -1149,39 +600,58 @@ const getFieldnotesStubsCollectionRef = ({db}) => {
 
 export const getFieldnotes = async () => {   
   const db = getDb()
-
-  const fieldNotesCollection = collection(db, 'fieldnotes')
-  const notesDocs = await getDocs((fieldNotesCollection))
-  const notesList = notesDocs.docs.map(doc => {
+  const fieldnotesCollectionRef = getFieldnotesCollectionRef({db})
+  const notesDocsRef = await getDocs((fieldnotesCollectionRef))
+  const notesList = notesDocsRef.docs.map(doc => {
     console.log(doc.data().fnId)
     return doc.data()
   })
-  console.log(notesList)
   return notesList
 }
 
+export const getFieldnotesById = async ({id}) => {
+  const docRef = doc(getDb(), "fieldnotes", id)
+  const docSnap = await getDoc(docRef)
+  return docSnap.data()
+}
+
+export const getFieldnotesStubs = async () => {   
+  const db = getDb()
+  const fieldnotesStubCollectionRef = getFieldnotesStubsCollectionRef({db})
+  const notesDocsRef = await getDocs((fieldnotesStubCollectionRef))
+  const stubsList = notesDocsRef.docs.map(doc => {
+    console.log(doc.data().fnId)
+    return doc.data()
+  })
+  console.log(stubsList)
+  return stubsList
+}
+
 export const addFieldnotes = async ({fieldnotes}) => {
+  const db = getDb()
   // Add new fieldnotes to collection
-  const fieldnotesCollectionRef = getFieldnotesCollectionRef({db:getDb()})
-  const fieldNotesRef = doc(fieldnotesCollectionRef)
+  const fieldnotesCollectionRef = getFieldnotesCollectionRef({db})
+  const fieldNotesRef = await doc(fieldnotesCollectionRef)
   const id = fieldNotesRef.id
-  const fieldnotesData = { id, ...fieldnotes }
+  const fieldnotesData = { ...fieldnotes, id }
   await setDoc(fieldNotesRef, fieldnotesData)
 
   // Add new fieldnotes stub to collection
-  const fieldnotesStubCollectionRef = getFieldnotesStubsCollectionRef({db:getDb()})
-  const fieldNotesStubRef = doc(fieldnotesStubCollectionRef)
+  const fieldnotesStubCollectionRef = getFieldnotesStubsCollectionRef({db})
+  const fieldNotesStubRef = await doc(fieldnotesStubCollectionRef)
   const stubId = fieldNotesStubRef.id
-  const fieldnotesStubData = { id, title: fieldnotes.title, author: fieldnotes.author }
+  const fieldnotesStubData = { id: stubId, fieldnotesId: id, title: fieldnotes.title, author: fieldnotes.author }
   await setDoc(fieldNotesStubRef, fieldnotesStubData)
 }
 
-export const updateFieldNote = async ({db, fieldnotes, data}) => {
+export const updateFieldNotes = async ({fieldnotes, data}) => {
+  const db = getDb()
   const docRef = doc(db, 'fieldnotes', fieldnotes.id)  
   updateDoc(docRef, data)
 }
 
-export const deleteFieldnoteProperty = async ({db, fieldnotes, prop}) => {
+export const deleteFieldnoteProperty = async ({fieldnotes, prop}) => {
+  const db = getDb()
   const docRef = doc(db, 'fieldnotes', fieldnotes.id)
   const data = {
     [prop]: deleteField()
@@ -1189,7 +659,8 @@ export const deleteFieldnoteProperty = async ({db, fieldnotes, prop}) => {
   updateDoc(docRef, data)
 }
 
-export const addElementToArray = async ({db, fieldnotes, array, element}) => {
+export const addElementToArray = async ({fieldnotes, array, element}) => {
+  const db = getDb()
   const docRef = doc(db, 'fieldnotes', fieldnotes.id)
   const data = {
     [array]: arrayUnion(element)
@@ -1197,35 +668,11 @@ export const addElementToArray = async ({db, fieldnotes, array, element}) => {
   updateDoc(docRef, data)
 }
 
-export const removeElementFromArray = async ({db, fieldnotes, array, element}) => {
+export const removeElementFromArray = async ({fieldnotes, array, element}) => {
+  const db = getDb()
   const docRef = doc(db, 'fieldnotes', fieldnotes.id)
   const data = {
     [array]: arrayRemove(element)
   }
   updateDoc(docRef, data)
-}
-
-export const testConnection = async () => {
-  const db = getDb()
-
-
-  const notes = await getFieldnotes()
-  // addFieldnotes({fieldnotesCollectionRef: getFieldnotesCollectionRef({db}), fieldnotes: fieldnotes[2]})
-  // updateFieldNote({db, fieldnotes: notes[0], data: {
-  //   title: "UPDATED Arrábida, Portugal, Thu Nov 09 2023",
-  // }})
-
-  // deleteFieldnoteProperty({db, fieldnotes: notes[0], prop: 'title'})
-
-  const section = {
-    parent: "non-grid-template",
-    name: "Subheader",
-    id: "h4-input-template",
-    type: "h4-header",
-    h4: "Test subheader"
-  }
-  // addElementToArray({db, fieldnotes:notes[0], array:'sections', element: section})
-  // removeElementFromArray({db, fieldnotes:notes[0], array:'sections', element: section})
-  getFieldnotes()
-
 }

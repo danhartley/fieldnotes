@@ -600,6 +600,7 @@ export const fieldnotes = [
     ]
   },
   {
+    id: 'mpweBXYrNgaqyv3PpkTh',
     fnId: "Arrábida, Portugal, Thu Nov 09 2023",
     title: "FOR DB Arrábida, Portugal, Thu Nov 09 2023",
     author: "danhartleybcn",
@@ -670,6 +671,17 @@ export const fieldnotes = [
         id: 49490,
         name: "Cladonia"
       }
+    ],
+    sectionOrder: [
+        'section-0',
+        'section-1',
+        'section-2',
+        'section-3',
+        'section-4',
+        'section-5',
+        'section-6',
+        'section-7',
+        'section-8'
     ],
     sections: [
       {

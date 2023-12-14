@@ -4,7 +4,10 @@ import {
 , getTerms
 , _getFieldnotes
 , getFieldnotes
+, getFieldnotesStubs
+, getFieldnotesById
 , addFieldnotes
+, updateFieldNotes
 } from './api.js'
 
 import { 
@@ -22,7 +25,7 @@ import {
   , createInatParamsCheckboxGroup
   , createInatLookups
   , handleTermAutocomplete
-  , handleFieldsNotesAutocomplete
+  , handleFieldsnotesAutocomplete
   , cloneImages
   , dragstartHandler
   , dragoverHandler
@@ -68,7 +71,7 @@ const init = () => {
   const exportFieldNotesBtn = d.getElementById('export-fieldnotes-btn')
 
   draggableSections.addEventListener('dragover', dragoverHandler)
-  draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections}))
+  draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
 
   let sectionIndex = 0
 
@@ -122,15 +125,18 @@ const init = () => {
     if(globalWrite.species.length === 0) return
 
     const { author, date, location } = getMeta({species: globalWrite.species})
+    const title = `${location.place_guess}, ${(new Date(date)).toDateString()}`
 
-    titleInputText.value = `${location.place_guess}, ${(new Date(date)).toDateString()}`
+    titleInputText.value = title
     authorInputText.value = author
     dateInputText.value = date
     placeInputText.value = location.place_guess
 
+    globalWrite.title = title
     globalWrite.author = author
     globalWrite.d1 = date
     globalWrite.d2 = date
+    globalWrite.location = location
 
     // Enable the create observation and species section buttons
     selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
@@ -172,7 +178,7 @@ const init = () => {
 
   const { id, prop } = g.inatAutocomplete
   handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g: globalWrite, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})  
-  handleFieldsNotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, g: globalWrite, data: _getFieldnotes(), importFieldNotesBtn}) 
+  handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, g: globalWrite, fieldnotesStubsCallback: getFieldnotesStubs, importFieldNotesBtn}) 
 
   const updateBtnState = ({str, btn}) => {
     str.length > 0
@@ -215,13 +221,15 @@ const init = () => {
 
     let t, clone, header, input, section, sectionIndex = null
 
-    section = globalWrite.templates.find(t => t.sectionId === sectionId)
+    globalWrite.sections = globalWrite.sections || []
 
-    if(section) sectionIndex = globalWrite.templates.findIndex(t => t.sectionId === sectionId)
+    section = globalWrite.sections.find(t => t.sectionId === sectionId) || null
+
+    if(section) sectionIndex = globalWrite.sections.findIndex(t => t.sectionId === sectionId)
 
     switch(typeId) {
       case 'h3-input':        
-        globalWrite.templates.push({ ...h3, templateId: h3.id, sectionId, h3: typeValue },)
+        globalWrite.sections.push({ ...h3, templateId: h3.id, sectionId, h3: typeValue },)
         t = d.getElementById('h3-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h3')
@@ -229,7 +237,7 @@ const init = () => {
         previewContainer.appendChild(clone)
         break
       case 'h4-input':
-        globalWrite.templates.push({ ...h4, templateId: h4.id, sectionId, h4: typeValue })
+        globalWrite.sections.push({ ...h4, templateId: h4.id, sectionId, h4: typeValue })
         t = d.getElementById('h4-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h4')
@@ -237,7 +245,7 @@ const init = () => {
         previewContainer.appendChild(clone)
         break
       case 'birdsong-input':
-        globalWrite.templates.push({ ...xenocanto, templateId: xenocanto.id, sectionId, xenocanto: typeValue })
+        globalWrite.sections.push({ ...xenocanto, templateId: xenocanto.id, sectionId, xenocanto: typeValue })
         t = d.getElementById('xenocanto-template')
         clone = t.content.cloneNode(true)
         input = clone.querySelector('input')
@@ -252,8 +260,8 @@ const init = () => {
           }
         })
         section      
-          ? globalWrite.templates[sectionIndex] = {...text, templateId: text.id, sectionId, paras}
-          : globalWrite.templates.push({...text, templateId: text.id, sectionId, paras})        
+          ? globalWrite.sections[sectionIndex] = {...text, templateId: text.id, sectionId, paras}
+          : globalWrite.sections.push({...text, templateId: text.id, sectionId, paras})        
 
         paras.forEach(text => {
           const t = d.getElementById('text-template')
@@ -265,15 +273,15 @@ const init = () => {
         break
       case 'terms':        
         section
-          ? globalWrite.templates[sectionIndex] = {...term, templateId: term.id, sectionId, selectedTerms: typeValue}
-          : globalWrite.templates.push({ ...term, templateId: term.id, sectionId, terms: typeValue })
+          ? globalWrite.sections[sectionIndex] = {...term, templateId: term.id, sectionId, selectedTerms: typeValue}
+          : globalWrite.sections.push({ ...term, templateId: term.id, sectionId, terms: typeValue })
 
         addTermToList({selectedTerms: typeValue, selectedTerm: null, selectedTermsList: previewContainer})  
         break
       case 'images':
         section
-          ? globalWrite.templates[sectionIndex] = {...image, templateId: image.id, sectionId, imgs: typeValue}
-          : globalWrite.templates.push({ ...image, templateId: image.id, sectionId, imgs: typeValue })        
+          ? globalWrite.sections[sectionIndex] = {...image, templateId: image.id, sectionId, imgs: typeValue}
+          : globalWrite.sections.push({ ...image, templateId: image.id, sectionId, imgs: typeValue })        
         break
     }
     const parent = e.target.parentElement
@@ -292,7 +300,7 @@ const init = () => {
   const deleteSection = ({e, sectionId}) => {
     const element = d.getElementById(sectionId)
     element.remove()
-    globalWrite.templates = globalWrite.templates.filter(t => t.sectionId !== sectionId) // check exits there first…
+    globalWrite.sections = globalWrite.sections.filter(t => t.sectionId !== sectionId) // check exits there first…
   }
 
   const handleInputChangeEvent = (e, addBtn) => {
@@ -584,11 +592,12 @@ const init = () => {
   singleObservationsInputDate.addEventListener('blur', checkSearchBtnState, true)
   iNatAutocompleteInputText.addEventListener('blur', checkSearchBtnState, true)
 
-  // Export fieldnots
+  // Export fieldnotes
   const exportFieldNotes = () => {
     const notes = {}
 
     Object.assign(notes, {
+      id: globalWrite.id,
       fnId: globalWrite.title,
       title: globalWrite.title,
       author: globalWrite.author,
@@ -605,27 +614,13 @@ const init = () => {
       location: globalWrite.location,
       language: globalWrite.language,
       taxa: globalWrite.taxa,
-      sections: globalWrite.templates.map(t => {
-        const {templateId, sectionId, ...validProps} = t
+      sections: globalWrite.sections.map(t => {
+        const {templateId, ...validProps} = t
         return {
           ...validProps,
         }
       }),
-    //   templates: [{
-    //     id: globalWrite.title,
-    //     name: 'Field journal',
-    //     parent: 'non-grid-template',
-    //     type: 'fieldnotes',
-    //     isTest: false,  
-    //     sections: globalWrite.templates.map(t => {
-    //       const {templateId, sectionId, ...validProps} = t
-    //       return {
-    //         ...validProps,
-    //       }
-    //     }),
-    //   },
-    //   ...templates,
-    // ],
+      sectionOrder: globalWrite.sections.map(section => section.sectionId)
     })
     console.log(notes)
     
@@ -638,12 +633,14 @@ const init = () => {
   const importFieldNotes = async () => {
     importFieldNotesNotificationText.classList.remove('hidden')
     
-    const guide = globalWrite.fieldnote
+    const fieldnotes = await getFieldnotesById({id: globalWrite.fieldnotesStubs.fieldnotesId})
 
     Object.assign(globalWrite, {
       iconicTaxa: g.ICONIC_TAXA,
-      ...guide,
-      templates: guide.sections
+      ...fieldnotes,
+      sections: fieldnotes.sectionOrder.map(sectionId => {
+        return fieldnotes.sections.find(section => section.sectionId === sectionId)
+      })      
     })
 
     const { title, author, d1, d2, location } = globalWrite
@@ -666,7 +663,7 @@ const init = () => {
 
     importFieldNotesNotificationText.classList.add('hidden')
 
-    globalWrite.templates.forEach((section, index) => {
+    globalWrite.sections.forEach((section, index) => {
       section.sectionId = `section-${index}`
       const sectionContainer = handleSelectSectionType({
           typeId: section.type
@@ -705,7 +702,6 @@ const init = () => {
     // Enable the create observation and species section buttons
     selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
     selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
-    exportFieldNotesBtn.classList.remove('disabled')
 
     // Hide all species that are not included
     const btns = d.querySelectorAll('.show-all-or-include-only-btn')
@@ -716,12 +712,10 @@ const init = () => {
     })
 
     // Enable saving fieldnotes
-    exportFieldNotesBtn.classList.remove('disabled')
+    // exportFieldNotesBtn.classList.remove('disabled')
   }
 
   importFieldNotesBtn.addEventListener('click', importFieldNotes, true)
-
-  // testConnection()
 }
 
 init()

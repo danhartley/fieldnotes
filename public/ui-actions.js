@@ -150,15 +150,18 @@ export const handleTermAutocomplete = ({inputText, selectedTerms, dataList, g, d
     })
 }
 
-export const handleFieldsNotesAutocomplete = ({inputText, dataList, g, data, importFieldNotesBtn}) => {
-  inputText.addEventListener('input', debounce(async (e) => {
+export const handleFieldsnotesAutocomplete = async ({inputText, dataList, g, fieldnotesStubsCallback, importFieldNotesBtn}) => {
+    let stubs
+    inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
         }
 
         const strToComplete = e.target.value
 
-        g.matches = data.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
+        stubs = await fieldnotesStubsCallback()
+
+        g.matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
                 
         g.matches.forEach(match => {
             const option = d.createElement('option')
@@ -171,7 +174,7 @@ export const handleFieldsNotesAutocomplete = ({inputText, dataList, g, data, imp
         const match = e.target.value
 
         if(match) {
-            g.fieldnote = data.find(option => option.title === match)
+            g.fieldnotesStubs = stubs.find(option => option.title === match)
             importFieldNotesBtn.classList.remove('disabled')        
         }
     })
@@ -357,7 +360,7 @@ export const dragleaveHandler = e => {
   }
 }
 
-export const dropHandler = ({e, globalWrite, draggableSections}) => {
+export const dropHandler = async ({e, globalWrite, draggableSections, apiCallback}) => {
   // The event target is the section being moved (dragged and dropped)
   e.preventDefault()
 
@@ -379,18 +382,28 @@ export const dropHandler = ({e, globalWrite, draggableSections}) => {
     // Update the mouse icon
     sectionToMove.classList.remove('moveable')
     sectionToMove.classList.add('pointer')
+
+    console.log(globalWrite.sectionOrder)
     
     // Finally update the position of the moved section template to correspond to its new position in the DOM
-    const indexOfJumpedSectionTemplate = globalWrite.templates.findIndex(t => t.sectionId === sectionToJumpId)
+    const indexOfJumpedSectionTemplate = globalWrite.sectionOrder.findIndex(sectionId => sectionId === sectionToJumpId)
 
     if(indexOfJumpedSectionTemplate === -1) return // There is no such section, something went wrong
 
-    const sectionTemplateToMove = globalWrite.templates.find(t => t.sectionId === sectionToDropId)
+    const sectionTemplateToMoveId = globalWrite.sectionOrder.find(sectionId => sectionId === sectionToDropId)
 
-    globalWrite.templates = globalWrite.templates.filter(t => t.sectionId !== sectionToDropId)
+    globalWrite.sectionOrder = globalWrite.sectionOrder.filter(sectionId => sectionId !== sectionToDropId)
 
     sectionToMoveDOMIndex > sectionToJumpDOMIndex
-      ? globalWrite.templates.splice(indexOfJumpedSectionTemplate, 0, sectionTemplateToMove) // Move up
-      : globalWrite.templates.splice(indexOfJumpedSectionTemplate + 1, 0, sectionTemplateToMove) // Move down
+      ? globalWrite.sectionOrder.splice(indexOfJumpedSectionTemplate, 0, sectionTemplateToMoveId) // Move up
+      : globalWrite.sectionOrder.splice(indexOfJumpedSectionTemplate + 1, 0, sectionTemplateToMoveId) // Move down
+
+    console.log(globalWrite.sectionOrder)
+
+    const response = await apiCallback({fieldnotes: globalWrite, data: {
+        sectionOrder: globalWrite.sectionOrder
+    }})
+
+    console.log(response)
   }
 }
