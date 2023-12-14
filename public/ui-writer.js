@@ -17,6 +17,7 @@ import {
 , h3
 , h4
 , text
+, textarea
 , term
 , image
 , xenocanto 
@@ -220,7 +221,15 @@ const init = () => {
     })
   }
 
-  const addSection = async ({e, typeId, typeValue, previewContainer, sectionId}) => {
+  const addParasToPreviewContainer = ({text, previewContainer}) => {
+    const t = d.getElementById('text-template')
+    const clone = t.content.cloneNode(true)
+    const p = clone.querySelector('p')
+    p.textContent = text.p
+    previewContainer.appendChild(clone)
+  }
+
+  const addSection = async ({parent, typeId, typeValue, previewContainer, sectionId}) => {
     previewContainer.innerHTML = ''
 
     let t, clone, header, input, section, sectionIndex, sectionToAdd, sectionToUpdate = null
@@ -234,7 +243,6 @@ const init = () => {
     switch(typeId) {
       case 'h3-input':        
         sectionToAdd = { ...h3, templateId: h3.id, sectionId, h3: typeValue }
-        // globalWrite.sections.push({ ...h3, templateId: h3.id, sectionId, h3: typeValue })
         t = d.getElementById('h3-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h3')
@@ -243,7 +251,6 @@ const init = () => {
         break
       case 'h4-input':
         sectionToAdd = { ...h4, templateId: h4.id, sectionId, h4: typeValue }
-        // globalWrite.sections.push({ ...h4, templateId: h4.id, sectionId, h4: typeValue })
         t = d.getElementById('h4-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h4')
@@ -265,16 +272,10 @@ const init = () => {
             p
           }
         })
-        sectionToAdd = { ...text, templateId: text.id, sectionId, paras }
-        sectionToUpdate = { ...text, templateId: text.id, sectionId, paras }
+        sectionToAdd = { ...textarea, templateId: textarea.id, sectionId, paras }
+        sectionToUpdate = { ...textarea, templateId: textarea.id, sectionId, paras }
 
-        paras.forEach(text => {
-          const t = d.getElementById('text-template')
-          const clone = t.content.cloneNode(true)
-          const p = clone.querySelector('p')
-          p.textContent = text.p    
-          previewContainer.appendChild(clone)
-        })
+        paras.forEach(text => addParasToPreviewContainer({text, previewContainer}))
         break
       case 'terms':        
         sectionToAdd = { ...term, templateId: term.id, sectionId, selectedTerms: typeValue }
@@ -287,26 +288,26 @@ const init = () => {
         sectionToUpdate = { ...image, templateId: image.id, sectionId, imgs: typeValue }        
         break
     }
-    const parent = e.target.parentElement
+    // Show the preview section and hide the edit section
     Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
     Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
 
     // Update DOM
-    !!section
-      ? globalWrite.sections.push(sectionToAdd)
-      : globalWrite.sections[sectionIndex] = sectionToUpdate
-
-    // Save to db
-    const response = !!section 
-      ? await addElementToArray({fieldnotes: globalWrite, array: 'sections',  element: sectionToAdd})
-      : await updateElementFromArray({fieldnotes: globalWrite, array: 'sections',  element: sectionToUpdate})
-
-    console.log(response)
+    section !== null
+    ? globalWrite.sections[sectionIndex] = sectionToUpdate
+    : globalWrite.sections.push(sectionToAdd)
+        
+    // Save changes to db
+    section !== null
+      ? await updateElementFromArray({fieldnotes: globalWrite, array: 'sections',  element: sectionToUpdate})
+      : await addElementToArray({fieldnotes: globalWrite, array: 'sections',  element: sectionToAdd})  
   }
 
   const editSection = ({e}) => {
     const parent = e.target.parentElement
-    parent.querySelector('#add-section-btn').innerText = 'Save changes'
+    const addSectionBtn = parent.querySelector('#add-section-btn')
+    addSectionBtn.innerText = 'Save changes'
+    addSectionBtn.classList.remove('disabled')
 
     Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
     Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
@@ -358,7 +359,7 @@ const init = () => {
     return sectionTemplate
   }
 
-  const handleSelectSectionType = ({typeId, typeText, typeTemplateName, sectionTemplate}) => {
+  const handleSelectSectionType = ({typeId, typeText, typeTemplateName, sectionTemplate, sectionId}) => {
     const sectionClone = sectionTemplate.content.cloneNode(true)
     const fieldset = sectionClone.querySelector('fieldset')
     const legend = sectionClone.querySelector('legend')
@@ -366,8 +367,7 @@ const init = () => {
     const parentContainer = sectionClone.querySelector('div')
     const addSectionBtn = sectionClone.getElementById('add-section-btn')
     const editSectionBtn = sectionClone.getElementById('edit-section-btn')
-    const deleteSectionBtn = sectionClone.getElementById('delete-section-btn')
-    const sectionId = `section-${sectionIndex++}`
+    const deleteSectionBtn = sectionClone.getElementById('delete-section-btn')    
     const sectionContainer = sectionClone.querySelector('section')    
     const typeTemplate = d.getElementById(typeTemplateName)
     const typeClone = typeTemplate.content.cloneNode(true)
@@ -387,14 +387,14 @@ const init = () => {
       case 'birdsong-input':
         input = typeClone.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
-        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:input.value, previewContainer, sectionId}), true)
+        addSectionBtn.addEventListener('click', e => addSection({parent: e.target.parentElement, typeId, typeValue:input.value, previewContainer, sectionId}), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
-      case 'textarea':
-        texarea = typeClone.querySelector('textarea')        
+      case 'textarea':      
+        texarea = typeClone.querySelector('textarea')
         texarea.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
-        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:texarea.value, previewContainer, sectionId}), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
+        addSectionBtn.addEventListener('click', e => addSection({parent: e.target.parentElement, typeId, typeValue:texarea.value, previewContainer, sectionId}), true)
         break
       case 'observations':
       case 'species':                
@@ -408,7 +408,7 @@ const init = () => {
         input.setAttribute('list', datalist.id)        
         label = typeClone.querySelector('label')
         label.htmlFor = input.id                  
-        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:selectedTerms, previewContainer, sectionId }), true)
+        addSectionBtn.addEventListener('click', e => addSection({parent: e.target.parentElement, typeId, typeValue:selectedTerms, previewContainer, sectionId }), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
       case 'images':
@@ -417,7 +417,7 @@ const init = () => {
         url1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addSectionBtn, url1, title1}), true)
         title1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addSectionBtn, url1, title1}), true)
         
-        addSectionBtn.addEventListener('click', e => addSection({e, typeId, typeValue:images, previewContainer, sectionId}), true)
+        addSectionBtn.addEventListener('click', e => addSection({parent: e.target.parentElement, typeId, typeValue:images, previewContainer, sectionId}), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
       case 'inat-lookup':
@@ -576,7 +576,7 @@ const init = () => {
     const typeId = e.target.value
     const typeText = e.target.innerText
     
-    handleSelectSectionType({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate: getSectionTemplate({typeId})})
+    handleSelectSectionType({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate: getSectionTemplate({typeId}), sectionId: `section-${sectionIndex++}`})
   }, true))
 
   // Persist updated metadata values to the fieldnotes object
@@ -680,13 +680,16 @@ const init = () => {
 
     importFieldNotesNotificationText.classList.add('hidden')
 
-    globalWrite.sections.forEach((section, index) => {
-      section.sectionId = `section-${index}`
+    // update the sectionIndex to reflect the number of imported sections (move to global??)
+    sectionIndex = globalWrite.sections.length
+
+    globalWrite.sections.forEach(section => {
       const sectionContainer = handleSelectSectionType({
           typeId: section.type
         , typeText: section.name
         , typeTemplateName: section.id
-        , sectionTemplate: getSectionTemplate({typeId: section.type})              
+        , sectionTemplate: getSectionTemplate({typeId: section.type})
+        , sectionId: section.sectionId     
       })
 
       const addSectionBtn = sectionContainer.querySelector('#add-section-btn')
@@ -695,12 +698,18 @@ const init = () => {
       if(addSectionBtn) addSectionBtn.classList.add('hidden')
       if(editSectionBtn) editSectionBtn.classList.remove('hidden')
 
-      let target
+      let edit, add
 
       switch(section.type) {
-        case 'text':
-          target = sectionContainer.querySelector('p')    
-          target.innerText = section.paras.map(para => para.p).join('\n\n')
+        case 'textarea':
+          edit = sectionContainer.querySelector('.edit')
+          edit.classList.remove('hidden')
+          add = sectionContainer.querySelector('.add')
+          section.paras.forEach(text => {
+            addParasToPreviewContainer({text, previewContainer: edit})
+            add.innerText += text.p
+          })
+          sectionContainer.querySelector('.add:not(.edit)').classList.add('hidden')
           break
         case 'species':
           const speciesCheckboxes = sectionContainer.querySelectorAll('input')

@@ -60,6 +60,14 @@ export const text = {
   paras: [],
 }
 
+export const textarea = {
+  id: 'textarea-template',
+  name: 'Text block',
+  parent: 'non-grid-template',
+  type: 'textarea',
+  paras: [],
+}
+
 export const term = {
   id: 'terms-template',
   name: 'Terms', 
