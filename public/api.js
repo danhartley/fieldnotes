@@ -662,10 +662,20 @@ export const deleteFieldnoteProperty = async ({fieldnotes, prop}) => {
 export const addElementToArray = async ({fieldnotes, array, element}) => {
   const db = getDb()
   const docRef = doc(db, 'fieldnotes', fieldnotes.id)
-  const data = {
+
+  let data = null
+  
+  data = {
     [array]: arrayUnion(element)
   }
   updateDoc(docRef, data)
+
+  if(array === 'sections') {
+    data = {
+      sectionOrder: arrayUnion(element.sectionId)
+    }
+    updateDoc(docRef, data)
+  }
 }
 
 export const removeElementFromArray = async ({fieldnotes, array, element}) => {
@@ -675,4 +685,11 @@ export const removeElementFromArray = async ({fieldnotes, array, element}) => {
     [array]: arrayRemove(element)
   }
   updateDoc(docRef, data)
+}
+
+export const updateElementFromArray = async ({fieldnotes, array, element}) => {
+  // There is no native operation to update the element of an array
+  // Instead, we remove the element, then add (the now updated) element
+  await removeElementFromArray({fieldnotes, array, element})
+  await addElementToArray({fieldnotes, array, element})
 }

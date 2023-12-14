@@ -600,7 +600,7 @@ export const fieldnotes = [
     ]
   },
   {
-    id: 'mpweBXYrNgaqyv3PpkTh',
+    id: 'bKOYBjbqs21z7Qf430uX',
     fnId: "Arrábida, Portugal, Thu Nov 09 2023",
     title: "FOR DB Arrábida, Portugal, Thu Nov 09 2023",
     author: "danhartleybcn",
@@ -686,6 +686,7 @@ export const fieldnotes = [
     sections: [
       {
         id: "text-template",
+        sectionId: 'section-0',
         name: "Text block",
         parent: "non-grid-template",
         type: "text",
@@ -700,6 +701,7 @@ export const fieldnotes = [
       },
       {
         id: "species-template",
+        sectionId: 'section-1',
         name: "Species catalogue",
         parent: "grid-template",
         type: "species",
@@ -711,6 +713,7 @@ export const fieldnotes = [
       },
       {
         id: "text-template",
+        sectionId: 'section-2',
         name: "Text block",
         parent: "non-grid-template",
         type: "text",
@@ -731,6 +734,7 @@ export const fieldnotes = [
       },
       {
         id: "species-template",
+        sectionId: 'section-3',
         name: "Species catalogue",
         parent: "grid-template",
         type: "species",
@@ -745,6 +749,7 @@ export const fieldnotes = [
       },
       {
         id: "text-template",
+        sectionId: 'section-4',
         name: "Text block",
         parent: "non-grid-template",
         type: "text",
@@ -759,6 +764,7 @@ export const fieldnotes = [
       },
       {
         id: "species-template",
+        sectionId: 'section-5',
         name: "Species catalogue",
         parent: "grid-template",
         type: "species",
@@ -770,6 +776,7 @@ export const fieldnotes = [
       },
       {
         id: "text-template",
+        sectionId: 'section-6',
         name: "Text block",
         parent: "non-grid-template",
         type: "text",
@@ -796,6 +803,7 @@ export const fieldnotes = [
       },
       {
         id: "h4-input-template",
+        sectionId: 'section-7',
         name: "Subheader",
         parent: "non-grid-template",
         type: "h4-header",
@@ -803,6 +811,7 @@ export const fieldnotes = [
       },
       {
         id: "text-template",
+        sectionId: 'section-8',
         name: "Text block",
         parent: "non-grid-template",
         type: "text",

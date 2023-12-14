@@ -8,6 +8,8 @@ import {
 , getFieldnotesById
 , addFieldnotes
 , updateFieldNotes
+, addElementToArray
+, updateElementFromArray
 } from './api.js'
 
 import { 
@@ -35,6 +37,8 @@ import {
 } from './ui-actions.js'
 
 const init = () => {
+
+  const useLocal = false
 
   let globalWrite = {}
 
@@ -178,7 +182,7 @@ const init = () => {
 
   const { id, prop } = g.inatAutocomplete
   handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g: globalWrite, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})  
-  handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, g: globalWrite, fieldnotesStubsCallback: getFieldnotesStubs, importFieldNotesBtn}) 
+  handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, g: globalWrite, fieldnotesStubsCallback: useLocal ? _getFieldnotes : getFieldnotesStubs, importFieldNotesBtn}) 
 
   const updateBtnState = ({str, btn}) => {
     str.length > 0
@@ -216,10 +220,10 @@ const init = () => {
     })
   }
 
-  const addSection = ({e, typeId, typeValue, previewContainer, sectionId}) => {
+  const addSection = async ({e, typeId, typeValue, previewContainer, sectionId}) => {
     previewContainer.innerHTML = ''
 
-    let t, clone, header, input, section, sectionIndex = null
+    let t, clone, header, input, section, sectionIndex, sectionToAdd, sectionToUpdate = null
 
     globalWrite.sections = globalWrite.sections || []
 
@@ -229,7 +233,8 @@ const init = () => {
 
     switch(typeId) {
       case 'h3-input':        
-        globalWrite.sections.push({ ...h3, templateId: h3.id, sectionId, h3: typeValue },)
+        sectionToAdd = { ...h3, templateId: h3.id, sectionId, h3: typeValue }
+        // globalWrite.sections.push({ ...h3, templateId: h3.id, sectionId, h3: typeValue })
         t = d.getElementById('h3-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h3')
@@ -237,7 +242,8 @@ const init = () => {
         previewContainer.appendChild(clone)
         break
       case 'h4-input':
-        globalWrite.sections.push({ ...h4, templateId: h4.id, sectionId, h4: typeValue })
+        sectionToAdd = { ...h4, templateId: h4.id, sectionId, h4: typeValue }
+        // globalWrite.sections.push({ ...h4, templateId: h4.id, sectionId, h4: typeValue })
         t = d.getElementById('h4-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h4')
@@ -245,7 +251,7 @@ const init = () => {
         previewContainer.appendChild(clone)
         break
       case 'birdsong-input':
-        globalWrite.sections.push({ ...xenocanto, templateId: xenocanto.id, sectionId, xenocanto: typeValue })
+        sectionToAdd = { ...xenocanto, templateId: xenocanto.id, sectionId, xenocanto: typeValue }
         t = d.getElementById('xenocanto-template')
         clone = t.content.cloneNode(true)
         input = clone.querySelector('input')
@@ -259,9 +265,8 @@ const init = () => {
             p
           }
         })
-        section      
-          ? globalWrite.sections[sectionIndex] = {...text, templateId: text.id, sectionId, paras}
-          : globalWrite.sections.push({...text, templateId: text.id, sectionId, paras})        
+        sectionToAdd = { ...text, templateId: text.id, sectionId, paras }
+        sectionToUpdate = { ...text, templateId: text.id, sectionId, paras }
 
         paras.forEach(text => {
           const t = d.getElementById('text-template')
@@ -272,21 +277,31 @@ const init = () => {
         })
         break
       case 'terms':        
-        section
-          ? globalWrite.sections[sectionIndex] = {...term, templateId: term.id, sectionId, selectedTerms: typeValue}
-          : globalWrite.sections.push({ ...term, templateId: term.id, sectionId, terms: typeValue })
+        sectionToAdd = { ...term, templateId: term.id, sectionId, selectedTerms: typeValue }
+        sectionToUpdate = { ...term, templateId: term.id, sectionId, terms: typeValue }
 
         addTermToList({selectedTerms: typeValue, selectedTerm: null, selectedTermsList: previewContainer})  
         break
       case 'images':
-        section
-          ? globalWrite.sections[sectionIndex] = {...image, templateId: image.id, sectionId, imgs: typeValue}
-          : globalWrite.sections.push({ ...image, templateId: image.id, sectionId, imgs: typeValue })        
+        sectionToAdd = {...image, templateId: image.id, sectionId, imgs: typeValue }
+        sectionToUpdate = { ...image, templateId: image.id, sectionId, imgs: typeValue }        
         break
     }
     const parent = e.target.parentElement
     Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
     Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
+
+    // Update DOM
+    !!section
+      ? globalWrite.sections.push(sectionToAdd)
+      : globalWrite.sections[sectionIndex] = sectionToUpdate
+
+    // Save to db
+    const response = !!section 
+      ? await addElementToArray({fieldnotes: globalWrite, array: 'sections',  element: sectionToAdd})
+      : await updateElementFromArray({fieldnotes: globalWrite, array: 'sections',  element: sectionToUpdate})
+
+    console.log(response)
   }
 
   const editSection = ({e}) => {
@@ -633,7 +648,9 @@ const init = () => {
   const importFieldNotes = async () => {
     importFieldNotesNotificationText.classList.remove('hidden')
     
-    const fieldnotes = await getFieldnotesById({id: globalWrite.fieldnotesStubs.fieldnotesId})
+    const fieldnotes = useLocal 
+      ? await globalWrite.fieldnotesStubs
+      : await getFieldnotesById({id: globalWrite.fieldnotesStubs.fieldnotesId})
 
     Object.assign(globalWrite, {
       iconicTaxa: g.ICONIC_TAXA,
@@ -712,7 +729,7 @@ const init = () => {
     })
 
     // Enable saving fieldnotes
-    // exportFieldNotesBtn.classList.remove('disabled')
+    exportFieldNotesBtn.classList.remove('disabled')
   }
 
   importFieldNotesBtn.addEventListener('click', importFieldNotes, true)

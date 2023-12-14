@@ -61,10 +61,10 @@ export const text = {
 }
 
 export const term = {
-  id: 'term-template',
+  id: 'terms-template',
   name: 'Terms', 
   parent: 'dl-template',
-  type: 'term',                 
+  type: 'terms',                 
   terms: [],
 }
 
