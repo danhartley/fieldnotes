@@ -40,7 +40,7 @@ export const h3 = {
   id: 'h3-input-template',
   name: 'Header',
   parent: 'non-grid-template',
-  type: 'h3-header',
+  type: 'h3-input',
   h3: 'title',
 }
 
@@ -48,7 +48,7 @@ export const h4 = {
   id: 'h4-input-template',
   name: 'Subheader',
   parent: 'non-grid-template',
-  type: 'h4-header',
+  type: 'h4-input',
   h4: 'title',
 }
 
@@ -132,6 +132,6 @@ export const author = {
 export const xenocanto = {
   id: 'xeno-canto-template',
   parent: 'non-grid-template',
-  type: 'xeno-canto',
+  type: 'birdsong-input',
   recordingId: 'id',
 }

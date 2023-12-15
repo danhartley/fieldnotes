@@ -10,6 +10,7 @@ import {
 , updateFieldNotes
 , addElementToArray
 , updateElementFromArray
+, removeElementFromArray
 } from './api.js'
 
 import { 
@@ -232,17 +233,17 @@ const init = () => {
   const addSection = async ({parent, typeId, typeValue, previewContainer, sectionId}) => {
     previewContainer.innerHTML = ''
 
-    let t, clone, header, input, section, sectionIndex, sectionToAdd, sectionToUpdate = null
+    let t, clone, header, input, sectionToUpdate, sectionIndex, sectionAddedOrUpdated = null
 
     globalWrite.sections = globalWrite.sections || []
 
-    section = globalWrite.sections.find(t => t.sectionId === sectionId) || null
+    sectionToUpdate = globalWrite.sections.find(t => t.sectionId === sectionId) || null
 
-    if(section) sectionIndex = globalWrite.sections.findIndex(t => t.sectionId === sectionId)
+    if(sectionToUpdate) sectionIndex = globalWrite.sections.findIndex(t => t.sectionId === sectionId)
 
     switch(typeId) {
       case 'h3-input':        
-        sectionToAdd = { ...h3, templateId: h3.id, sectionId, h3: typeValue }
+        sectionAddedOrUpdated = { ...h3, templateId: h3.id, sectionId, h3: typeValue }
         t = d.getElementById('h3-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h3')
@@ -250,7 +251,7 @@ const init = () => {
         previewContainer.appendChild(clone)
         break
       case 'h4-input':
-        sectionToAdd = { ...h4, templateId: h4.id, sectionId, h4: typeValue }
+        sectionAddedOrUpdated = { ...h4, templateId: h4.id, sectionId, h4: typeValue }
         t = d.getElementById('h4-template')
         clone = t.content.cloneNode(true)
         header = clone.querySelector('h4')
@@ -258,7 +259,7 @@ const init = () => {
         previewContainer.appendChild(clone)
         break
       case 'birdsong-input':
-        sectionToAdd = { ...xenocanto, templateId: xenocanto.id, sectionId, xenocanto: typeValue }
+        sectionAddedOrUpdated = { ...xenocanto, templateId: xenocanto.id, sectionId, xenocanto: typeValue }
         t = d.getElementById('xenocanto-template')
         clone = t.content.cloneNode(true)
         input = clone.querySelector('input')
@@ -272,35 +273,32 @@ const init = () => {
             p
           }
         })
-        sectionToAdd = { ...textarea, templateId: textarea.id, sectionId, paras }
-        sectionToUpdate = { ...textarea, templateId: textarea.id, sectionId, paras }
-
+        sectionAddedOrUpdated = { ...textarea, templateId: textarea.id, sectionId, paras }
         paras.forEach(text => addParasToPreviewContainer({text, previewContainer}))
         break
       case 'terms':        
-        sectionToAdd = { ...term, templateId: term.id, sectionId, selectedTerms: typeValue }
-        sectionToUpdate = { ...term, templateId: term.id, sectionId, terms: typeValue }
-
+        sectionAddedOrUpdated = { ...term, templateId: term.id, sectionId, terms: typeValue }
         addTermToList({selectedTerms: typeValue, selectedTerm: null, selectedTermsList: previewContainer})  
         break
       case 'images':
-        sectionToAdd = {...image, templateId: image.id, sectionId, imgs: typeValue }
-        sectionToUpdate = { ...image, templateId: image.id, sectionId, imgs: typeValue }        
+        sectionAddedOrUpdated = { ...image, templateId: image.id, sectionId, imgs: typeValue }
         break
     }
     // Show the preview section and hide the edit section
     Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
     Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
 
-    // Update DOM
-    section !== null
-    ? globalWrite.sections[sectionIndex] = sectionToUpdate
-    : globalWrite.sections.push(sectionToAdd)
+    const isAnUpdate = sectionToUpdate !== null
+
+    // Update the DOM
+    isAnUpdate
+    ? globalWrite.sections[sectionIndex] = sectionAddedOrUpdated
+    : globalWrite.sections.push(sectionAddedOrUpdated)
         
-    // Save changes to db
-    section !== null
-      ? await updateElementFromArray({fieldnotes: globalWrite, array: 'sections',  element: sectionToUpdate})
-      : await addElementToArray({fieldnotes: globalWrite, array: 'sections',  element: sectionToAdd})  
+    // Save changes to the db
+    isAnUpdate
+      ? await updateElementFromArray({fieldnotes: globalWrite, array: 'sections', elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated})
+      : await addElementToArray({fieldnotes: globalWrite, array: 'sections',  element: sectionAddedOrUpdated})  
   }
 
   const editSection = ({e}) => {
@@ -313,10 +311,13 @@ const init = () => {
     Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
   }
   
-  const deleteSection = ({e, sectionId}) => {
+  const deleteSection = async ({e, sectionId}) => {
     const element = d.getElementById(sectionId)
     element.remove()
-    globalWrite.sections = globalWrite.sections.filter(t => t.sectionId !== sectionId) // check exits there first…
+    globalWrite.sections = globalWrite.sections.filter(t => t.sectionId !== sectionId)
+
+    // Delete in the db
+    // await removeElementFromArray({fieldnotes: globalWrite, array: 'sections',  element:})
   }
 
   const handleInputChangeEvent = (e, addBtn) => {
@@ -698,18 +699,29 @@ const init = () => {
       if(addSectionBtn) addSectionBtn.classList.add('hidden')
       if(editSectionBtn) editSectionBtn.classList.remove('hidden')
 
-      let edit, add
+      const edit = sectionContainer.querySelector('.edit')
+      edit.classList.remove('hidden')
+      const add = sectionContainer.querySelector('.add')
+      if(sectionContainer.querySelector('.add:not(.edit)')) sectionContainer.querySelector('.add:not(.edit)').classList.add('hidden')
 
       switch(section.type) {
-        case 'textarea':
-          edit = sectionContainer.querySelector('.edit')
-          edit.classList.remove('hidden')
-          add = sectionContainer.querySelector('.add')
+        case 'h3-input':
+          edit.innerText = section.h3
+          add.value = section.h3
+          break
+        case 'h4-input':
+          edit.innerText = section.h4
+          add.value = section.h4
+          break
+        case 'birdsong-input':
+          edit.innerText = section.xenocanto
+          add.value = section.xenocanto
+          break
+        case 'textarea':          
           section.paras.forEach(text => {
             addParasToPreviewContainer({text, previewContainer: edit})
             add.innerText += text.p
-          })
-          sectionContainer.querySelector('.add:not(.edit)').classList.add('hidden')
+          })          
           break
         case 'species':
           const speciesCheckboxes = sectionContainer.querySelectorAll('input')

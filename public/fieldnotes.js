@@ -548,7 +548,7 @@ export const fieldnotes = [
             id: "h4-input-template",
             name: "Subheader",
             parent: "non-grid-template",
-            type: "h4-header",
+            type: "h4-input",
             h4: "Final reflections"
           },
           {
@@ -806,7 +806,7 @@ export const fieldnotes = [
         sectionId: 'section-7',
         name: "Subheader",
         parent: "non-grid-template",
-        type: "h4-header",
+        type: "h4-input",
         h4: "Final reflections"
       },
       {

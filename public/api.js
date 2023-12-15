@@ -629,6 +629,7 @@ export const getFieldnotesStubs = async () => {
 
 export const addFieldnotes = async ({fieldnotes}) => {
   const db = getDb()
+  
   // Add new fieldnotes to collection
   const fieldnotesCollectionRef = getFieldnotesCollectionRef({db})
   const fieldNotesRef = await doc(fieldnotesCollectionRef)
@@ -687,9 +688,9 @@ export const removeElementFromArray = async ({fieldnotes, array, element}) => {
   updateDoc(docRef, data)
 }
 
-export const updateElementFromArray = async ({fieldnotes, array, element}) => {
+export const updateElementFromArray = async ({fieldnotes, array, elementToUpdate, elementAddedOrUpdated}) => {
   // There is no native operation to update the element of an array
   // Instead, we remove the element, then add (the now updated) element
-  await removeElementFromArray({fieldnotes, array, element})
-  await addElementToArray({fieldnotes, array, element})
+  await removeElementFromArray({fieldnotes, array, element: elementToUpdate})
+  await addElementToArray({fieldnotes, array, element: elementAddedOrUpdated})
 }
