@@ -195,7 +195,10 @@ const init = () => {
   const addTermToList = ({selectedTerms, selectedTerm, selectedTermsList}) => {
     
     if(selectedTerm) {
-      if(selectedTerms.findIndex(item => item.dt === selectedTerm.dt) === -1) selectedTerms.push(selectedTerm)
+      if(selectedTerms.findIndex(item => item.dt === selectedTerm.dt) === -1) selectedTerms.push({
+          ...selectedTerm
+        , isNewTerm: true
+      })
     }
     
     const removeTermFromList = ({e, li}) => {
@@ -277,7 +280,12 @@ const init = () => {
         paras.forEach(text => addParasToPreviewContainer({text, previewContainer}))
         break
       case 'terms':        
+        // Make sure the original array of terms doesn't include any newly added terms
+        sectionToUpdate.terms = sectionToUpdate.terms.filter(t => !t.isNewTerm)
         sectionAddedOrUpdated = { ...term, templateId: term.id, sectionId, terms: typeValue }
+        sectionAddedOrUpdated.terms.forEach(term => {
+          if(term['isNewTerm']) delete term['isNewTerm']
+        })
         addTermToList({selectedTerms: typeValue, selectedTerm: null, selectedTermsList: previewContainer})  
         break
       case 'images':
@@ -471,7 +479,7 @@ const init = () => {
         const selectedTermsList = fieldset.querySelector('#selected-terms-list')
         
         // Add a pre-existing term
-        selectedTerms = globalWrite?.templates?.find(t => t.sectionId === sectionId)?.terms || []
+        selectedTerms = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.terms || []
         const handleAddSelectedTerm = ({e, selectedTerm}) => {
           addTermToList({selectedTerms, selectedTerm, selectedTermsList})
           addSelectedTermBtn.classList.add('disabled')
