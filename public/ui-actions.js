@@ -1,5 +1,8 @@
 import { 
-    getIdByAutocomplete
+      getIdByAutocomplete
+    , removeElementFromArray
+    , addElementToArray
+    , updateElementFromArray    
 } from './api.js'
 
 import { 
@@ -407,3 +410,60 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
     console.log(response)
   }
 }
+
+export const showDialog = ({message, type = 'success', displayDuration = 3500}) => {
+    const dialog = document.getElementById('state-notifications')
+    
+    dialog.querySelector('div:nth-child(1').innerText = message
+    const className = type === 'success'
+        ? 'success-bg'
+        : 'error-bg'
+    dialog.classList.remove(...dialog.classList)
+    dialog.classList.add(className)
+    dialog.show()
+    setTimeout(() => {
+        dialog.close()
+    }, displayDuration)
+}
+
+export const deleteSection = async ({d, sectionId, globalWrite}) => {
+    let elementToRemove
+
+    try {    
+    const element = d.getElementById(sectionId)
+
+    // Remove section from the DOM
+    element.remove()
+
+    elementToRemove = globalWrite.sections.find(t => t.sectionId == sectionId)
+    
+    // Remove section from the in-memory fieldnotes
+    globalWrite.sections = globalWrite.sections.filter(t => t.sectionId !== sectionId)
+
+    // Remove section from fieldnotes in the db
+    const response = await removeElementFromArray({fieldnotes: globalWrite, array: 'sections',  element: elementToRemove})
+    showDialog({message: response.message, type: 'success'})
+    } catch (e) {
+      showDialog({message: e.message, type: 'error'})
+    }
+  }
+
+  export const addOrUpdateSection = async ({globalWrite, sectionIndex, sectionToUpdate, sectionAddedOrUpdated}) => {
+    try {
+    const array = 'sections'
+    const isAnUpdate = sectionToUpdate !== null
+
+    // Update the DOM
+    isAnUpdate
+    ? globalWrite.sections[sectionIndex] = sectionAddedOrUpdated
+    : globalWrite.sections.push(sectionAddedOrUpdated)
+        
+    // Save changes to the db
+    const response = isAnUpdate
+      ? await updateElementFromArray({fieldnotes: globalWrite, array, elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated})
+      : await addElementToArray({fieldnotes: globalWrite, array, element: sectionAddedOrUpdated})
+      showDialog({message: response.message, type: 'success'})
+    } catch (e) {
+        showDialog({message: e.message, type: 'error'})
+    }
+  }

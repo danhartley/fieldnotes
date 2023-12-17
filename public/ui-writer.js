@@ -3,21 +3,15 @@ import {
 , g
 , getTerms
 , _getFieldnotes
-, getFieldnotes
 , getFieldnotesStubs
 , getFieldnotesById
 , addFieldnotes
 , updateFieldNotes
-, addElementToArray
-, updateElementFromArray
-, removeElementFromArray
 } from './api.js'
 
 import { 
-  templates
-, h3
+  h3
 , h4
-, text
 , textarea
 , term
 , image
@@ -36,6 +30,9 @@ import {
   , dragenterHandler
   , dragleaveHandler
   , dropHandler
+  , deleteSection
+  , addOrUpdateSection
+  , showDialog
 } from './ui-actions.js'
 
 const init = () => {
@@ -74,7 +71,7 @@ const init = () => {
   const placeInputText = d.getElementById('place-input-text')
   const selectSectionTypeSection = d.getElementById('select-section-type-section')
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
-  const exportFieldNotesBtn = d.getElementById('export-fieldnotes-btn')
+  const exportFieldNotesBtn = d.getElementById('export-fieldnotes-btn') 
 
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
@@ -296,17 +293,7 @@ const init = () => {
     Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
     Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
 
-    const isAnUpdate = sectionToUpdate !== null
-
-    // Update the DOM
-    isAnUpdate
-    ? globalWrite.sections[sectionIndex] = sectionAddedOrUpdated
-    : globalWrite.sections.push(sectionAddedOrUpdated)
-        
-    // Save changes to the db
-    isAnUpdate
-      ? await updateElementFromArray({fieldnotes: globalWrite, array: 'sections', elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated})
-      : await addElementToArray({fieldnotes: globalWrite, array: 'sections',  element: sectionAddedOrUpdated})  
+    addOrUpdateSection({globalWrite, sectionIndex, sectionToUpdate, sectionAddedOrUpdated})
   }
 
   const editSection = ({e}) => {
@@ -317,15 +304,6 @@ const init = () => {
 
     Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
     Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
-  }
-  
-  const deleteSection = async ({e, sectionId}) => {
-    const element = d.getElementById(sectionId)
-    element.remove()
-    globalWrite.sections = globalWrite.sections.filter(t => t.sectionId !== sectionId)
-
-    // Delete in the db
-    // await removeElementFromArray({fieldnotes: globalWrite, array: 'sections',  element:})
   }
 
   const handleInputChangeEvent = (e, addBtn) => {
@@ -456,7 +434,7 @@ const init = () => {
 
     draggableSections.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })
     
-    deleteSectionBtn.addEventListener('click', e => deleteSection({e, sectionId}), true)
+    deleteSectionBtn.addEventListener('click', e => deleteSection({d, sectionId, globalWrite}), true)
 
     // Add additional functionality once the DOM has been updated
     switch(typeId) {
@@ -618,147 +596,160 @@ const init = () => {
 
   // Export fieldnotes
   const exportFieldNotes = () => {
-    const notes = {}
+    try {
+      const notes = {}
 
-    Object.assign(notes, {
-      id: globalWrite.id,
-      fnId: globalWrite.title,
-      title: globalWrite.title,
-      author: globalWrite.author,
-      user: {
-        id: globalWrite.user.id,
-        icon: globalWrite.user.icon,
-        identifications_count: globalWrite.user.identifications_count,
-        login: globalWrite.user.login,
-        observations_count: globalWrite.user.observations_count,
-        species_count: globalWrite.user.species_count,
-      },
-      d1: globalWrite.d1,
-      d2: globalWrite.d2,
-      location: globalWrite.location,
-      language: globalWrite.language,
-      taxa: globalWrite.taxa,
-      sections: globalWrite.sections.map(t => {
-        const {templateId, ...validProps} = t
-        return {
-          ...validProps,
-        }
-      }),
-      sectionOrder: globalWrite.sections.map(section => section.sectionId)
-    })
-    console.log(notes)
-    
-    addFieldnotes({fieldnotes: notes})
+      Object.assign(notes, {
+        id: globalWrite.id,
+        fnId: globalWrite.title,
+        title: globalWrite.title,
+        author: globalWrite.author,
+        user: {
+          id: globalWrite.user.id,
+          icon: globalWrite.user.icon,
+          identifications_count: globalWrite.user.identifications_count,
+          login: globalWrite.user.login,
+          observations_count: globalWrite.user.observations_count,
+          species_count: globalWrite.user.species_count,
+        },
+        d1: globalWrite.d1,
+        d2: globalWrite.d2,
+        location: globalWrite.location,
+        language: globalWrite.language,
+        taxa: globalWrite.taxa,
+        sections: globalWrite.sections.map(t => {
+          const {templateId, ...validProps} = t
+          return {
+            ...validProps,
+          }
+        }),
+        sectionOrder: globalWrite.sections.map(section => section.sectionId)
+      })
+      
+      addFieldnotes({fieldnotes: notes})
+
+      // Show notification that Fieldnotes have been exported
+      showDialog({message: 'Fieldnotes exported successfully', type: 'success', displayDuration: 2000})
+    } catch (e) {
+      showDialog({message: e.message, type: 'error'})
+    }
   }
 
   exportFieldNotesBtn.addEventListener('click', exportFieldNotes, true)
 
   // Import fieldnotes
   const importFieldNotes = async () => {
-    importFieldNotesNotificationText.classList.remove('hidden')
-    
-    const fieldnotes = useLocal 
-      ? await globalWrite.fieldnotesStubs
-      : await getFieldnotesById({id: globalWrite.fieldnotesStubs.fieldnotesId})
+    try {
+      importFieldNotesNotificationText.classList.remove('hidden')
+      
+      const fieldnotes = useLocal 
+        ? await globalWrite.fieldnotesStubs
+        : await getFieldnotesById({id: globalWrite.fieldnotesStubs.fieldnotesId})
 
-    Object.assign(globalWrite, {
-      iconicTaxa: g.ICONIC_TAXA,
-      ...fieldnotes,
-      sections: fieldnotes.sectionOrder.map(sectionId => {
-        return fieldnotes.sections.find(section => section.sectionId === sectionId)
-      })      
-    })
-
-    const { title, author, d1, d2, location } = globalWrite
-
-    titleInputText.value = title
-    authorInputText.value = author
-    dateInputText.value = d1
-    placeInputText.value = location.place_guess
-
-    globalWrite.species = await getInatObservations({ 
-      user_id: globalWrite.user.id,
-      place_id: null,
-      iconic_taxa: globalWrite.iconicTaxa,
-      per_page: 200,
-      locale: globalWrite.language.id,
-      species_count: false,
-      d1,
-      d2,
-    })
-
-    importFieldNotesNotificationText.classList.add('hidden')
-
-    // update the sectionIndex to reflect the number of imported sections (move to global??)
-    sectionIndex = globalWrite.sections.length
-
-    globalWrite.sections.forEach(section => {
-      const sectionContainer = handleSelectSectionType({
-          typeId: section.type
-        , typeText: section.name
-        , typeTemplateName: section.id
-        , sectionTemplate: getSectionTemplate({typeId: section.type})
-        , sectionId: section.sectionId     
+      Object.assign(globalWrite, {
+        iconicTaxa: g.ICONIC_TAXA,
+        ...fieldnotes,
+        sections: fieldnotes.sectionOrder.map(sectionId => {
+          return fieldnotes.sections.find(section => section.sectionId === sectionId)
+        })      
       })
 
-      const addSectionBtn = sectionContainer.querySelector('#add-section-btn')
-      const editSectionBtn = sectionContainer.querySelector('#edit-section-btn')      
+      const { title, author, d1, d2, location } = globalWrite
 
-      if(addSectionBtn) addSectionBtn.classList.add('hidden')
-      if(editSectionBtn) editSectionBtn.classList.remove('hidden')
+      titleInputText.value = title
+      authorInputText.value = author
+      dateInputText.value = d1
+      placeInputText.value = location.place_guess
 
-      const edit = sectionContainer.querySelector('.edit')
-      edit.classList.remove('hidden')
-      const add = sectionContainer.querySelector('.add')
-      if(sectionContainer.querySelector('.add:not(.edit)')) sectionContainer.querySelector('.add:not(.edit)').classList.add('hidden')
+      globalWrite.species = await getInatObservations({ 
+        user_id: globalWrite.user.id,
+        place_id: null,
+        iconic_taxa: globalWrite.iconicTaxa,
+        per_page: 200,
+        locale: globalWrite.language.id,
+        species_count: false,
+        d1,
+        d2,
+      })
 
-      switch(section.type) {
-        case 'h3-input':
-          edit.innerText = section.h3
-          add.value = section.h3
-          break
-        case 'h4-input':
-          edit.innerText = section.h4
-          add.value = section.h4
-          break
-        case 'birdsong-input':
-          edit.innerText = section.xenocanto
-          add.value = section.xenocanto
-          break
-        case 'textarea':          
-          section.paras.forEach(text => {
-            addParasToPreviewContainer({text, previewContainer: edit})
-            add.innerText += text.p
-          })          
-          break
-        case 'species':
-          const speciesCheckboxes = sectionContainer.querySelectorAll('input')
-          speciesCheckboxes.forEach(checkbox => {
-            if(section.species.includes(checkbox.value)) {
-              checkbox.setAttribute('checked', true)
-            }
-          })            
-          break
-        case 'terms':
-          const selectedTermsList = sectionContainer.querySelector('#selected-terms-list')
-          addTermToList({selectedTerms: section.terms, selectedTerm: null, selectedTermsList})
-      }
-    })
+      importFieldNotesNotificationText.classList.add('hidden')
 
-    // Enable the create observation and species section buttons
-    selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
-    selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
+      // update the sectionIndex to reflect the number of imported sections (move to global??)
+      sectionIndex = globalWrite.sections.length
 
-    // Hide all species that are not included
-    const btns = d.querySelectorAll('.show-all-or-include-only-btn')
-    btns.forEach(btn => {
-      btn.innerText = 'show only included'
-      const fieldset = btn.parentElement
-      toggleAllOrIncludedInSpeciesList({btn, fieldset})
-    })
+      globalWrite.sections.forEach(section => {
+        const sectionContainer = handleSelectSectionType({
+            typeId: section.type
+          , typeText: section.name
+          , typeTemplateName: section.id
+          , sectionTemplate: getSectionTemplate({typeId: section.type})
+          , sectionId: section.sectionId     
+        })
 
-    // Enable saving fieldnotes
-    exportFieldNotesBtn.classList.remove('disabled')
+        const addSectionBtn = sectionContainer.querySelector('#add-section-btn')
+        const editSectionBtn = sectionContainer.querySelector('#edit-section-btn')      
+
+        if(addSectionBtn) addSectionBtn.classList.add('hidden')
+        if(editSectionBtn) editSectionBtn.classList.remove('hidden')
+
+        const edit = sectionContainer.querySelector('.edit')
+        edit.classList.remove('hidden')
+        const add = sectionContainer.querySelector('.add')
+        if(sectionContainer.querySelector('.add:not(.edit)')) sectionContainer.querySelector('.add:not(.edit)').classList.add('hidden')
+
+        switch(section.type) {
+          case 'h3-input':
+            edit.innerText = section.h3
+            add.value = section.h3
+            break
+          case 'h4-input':
+            edit.innerText = section.h4
+            add.value = section.h4
+            break
+          case 'birdsong-input':
+            edit.innerText = section.xenocanto
+            add.value = section.xenocanto
+            break
+          case 'textarea':          
+            section.paras.forEach(text => {
+              addParasToPreviewContainer({text, previewContainer: edit})
+              add.innerText += text.p
+            })          
+            break
+          case 'species':
+            const speciesCheckboxes = sectionContainer.querySelectorAll('input')
+            speciesCheckboxes.forEach(checkbox => {
+              if(section.species.includes(checkbox.value)) {
+                checkbox.setAttribute('checked', true)
+              }
+            })            
+            break
+          case 'terms':
+            const selectedTermsList = sectionContainer.querySelector('#selected-terms-list')
+            addTermToList({selectedTerms: section.terms, selectedTerm: null, selectedTermsList})
+        }
+      })
+
+      // Enable the create observation and species section buttons
+      selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
+      selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
+
+      // Hide all species that are not included
+      const btns = d.querySelectorAll('.show-all-or-include-only-btn')
+      btns.forEach(btn => {
+        btn.innerText = 'show only included'
+        const fieldset = btn.parentElement
+        toggleAllOrIncludedInSpeciesList({btn, fieldset})
+      })
+
+      // Enable saving fieldnotes
+      exportFieldNotesBtn.classList.remove('disabled')
+
+      // Show notification that Fieldnotes have been imported
+      showDialog({message: 'Fieldnotes imported successfully', type: 'success', displayDuration: 2000})
+    } catch (e) {
+      showDialog({message: e.message, type: 'error'})
+    }
   }
 
   importFieldNotesBtn.addEventListener('click', importFieldNotes, true)

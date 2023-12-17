@@ -570,7 +570,6 @@ const getApp = () => {
 
   // Initialise Firebase
   const app = initializeApp(firebaseConfig)
-  console.log('app', app)
 
   return app
 
@@ -623,7 +622,7 @@ export const getFieldnotesStubs = async () => {
     console.log(doc.data().fnId)
     return doc.data()
   })
-  console.log(stubsList)
+
   return stubsList
 }
 
@@ -646,9 +645,22 @@ export const addFieldnotes = async ({fieldnotes}) => {
 }
 
 export const updateFieldNotes = async ({fieldnotes, data}) => {
-  const db = getDb()
-  const docRef = doc(db, 'fieldnotes', fieldnotes.id)  
-  updateDoc(docRef, data)
+  let docRef  = null
+
+  try {
+    const db = getDb()
+    docRef = doc(db, 'fieldnotes', fieldnotes.id)  
+    updateDoc(docRef, data)
+
+    return {
+      success: true,
+      message: 'Fieldnotes updated successfully'
+    }
+  } catch (e) {
+    console.log('API docRef: ', docRef)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
+  }
 }
 
 export const deleteFieldnoteProperty = async ({fieldnotes, prop}) => {
@@ -661,31 +673,66 @@ export const deleteFieldnoteProperty = async ({fieldnotes, prop}) => {
 }
 
 export const addElementToArray = async ({fieldnotes, array, element}) => {
-  const db = getDb()
-  const docRef = doc(db, 'fieldnotes', fieldnotes.id)
+  let docRef, data  = null
 
-  let data = null
-  
-  data = {
-    [array]: arrayUnion(element)
-  }
-  updateDoc(docRef, data)
-
-  if(array === 'sections') {
+  try {
+    const db = getDb()
+    docRef = doc(db, 'fieldnotes', fieldnotes.id)
+    
     data = {
-      sectionOrder: arrayUnion(element.sectionId)
+      [array]: arrayUnion(element)
     }
     updateDoc(docRef, data)
+
+    if(array === 'sections') {
+      data = {
+        sectionOrder: arrayUnion(element.sectionId)
+      }
+      updateDoc(docRef, data)
+    }
+
+    return {
+      success: true,
+      message: 'Section added to database successfully'
+    }
+  } catch (e) {
+    console.log('API elemt to remove: ', element)
+    console.log('API docRef: ', docRef)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
   }
 }
 
 export const removeElementFromArray = async ({fieldnotes, array, element}) => {
-  const db = getDb()
-  const docRef = doc(db, 'fieldnotes', fieldnotes.id)
-  const data = {
-    [array]: arrayRemove(element)
+  let docRef, data  = null
+
+  try {
+    const db = getDb()
+    docRef = doc(db, 'fieldnotes', fieldnotes.id)
+
+    data = {
+      [array]: arrayRemove(element)
+    }
+    
+    await updateDoc(docRef, data)
+    
+    if(array === 'sections') {
+      data = {
+        sectionOrder: arrayRemove(element.sectionId)
+      }
+      await updateDoc(docRef, data)            
+    }
+
+    return {
+      success: true,
+      message: 'Section removed from database successfully'
+    }
+  } catch (e) {
+    console.log('API elemt to remove: ', element)
+    console.log('API docRef: ', docRef)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
   }
-  updateDoc(docRef, data)
 }
 
 export const updateElementFromArray = async ({fieldnotes, array, elementToUpdate, elementAddedOrUpdated}) => {
@@ -693,4 +740,9 @@ export const updateElementFromArray = async ({fieldnotes, array, elementToUpdate
   // Instead, we remove the element, then add (the now updated) element
   await removeElementFromArray({fieldnotes, array, element: elementToUpdate})
   await addElementToArray({fieldnotes, array, element: elementAddedOrUpdated})
+
+  return {
+    success: true,
+    message: 'Section updated in database successfully'
+  }
 }

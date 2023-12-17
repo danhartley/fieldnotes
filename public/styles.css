@@ -31,6 +31,8 @@
   --reptilia: #fee2df;  
   --inactive-bg: #eef2e3;
   --inactive-bg-light: #f7f9f2;
+  --success-bg-light: #e6edf6;
+  --error-bg-light: #feecea;
   --active-bg: #d5e1ba;
   --active-fg: #74ac02;
   --grid-min-max: 180px;
@@ -298,9 +300,30 @@ dt:has(+ dd:empty) {
   display: none;
 }
 
+main { 
+  position: relative;
+}
+
 main > fieldset {
   display: grid;
   grid-template-columns: 1fr 1fr;
+}
+
+dialog, dialog:focus-visible {
+  position: sticky;
+  bottom: calc(var(--d) * 2);
+  padding: calc(var(--d) * 2);
+  border: 1px solid var(--c4);
+  border-radius: var(--d);
+  background-color: var(--success-bg-light);
+  outline: none;
+  z-index: 2;
+}
+
+dialog div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 fieldset {
@@ -448,6 +471,14 @@ datalist {
 
 .initial-width {
   min-width: initial;
+}
+
+.error-bg {
+  background-color: var(--error-bg-light);
+}
+
+.success-bg {
+  background-color: var(--success-bg-light);
 }
 
 /* SELECTOR RULES */
