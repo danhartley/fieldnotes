@@ -32,7 +32,7 @@ import {
   , dropHandler
   , deleteSection
   , addOrUpdateSection
-  , showDialog
+  , showNotificationsDialog
 } from './ui-actions.js'
 
 const init = () => {
@@ -629,9 +629,9 @@ const init = () => {
       addFieldnotes({fieldnotes: notes})
 
       // Show notification that Fieldnotes have been exported
-      showDialog({message: 'Fieldnotes exported successfully', type: 'success', displayDuration: 2000})
+      showNotificationsDialog({message: 'Fieldnotes exported successfully', type: 'success', displayDuration: 2000})
     } catch (e) {
-      showDialog({message: e.message, type: 'error'})
+      showNotificationsDialog({message: e.message, type: 'error'})
     }
   }
 
@@ -746,9 +746,9 @@ const init = () => {
       exportFieldNotesBtn.classList.remove('disabled')
 
       // Show notification that Fieldnotes have been imported
-      showDialog({message: 'Fieldnotes imported successfully', type: 'success', displayDuration: 2000})
+      showNotificationsDialog({message: 'Fieldnotes imported successfully', type: 'success', displayDuration: 2000})
     } catch (e) {
-      showDialog({message: e.message, type: 'error'})
+      showNotificationsDialog({message: e.message, type: 'error'})
     }
   }
 

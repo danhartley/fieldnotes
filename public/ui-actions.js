@@ -411,7 +411,7 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
   }
 }
 
-export const showDialog = ({message, type = 'success', displayDuration = 3500}) => {
+export const showNotificationsDialog = ({message, type = 'success', displayDuration = 3500}) => {
     const dialog = document.getElementById('state-notifications')
     
     dialog.querySelector('div:nth-child(1').innerText = message
@@ -442,9 +442,9 @@ export const deleteSection = async ({d, sectionId, globalWrite}) => {
 
     // Remove section from fieldnotes in the db
     const response = await removeElementFromArray({fieldnotes: globalWrite, array: 'sections',  element: elementToRemove})
-    showDialog({message: response.message, type: 'success'})
+    showNotificationsDialog({message: response.message, type: 'success'})
     } catch (e) {
-      showDialog({message: e.message, type: 'error'})
+      showNotificationsDialog({message: e.message, type: 'error'})
     }
   }
 
@@ -462,8 +462,8 @@ export const deleteSection = async ({d, sectionId, globalWrite}) => {
     const response = isAnUpdate
       ? await updateElementFromArray({fieldnotes: globalWrite, array, elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated})
       : await addElementToArray({fieldnotes: globalWrite, array, element: sectionAddedOrUpdated})
-      showDialog({message: response.message, type: 'success'})
+      showNotificationsDialog({message: response.message, type: 'success'})
     } catch (e) {
-        showDialog({message: e.message, type: 'error'})
+        showNotificationsDialog({message: e.message, type: 'error'})
     }
   }
