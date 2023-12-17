@@ -76,8 +76,6 @@ const init = () => {
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
 
-  let sectionIndex = 0
-
   const toggleView = () => {
     editView.classList.toggle('hidden')
     previewView.classList.toggle('hidden')
@@ -563,7 +561,7 @@ const init = () => {
     const typeId = e.target.value
     const typeText = e.target.innerText
     
-    handleSelectSectionType({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate: getSectionTemplate({typeId}), sectionId: `section-${sectionIndex++}`})
+    handleSelectSectionType({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate: getSectionTemplate({typeId}), sectionId: `section-${g.sectionIndex++}`})
   }, true))
 
   // Persist updated metadata values to the fieldnotes object
@@ -674,8 +672,8 @@ const init = () => {
 
       importFieldNotesNotificationText.classList.add('hidden')
 
-      // update the sectionIndex to reflect the number of imported sections (move to global??)
-      sectionIndex = globalWrite.sections.length
+      // update the sectionIndex to reflect the number of imported sections
+      g.sectionIndex = globalWrite.sections.map(s => Number(s.sectionId.replace('section-', ''))).sort(function (a, b) {  return a - b;  })[globalWrite.sections.length -1 ] + 1
 
       globalWrite.sections.forEach(section => {
         const sectionContainer = handleSelectSectionType({

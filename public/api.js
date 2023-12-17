@@ -417,6 +417,7 @@ export const g = {
     matches: [],    
     useObservationsSpeciesCountOptions: [{name:'Species', id: "true"}, {name:'Observations', id: "false"}],
     dateOption: 'none',
+    sectionIndex: 0,
 }
 
 export const inatControls = [
