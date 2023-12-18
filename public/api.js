@@ -603,7 +603,6 @@ export const getFieldnotes = async () => {
   const fieldnotesCollectionRef = getFieldnotesCollectionRef({db})
   const notesDocsRef = await getDocs((fieldnotesCollectionRef))
   const notesList = notesDocsRef.docs.map(doc => {
-    console.log(doc.data().fnId)
     return doc.data()
   })
   return notesList
@@ -620,7 +619,6 @@ export const getFieldnotesStubs = async () => {
   const fieldnotesStubCollectionRef = getFieldnotesStubsCollectionRef({db})
   const notesDocsRef = await getDocs((fieldnotesStubCollectionRef))
   const stubsList = notesDocsRef.docs.map(doc => {
-    console.log(doc.data().fnId)
     return doc.data()
   })
 
@@ -629,20 +627,34 @@ export const getFieldnotesStubs = async () => {
 
 export const addFieldnotes = async ({fieldnotes}) => {
   const db = getDb()
-  
-  // Add new fieldnotes to collection
-  const fieldnotesCollectionRef = getFieldnotesCollectionRef({db})
-  const fieldNotesRef = await doc(fieldnotesCollectionRef)
-  const id = fieldNotesRef.id
-  const fieldnotesData = { ...fieldnotes, id }
-  await setDoc(fieldNotesRef, fieldnotesData)
+  let id, data = null
 
-  // Add new fieldnotes stub to collection
-  const fieldnotesStubCollectionRef = getFieldnotesStubsCollectionRef({db})
-  const fieldNotesStubRef = await doc(fieldnotesStubCollectionRef)
-  const stubId = fieldNotesStubRef.id
-  const fieldnotesStubData = { id: stubId, fieldnotesId: id, title: fieldnotes.title, author: fieldnotes.author }
-  await setDoc(fieldNotesStubRef, fieldnotesStubData)
+  try {    
+      // Add new fieldnotes to collection
+      const fieldnotesCollectionRef = getFieldnotesCollectionRef({db})
+      const fieldNotesRef = await doc(fieldnotesCollectionRef)
+      id = fieldNotesRef.id
+      data = { ...fieldnotes, id }
+      await setDoc(fieldNotesRef, data)
+
+      // Add new fieldnotes stub to collection
+      const fieldnotesStubCollectionRef = getFieldnotesStubsCollectionRef({db})
+      const fieldNotesStubRef = await doc(fieldnotesStubCollectionRef)
+      const stubId = fieldNotesStubRef.id
+      data = { id: stubId, fieldnotesId: id, title: fieldnotes.title, author: fieldnotes.author }
+      await setDoc(fieldNotesStubRef, data)
+
+      return {
+        success: true,
+        message: 'Fieldnotes added successfully',
+        id,
+        type: 'success'
+      }
+    } catch (e) {
+      console.log('API fieldnotes id: ', id)
+      console.log('API data: ', data)
+      console.warn('API error: ', e)
+    }
 }
 
 export const updateFieldNotes = async ({fieldnotes, data}) => {

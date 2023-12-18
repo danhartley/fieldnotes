@@ -214,24 +214,24 @@ export const bgColour = taxon => {
 }
 
 const handleSpeciesCheckState = ({e, sectionId, global}) => {
-const name = e.target.value
-const section = global.templates.find(t => t.sectionId === sectionId)
-if(section) {
-    section.species.find(sp => sp === name) 
-    ? section.species = section.species.filter(sp => sp !== name)
-    : section.species.push(name)
-} else {
-    const sp = [ name ]
-    global.templates.push({...species, species: sp, templateId: species.id, sectionId })
-}
-// We should check also if a taxon needs to be removed from the list i.e. it appears in no species or observation section
-// But for now, we will content ourselves with addding taxon (which is harmless)
-if(!global.taxa.find(t => t.name === name)) {
-    global.taxa.push({
-    id: global.species.find(sp => sp.taxon.name === name)?.taxon?.id,
-    name
-    })
-}
+    const name = e.target.value
+    const section = global.sections.find(t => t.sectionId === sectionId)
+    if(section) {
+        section.species.find(sp => sp === name) 
+        ? section.species = section.species.filter(sp => sp !== name)
+        : section.species.push(name)
+    } else {
+        const sp = [ name ]
+        global.sections.push({...species, species: sp, templateId: species.id, sectionId })
+    }
+    // We should check also if a taxon needs to be removed from the list i.e. it appears in no species or observation section
+    // But for now, we will content ourselves with addding taxon (which is harmless)
+    if(!global.taxa.find(t => t.name === name)) {
+        global.taxa.push({
+        id: global.species.find(sp => sp.taxon.name === name)?.taxon?.id,
+        name
+        })
+    }
 }
 
 export const cloneImages = ({global, parent, typeId, sectionId}) => {
@@ -376,38 +376,55 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
     const sectionToJumpDOMIndex = Array.from(d.querySelectorAll('.draggable')).findIndex(section => section.id === sectionToJumpId)
     
     if(sectionToMoveDOMIndex === sectionToJumpDOMIndex) return
-    
-    sectionToMoveDOMIndex > sectionToJumpDOMIndex
-      // Update the position of the section visually (in the DOM)
-      ? draggableSections.insertBefore(sectionToMove, e.target.parentNode) // Move up
-      : draggableSections.insertBefore(sectionToMove, e.target.parentNode.nextSibling) // Move down
 
-    // Update the mouse icon
-    sectionToMove.classList.remove('moveable')
-    sectionToMove.classList.add('pointer')
-
-    console.log(globalWrite.sectionOrder)
-    
-    // Finally update the position of the moved section template to correspond to its new position in the DOM
-    const indexOfJumpedSectionTemplate = globalWrite.sectionOrder.findIndex(sectionId => sectionId === sectionToJumpId)
-
-    if(indexOfJumpedSectionTemplate === -1) return // There is no such section, something went wrong
-
+    // Get the section to move
     const sectionTemplateToMoveId = globalWrite.sectionOrder.find(sectionId => sectionId === sectionToDropId)
 
+    // Remove the section to move
     globalWrite.sectionOrder = globalWrite.sectionOrder.filter(sectionId => sectionId !== sectionToDropId)
 
-    sectionToMoveDOMIndex > sectionToJumpDOMIndex
-      ? globalWrite.sectionOrder.splice(indexOfJumpedSectionTemplate, 0, sectionTemplateToMoveId) // Move up
-      : globalWrite.sectionOrder.splice(indexOfJumpedSectionTemplate + 1, 0, sectionTemplateToMoveId) // Move down
+    // Calculate position of the jumped section
+    const indexOfJumpedSectionTemplate = globalWrite.sectionOrder.findIndex(sectionId => sectionId === sectionToJumpId)
 
-    console.log(globalWrite.sectionOrder)
+    if(indexOfJumpedSectionTemplate === -1) {
+        throw new Error({
+            message: 'Something went wrong, please try again.'
+        })
+    }
 
-    const response = await apiCallback({fieldnotes: globalWrite, data: {
-        sectionOrder: globalWrite.sectionOrder
-    }})
+    let sectionOrder = globalWrite.sectionOrder
 
-    console.log(response)
+    const moveUp = sectionToMoveDOMIndex > sectionToJumpDOMIndex
+
+    try {
+        moveUp
+            ? sectionOrder.splice(indexOfJumpedSectionTemplate, 0, sectionTemplateToMoveId)
+            : sectionOrder.splice(indexOfJumpedSectionTemplate + 1, 0, sectionTemplateToMoveId)
+
+        // Save to the db
+        const response = await apiCallback({fieldnotes: globalWrite, data: {
+            sectionOrder
+        }})
+
+        if(response.success) {
+            // Update changes in memory
+            globalWrite.sectionOrder = sectionOrder
+
+            // Update changes to the DOM
+            moveUp
+                ? draggableSections.insertBefore(sectionToMove, e.target.parentNode)
+                : draggableSections.insertBefore(sectionToMove, e.target.parentNode.nextSibling)
+
+            // Update the mouse icon
+            sectionToMove.classList.remove('moveable')
+            sectionToMove.classList.add('pointer')
+
+            // Notify user
+            showNotificationsDialog({message: 'Section moved successfully'})
+        }
+    } catch (e) {
+        showNotificationsDialog({message: e.message, type: 'error'})
+    }
   }
 }
 
@@ -427,43 +444,56 @@ export const showNotificationsDialog = ({message, type = 'success', displayDurat
 }
 
 export const deleteSection = async ({d, sectionId, globalWrite}) => {
-    let elementToRemove
-
-    try {    
-    const element = d.getElementById(sectionId)
-
-    // Remove section from the DOM
-    element.remove()
-
-    elementToRemove = globalWrite.sections.find(t => t.sectionId == sectionId)
+    try {        
+    const elementToRemove = globalWrite.sections.find(t => t.sectionId == sectionId)
     
-    // Remove section from the in-memory fieldnotes
-    globalWrite.sections = globalWrite.sections.filter(t => t.sectionId !== sectionId)
-
     // Remove section from fieldnotes in the db
     const response = await removeElementFromArray({fieldnotes: globalWrite, array: 'sections',  element: elementToRemove})
-    showNotificationsDialog({message: response.message, type: 'success'})
+
+    if(response.success) {
+        const element = d.getElementById(sectionId)
+        // Remove section from the DOM
+        element.remove()
+
+        // Remove section from the in-memory fieldnotes
+        globalWrite.sections = globalWrite.sections.filter(t => t.sectionId !== sectionId)
+        globalWrite.sectionOrder = globalWrite.sectionOrder.filter(id => id !== sectionId)
+
+        // Notify user
+        showNotificationsDialog({message: response.message, type: 'success'})
+    }    
     } catch (e) {
       showNotificationsDialog({message: e.message, type: 'error'})
     }
-  }
+}
 
-  export const addOrUpdateSection = async ({globalWrite, sectionIndex, sectionToUpdate, sectionAddedOrUpdated}) => {
+export const addOrUpdateSection = async ({globalWrite, sectionIndex, sectionToUpdate, sectionAddedOrUpdated}) => {
     try {
-    const array = 'sections'
-    const isAnUpdate = sectionToUpdate !== null
+        const array = 'sections'
+        const isAnUpdate = sectionToUpdate !== null
 
-    // Update the DOM
-    isAnUpdate
-    ? globalWrite.sections[sectionIndex] = sectionAddedOrUpdated
-    : globalWrite.sections.push(sectionAddedOrUpdated)
+        // Save changes to the db
+        let response
         
-    // Save changes to the db
-    const response = isAnUpdate
-      ? await updateElementFromArray({fieldnotes: globalWrite, array, elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated})
-      : await addElementToArray({fieldnotes: globalWrite, array, element: sectionAddedOrUpdated})
-      showNotificationsDialog({message: response.message, type: 'success'})
+        if(isAnUpdate) {
+            response = await updateElementFromArray({fieldnotes: globalWrite, array, elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated})
+            // Update changes in memory
+            if(response.success) {                
+                globalWrite.sections[sectionIndex] = sectionAddedOrUpdated
+            }
+        } else {
+            response = await addElementToArray({fieldnotes: globalWrite, array, element: sectionAddedOrUpdated})
+            // Update changes in memory
+            if(response.success) {                
+                globalWrite.sections.push(sectionAddedOrUpdated)
+                globalWrite.sectionOrder.push(sectionAddedOrUpdated.sectionId)
+            }
+        }
+
+        // Notify user
+        showNotificationsDialog({message: response.message, type: 'success'})
+        
     } catch (e) {
         showNotificationsDialog({message: e.message, type: 'error'})
     }
-  }
+}

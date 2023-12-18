@@ -429,6 +429,7 @@ th, td {
 
 datalist {
   display: block;
+  height: 33.5px;
 }
 
 /* ASPECT-RATIO */
@@ -707,7 +708,7 @@ datalist {
 
 /* VIEWS */
 
-#edit-view *:not(input, textarea) {
+.edit-view *:not(input, textarea) {
   width: initial;
   max-width: initial;
 }

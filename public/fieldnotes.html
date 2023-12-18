@@ -17,13 +17,13 @@
 
     <main class="mt2">
       <fieldset class="fieldset-reset">
-        <legend class="hidden">Preview or edit fieldnotes</legend>
+        <legend class="hidden">Create new fieldnotes or editing existing fieldnotes</legend>
         <section>
           <div class="section-header section-group">
             <h2>              
-              <input id="edit-ctrl-input-radio" type="radio" name="author-mode" value="edit" checked>
-              <label for="edit-ctrl-input-radio">
-                Edit mode
+              <input id="create-fieldnotes-input-radio" type="radio" name="author-mode" value="create" checked>
+              <label for="create-fieldnotes-input-radio">
+                Create fieldnotes
               </label>
             </h2>
           </div>        
@@ -31,20 +31,20 @@
         <section>
           <div class="section-header section-group">
             <h2>              
-              <input id="preview-ctrl-input-radio" type="radio" name="author-mode" value="preview">
-              <label for="preview-ctrl-input-radio">
-                Preview mode
+              <input id="edit-fieldnotes-input-radio" type="radio" name="author-mode" value="edit">
+              <label for="edit-fieldnotes-input-radio">
+                Edit fieldnotes
               </label>
             </h2>
           </div>      
         </section>       
       </fieldset>
 
-      <article id="edit-view">
-        <section>
+      <article>
+        <section class="create-view">
           <fieldset class="mt2">
             <legend>iNaturalist search</legend>
-            <p class="mt0 small">Filter your iNaturalist observations by user account and the date of your field trip.</p>
+            <p class="mt0 small">Filter iNaturalist observations by user and date.</p>
             <div class="centred-block">
                 <label for="inat-autocomplete-input-text">User</label>
                 <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing a username or user ID…">
@@ -56,16 +56,15 @@
             </div>
             <div class="centred-block mt2">
               <button id="search-inat-observations-btn" class="mr submit disabled">Search iNaturalist for observations </button>
-              <div id="search-inat-observations-notification-text" class="small hidden">Waiting for response from iNaturalist…</div>
+              <div id="search-inat-observations-notification-text" class="small hidden">Connecting…</div>
             </div>
-            <p class="mt2 small"><em>The results of this search are used to create a catalogue of species observed, and to provide metadata e.g. location.</em></p>
           </fieldset>
         </section>
   
-        <section>
-          <fieldset id="edit-field-notes">
+        <section class="edit-view hidden">
+          <fieldset id="edit-field-notes" class="mt2">
             <legend>Fieldnotes search</legend>
-            <p class="mt0 small">Find and edit earlier fieldnotes.</p>
+            <p class="mt0 small">Find and edit previous fieldnotes.</p>
             <div class="centred-block">
                 <label for="ltp-autocomplete-title-input-text">Title</label>
                 <input id="ltp-autocomplete-title-input-text" list="ltp-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing to find existing fieldnotes by their title…">
@@ -74,7 +73,7 @@
             <div id="field-notes-lookup-callback-parent" class="mt2"></div>
             <div class="centred-block mt2">
               <button id="import-fieldnotes-btn" class="mr disabled">Import fieldnotes</button>
-              <div id="import-fieldnotes-notification-text" class="small hidden">Waiting for response from iNaturalist…</div>
+              <div id="import-fieldnotes-notification-text" class="small hidden">Fetching fieldnotes…</div>
             </div>
           </fieldset>
         </section>
@@ -82,24 +81,31 @@
         <section id="meta-data-section">
           <fieldset id="field-trip">
             <legend>Field trip</legend>
-            <p class="mt0 small">When and where you recorded your fieldnotes.</p>            
+            <p class="mt0 small">If your field trip is supported by iNaturalist observations, an iNaturalist search will populate these fields for you.</p>            
             <div class="centred-block">
               <label for="title-input-text">Title</label>      
-              <input id="title-input-text" type="text" class="p" autocomplete="off" placeholder="e.g. Simien Mountains January 27 2020">
+              <input id="title-input-text" type="text" class="p" autocomplete="off" minlength="3" placeholder="e.g. Simien Mountains January 27 2020">
             </div>
             <div class="centred-block mt2">
               <label for="author-input-text">Author</label>      
-              <input id="author-input-text" type="text" class="p" autocomplete="off">
+              <input id="author-input-text" type="text" class="p" autocomplete="off" minlength="3" placeholder="Minimum length 3 characters">
             </div>
             <div class="centred-block mt2">
               <label for="date-input-text">Date</label>      
-              <input id="date-input-text" type="text" class="p" autocomplete="off">
+              <input id="date-input-text" type="date" autocomplete="off">
             </div>
             <div class="centred-block mt2">
               <label for="place-input-text">Place</label>      
-              <input id="place-input-text" type="text" class="p" autocomplete="off">
+              <input id="place-input-text" type="text" class="p" autocomplete="off" minlength="3" placeholder="Minimum length 3 characters">
             </div>
-            <p class="mt2 small"><em>If you are using iNaturalist observations, this information is derived from your iNaturalist account and photo metadata.</em></p>
+          </fieldset>
+        </section>
+
+        <section id="export-fieldnotes-container" class="create-view disabled">
+          <fieldset>
+            <legend>Save fieldnotes</legend>
+            <button id="export-fieldnotes-btn" class="p">Save fieldnotes</button>
+            <p class="mt2 small"><em>Fieldnotes are updated when you add, edit or delete sections.</em></p>
           </fieldset>
         </section>
 
@@ -123,18 +129,6 @@
         </section>
 
         <div id="draggable-sections"></div>
-
-        <section>
-          <fieldset>
-            <legend>Save fieldnotes</legend>
-            <button id="export-fieldnotes-btn" class="p disabled">Save fieldnotes</button>
-            <p class="mt2 small"><em>Your fieldnotes are automatically saved when you run an iNaturalist search, and whenever you add, edit or delete sections in the journal.</em></p>
-          </fieldset>
-        </section>
-      </article>
-
-      <article id="preview-view" class="hidden">
-        <p>When you start work on a new set of fielnotes a preview of the published version will appear here.</p>
       </article>
 
       <dialog id="state-notifications">
@@ -162,6 +156,7 @@
           <button id="add-section-btn" class="small mt2 disabled add">Add section</button>
           <button id="edit-section-btn" class="small mt2 edit hidden">Edit section</button>
           <button id="delete-section-btn" class="small mt2 edit">Delete section</button>
+          <p class="mt2 small"><em>Your fieldnotes are automatically saved when you add, edit or delete sections in the journal.</em></p>
         </fieldset>
       </section>
     </template>
