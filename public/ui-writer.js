@@ -261,119 +261,6 @@ const init = () => {
     previewContainer.appendChild(clone)
   }
 
-  const addSection = async ({parent, typeId, typeValue, previewContainer, sectionId}) => {
-    previewContainer.innerHTML = ''
-
-    let t, clone, header, input, sectionToUpdate, sectionIndex, sectionAddedOrUpdated = null
-
-    sectionToUpdate = globalWrite.sections.find(t => t.sectionId === sectionId) || null
-
-    if(sectionToUpdate) sectionIndex = globalWrite.sections.findIndex(t => t.sectionId === sectionId)
-
-    switch(typeId) {
-      case 'h3-input':        
-        sectionAddedOrUpdated = { ...h3, templateId: h3.id, sectionId, h3: typeValue }
-        t = d.getElementById('h3-template')
-        clone = t.content.cloneNode(true)
-        header = clone.querySelector('h3')
-        header.textContent = typeValue
-        previewContainer.appendChild(clone)
-        break
-      case 'h4-input':
-        sectionAddedOrUpdated = { ...h4, templateId: h4.id, sectionId, h4: typeValue }
-        t = d.getElementById('h4-template')
-        clone = t.content.cloneNode(true)
-        header = clone.querySelector('h4')
-        header.textContent = typeValue
-        previewContainer.appendChild(clone)
-        break
-      case 'birdsong-input':
-        sectionAddedOrUpdated = { ...xenocanto, templateId: xenocanto.id, sectionId, xenocanto: typeValue }
-        t = d.getElementById('xenocanto-template')
-        clone = t.content.cloneNode(true)
-        input = clone.querySelector('input')
-        input.value = typeValue
-        previewContainer.appendChild(clone)
-        break
-      case 'textarea':
-        const ps = typeValue.split('\n').filter(p => p.length > 0)
-        const paras = ps.map(p => {
-          return {
-            p
-          }
-        })
-        sectionAddedOrUpdated = { ...textarea, templateId: textarea.id, sectionId, paras }
-        paras.forEach(text => addParasToPreviewContainer({text, previewContainer}))
-        break
-      case 'terms':        
-        // Make sure the original array of terms doesn't include any newly added terms
-        if(sectionToUpdate) sectionToUpdate.terms = sectionToUpdate.terms.filter(t => !t.isItemNewToList)
-        sectionAddedOrUpdated = { ...term, templateId: term.id, sectionId, terms: typeValue }
-        sectionAddedOrUpdated.terms.forEach(term => {
-          if(term['isItemNewToList']) delete term['isItemNewToList']
-        })
-        addItemToList({selectedItems: typeValue, selectedItem: null, selectedItemsList: previewContainer})  
-        break
-      case 'images':
-        sectionAddedOrUpdated = { ...image, templateId: image.id, sectionId, imgs: typeValue }
-        break
-    }
-    // Show the preview section and hide the edit section
-    Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
-    Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
-
-    addOrUpdateSection({globalWrite, sectionIndex, sectionToUpdate, sectionAddedOrUpdated})
-  }
-
-  const editSection = ({e}) => {
-    const parent = e.target.parentElement
-    const addSectionBtn = parent.querySelector('#add-section-btn')
-    addSectionBtn.innerText = 'Save changes'
-    addSectionBtn.classList.remove('disabled')
-
-    Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
-    Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
-  }
-
-  const handleInputChangeEvent = (e, addBtn) => {
-    updateBtnState({str: e.target.value, btn: addBtn})
-  }
-
-  const handleImageInputChangeEvent = ({e, addBtn, url1, title1}) => {
-      (url1.value.length >= 5 && title1.value.length >= 2)
-        ? addBtn.classList.remove('disabled')
-        : addBtn.classList.add('disabled')    
-  }
-
-  const toggleAllOrIncludedInSpeciesList = ({btn, fieldset}) => {
-    {
-      if(btn.innerText.toLowerCase() === 'show only included') {
-        fieldset.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(input => {
-          input.closest('figure').classList.add('hidden')
-        })
-        btn.innerText = 'show all'
-      } else {
-        fieldset.querySelectorAll('input[type="checkbox"]').forEach(input => {
-          input.closest('figure').classList.remove('hidden')
-        })
-        btn.innerText = 'show only included'
-      }
-    }
-  }
-
-  const getSectionTemplate = ({typeId}) => {
-    let sectionTemplate = null
-    switch (typeId) {
-      case 'species':
-      case 'observations':
-      case 'inat-lookup':
-        sectionTemplate = d.getElementById('section-include-template')
-        break
-      default:
-        sectionTemplate = d.getElementById('section-template')
-    }
-    return sectionTemplate
-  }
 
   const handleSelectSectionType = ({typeId, typeText, typeTemplateName, sectionTemplate, sectionId}) => {
     const sectionClone = sectionTemplate.content.cloneNode(true)
@@ -594,6 +481,120 @@ const init = () => {
     
     handleSelectSectionType({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate: getSectionTemplate({typeId}), sectionId: `section-${g.sectionIndex++}`})
   }, true))
+
+  const addSection = async ({parent, typeId, typeValue, previewContainer, sectionId}) => {
+    previewContainer.innerHTML = ''
+
+    let t, clone, header, input, sectionToUpdate, sectionIndex, sectionAddedOrUpdated = null
+
+    sectionToUpdate = globalWrite.sections.find(t => t.sectionId === sectionId) || null
+
+    if(sectionToUpdate) sectionIndex = globalWrite.sections.findIndex(t => t.sectionId === sectionId)
+
+    switch(typeId) {
+      case 'h3-input':        
+        sectionAddedOrUpdated = { ...h3, templateId: h3.id, sectionId, h3: typeValue }
+        t = d.getElementById('h3-template')
+        clone = t.content.cloneNode(true)
+        header = clone.querySelector('h3')
+        header.textContent = typeValue
+        previewContainer.appendChild(clone)
+        break
+      case 'h4-input':
+        sectionAddedOrUpdated = { ...h4, templateId: h4.id, sectionId, h4: typeValue }
+        t = d.getElementById('h4-template')
+        clone = t.content.cloneNode(true)
+        header = clone.querySelector('h4')
+        header.textContent = typeValue
+        previewContainer.appendChild(clone)
+        break
+      case 'birdsong-input':
+        sectionAddedOrUpdated = { ...xenocanto, templateId: xenocanto.id, sectionId, xenocanto: typeValue }
+        t = d.getElementById('xenocanto-template')
+        clone = t.content.cloneNode(true)
+        input = clone.querySelector('input')
+        input.value = typeValue
+        previewContainer.appendChild(clone)
+        break
+      case 'textarea':
+        const ps = typeValue.split('\n').filter(p => p.length > 0)
+        const paras = ps.map(p => {
+          return {
+            p
+          }
+        })
+        sectionAddedOrUpdated = { ...textarea, templateId: textarea.id, sectionId, paras }
+        paras.forEach(text => addParasToPreviewContainer({text, previewContainer}))
+        break
+      case 'terms':        
+        // Make sure the original array of terms doesn't include any newly added terms
+        if(sectionToUpdate) sectionToUpdate.terms = sectionToUpdate.terms.filter(t => !t.isItemNewToList)
+        sectionAddedOrUpdated = { ...term, templateId: term.id, sectionId, terms: typeValue }
+        sectionAddedOrUpdated.terms.forEach(term => {
+          if(term['isItemNewToList']) delete term['isItemNewToList']
+        })
+        addItemToList({selectedItems: typeValue, selectedItem: null, selectedItemsList: previewContainer})  
+        break
+      case 'images':
+        sectionAddedOrUpdated = { ...image, templateId: image.id, sectionId, imgs: typeValue }
+        break
+    }
+    // Show the preview section and hide the edit section
+    Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
+    Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
+
+    addOrUpdateSection({globalWrite, sectionIndex, sectionToUpdate, sectionAddedOrUpdated})
+  }
+
+  const editSection = ({e}) => {
+    const parent = e.target.parentElement
+    const addSectionBtn = parent.querySelector('#add-section-btn')
+    addSectionBtn.innerText = 'Save changes'
+    addSectionBtn.classList.remove('disabled')
+
+    Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
+    Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
+  }
+
+  const handleInputChangeEvent = (e, addBtn) => {
+    updateBtnState({str: e.target.value, btn: addBtn})
+  }
+
+  const handleImageInputChangeEvent = ({e, addBtn, url1, title1}) => {
+      (url1.value.length >= 5 && title1.value.length >= 2)
+        ? addBtn.classList.remove('disabled')
+        : addBtn.classList.add('disabled')    
+  }
+
+  const toggleAllOrIncludedInSpeciesList = ({btn, fieldset}) => {
+    {
+      if(btn.innerText.toLowerCase() === 'show only included') {
+        fieldset.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(input => {
+          input.closest('figure').classList.add('hidden')
+        })
+        btn.innerText = 'show all'
+      } else {
+        fieldset.querySelectorAll('input[type="checkbox"]').forEach(input => {
+          input.closest('figure').classList.remove('hidden')
+        })
+        btn.innerText = 'show only included'
+      }
+    }
+  }
+
+  const getSectionTemplate = ({typeId}) => {
+    let sectionTemplate = null
+    switch (typeId) {
+      case 'species':
+      case 'observations':
+      case 'inat-lookup':
+        sectionTemplate = d.getElementById('section-include-template')
+        break
+      default:
+        sectionTemplate = d.getElementById('section-template')
+    }
+    return sectionTemplate
+  }
 
   const enableExportFieldNotesContainer = () => {
     // Check fields added by the user
