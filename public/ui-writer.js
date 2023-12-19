@@ -201,17 +201,28 @@ const init = () => {
   }
 
   const addItemToList = ({selectedItems, selectedItem, selectedItemsListElement}) => {
+
+    const orginalSelectedItems = selectedItems
     
     if(selectedItem) {
-      if(selectedItems.findIndex(item => item.dt === selectedItem.dt) === -1) selectedItems.push({
-          ...selectedItem
-        , isItemNewToList: true
+      const isItemNewToList = selectedItems.findIndex(item => item.dt === selectedItem.dt) === -1
+      if(isItemNewToList) selectedItems.push({
+            ...selectedItem
+          , hasChanged: true
       })
     }
-    
+
     const removeTermFromList = ({e, li}) => {
       const checkbox = e.target
-      if(!checkbox.checked) li.remove()
+      if(!checkbox.checked) {        
+        selectedItems.forEach(item => {
+          if(item.dt.toLowerCase() === li.innerText.toLowerCase()) {
+            item.hasChanged = true
+          }
+        })
+        // li.remove()
+        // selectedItems = selectedItems.filter(item => item.dt.toLowerCase() !== li.innerText.toLowerCase())
+      }
     }
 
     selectedItemsListElement.innerHTML = ''
@@ -351,11 +362,11 @@ const init = () => {
         const parent = fieldset.querySelector('#selected-term')
         const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
         const addNewTermBtn = fieldset.querySelector('#add-new-term-btn')
-        const selectedItemsListElement = fieldset.querySelector('#selected-terms-list')
         
-        selectedItems = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.terms || []
+        selectedItems = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.terms || []        
 
-        const handleOnClickAddSelectedTermBtn = ({e, selectedItem}) => {
+        const handleOnClickAddSelectedTermBtn = ({e, selectedItems, selectedItem}) => {
+          const selectedItemsListElement = fieldset.querySelector('#selected-terms-list')
           addItemToList({selectedItems, selectedItem, selectedItemsListElement})
           addSelectedTermBtn.classList.add('disabled')
           addSectionBtn.classList.remove('disabled')
@@ -439,7 +450,7 @@ const init = () => {
           showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))
           Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
 
-          selectedItems = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.terms || []
+          // selectedItems = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.items || []
 
           handleInatAutocomplete({ 
               inputText: input
@@ -462,17 +473,21 @@ const init = () => {
     const typeId = e.target.value
     const typeText = e.target.innerText
     
-    handleOnClickSectionTypeBtn({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate: getSectionTemplate({typeId}), sectionId: `section-${globalWrite.sectionIndex++}`})
+    handleOnClickSectionTypeBtn({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate: getSectionTemplate({typeId}), sectionId: `section-${globalWrite.sectionIndex}`})
   }, true))
 
   const addSection = async ({parent, typeId, typeValue, previewContainer, sectionId}) => {
     previewContainer.innerHTML = ''
 
-    let t, clone, header, input, sectionToUpdate, sectionIndex, sectionAddedOrUpdated = null
+    let t, clone, header, input, sectionToUpdate, sectionIndex, sectionAddedOrUpdated, isEdit = null
 
     sectionToUpdate = globalWrite.sections.find(t => t.sectionId === sectionId) || null
 
-    if(sectionToUpdate) sectionIndex = globalWrite.sections.findIndex(t => t.sectionId === sectionId)
+    isEdit = !!sectionToUpdate
+
+    sectionIndex = isEdit
+      ? globalWrite.sections.findIndex(t => t.sectionId === sectionId)
+      : 0
 
     switch(typeId) {
       case 'h3-input':        
@@ -509,13 +524,13 @@ const init = () => {
         sectionAddedOrUpdated = { ...textarea, templateId: textarea.id, sectionId, paras }
         paras.forEach(text => addParasToPreviewContainer({text, previewContainer}))
         break
-      case 'terms':        
-        // Make sure the original array of terms doesn't include any newly added terms
-        if(sectionToUpdate) sectionToUpdate.terms = sectionToUpdate.terms.filter(t => !t.isItemNewToList)
-        sectionAddedOrUpdated = { ...term, templateId: term.id, sectionId, terms: typeValue }
-        sectionAddedOrUpdated.terms.forEach(term => {
-          if(term['isItemNewToList']) delete term['isItemNewToList']
+      case 'terms':                
+        if(isEdit) sectionToUpdate.terms = typeValue.filter(term => !term.hasChanged)
+        const terms = typeValue.map(term => {
+          if(term.hasChanged) delete term.hasChanged
+          return term
         })
+        sectionAddedOrUpdated = { ...term, templateId: term.id, sectionId, terms }
         addItemToList({selectedItems: typeValue, selectedItem: null, selectedItemsListElement: previewContainer})  
         break
       case 'images':
@@ -712,21 +727,22 @@ const init = () => {
       dateInputText.value = d1
       placeInputText.value = location.place_guess
 
-      globalWrite.species = await getInatObservations({ 
-        user_id: globalWrite.user.id,
-        place_id: null,
-        iconic_taxa: globalWrite.iconicTaxa,
-        per_page: 200,
-        locale: globalWrite.language.id,
-        species_count: false,
-        d1,
-        d2,
-      })
+      // globalWrite.species = await getInatObservations({ 
+      //   user_id: globalWrite.user.id,
+      //   place_id: null,
+      //   iconic_taxa: globalWrite.iconicTaxa,
+      //   per_page: 200,
+      //   locale: globalWrite.language.id,
+      //   species_count: false,
+      //   d1,
+      //   d2,
+      // })
 
       importFieldNotesNotificationText.classList.add('hidden')
 
-      // update the sectionIndex to reflect the number of imported sections
-      globalWrite.sectionIndex = globalWrite.sections.map(s => Number(s.sectionId.replace('section-', ''))).sort(function (a, b) {  return a - b;  })[globalWrite.sections.length -1 ] + 1
+      globalWrite.sectionIndex = globalWrite.sections.length > 0
+        ? globalWrite.sections.map(s => Number(s.sectionId.replace('section-', ''))).sort(function (a, b) { return a - b })[globalWrite.sections.length -1 ] + 1
+        : 0
 
       globalWrite.sections.forEach(section => {
         const sectionContainer = handleOnClickSectionTypeBtn({

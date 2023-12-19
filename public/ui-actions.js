@@ -108,7 +108,7 @@ export const handleInatAutocomplete = ({inputText, dataList, globalWrite, id, pr
             if(option) option[name] = globalWrite.matches.find(m => m[prop] === match)
             
             globalWrite[prop] = match
-            callback({g, parent: cbParent, typeId, sectionId})
+            callback({globalWrite, parent: cbParent, typeId, sectionId})
         }
     })
 }
@@ -148,7 +148,7 @@ export const handleTermAutocomplete = ({inputText, selectedItems, dataList, glob
             if(selectedItems.find(t => t.dt.toLowerCase() === match.toLowerCase())) return 
 
             addSelectedTermBtn.classList.remove('disabled')
-            addSelectedTermBtn.addEventListener('click', e => handleOnClickAddSelectedTermBtn({e,selectedItem: term}), true)
+            addSelectedTermBtn.addEventListener('click', e => handleOnClickAddSelectedTermBtn({e,selectedItems, selectedItem: term}), true)
         }
     })
 }
@@ -213,10 +213,14 @@ export const bgColour = taxon => {
     return getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
 }
 
-const handleSpeciesCheckState = async({e, sectionId, globalWrite, sectionToUpdateSpecies}) => {
+const handleSpeciesCheckState = async({e, sectionId, globalWrite}) => {
     const name = e.target.value    
+
+    const sectionToUpdateSpecies = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.species || []
+    // const sectionToUpdateSpecies = sectionToUpdate ? globalWrite.sections.find(t => t.sectionId === sectionId).species : []
+
     let sectionToUpdate = {
-        ...globalWrite.sections.find(t => t.sectionId === sectionId)
+          ...globalWrite.sections.find(t => t.sectionId === sectionId)
         , species: sectionToUpdateSpecies
     }
     let section = globalWrite.sections.find(t => t.sectionId === sectionId)    
@@ -298,9 +302,6 @@ const cloneImageTemplate = ({species, index, sectionId, imgUrl, globalWrite}) =>
 
     figure.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
 
-    const sectionToUpdate = globalWrite.sections.find(t => t.sectionId === sectionId)
-    const sectionToUpdateSpecies = sectionToUpdate ? globalWrite.sections.find(t => t.sectionId === sectionId).species : []
-
     img.src = imgUrl
     img.alt = species.taxon.name
     img.id = species.taxon.id
@@ -313,7 +314,7 @@ const cloneImageTemplate = ({species, index, sectionId, imgUrl, globalWrite}) =>
     
     checkbox.id = `${sectionId}-${species.id || species.taxon.id}`
     checkbox.value = species.taxon.name
-    checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionId, globalWrite, sectionToUpdateSpecies}), true)
+    // checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionId, globalWrite}), true)
     label.htmlFor = checkbox.id
 
     return clone
@@ -475,7 +476,12 @@ export const deleteSection = async ({d, sectionId, globalWrite}) => {
     const elementToRemove = globalWrite.sections.find(t => t.sectionId == sectionId)
     
     // Remove section from fieldnotes in the db
-    const response = await removeElementFromArray({fieldnotes: globalWrite, array: 'sections',  element: elementToRemove})
+    const response = !!elementToRemove 
+        ? await removeElementFromArray({fieldnotes: globalWrite, array: 'sections',  element: elementToRemove})
+        : {
+            success: true,
+            message: 'Section removed'
+        }
 
     if(response.success) {
         const element = d.getElementById(sectionId)

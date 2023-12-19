@@ -745,11 +745,11 @@ export const removeElementFromArray = async ({fieldnotes, array, element}) => {
         sectionOrder: arrayRemove(element.sectionId)
       }
       await updateDoc(docRef, data)            
-    }
 
-    return {
-      success: true,
-      message: 'Section removed'
+      return {
+        success: true,
+        message: 'Section removed'
+      }
     }
   } catch (e) {
     console.log('API element to remove: ', element)
