@@ -69,7 +69,7 @@ export const createInatParamsCheckboxGroup = ({g, parent, typeId, sectionId}) =>
 }
 
 export const createInatLookups = ({g, parent, typeId, sectionId}) => {
-    cloneImages({global:g, parent, typeId, sectionId})
+    cloneImages({globalWrite:g, parent, typeId, sectionId})
 }
 
 export const handleInatAutocomplete = ({inputText, dataList, g, id, prop, callback, cbParent, typeId, sectionId}) => {
@@ -113,7 +113,7 @@ export const handleInatAutocomplete = ({inputText, dataList, g, id, prop, callba
     })
 }
 
-export const handleTermAutocomplete = ({inputText, selectedTerms, dataList, g, data, parent, addSelectedTermBtn, handleAddSelectedTerm}) => {
+export const handleTermAutocomplete = ({inputText, selectedItems, dataList, g, data, parent, addSelectedTermBtn, handleAddSelectedTerm}) => {
   inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
@@ -145,10 +145,10 @@ export const handleTermAutocomplete = ({inputText, selectedTerms, dataList, g, d
             spans[3].innerText = term.da
             if(spans[4]) spans[4].innerText = term.dx || '--'
 
-            if(selectedTerms.find(t => t.dt.toLowerCase() === match.toLowerCase())) return 
+            if(selectedItems.find(t => t.dt.toLowerCase() === match.toLowerCase())) return 
 
             addSelectedTermBtn.classList.remove('disabled')
-            addSelectedTermBtn.addEventListener('click', e => handleAddSelectedTerm({e,selectedTerm: term}), true)
+            addSelectedTermBtn.addEventListener('click', e => handleAddSelectedTerm({e,selectedItem: term}), true)
         }
     })
 }
@@ -213,50 +213,70 @@ export const bgColour = taxon => {
     return getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
 }
 
-const handleSpeciesCheckState = ({e, sectionId, global}) => {
-    const name = e.target.value
-    const section = global.sections.find(t => t.sectionId === sectionId)
-    if(section) {
-        section.species.find(sp => sp === name) 
-        ? section.species = section.species.filter(sp => sp !== name)
-        : section.species.push(name)
-    } else {
-        const sp = [ name ]
-        global.sections.push({...species, species: sp, templateId: species.id, sectionId })
+const handleSpeciesCheckState = async({e, sectionId, globalWrite, sectionToUpdateSpecies}) => {
+    const name = e.target.value    
+    let sectionToUpdate = {
+        ...globalWrite.sections.find(t => t.sectionId === sectionId)
+        , species: sectionToUpdateSpecies
     }
+    let section = globalWrite.sections.find(t => t.sectionId === sectionId)    
+    let sectionIndex = globalWrite.sections.findIndex(t => t.sectionId === sectionId)
+
+    // Save to the db
+    const response = await addOrUpdateSection({
+          globalWrite
+        , sectionIndex
+        , sectionToUpdate
+        , sectionAddedOrUpdated: section
+    })
+
+    if(response.success) {
+        // Update in-memory species list
+        if(section) {
+            section.species.find(sp => sp === name) 
+                ? section.species = section.species.filter(sp => sp !== name)
+                : section.species.push(name)
+            globalWrite.sections[sectionIndex] = section
+        } else {
+            const sp = [ name ]
+            section = {...species, species: sp, templateId: species.id, sectionId }
+            globalWrite.sections.push(section)
+        }
+    }
+    
     // We should check also if a taxon needs to be removed from the list i.e. it appears in no species or observation section
     // But for now, we will content ourselves with addding taxon (which is harmless)
-    if(!global.taxa.find(t => t.name === name)) {
-        global.taxa.push({
-        id: global.species.find(sp => sp.taxon.name === name)?.taxon?.id,
+    if(!globalWrite.taxa.find(t => t.name === name)) {
+        globalWrite.taxa.push({
+        id: globalWrite.species.find(sp => sp.taxon.name === name)?.taxon?.id,
         name
         })
     }
 }
 
-export const cloneImages = ({global, parent, typeId, sectionId}) => {
+export const cloneImages = ({globalWrite, parent, typeId, sectionId}) => {
 switch(typeId) {
     case 'species':
     case 'observations':
-        if(global.species.length > 0) {
-        global.species.forEach((species, index) => {
+        if(globalWrite.species.length > 0) {
+            globalWrite.species.forEach((species, index) => {
             const imgUrl = typeId === 'observations'
             ? species.photos[0].url
             : species.taxon.default_photo.medium_url
-            const clone = cloneImageTemplate({species, index, sectionId, imgUrl, global})            
+            const clone = cloneImageTemplate({species, index, sectionId, imgUrl, globalWrite})            
             parent.appendChild(clone)
         })
         } 
         break
     case 'inat-lookup':
-    if(global.name) {
-        const match = global.matches.find(match => match.name === global.name)
+    if(globalWrite.name) {
+        const match = globalWrite.matches.find(match => match.name === globalWrite.name)
         const imgUrl = match.default_photo.square_url
-        const clone = cloneImageTemplate({species: {taxon:match}, index: 0, sectionId, imgUrl, global})            
+        const clone = cloneImageTemplate({species: {taxon:match}, index: 0, sectionId, imgUrl, globalWrite})            
         parent.appendChild(clone)
 
-        if(!global.taxa.find(taxon => taxon.id === match.id)) {                
-            global.taxa.push({
+        if(!globalWrite.taxa.find(taxon => taxon.id === match.id)) {                
+            globalWrite.taxa.push({
                 id: match.id,
                 name: match.name,
             })
@@ -266,7 +286,7 @@ switch(typeId) {
 }
 }
 
-const cloneImageTemplate = ({species, index, sectionId, imgUrl, global}) => {
+const cloneImageTemplate = ({species, index, sectionId, imgUrl, globalWrite}) => {
     const templateToClone = d.getElementById('img-template')
     const clone = templateToClone.content.cloneNode(true)
 
@@ -278,6 +298,9 @@ const cloneImageTemplate = ({species, index, sectionId, imgUrl, global}) => {
 
     figure.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
 
+    const sectionToUpdate = globalWrite.sections.find(t => t.sectionId === sectionId)
+    const sectionToUpdateSpecies = sectionToUpdate ? globalWrite.sections.find(t => t.sectionId === sectionId).species : []
+
     img.src = imgUrl
     img.alt = species.taxon.name
     img.id = species.taxon.id
@@ -288,9 +311,9 @@ const cloneImageTemplate = ({species, index, sectionId, imgUrl, global}) => {
     spans[1].textContent = species.taxon.name
     spans[1].classList.add('latin')
     
-    checkbox.id = `${sectionId}-${species.id}`
+    checkbox.id = `${sectionId}-${species.id || species.taxon.id}`
     checkbox.value = species.taxon.name
-    checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionId, global}), true)
+    checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionId, globalWrite, sectionToUpdateSpecies}), true)
     label.htmlFor = checkbox.id
 
     return clone
@@ -420,7 +443,7 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
             sectionToMove.classList.add('pointer')
 
             // Notify user
-            showNotificationsDialog({message: 'Section moved successfully'})
+            showNotificationsDialog({message: 'Section moved'})
         }
     } catch (e) {
         showNotificationsDialog({message: e.message, type: 'error'})
@@ -428,10 +451,14 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
   }
 }
 
-export const showNotificationsDialog = ({message, type = 'success', displayDuration = 3500}) => {
+export const showNotificationsDialog = ({message, type = 'success', displayDuration = 3500, icon = 'success-icon'}) => {
     const dialog = document.getElementById('state-notifications')
-    
-    dialog.querySelector('div:nth-child(1').innerText = message
+    const div1 = dialog.querySelector('div > div:nth-child(1)')
+
+    div1.innerText = message
+    div1.classList.remove(...div1.classList)
+    div1.classList.add(icon)
+
     const className = type === 'success'
         ? 'success-bg'
         : 'error-bg'
@@ -492,6 +519,8 @@ export const addOrUpdateSection = async ({globalWrite, sectionIndex, sectionToUp
 
         // Notify user
         showNotificationsDialog({message: response.message, type: 'success'})
+
+        return response
         
     } catch (e) {
         showNotificationsDialog({message: e.message, type: 'error'})

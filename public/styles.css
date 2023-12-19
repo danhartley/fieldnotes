@@ -130,7 +130,7 @@ button.submit:hover {
   background-color: var(--active-bg);
 }
 
-button:focus-visible {
+button:focus-visible, button:focus {
   outline: 1px solid var(--c6);
   background-color: var(--active-bg);
 }
@@ -201,7 +201,7 @@ input[type='checkbox']::before {
   background-color: var(--c6);
 }
 
-input:focus-visible, textarea:focus-visible {
+input:focus-visible, input:focus, textarea:focus-visible, textarea:focus {
   outline: 1px solid var(--c6);
 }
 
@@ -268,7 +268,7 @@ select {
   cursor: pointer;
 }
 
-select:focus-visible {
+select:focus-visible, select:focus {
   border: none;
   outline: 1px solid var(--c8);
 }
@@ -309,7 +309,7 @@ main > fieldset {
   grid-template-columns: 1fr 1fr;
 }
 
-dialog, dialog:focus-visible {
+dialog, dialog:focus-visible, dialog:focus {
   position: sticky;
   bottom: calc(var(--d) * 2);
   padding: calc(var(--d) * 2);
@@ -480,6 +480,16 @@ datalist {
 
 .success-bg {
   background-color: var(--success-bg-light);
+}
+
+.success-icon::before {
+  content: '\2713';
+  margin-right: calc(var(--d) * .25);
+}
+
+.error-icon::before {
+  content: '\1F5F4';
+  margin-right: calc(var(--d) * .25);
 }
 
 /* SELECTOR RULES */

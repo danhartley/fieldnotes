@@ -93,13 +93,22 @@ const init = () => {
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
 
-  const toggleView = () => {
+  const toggleView = view => {
     Array.from(editView).forEach(view => view.classList.toggle('hidden'))
     Array.from(createView).forEach(view => view.classList.toggle('hidden'))
+
+    switch(view) {
+      case 'create':
+        iNatAutocompleteInputText.focus()
+        break
+      case 'edit':
+        ltpAutocompleteTitleInputText.focus()
+        break
+    }    
   }
 
-  createFieldnotesInputRadio.addEventListener('click', toggleView, true)
-  editFieldnotesInputRadio.addEventListener('click', toggleView, true)
+  createFieldnotesInputRadio.addEventListener('click', e => toggleView('create'), true)
+  editFieldnotesInputRadio.addEventListener('click', e => toggleView('edit'), true)
 
   const getMeta = ({species}) => {
     return {
@@ -211,12 +220,12 @@ const init = () => {
     : btn.classList.add('disabled')
   }
 
-  const addTermToList = ({selectedTerms, selectedTerm, selectedTermsList}) => {
+  const addItemToList = ({selectedItems, selectedItem, selectedItemsList}) => {
     
-    if(selectedTerm) {
-      if(selectedTerms.findIndex(item => item.dt === selectedTerm.dt) === -1) selectedTerms.push({
-          ...selectedTerm
-        , isNewTerm: true
+    if(selectedItem) {
+      if(selectedItems.findIndex(item => item.dt === selectedItem.dt) === -1) selectedItems.push({
+          ...selectedItem
+        , isItemNewToList: true
       })
     }
     
@@ -225,9 +234,9 @@ const init = () => {
       if(!checkbox.checked) li.remove()
     }
 
-    selectedTermsList.innerHTML = ''
+    selectedItemsList.innerHTML = ''
     
-    selectedTerms.forEach(term => {
+    selectedItems.forEach(term => {
       const li = d.createElement('li')
       const checkbox = d.createElement('input')
       checkbox.type = 'checkbox'
@@ -240,7 +249,7 @@ const init = () => {
       label.htmlFor = checkbox.id
       li.appendChild(checkbox)
       li.appendChild(label)
-      selectedTermsList.appendChild(li)
+      selectedItemsList.appendChild(li)
     })
   }
 
@@ -256,8 +265,6 @@ const init = () => {
     previewContainer.innerHTML = ''
 
     let t, clone, header, input, sectionToUpdate, sectionIndex, sectionAddedOrUpdated = null
-
-    globalWrite.sections = globalWrite.sections || []
 
     sectionToUpdate = globalWrite.sections.find(t => t.sectionId === sectionId) || null
 
@@ -300,12 +307,12 @@ const init = () => {
         break
       case 'terms':        
         // Make sure the original array of terms doesn't include any newly added terms
-        sectionToUpdate.terms = sectionToUpdate.terms.filter(t => !t.isNewTerm)
+        if(sectionToUpdate) sectionToUpdate.terms = sectionToUpdate.terms.filter(t => !t.isItemNewToList)
         sectionAddedOrUpdated = { ...term, templateId: term.id, sectionId, terms: typeValue }
         sectionAddedOrUpdated.terms.forEach(term => {
-          if(term['isNewTerm']) delete term['isNewTerm']
+          if(term['isItemNewToList']) delete term['isItemNewToList']
         })
-        addTermToList({selectedTerms: typeValue, selectedTerm: null, selectedTermsList: previewContainer})  
+        addItemToList({selectedItems: typeValue, selectedItem: null, selectedItemsList: previewContainer})  
         break
       case 'images':
         sectionAddedOrUpdated = { ...image, templateId: image.id, sectionId, imgs: typeValue }
@@ -384,7 +391,7 @@ const init = () => {
     sectionContainer.setAttribute('id', sectionId)
     sectionContainer.addEventListener('dragstart', dragstartHandler)
     
-    let input, label, texarea, datalist, previewContainer, selectedTerms, images, cbParent = null
+    let input, label, texarea, datalist, previewContainer, selectedItems, images, cbParent = null
 
     legend.innerText = typeText
 
@@ -407,7 +414,7 @@ const init = () => {
         break
       case 'observations':
       case 'species':                
-        cloneImages({global:globalWrite, parent:typeClone.querySelector('div'), typeId, sectionId })
+        cloneImages({globalWrite, parent:typeClone.querySelector('div'), typeId, sectionId })
         break
       case 'terms':
         datalist = typeClone.querySelector('datalist')
@@ -417,7 +424,7 @@ const init = () => {
         input.setAttribute('list', datalist.id)        
         label = typeClone.querySelector('label')
         label.htmlFor = input.id                  
-        addSectionBtn.addEventListener('click', e => addSection({parent: e.target.parentElement, typeId, typeValue:selectedTerms, previewContainer, sectionId }), true)
+        addSectionBtn.addEventListener('click', e => addSection({parent: e.target.parentElement, typeId, typeValue:selectedItems, previewContainer, sectionId }), true)
         editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
       case 'images':
@@ -476,18 +483,18 @@ const init = () => {
         const parent = fieldset.querySelector('#selected-term')
         const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
         const addNewTermBtn = fieldset.querySelector('#add-new-term-btn')
-        const selectedTermsList = fieldset.querySelector('#selected-terms-list')
+        const selectedItemsList = fieldset.querySelector('#selected-terms-list')
         
         // Add a pre-existing term
-        selectedTerms = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.terms || []
-        const handleAddSelectedTerm = ({e, selectedTerm}) => {
-          addTermToList({selectedTerms, selectedTerm, selectedTermsList})
+        selectedItems = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.terms || []
+        const handleAddSelectedTerm = ({e, selectedItem}) => {
+          addItemToList({selectedItems, selectedItem, selectedItemsList})
           addSelectedTermBtn.classList.add('disabled')
           addSectionBtn.classList.remove('disabled')
           input.value = ''             
         }
         input.focus()
-        handleTermAutocomplete({ inputText: input, selectedTerms, dataList: datalist, g: globalWrite, data: getTerms(), parent, addSelectedTermBtn, handleAddSelectedTerm})
+        handleTermAutocomplete({ inputText: input, selectedItems, dataList: datalist, g: globalWrite, data: getTerms(), parent, addSelectedTermBtn, handleAddSelectedTerm})
         
         // Create a new term
         const dt = fieldset.querySelector('#input-dt')
@@ -521,7 +528,7 @@ const init = () => {
             dx: dx.value,
           })
           
-          handleAddSelectedTerm({selectedTerm: newTerm})
+          handleAddSelectedTerm({selectedItem: newTerm})
         })
         break
       case 'images':
@@ -695,9 +702,13 @@ const init = () => {
     try {
       importFieldNotesNotificationText.classList.remove('hidden')
       
-      const fieldnotes = useLocal 
+      const response = useLocal 
         ? await globalWrite.fieldnotesStubs
         : await getFieldnotesById({id: globalWrite.fieldnotesStubs.fieldnotesId})
+
+      if(!response.success) return 
+
+      const fieldnotes = response.data
 
       Object.assign(globalWrite, {
         iconicTaxa: g.ICONIC_TAXA,
@@ -714,16 +725,16 @@ const init = () => {
       dateInputText.value = d1
       placeInputText.value = location.place_guess
 
-      globalWrite.species = await getInatObservations({ 
-        user_id: globalWrite.user.id,
-        place_id: null,
-        iconic_taxa: globalWrite.iconicTaxa,
-        per_page: 200,
-        locale: globalWrite.language.id,
-        species_count: false,
-        d1,
-        d2,
-      })
+      // globalWrite.species = await getInatObservations({ 
+      //   user_id: globalWrite.user.id,
+      //   place_id: null,
+      //   iconic_taxa: globalWrite.iconicTaxa,
+      //   per_page: 200,
+      //   locale: globalWrite.language.id,
+      //   species_count: false,
+      //   d1,
+      //   d2,
+      // })
 
       importFieldNotesNotificationText.classList.add('hidden')
 
@@ -778,8 +789,8 @@ const init = () => {
             })            
             break
           case 'terms':
-            const selectedTermsList = sectionContainer.querySelector('#selected-terms-list')
-            addTermToList({selectedTerms: section.terms, selectedTerm: null, selectedTermsList})
+            const selectedItemsList = sectionContainer.querySelector('#selected-terms-list')
+            addItemToList({selectedItems: section.terms, selectedItem: null, selectedItemsList})
         }
       })
 
@@ -799,7 +810,7 @@ const init = () => {
       exportFieldNotesContainer.classList.remove('disabled')
 
       // Show notification that Fieldnotes have been imported
-      showNotificationsDialog({message: 'Fieldnotes imported successfully', type: 'success', displayDuration: 2000})
+      showNotificationsDialog({message: 'Fieldnotes imported', type: 'success', displayDuration: 2000})
     } catch (e) {
       showNotificationsDialog({message: e.message, type: 'error'})
     }

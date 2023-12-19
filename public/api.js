@@ -609,9 +609,21 @@ export const getFieldnotes = async () => {
 }
 
 export const getFieldnotesById = async ({id}) => {
-  const docRef = doc(getDb(), "fieldnotes", id)
-  const docSnap = await getDoc(docRef)
-  return docSnap.data()
+  let docRef = null
+
+  try {
+    docRef = doc(getDb(), "fieldnotes", id)
+    const docSnap = await getDoc(docRef)
+    return {
+      data: docSnap.data(),
+      success: true,
+      message: 'Fieldnotes returned'
+    }
+  } catch (e) {
+    console.log('API docRef: ', docRef)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
+  }
 }
 
 export const getFieldnotesStubs = async () => {   
@@ -646,7 +658,7 @@ export const addFieldnotes = async ({fieldnotes}) => {
 
       return {
         success: true,
-        message: 'Fieldnotes added successfully',
+        message: 'Fieldnotes added',
         id,
         type: 'success'
       }
@@ -667,7 +679,7 @@ export const updateFieldNotes = async ({fieldnotes, data}) => {
 
     return {
       success: true,
-      message: 'Fieldnotes updated successfully'
+      message: 'Fieldnotes updated'
     }
   } catch (e) {
     console.log('API docRef: ', docRef)
@@ -706,10 +718,10 @@ export const addElementToArray = async ({fieldnotes, array, element}) => {
 
     return {
       success: true,
-      message: 'Section added to database successfully'
+      message: 'Section added'
     }
   } catch (e) {
-    console.log('API elemt to remove: ', element)
+    console.log('API element to remove: ', element)
     console.log('API docRef: ', docRef)
     console.log('API data: ', data)
     console.warn('API error: ', e)
@@ -738,10 +750,10 @@ export const removeElementFromArray = async ({fieldnotes, array, element}) => {
 
     return {
       success: true,
-      message: 'Section removed from database successfully'
+      message: 'Section removed'
     }
   } catch (e) {
-    console.log('API elemt to remove: ', element)
+    console.log('API element to remove: ', element)
     console.log('API docRef: ', docRef)
     console.log('API data: ', data)
     console.warn('API error: ', e)
@@ -756,6 +768,6 @@ export const updateElementFromArray = async ({fieldnotes, array, elementToUpdate
 
   return {
     success: true,
-    message: 'Section updated in database successfully'
+    message: 'Section updated'
   }
 }
