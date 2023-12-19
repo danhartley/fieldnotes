@@ -68,11 +68,11 @@ export const createInatParamsCheckboxGroup = ({g, parent, typeId, sectionId}) =>
     attachListenersToInatParams(g)
 }
 
-export const createInatLookups = ({g, parent, typeId, sectionId}) => {
-    cloneImages({globalWrite:g, parent, typeId, sectionId})
+export const createInatLookups = ({globalWrite, parent, typeId, sectionId}) => {
+    cloneImages({globalWrite, parent, typeId, sectionId})
 }
 
-export const handleInatAutocomplete = ({inputText, dataList, g, id, prop, callback, cbParent, typeId, sectionId}) => {
+export const handleInatAutocomplete = ({inputText, dataList, globalWrite, id, prop, callback, cbParent, typeId, sectionId}) => {
   inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
@@ -84,9 +84,9 @@ export const handleInatAutocomplete = ({inputText, dataList, g, id, prop, callba
 
         const data = await getIdByAutocomplete({ by: id, toComplete: strToComplete })
         
-        g.matches = data.results
+        globalWrite.matches = data.results
         
-        g.matches.forEach(match => {
+        globalWrite.matches.forEach(match => {
             const option = d.createElement('option')
             option.value = match[prop]
             dataList.appendChild(option)
@@ -94,26 +94,26 @@ export const handleInatAutocomplete = ({inputText, dataList, g, id, prop, callba
     }, 350))
 
     inputText.addEventListener('change', e => {
-        const { name } = g.inatAutocomplete
+        const { name } = globalWrite.inatAutocomplete
         const match = e.target.value
 
-        g.inatAutocompleteOptions.forEach(option => {
+        globalWrite.inatAutocompleteOptions.forEach(option => {
             if(option.id === id) {
                 option.isActive = true
             }
         })
 
         if(match) {
-            const option = g.inatAutocompleteOptions.find(option => option.id === id)
-            if(option) option[name] = g.matches.find(m => m[prop] === match)
+            const option = globalWrite.inatAutocompleteOptions.find(option => option.id === id)
+            if(option) option[name] = globalWrite.matches.find(m => m[prop] === match)
             
-            g[prop] = match
+            globalWrite[prop] = match
             callback({g, parent: cbParent, typeId, sectionId})
         }
     })
 }
 
-export const handleTermAutocomplete = ({inputText, selectedItems, dataList, g, data, parent, addSelectedTermBtn, handleAddSelectedTerm}) => {
+export const handleTermAutocomplete = ({inputText, selectedItems, dataList, globalWrite, data, parent, addSelectedTermBtn, handleOnClickAddSelectedTermBtn}) => {
   inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
@@ -123,9 +123,9 @@ export const handleTermAutocomplete = ({inputText, selectedItems, dataList, g, d
 
         if(strToComplete.length < 3) return
 
-        g.matches = data.filter(item => item.dt.toLowerCase().startsWith(strToComplete.toLowerCase()))
+        globalWrite.matches = data.filter(item => item.dt.toLowerCase().startsWith(strToComplete.toLowerCase()))
                 
-        g.matches.forEach(match => {
+        globalWrite.matches.forEach(match => {
             const option = d.createElement('option')
             option.value = match['dt']
             dataList.appendChild(option)
@@ -148,12 +148,12 @@ export const handleTermAutocomplete = ({inputText, selectedItems, dataList, g, d
             if(selectedItems.find(t => t.dt.toLowerCase() === match.toLowerCase())) return 
 
             addSelectedTermBtn.classList.remove('disabled')
-            addSelectedTermBtn.addEventListener('click', e => handleAddSelectedTerm({e,selectedItem: term}), true)
+            addSelectedTermBtn.addEventListener('click', e => handleOnClickAddSelectedTermBtn({e,selectedItem: term}), true)
         }
     })
 }
 
-export const handleFieldsnotesAutocomplete = async ({inputText, dataList, g, fieldnotesStubsCallback, importFieldNotesBtn}) => {
+export const handleFieldsnotesAutocomplete = async ({inputText, dataList, globalWrite, fieldnotesStubsCallback, importFieldNotesBtn}) => {
     let stubs
     inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
@@ -164,9 +164,9 @@ export const handleFieldsnotesAutocomplete = async ({inputText, dataList, g, fie
 
         stubs = await fieldnotesStubsCallback()
 
-        g.matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
+        globalWrite.matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
                 
-        g.matches.forEach(match => {
+        globalWrite.matches.forEach(match => {
             const option = d.createElement('option')
             option.value = match['title']
             dataList.appendChild(option)
@@ -177,7 +177,7 @@ export const handleFieldsnotesAutocomplete = async ({inputText, dataList, g, fie
         const match = e.target.value
 
         if(match) {
-            g.fieldnotesStubs = stubs.find(option => option.title === match)
+            globalWrite.fieldnotesStubs = stubs.find(option => option.title === match)
             importFieldNotesBtn.classList.remove('disabled')        
         }
     })

@@ -410,14 +410,13 @@ export const g = {
         project: null,
         place: null,
     },
-    inatTaxaAutocomplete: {
-        id: 'taxa',
-        name: 'name',
-    },
+    // inatTaxaAutocomplete: {
+    //     id: 'taxa',
+    //     name: 'name',
+    // },
     matches: [],    
     useObservationsSpeciesCountOptions: [{name:'Species', id: "true"}, {name:'Observations', id: "false"}],
-    dateOption: 'none',
-    sectionIndex: 0,
+    dateOption: 'none',    
 }
 
 export const inatControls = [

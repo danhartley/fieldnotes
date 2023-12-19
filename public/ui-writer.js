@@ -39,32 +39,40 @@ const init = () => {
 
   const useLocal = false
 
-  let globalWrite = {}
+  const initGlobalWrite = () => {
+    const globalWrite = {}
+    Object.assign(globalWrite, {
+      iconicTaxa: g.ICONIC_TAXA,
+      language: g.LANGUAGES[1],
+      useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0],
+      species: [],
+      taxa: [],
+      sections: [],
+      title: '',
+      author: '',
+      d1: '',
+      d2: '',
+      location: {
+        location: '',
+        place_guess: '',      
+      },
+      user: {
+        id: '',
+        icon: '',
+        identifications_count: 0,
+        login: '',
+        observations_count: 0,
+        species_count: 0,
+      },
+      sectionIndex: 0,
+      inatAutocompleteOptions: g.inatAutocompleteOptions,
+      inatAutocomplete: g.inatAutocomplete,
+    })
 
-  Object.assign(globalWrite, {
-    iconicTaxa: g.ICONIC_TAXA,
-    language: g.LANGUAGES[1],
-    useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0],
-    species: [],
-    taxa: [],
-    sections: [],
-    title: '',
-    author: '',
-    d1: '',
-    d2: '',
-    location: {
-      location: '',
-      place_guess: '',      
-    },
-    user: {
-      id: '',
-      icon: '',
-      identifications_count: 0,
-      login: '',
-      observations_count: 0,
-      species_count: 0,
-    }
-  })
+    return globalWrite
+  }
+
+  let globalWrite = initGlobalWrite()
 
   const d = document
   const createFieldnotesInputRadio = d.getElementById('create-fieldnotes-input-radio')
@@ -182,37 +190,9 @@ const init = () => {
 
   searchInatObservationsBtn.addEventListener('click', searchInatObservations, false)
 
-  const initGlobalWrite = () => {
-    globalWrite = {
-      ...globalWrite,
-      inatAutocompleteOptions: [
-        {
-          id: 'users',
-          name: 'user',
-          prop: 'login',
-          placeholder: 'Start typing a username or user ID…',
-          isActive: false,
-          user: null,
-        },
-      ],
-      inatAutocomplete: {
-        id: 'users',
-        name: 'user',
-        prop: 'login',
-        placeholder: 'Username or user ID',
-        isActive: false,
-        user: null,
-        project: null,
-        place: null,
-      },
-    }
-  }
-
-  initGlobalWrite()
-
-  const { id, prop } = g.inatAutocomplete
-  handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g: globalWrite, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})  
-  handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, g: globalWrite, fieldnotesStubsCallback: useLocal ? _getFieldnotes : getFieldnotesStubs, importFieldNotesBtn}) 
+  const { id, prop } = globalWrite.inatAutocomplete
+  handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, globalWrite, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})  
+  handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, globalWrite, fieldnotesStubsCallback: useLocal ? _getFieldnotes : getFieldnotesStubs, importFieldNotesBtn}) 
 
   const updateBtnState = ({str, btn}) => {
     str.length > 0
@@ -220,7 +200,7 @@ const init = () => {
     : btn.classList.add('disabled')
   }
 
-  const addItemToList = ({selectedItems, selectedItem, selectedItemsList}) => {
+  const addItemToList = ({selectedItems, selectedItem, selectedItemsListElement}) => {
     
     if(selectedItem) {
       if(selectedItems.findIndex(item => item.dt === selectedItem.dt) === -1) selectedItems.push({
@@ -234,7 +214,7 @@ const init = () => {
       if(!checkbox.checked) li.remove()
     }
 
-    selectedItemsList.innerHTML = ''
+    selectedItemsListElement.innerHTML = ''
     
     selectedItems.forEach(term => {
       const li = d.createElement('li')
@@ -249,7 +229,7 @@ const init = () => {
       label.htmlFor = checkbox.id
       li.appendChild(checkbox)
       li.appendChild(label)
-      selectedItemsList.appendChild(li)
+      selectedItemsListElement.appendChild(li)
     })
   }
 
@@ -261,8 +241,7 @@ const init = () => {
     previewContainer.appendChild(clone)
   }
 
-
-  const handleSelectSectionType = ({typeId, typeText, typeTemplateName, sectionTemplate, sectionId}) => {
+  const handleOnClickSectionTypeBtn = ({typeId, typeText, typeTemplateName, sectionTemplate, sectionId}) => {
     const sectionClone = sectionTemplate.content.cloneNode(true)
     const fieldset = sectionClone.querySelector('fieldset')
     const legend = sectionClone.querySelector('legend')
@@ -333,6 +312,8 @@ const init = () => {
         label.htmlFor = input.id
         cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
         cbParent.id = `${sectionId}-lookup-parent`
+        addSectionBtn.addEventListener('click', e => addSection({parent: e.target.parentElement, typeId, typeValue:selectedItems, previewContainer, sectionId }), true)
+        editSectionBtn.addEventListener('click', e => editSection({e}), true)
         break
     }
     
@@ -370,18 +351,18 @@ const init = () => {
         const parent = fieldset.querySelector('#selected-term')
         const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
         const addNewTermBtn = fieldset.querySelector('#add-new-term-btn')
-        const selectedItemsList = fieldset.querySelector('#selected-terms-list')
+        const selectedItemsListElement = fieldset.querySelector('#selected-terms-list')
         
-        // Add a pre-existing term
         selectedItems = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.terms || []
-        const handleAddSelectedTerm = ({e, selectedItem}) => {
-          addItemToList({selectedItems, selectedItem, selectedItemsList})
+
+        const handleOnClickAddSelectedTermBtn = ({e, selectedItem}) => {
+          addItemToList({selectedItems, selectedItem, selectedItemsListElement})
           addSelectedTermBtn.classList.add('disabled')
           addSectionBtn.classList.remove('disabled')
           input.value = ''             
         }
         input.focus()
-        handleTermAutocomplete({ inputText: input, selectedItems, dataList: datalist, g: globalWrite, data: getTerms(), parent, addSelectedTermBtn, handleAddSelectedTerm})
+        handleTermAutocomplete({ inputText: input, selectedItems, dataList: datalist, globalWrite, data: getTerms(), parent, addSelectedTermBtn, handleOnClickAddSelectedTermBtn})
         
         // Create a new term
         const dt = fieldset.querySelector('#input-dt')
@@ -415,7 +396,7 @@ const init = () => {
             dx: dx.value,
           })
           
-          handleAddSelectedTerm({selectedItem: newTerm})
+          handleOnClickAddSelectedTermBtn({selectedItem: newTerm})
         })
         break
       case 'images':
@@ -458,10 +439,12 @@ const init = () => {
           showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))
           Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
 
+          selectedItems = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.terms || []
+
           handleInatAutocomplete({ 
               inputText: input
             , dataList: datalist
-            , g: globalWrite
+            , globalWrite
             , id: 'taxa'
             , prop: 'name'
             , callback: createInatLookups
@@ -479,7 +462,7 @@ const init = () => {
     const typeId = e.target.value
     const typeText = e.target.innerText
     
-    handleSelectSectionType({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate: getSectionTemplate({typeId}), sectionId: `section-${g.sectionIndex++}`})
+    handleOnClickSectionTypeBtn({typeId, typeText, typeTemplateName: `${typeId}-template`, sectionTemplate: getSectionTemplate({typeId}), sectionId: `section-${globalWrite.sectionIndex++}`})
   }, true))
 
   const addSection = async ({parent, typeId, typeValue, previewContainer, sectionId}) => {
@@ -533,10 +516,12 @@ const init = () => {
         sectionAddedOrUpdated.terms.forEach(term => {
           if(term['isItemNewToList']) delete term['isItemNewToList']
         })
-        addItemToList({selectedItems: typeValue, selectedItem: null, selectedItemsList: previewContainer})  
+        addItemToList({selectedItems: typeValue, selectedItem: null, selectedItemsListElement: previewContainer})  
         break
       case 'images':
         sectionAddedOrUpdated = { ...image, templateId: image.id, sectionId, imgs: typeValue }
+        break
+      case 'inat-lookup':
         break
     }
     // Show the preview section and hide the edit section
@@ -711,8 +696,9 @@ const init = () => {
 
       const fieldnotes = response.data
 
+      globalWrite = initGlobalWrite()
+
       Object.assign(globalWrite, {
-        iconicTaxa: g.ICONIC_TAXA,
         ...fieldnotes,
         sections: fieldnotes.sectionOrder.map(sectionId => {
           return fieldnotes.sections.find(section => section.sectionId === sectionId)
@@ -726,24 +712,24 @@ const init = () => {
       dateInputText.value = d1
       placeInputText.value = location.place_guess
 
-      // globalWrite.species = await getInatObservations({ 
-      //   user_id: globalWrite.user.id,
-      //   place_id: null,
-      //   iconic_taxa: globalWrite.iconicTaxa,
-      //   per_page: 200,
-      //   locale: globalWrite.language.id,
-      //   species_count: false,
-      //   d1,
-      //   d2,
-      // })
+      globalWrite.species = await getInatObservations({ 
+        user_id: globalWrite.user.id,
+        place_id: null,
+        iconic_taxa: globalWrite.iconicTaxa,
+        per_page: 200,
+        locale: globalWrite.language.id,
+        species_count: false,
+        d1,
+        d2,
+      })
 
       importFieldNotesNotificationText.classList.add('hidden')
 
       // update the sectionIndex to reflect the number of imported sections
-      g.sectionIndex = globalWrite.sections.map(s => Number(s.sectionId.replace('section-', ''))).sort(function (a, b) {  return a - b;  })[globalWrite.sections.length -1 ] + 1
+      globalWrite.sectionIndex = globalWrite.sections.map(s => Number(s.sectionId.replace('section-', ''))).sort(function (a, b) {  return a - b;  })[globalWrite.sections.length -1 ] + 1
 
       globalWrite.sections.forEach(section => {
-        const sectionContainer = handleSelectSectionType({
+        const sectionContainer = handleOnClickSectionTypeBtn({
             typeId: section.type
           , typeText: section.name
           , typeTemplateName: section.id
@@ -790,8 +776,8 @@ const init = () => {
             })            
             break
           case 'terms':
-            const selectedItemsList = sectionContainer.querySelector('#selected-terms-list')
-            addItemToList({selectedItems: section.terms, selectedItem: null, selectedItemsList})
+            const selectedItemsListElement = sectionContainer.querySelector('#selected-terms-list')
+            addItemToList({selectedItems: section.terms, selectedItem: null, selectedItemsListElement})
         }
       })
 
