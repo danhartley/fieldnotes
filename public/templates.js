@@ -56,20 +56,14 @@ export const h4 = {
   element: 'h4'
 }
 
-export const text = {
-  id: 'text-template',
-  name: 'Text block',
-  parent: 'non-grid-template',
-  type: 'text',
-  paras: [],
-}
-
 export const textarea = {
-  id: 'textarea-template',
+  id: 'textarea-read-template',
+  templateId: 'textarea-read-template',
   name: 'Text block',
   parent: 'non-grid-template',
-  type: 'textarea',
+  type: 'textarea-read-template',
   paras: [],
+  element: 'p'
 }
 
 export const term = {
@@ -146,6 +140,7 @@ export const previewTemplates = [
     h3
   , h4
   , xenocanto
+  , textarea
 ]
 
 export const writeTemplates = [
@@ -153,18 +148,28 @@ export const writeTemplates = [
     id: 'h3-write-template',
     templateId: 'h3-write-template',
     readTemplateId: 'h3-read-template',
+    element: 'input',
     previewElement: 'h3' 
   },
   {
     id: 'h4-write-template',
     templateId: 'h4-write-template',
     readTemplateId: 'h4-read-template',
+    element: 'input',
     previewElement: 'h4'
   },
   {
     id: 'xenocanto-write-template',
     templateId: 'xenocanto-write-template',
     readTemplateId: 'xenocanto-read-template',
+    element: 'input',
     previewElement: 'input'
   },
+  {
+    id: 'textarea-write-template',
+    templateId: 'textarea-write-template',
+    readTemplateId: 'textarea-read-template',
+    element: 'textarea',
+    previewElement: 'p'
+  }
 ]

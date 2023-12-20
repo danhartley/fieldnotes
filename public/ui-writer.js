@@ -10,12 +10,8 @@ import {
 } from './api.js'
 
 import { 
-  h3
-, h4
-, textarea
-, term
+  term
 , image
-, xenocanto 
 , previewTemplates
 , writeTemplates
 } from './templates.js'
@@ -244,7 +240,7 @@ const init = () => {
   }
 
   const addParasToPreviewContainer = ({text, previewContainer}) => {
-    const t = d.getElementById('text-template')
+    const t = d.getElementById('textarea-read-template')
     const clone = t.content.cloneNode(true)
     const p = clone.querySelector('p')
     p.textContent = text.p
@@ -282,7 +278,7 @@ const init = () => {
         addSectionBtn.addEventListener('click', e => addSection({parent: e.target.parentElement, typeId, typeValue:input.value, previewContainer, sectionId}), true)
         editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionId}), true)
         break
-      case 'textarea':      
+      case 'textarea-write-template':      
         texarea = typeClone.querySelector('textarea')
         texarea.addEventListener('input', e => handleInputChangeEvent(e, addSectionBtn), true)
         editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionId}), true)
@@ -503,14 +499,15 @@ const init = () => {
         header.textContent = typeValue
         previewContainer.appendChild(clone)
         break
-      case 'textarea':
+      case 'textarea-write-template':
         const ps = typeValue.split('\n').filter(p => p.length > 0)
         const paras = ps.map(p => {
           return {
             p
           }
         })
-        sectionAddedOrUpdated = { ...textarea, templateId: textarea.id, sectionId, paras }
+        previewTemplate[writeTemplate.previewElement] = typeValue
+        sectionAddedOrUpdated = { ...previewTemplate, sectionId, paras }
         paras.forEach(text => addParasToPreviewContainer({text, previewContainer}))
         break
       case 'terms':                
@@ -823,15 +820,7 @@ const init = () => {
             preview.value = section[section.element]
             add.value = section[section.element]
             break
-          // case 'h4-read-template':
-          //   preview.innerText = section.h4
-          //   add.value = section.h4
-          //   break
-          // case 'xenocanto-read-template':
-          //   preview.value = section.input
-          //   add.value = section.input
-          //   break
-          case 'textarea':          
+          case 'textarea-write-template':          
             section.paras.forEach(text => {
               addParasToPreviewContainer({text, previewContainer: edit})
               add.innerText += text.p

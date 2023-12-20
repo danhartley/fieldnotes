@@ -4,7 +4,7 @@ import {
 , h4
 , date
 , location
-, text
+, textarea
 , term
 , species
 , image
@@ -135,7 +135,7 @@ export const fieldnotes = [
           isTest: false,                
           sections: [
             {
-                ...text,
+                ...textarea,
                 paras: [
                     {
                         p: "My observations were made in the Serra do Louro within the Arrábida Natural Park (Parque Natural da Arrábida), a protected area in the district of Setúbal which lies about twenty kilometres south of Lisbon."
@@ -209,7 +209,7 @@ export const fieldnotes = [
             },
             { ...h3,  h3: 'Grinnell method of note-taking' },
             {
-                ...text,
+                ...textarea,
                 paras: [
                 {
                     p: 'A field-worthy notebook where one records direct observations as they are being observed.',
@@ -235,7 +235,7 @@ export const fieldnotes = [
             },
             { ...h3,  h3: 'Biological habitat' },
             {
-                ...text,
+                ...textarea,
                 paras: [
                 {
                     p: 'The other types of plants growing around your specimen.',
@@ -269,7 +269,7 @@ export const fieldnotes = [
                 },
                 ]
             },                
-            { ...text,
+            { ...textarea,
                 paras: [
                     {
                         p: 'Comparison (above) between species observed on location and the type specimens (below) used by iNaturalist.'
@@ -286,7 +286,7 @@ export const fieldnotes = [
                 ],
             },
             { ...h3,  h3: 'Physical habitat' },
-            { ...text,
+            { ...textarea,
                 paras: [
                 {
                     p: 'The type of soil, rocks, slope, elevation, aspect, moisture (for instance, whether the site is continuously wet)',
@@ -318,7 +318,7 @@ export const fieldnotes = [
             },
             { ...h3, h3: 'Description' },
             {
-                ...text,
+                ...textarea,
                 paras: [
                     {
                     p: 'Record features that may not be preserved in the pressed specimen, such as colour, odor, sap or latex, height, diameter, etc.',
@@ -435,7 +435,7 @@ export const fieldnotes = [
         isTest: false,
         sections: [
           {
-            id: "text-template",
+            id: "textarea-read-template",
             name: "Text block",
             parent: "non-grid-template",
             type: "text",
@@ -460,7 +460,7 @@ export const fieldnotes = [
             ]
           },
           {
-            id: "text-template",
+            id: "textarea-read-template",
             name: "Text block",
             parent: "non-grid-template",
             type: "text",
@@ -494,7 +494,7 @@ export const fieldnotes = [
             ]
           },
           {
-            id: "text-template",
+            id: "textarea-read-template",
             name: "Text block",
             parent: "non-grid-template",
             type: "text",
@@ -519,7 +519,7 @@ export const fieldnotes = [
             ]
           },
           {
-            id: "text-template",
+            id: "textarea-read-template",
             name: "Text block",
             parent: "non-grid-template",
             type: "text",
@@ -552,7 +552,7 @@ export const fieldnotes = [
             h4: "Final reflections"
           },
           {
-            id: "text-template",
+            id: "textarea-read-template",
             name: "Text block",
             parent: "non-grid-template",
             type: "text",
@@ -685,7 +685,7 @@ export const fieldnotes = [
     ],
     sections: [
       {
-        id: "text-template",
+        id: "textarea-read-template",
         sectionId: 'section-0',
         name: "Text block",
         parent: "non-grid-template",
@@ -712,7 +712,7 @@ export const fieldnotes = [
         ]
       },
       {
-        id: "text-template",
+        id: "textarea-read-template",
         sectionId: 'section-2',
         name: "Text block",
         parent: "non-grid-template",
@@ -748,7 +748,7 @@ export const fieldnotes = [
         ]
       },
       {
-        id: "text-template",
+        id: "textarea-read-template",
         sectionId: 'section-4',
         name: "Text block",
         parent: "non-grid-template",
@@ -775,7 +775,7 @@ export const fieldnotes = [
         ]
       },
       {
-        id: "text-template",
+        id: "textarea-read-template",
         sectionId: 'section-6',
         name: "Text block",
         parent: "non-grid-template",
@@ -810,7 +810,7 @@ export const fieldnotes = [
         h4: "Final reflections"
       },
       {
-        id: "text-template",
+        id: "textarea-read-template",
         sectionId: 'section-8',
         name: "Text block",
         parent: "non-grid-template",

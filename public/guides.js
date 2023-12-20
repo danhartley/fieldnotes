@@ -1,7 +1,7 @@
 import { 
     templates
   , h3
-  , text
+  , textarea
   , term
   , species
   , image
@@ -58,7 +58,7 @@ export const guides = [
           sections: [
             { ...h3, h3: 'Mediterranean Climate Regions' },
             { 
-              ...text, paras: [
+              ...textarea, paras: [
                 {
                   p: `
                   The Mediterranean has a subtropical climate with hot summers and mild winters. Precipitation is concentrated in the winter.`,
@@ -86,7 +86,7 @@ export const guides = [
               ]
             },
             { 
-              ...text, paras: [
+              ...textarea, paras: [
                 {
                   p: 'The typical Mediterranean landscape is a mosaic of diverse plant communities characterised by biodiversity.',
                 },
@@ -104,7 +104,7 @@ export const guides = [
               'Conifer',
               ]
             },
-            { ...text, paras: [
+            { ...textarea, paras: [
                 {
                   p: 'Much of Portugal has a Mediterranean climate.',
                 },
@@ -140,7 +140,7 @@ export const guides = [
               ]
             },
             { ...h3,  h3: 'Mediterranean climate and vegetation' },           
-            { ...text, paras: [
+            { ...textarea, paras: [
               {
                 p: 'The Mediterranean is characterised by mild and rainy winters and hot and dry summers.',
               },
@@ -164,7 +164,7 @@ export const guides = [
               ]
             },
             {
-              ...text,
+              ...textarea,
               paras: [
                 {
                   p: `
@@ -190,7 +190,7 @@ export const guides = [
             // {
             //   templates: [
             //     { ...h3,  h3: 'Human impact' },
-            //     { ...text,
+            //     { ...textarea,
             //       paras: [
             //         {
             //           p: 'Matorrals can be considered as different vegetation types developed on disturbed or altered sites where forest species form the natural potential vegetation and its vegetation series.',
@@ -401,7 +401,7 @@ export const guides = [
           sections: [
             { ...h3,  h3: 'The Mediterranean landscape' },
             {
-              ...text,
+              ...textarea,
               paras: [
                 {
                   p: 'The typical Mediterranean landscape is a mosaic of diverse plant communities characterised by biodiversity.',
@@ -477,7 +477,7 @@ export const guides = [
             },            
             { ...h3,  h3: 'title…' },
             {
-              ...text,
+              ...textarea,
               paras: [
                 {
                   p: 'Matorrals can be considered as different vegetation types developed on disturbed or altered sites where forest species form the natural potential vegetation and its vegetation series.',
@@ -863,7 +863,7 @@ export const guides = [
           isTest: false,                
           sections: [
             {
-              ...text,
+              ...textarea,
               paras: [
                 {
                   p: 'Mediterranean vegetation is among the most fire-prone and fire-shaped in the world.',
