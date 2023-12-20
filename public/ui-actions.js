@@ -164,6 +164,8 @@ export const handleFieldsnotesAutocomplete = async ({inputText, dataList, global
 
         stubs = await fieldnotesStubsCallback()
 
+        globalWrite.matches = null
+
         globalWrite.matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
                 
         globalWrite.matches.forEach(match => {
