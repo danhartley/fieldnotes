@@ -239,16 +239,17 @@ const init = () => {
     })
   }
 
-  const addParasToPreviewContainer = ({text, previewContainer}) => {
-    const t = d.getElementById('textarea-read-template')
+  const addContentToPreviewContainer = ({previewTemplate, textContent, previewContainer}) => {
+    const t = d.getElementById(previewTemplate.templateId)
     const clone = t.content.cloneNode(true)
-    const p = clone.querySelector('p')
-    p.textContent = text.p
+    const p = clone.querySelector(previewTemplate.element)
+    p.textContent = textContent
     previewContainer.appendChild(clone)
   }
 
   const handleOnClickSectionTypeBtn = ({typeId, typeText, typeTemplateName, sectionTemplate, sectionId}) => {
     const sectionClone = sectionTemplate.content.cloneNode(true)
+    const sectionContainer = sectionClone.querySelector('section')
     const fieldset = sectionClone.querySelector('fieldset')
     const legend = sectionClone.querySelector('legend')
     const showAllOrIncludedBtn = sectionClone.querySelector('.show-all-or-include-only-btn')
@@ -256,7 +257,6 @@ const init = () => {
     const addSectionBtn = sectionClone.getElementById('add-section-btn')
     const editSectionBtn = sectionClone.getElementById('edit-section-btn')
     const deleteSectionBtn = sectionClone.getElementById('delete-section-btn')    
-    const sectionContainer = sectionClone.querySelector('section')    
     const typeTemplate = d.getElementById(typeTemplateName)
     const typeClone = typeTemplate.content.cloneNode(true)
 
@@ -485,17 +485,17 @@ const init = () => {
       : 0
 
     const writeTemplate = writeTemplates.find(template => template.templateId === typeId)
-    const previewTemplate = previewTemplates.find(template => template.id === writeTemplate.readTemplateId)
+    const previewTemplate = previewTemplates.find(template => template.id === writeTemplate.previewTemplateId)
 
     switch(typeId) {
       case 'h3-write-template':        
       case 'h4-write-template':
       case 'xenocanto-write-template':
-        previewTemplate[writeTemplate.previewElement] = typeValue
+        previewTemplate[previewTemplate.element] = typeValue
         sectionAddedOrUpdated = { ...previewTemplate, sectionId }
         t = d.getElementById(previewTemplate.id)
         clone = t.content.cloneNode(true)
-        header = clone.querySelector(writeTemplate.previewElement)
+        header = clone.querySelector(previewTemplate.element)
         header.textContent = typeValue
         previewContainer.appendChild(clone)
         break
@@ -506,9 +506,9 @@ const init = () => {
             p
           }
         })
-        previewTemplate[writeTemplate.previewElement] = typeValue
+        previewTemplate[previewTemplate.element] = typeValue
         sectionAddedOrUpdated = { ...previewTemplate, sectionId, paras }
-        paras.forEach(text => addParasToPreviewContainer({text, previewContainer}))
+        paras.forEach(text => addContentToPreviewContainer({previewTemplate, textContent:text.p, previewContainer}))
         break
       case 'terms':                
         const originalTerms = typeValue.filter(term => !term.hasJustBeenAdded)
@@ -539,9 +539,6 @@ const init = () => {
     Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
 
     addOrUpdateSection({globalWrite, sectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit})
-
-    // const editSectionBtn = parent.querySelector('#edit-section-btn')
-    // editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionId, typeValue: updatedTerms}), true)
   }
 
   const updateSection = async({parent, typeId, typeValue, previewContainer}) => {
@@ -748,6 +745,13 @@ const init = () => {
   const importFieldNotes = async () => {
     try {
       importFieldNotesNotificationText.classList.remove('hidden')
+
+      const fieldnotesStubs = globalWrite.fieldnotesStubs
+
+      globalWrite = {
+        ...initGlobalWrite(),
+        fieldnotesStubs
+      }
       
       const response = useLocal 
         ? await globalWrite.fieldnotesStubs
@@ -756,8 +760,6 @@ const init = () => {
       if(!response.success) return 
 
       const fieldnotes = response.data
-
-      globalWrite = initGlobalWrite()
 
       Object.assign(globalWrite, {
         ...fieldnotes,
@@ -793,10 +795,10 @@ const init = () => {
 
       globalWrite.sections.forEach(section => {
         const sectionContainer = handleOnClickSectionTypeBtn({
-            typeId: section.type
+            typeId: section.writeTemplateId
           , typeText: section.name
-          , typeTemplateName: section.id
-          , sectionTemplate: getSectionTemplate({typeId: section.type})
+          , typeTemplateName: section.writeTemplateId
+          , sectionTemplate: getSectionTemplate({typeId: section.writeTemplateId})
           , sectionId: section.sectionId     
         })
 
@@ -806,23 +808,23 @@ const init = () => {
         if(addSectionBtn) addSectionBtn.classList.add('hidden')
         if(editSectionBtn) editSectionBtn.classList.remove('hidden')
 
-        const edit = sectionContainer.querySelector('.edit')
-        edit.classList.remove('hidden')
+        const previewContainer = sectionContainer.querySelector('.edit')
+        previewContainer.classList.remove('hidden')
         const add = sectionContainer.querySelector('.add')
-        const preview = sectionContainer.querySelector(section.element)
         if(sectionContainer.querySelector('.add:not(.edit)')) sectionContainer.querySelector('.add:not(.edit)').classList.add('hidden')
 
+        const previewTemplate = previewTemplates.find(template => template.id === section.templateId)
+
         switch(section.type) {
-          case 'h3-read-template':
-          case 'h4-read-template':
-          case 'xenocanto-read-template':
-            preview.innerText = section[section.element]
-            preview.value = section[section.element]
+          case 'h3-preview-template':
+          case 'h4-preview-template':
+          case 'xenocanto-preview-template':
+            addContentToPreviewContainer({previewTemplate, textContent: section[section.element], previewContainer})
             add.value = section[section.element]
             break
-          case 'textarea-write-template':          
+          case 'textarea-preview-template':          
             section.paras.forEach(text => {
-              addParasToPreviewContainer({text, previewContainer: edit})
+              addContentToPreviewContainer({previewTemplate, textContent: text.p, previewContainer})
               add.innerText += text.p
             })          
             break
@@ -860,6 +862,7 @@ const init = () => {
       // Show notification that Fieldnotes have been imported
       showNotificationsDialog({message: 'Fieldnotes imported', type: 'success', displayDuration: 2000})
     } catch (e) {
+      console.log('Error importing fieldnotes')
       showNotificationsDialog({message: e.message, type: 'error'})
     }
   }

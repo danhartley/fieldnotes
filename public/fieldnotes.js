@@ -435,7 +435,7 @@ export const fieldnotes = [
         isTest: false,
         sections: [
           {
-            id: "textarea-read-template",
+            id: "textarea-preview-template",
             name: "Text block",
             parent: "non-grid-template",
             type: "text",
@@ -460,7 +460,7 @@ export const fieldnotes = [
             ]
           },
           {
-            id: "textarea-read-template",
+            id: "textarea-preview-template",
             name: "Text block",
             parent: "non-grid-template",
             type: "text",
@@ -494,7 +494,7 @@ export const fieldnotes = [
             ]
           },
           {
-            id: "textarea-read-template",
+            id: "textarea-preview-template",
             name: "Text block",
             parent: "non-grid-template",
             type: "text",
@@ -519,7 +519,7 @@ export const fieldnotes = [
             ]
           },
           {
-            id: "textarea-read-template",
+            id: "textarea-preview-template",
             name: "Text block",
             parent: "non-grid-template",
             type: "text",
@@ -552,7 +552,7 @@ export const fieldnotes = [
             h4: "Final reflections"
           },
           {
-            id: "textarea-read-template",
+            id: "textarea-preview-template",
             name: "Text block",
             parent: "non-grid-template",
             type: "text",
@@ -685,7 +685,7 @@ export const fieldnotes = [
     ],
     sections: [
       {
-        id: "textarea-read-template",
+        id: "textarea-preview-template",
         sectionId: 'section-0',
         name: "Text block",
         parent: "non-grid-template",
@@ -712,7 +712,7 @@ export const fieldnotes = [
         ]
       },
       {
-        id: "textarea-read-template",
+        id: "textarea-preview-template",
         sectionId: 'section-2',
         name: "Text block",
         parent: "non-grid-template",
@@ -748,7 +748,7 @@ export const fieldnotes = [
         ]
       },
       {
-        id: "textarea-read-template",
+        id: "textarea-preview-template",
         sectionId: 'section-4',
         name: "Text block",
         parent: "non-grid-template",
@@ -775,7 +775,7 @@ export const fieldnotes = [
         ]
       },
       {
-        id: "textarea-read-template",
+        id: "textarea-preview-template",
         sectionId: 'section-6',
         name: "Text block",
         parent: "non-grid-template",
@@ -810,7 +810,7 @@ export const fieldnotes = [
         h4: "Final reflections"
       },
       {
-        id: "textarea-read-template",
+        id: "textarea-preview-template",
         sectionId: 'section-8',
         name: "Text block",
         parent: "non-grid-template",

@@ -528,7 +528,7 @@ const init = () => {
                         })
                         article.appendChild(parent)
                     break
-                    case 'textarea-read-template':
+                    case 'textarea-preview-template':
                         section.paras.forEach(text => {
                             const clone = templateToClone.content.cloneNode(true)                      
                             const md = clone.querySelector('p')

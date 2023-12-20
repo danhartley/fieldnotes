@@ -37,31 +37,34 @@ export const templates = [
 // TEMPLATES
 
 export const h3 = {
-  id: 'h3-read-template',
-  templateId: 'h3-read-template',
+  id: 'h3-preview-template',
+  templateId: 'h3-preview-template',
+  writeTemplateId: 'h3-write-template',
   name: 'Header',
   parent: 'non-grid-template',
-  type: 'h3-read-template',
+  type: 'h3-preview-template',
   h3: 'title',
   element: 'h3'
 }
 
 export const h4 = {
-  id: 'h4-read-template',
-  templateId: 'h4-read-template',
+  id: 'h4-preview-template',
+  templateId: 'h4-preview-template',
+  writeTemplateId: 'h4-write-template',
   name: 'Subheader',
   parent: 'non-grid-template',
-  type: 'h4-read-template',
+  type: 'h4-preview-template',
   h4: 'title',
   element: 'h4'
 }
 
 export const textarea = {
-  id: 'textarea-read-template',
-  templateId: 'textarea-read-template',
+  id: 'textarea-preview-template',
+  templateId: 'textarea-preview-template',
+  writeTemplateId: 'textarea-write-template',
   name: 'Text block',
   parent: 'non-grid-template',
-  type: 'textarea-read-template',
+  type: 'textarea-preview-template',
   paras: [],
   element: 'p'
 }
@@ -128,12 +131,13 @@ export const author = {
 }
 
 export const xenocanto = {
-  id: 'xenocanto-read-template',
+  id: 'xenocanto-preview-template',
   name: 'Xeno-canto',
-  templateId: 'xenocanto-read-template',
+  templateId: 'xenocanto-preview-template',
+  writeTemplateId: 'xenocanto-write-template',
   parent: 'non-grid-template',
-  type: 'xenocanto-read-template',
-  element: 'input'
+  type: 'xenocanto-preview-template',
+  element: 'p'
 }
 
 export const previewTemplates = [
@@ -147,29 +151,25 @@ export const writeTemplates = [
   {
     id: 'h3-write-template',
     templateId: 'h3-write-template',
-    readTemplateId: 'h3-read-template',
-    element: 'input',
-    previewElement: 'h3' 
+    previewTemplateId: 'h3-preview-template',
+    element: 'input'
   },
   {
     id: 'h4-write-template',
     templateId: 'h4-write-template',
-    readTemplateId: 'h4-read-template',
-    element: 'input',
-    previewElement: 'h4'
+    previewTemplateId: 'h4-preview-template',
+    element: 'input'
   },
   {
     id: 'xenocanto-write-template',
     templateId: 'xenocanto-write-template',
-    readTemplateId: 'xenocanto-read-template',
-    element: 'input',
-    previewElement: 'input'
+    previewTemplateId: 'xenocanto-preview-template',
+    element: 'input'
   },
   {
     id: 'textarea-write-template',
     templateId: 'textarea-write-template',
-    readTemplateId: 'textarea-read-template',
-    element: 'textarea',
-    previewElement: 'p'
+    previewTemplateId: 'textarea-preview-template',
+    element: 'textarea'
   }
 ]
