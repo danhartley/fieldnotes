@@ -37,19 +37,23 @@ export const templates = [
 // TEMPLATES
 
 export const h3 = {
-  id: 'h3-input-template',
+  id: 'h3-read-template',
+  templateId: 'h3-read-template',
   name: 'Header',
   parent: 'non-grid-template',
-  type: 'h3-input',
+  type: 'h3-read-template',
   h3: 'title',
+  element: 'h3'
 }
 
 export const h4 = {
-  id: 'h4-input-template',
+  id: 'h4-read-template',
+  templateId: 'h4-read-template',
   name: 'Subheader',
   parent: 'non-grid-template',
-  type: 'h4-input',
+  type: 'h4-read-template',
   h4: 'title',
+  element: 'h4'
 }
 
 export const text = {
@@ -130,8 +134,37 @@ export const author = {
 }
 
 export const xenocanto = {
-  id: 'xeno-canto-template',
+  id: 'xenocanto-read-template',
+  name: 'Xeno-canto',
+  templateId: 'xenocanto-read-template',
   parent: 'non-grid-template',
-  type: 'birdsong-input',
-  recordingId: 'id',
+  type: 'xenocanto-read-template',
+  element: 'input'
 }
+
+export const previewTemplates = [
+    h3
+  , h4
+  , xenocanto
+]
+
+export const writeTemplates = [
+  {
+    id: 'h3-write-template',
+    templateId: 'h3-write-template',
+    readTemplateId: 'h3-read-template',
+    previewElement: 'h3' 
+  },
+  {
+    id: 'h4-write-template',
+    templateId: 'h4-write-template',
+    readTemplateId: 'h4-read-template',
+    previewElement: 'h4'
+  },
+  {
+    id: 'xenocanto-write-template',
+    templateId: 'xenocanto-write-template',
+    readTemplateId: 'xenocanto-read-template',
+    previewElement: 'input'
+  },
+]

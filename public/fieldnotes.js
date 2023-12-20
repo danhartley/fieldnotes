@@ -347,7 +347,7 @@ export const fieldnotes = [
             { ...h3, h3: 'Birdsong'},
             {
                 ...xenocanto,
-                recordingId: '121910'
+                input: '121910'
             },
           ],
         },

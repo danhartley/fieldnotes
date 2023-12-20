@@ -457,7 +457,7 @@ const init = () => {
 
                 let clone, h3, h4, iframe, a
                 switch(section.type) {
-                    case 'h3-input':
+                    case 'h3-write-template':
                         clone = templateToClone.content.cloneNode(true)
                         h3 = clone.querySelector('h3')
                         h3.textContent = section.h3
@@ -465,7 +465,7 @@ const init = () => {
                         parent.appendChild(clone)
                         article.appendChild(parent)
                     break
-                    case 'h4-input':
+                    case 'h4-write-template':
                         clone = templateToClone.content.cloneNode(true)
                         h4 = clone.querySelector('h4')
                         h4.textContent = section.h4
@@ -481,15 +481,15 @@ const init = () => {
                         parent.appendChild(clone)
                         article.appendChild(parent)
                     break
-                    case 'birdsong-input':
+                    case 'xenocanto-write-template':
                         clone = templateToClone.content.cloneNode(true)
                         iframe = clone.querySelector('iframe')
-                        iframe.src = `https://xeno-canto.org/${section.recordingId}/embed?simple=1`
+                        iframe.src = `https://xeno-canto.org/${section.input}/embed?simple=1`
                         parent = parentClone.querySelector('div')
                         parent.appendChild(clone)
                         article.appendChild(parent)
                     break
-                    case 'h4-input':
+                    case 'h4-write-template':
                         clone = templateToClone.content.cloneNode(true)
                         h4 = clone.querySelector('h4')
                         h4.textContent = section.h4

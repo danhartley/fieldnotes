@@ -112,13 +112,13 @@
         <section id="select-section-type-section">
           <fieldset>
             <legend>Field journal sections</legend>
-            <button id="h3-input" type="button" value="h3-input">Header</button>
-            <button id="h4-input" type="button" value="h4-input" class="mt">Subheader</button>
+            <button id="h3-write" type="button" value="h3-write-template">Header</button>
+            <button id="h4-write" type="button" value="h4-write-template" class="mt">Subheader</button>
             <button id="textarea" type="button" value="textarea" class="mt">Text block</button>
             <button id="inat-lookup" type="button" value="inat-lookup" class="mt">iNat species</button>
             <button id="images" type="button" value="images" class="mt">Context photos</button>
             <button id="terms" type="button" value="terms" class="mt">Terms</button>
-            <button id="birdsong-input" type="button" value="birdsong-input" class="mt">Birdsong</button>
+            <button id="xenocanto-write" type="button" value="xenocanto-write-template" class="mt">Birdsong</button>
             
             <div class="mt2 small">To add observations and species photos, you must first run an iNaturalist search.</div>
 
@@ -154,6 +154,7 @@
           <legend></legend>
           <div></div>      
           <button id="add-section-btn" class="small mt2 disabled add">Add section</button>
+          <!-- <button id="update-section-btn" class="small mt2 hidden add">Save changes</button> -->
           <button id="edit-section-btn" class="small mt2 edit hidden">Edit section</button>
           <button id="delete-section-btn" class="small mt2 edit">Delete section</button>
           <p class="mt2 small"><em>Your fieldnotes are automatically saved when you add, edit or delete sections in the journal.</em></p>
@@ -174,17 +175,17 @@
       </section>
     </template>
 
-    <template id="h3-input-template">
+    <template id="h3-write-template">
       <input type="text" class="p add" />
       <div class="edit hidden"></div>
     </template>
     
-    <template id="h4-input-template">
+    <template id="h4-write-template">
       <input type="text" class="p add" />
       <div class="edit hidden"></div>
     </template>
 
-    <template id="birdsong-input-template">
+    <template id="xenocanto-write-template">
       <div class="small mb2">You can embed recordings from <a href="https://xeno-canto.org/" target="_blank">xeno-canto</a>.</div>
       <input type="text" class="p add" placeholder="Enter a xeno-canto recording id e.g. 121910" />
       <div class="edit hidden"></div>
@@ -294,15 +295,15 @@
 
     <!-- Preview templates -->
 
-    <template id="h3-template">
+    <template id="h3-read-template">
       <h3></h3>
     </template>
 
-    <template id="h4-template">
+    <template id="h4-read-template">
       <h4></h4>
     </template>
 
-    <template id="xenocanto-template">
+    <template id="xenocanto-read-template">
       <input type="text" class="p" />
     </template>
 

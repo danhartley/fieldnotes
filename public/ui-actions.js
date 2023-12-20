@@ -148,7 +148,7 @@ export const handleTermAutocomplete = ({inputText, selectedItems, dataList, glob
             if(selectedItems.find(t => t.dt.toLowerCase() === match.toLowerCase())) return 
 
             addSelectedTermBtn.classList.remove('disabled')
-            addSelectedTermBtn.addEventListener('click', e => handleOnClickAddSelectedTermBtn({e,selectedItems, selectedItem: term}), true)
+            addSelectedTermBtn.addEventListener('click', e => handleOnClickAddSelectedTermBtn({selectedItems, selectedItem: term}), true)
         }
     })
 }
@@ -500,15 +500,14 @@ export const deleteSection = async ({d, sectionId, globalWrite}) => {
     }
 }
 
-export const addOrUpdateSection = async ({globalWrite, sectionIndex, sectionToUpdate, sectionAddedOrUpdated}) => {
+export const addOrUpdateSection = async ({globalWrite, sectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit}) => {
     try {
         const array = 'sections'
-        const isAnUpdate = sectionToUpdate !== null
 
         // Save changes to the db
         let response
         
-        if(isAnUpdate) {
+        if(isEdit) {
             response = await updateElementFromArray({fieldnotes: globalWrite, array, elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated})
             // Update changes in memory
             if(response.success) {                
