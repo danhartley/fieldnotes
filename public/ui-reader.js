@@ -693,7 +693,7 @@ const init = () => {
     
         const rbGuideGroupEventHander = rb => {
             rb.addEventListener('change', async (e) => {
-                g.guide = g.guides.find(t => t.title === e.target.value)
+                g.guide = g.guides.find(t => t.fnId === e.target.value)
                 g.templates = g.guide.templates
      
                 const taxaIds = g.guide.taxa

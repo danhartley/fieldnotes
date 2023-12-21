@@ -898,7 +898,8 @@ export const g = {
     templates: templates,
     count: 12,
     species: null,
-    guides: [ ...guides, ...fieldnotes],
+    guides: fieldnotes,
+    // guides: [ ...guides, ...fieldnotes],
     terms: terms,
     inatSpecies: [],
     inatAutocompleteOptions: [
@@ -1219,6 +1220,15 @@ export const deleteFieldnoteProperty = async ({fieldnotes, prop}) => {
   const docRef = doc(db, 'fieldnotes', fieldnotes.id)
   const data = {
     [prop]: deleteField()
+  }
+  updateDoc(docRef, data)
+}
+
+export const updateFieldnoteProperty = async ({fieldnotes, prop, value}) => {
+  const db = getDb()
+  const docRef = doc(db, 'fieldnotes', fieldnotes.id)
+  const data = {
+    [prop]: value
   }
   updateDoc(docRef, data)
 }

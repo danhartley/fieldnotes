@@ -2,7 +2,8 @@ import {
       getIdByAutocomplete
     , removeElementFromArray
     , addElementToArray
-    , updateElementFromArray    
+    , updateElementFromArray
+    , updateFieldnoteProperty
 } from './api.js'
 
 import { 
@@ -220,46 +221,26 @@ export const bgColour = taxon => {
 const handleSpeciesCheckState = async({e, sectionIndex, globalWrite}) => {
     const name = e.target.value    
 
-    // const sectionToUpdateSpecies = globalWrite?.sections?.find(t => t.sectionIndex === sectionIndex)?.species || []
-    // selectedSpecies = globalWrite?.sections?.find(t => t.sectionIndex === sectionIndex)?.species || []
-    // const sectionToUpdateSpecies = sectionToUpdate ? globalWrite.sections.find(t => t.sectionIndex === sectionIndex).species : []
-
-    // let sectionToUpdate = {
-    //       ...globalWrite.sections.find(t => t.sectionIndex === sectionIndex)
-    //     , species: sectionToUpdateSpecies
-    // }
     let section = globalWrite.sections.find(t => t.sectionIndex === sectionIndex)    
     let index = globalWrite.sections.findIndex(t => t.sectionIndex === sectionIndex)
 
-    // Save to the db
-    // const response = await addOrUpdateSection({
-    //       globalWrite
-    //     , index
-    //     , sectionToUpdate
-    //     , sectionAddedOrUpdated: section
-    // })
+    if(section) {
+        section.species.find(sp => sp === name) 
+            ? section.species = section.species.filter(sp => sp !== name)
+            : section.species.push(name)
+        globalWrite.sections[index] = section            
+    } else {
+        const sp = [ name ]
+        section = {...species, species: sp, templateId: species.id, sectionIndex }
+        globalWrite.sections.push(section)
+    }
 
-    // if(response.success) {
-        // Update in-memory species list
-        if(section) {
-            section.species.find(sp => sp === name) 
-                ? section.species = section.species.filter(sp => sp !== name)
-                : section.species.push(name)
-            globalWrite.sections[index] = section            
-        } else {
-            const sp = [ name ]
-            section = {...species, species: sp, templateId: species.id, sectionIndex }
-            globalWrite.sections.push(section)
-        }
-    // }
-    
-    // We should check also if a taxon needs to be removed from the list i.e. it appears in no species or observation section
-    // But for now, we will content ourselves with addding taxon (which is harmless)
     if(!globalWrite.taxa.find(t => t.name === name)) {
         globalWrite.taxa.push({
         id: globalWrite.species.find(sp => sp.taxon.name === name)?.taxon?.id,
         name
         })
+        updateFieldnoteProperty({fieldnotes: globalWrite, prop: 'taxa', value: globalWrite.taxa})
     }
 }
 
