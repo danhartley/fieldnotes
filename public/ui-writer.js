@@ -116,16 +116,6 @@ const init = () => {
   createFieldnotesInputRadio.addEventListener('click', e => toggleView('create'), true)
   editFieldnotesInputRadio.addEventListener('click', e => toggleView('edit'), true)
 
-  const getMeta = ({species}) => {
-    return {
-      author: species[0].user.name,
-      date: species[0].observed_on,
-      location: {
-        location: species[0].location, place_guess: species[0].place_guess
-      }
-    }
-  }
-
   const searchInatObservations = async ({userId}) => {
   try {
       searchInatObservationsNotificationText.classList.toggle('hidden')
@@ -154,11 +144,17 @@ const init = () => {
       setTimeout(() => {
         searchInatObservationsNotificationText.classList.toggle('hidden')
         searchInatObservationsNotificationText.innerText = 'Waiting for response from iNaturalist…'
-      },1500)
+      }, 1500)
 
       if(globalWrite.species.length === 0) return
 
-      const { author, date, location } = getMeta({species: globalWrite.species})
+      const { author, date, location } = {
+        author: globalWrite.species[0].user.name,
+        date: globalWrite.species[0].observed_on,
+        location: {
+          location: globalWrite.species[0].location, place_guess: globalWrite.species[0].place_guess
+        }
+      }
       const title = `${location.place_guess}, ${(new Date(date)).toDateString()}`
 
       titleInputText.value = title
@@ -192,7 +188,7 @@ const init = () => {
   handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, globalWrite, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})  
   handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, globalWrite, fieldnotesStubsCallback: useLocal ? _getFieldnotes : getFieldnotesStubs, importFieldNotesBtn}) 
 
-  const updateBtnState = ({str, btn}) => {
+  const toggleBtnEnabledState = ({str, btn}) => {
     str.length > 0
     ? btn.classList.remove('disabled')
     : btn.classList.add('disabled')
@@ -390,7 +386,7 @@ const init = () => {
         d.querySelector('label[for="input-dx"]').htmlFor = dx.id
         
         dt.addEventListener('change', e => {
-          updateBtnState({str: e.target.value, btn: addNewTermBtn })          
+          toggleBtnEnabledState({str: e.target.value, btn: addNewTermBtn })          
         })
         
         addNewTermBtn.addEventListener('click', e => {
@@ -463,7 +459,6 @@ const init = () => {
     return sectionContainer
   }
 
-  // Create a new type section when the user clicks on a type button
   selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { 
     const typeId = e.target.value
     const typeText = e.target.innerText
@@ -537,40 +532,40 @@ const init = () => {
     addOrUpdateSection({globalWrite, sectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit})
   }
 
-  const updateSection = async({parent, typeId, typeValue, previewContainer}) => {
-    let t, clone, header, input, sectionToUpdate, sectionIndex, sectionAddedOrUpdated, isEdit = null
+  // const updateSection = async({parent, typeId, typeValue, previewContainer}) => {
+  //   let t, clone, header, input, sectionToUpdate, sectionIndex, sectionAddedOrUpdated, isEdit = null
 
-    sectionToUpdate = globalWrite.sections.find(t => t.sectionId === sectionId) || null
+  //   sectionToUpdate = globalWrite.sections.find(t => t.sectionId === sectionId) || null
 
-    isEdit = !!sectionToUpdate
+  //   isEdit = !!sectionToUpdate
 
-    switch(typeId) {
-      case 'terms':                
-      const originalTerms = typeValue.filter(term => !term.hasJustBeenAdded)
-      const updatedTerms = typeValue.filter(term => !term.hasJustBeenDeleted)
-      if(isEdit) sectionToUpdate.terms = originalTerms.map(term => {
-        if(term.hasJustBeenDeleted) delete term.hasJustBeenDeleted
-        return term
-      })
-      sectionAddedOrUpdated = { 
-          ...term
-        , templateId: term.id
-        , sectionId
-        , terms: updatedTerms.map(term => {
-          if(term.hasJustBeenAdded) delete term.hasJustBeenAdded
-          return term
-        })
-      }
-      addItemToList({selectedItems: updatedTerms, selectedItem: null, selectedItemsListElement: previewContainer})
-      break
-    }
+  //   switch(typeId) {
+  //     case 'terms':                
+  //     const originalTerms = typeValue.filter(term => !term.hasJustBeenAdded)
+  //     const updatedTerms = typeValue.filter(term => !term.hasJustBeenDeleted)
+  //     if(isEdit) sectionToUpdate.terms = originalTerms.map(term => {
+  //       if(term.hasJustBeenDeleted) delete term.hasJustBeenDeleted
+  //       return term
+  //     })
+  //     sectionAddedOrUpdated = { 
+  //         ...term
+  //       , templateId: term.id
+  //       , sectionId
+  //       , terms: updatedTerms.map(term => {
+  //         if(term.hasJustBeenAdded) delete term.hasJustBeenAdded
+  //         return term
+  //       })
+  //     }
+  //     addItemToList({selectedItems: updatedTerms, selectedItem: null, selectedItemsListElement: previewContainer})
+  //     break
+  //   }
 
-    // Show the preview section and hide the edit section
-    Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
-    Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
+  //   // Show the preview section and hide the edit section
+  //   Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
+  //   Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
 
-    addOrUpdateSection({globalWrite, sectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit})
-  }
+  //   addOrUpdateSection({globalWrite, sectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit})
+  // }
 
   const editSection = ({e}) => {
     const parent = e.target.parentElement
@@ -596,7 +591,7 @@ const init = () => {
   // }
 
   const handleInputChangeEvent = (e, addBtn) => {
-    updateBtnState({str: e.target.value, btn: addBtn})
+    toggleBtnEnabledState({str: e.target.value, btn: addBtn})
   }
 
   const handleImageInputChangeEvent = ({e, addBtn, url1, title1}) => {

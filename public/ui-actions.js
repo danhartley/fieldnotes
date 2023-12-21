@@ -167,6 +167,8 @@ export const handleFieldsnotesAutocomplete = async ({inputText, dataList, global
         globalWrite.matches = null
 
         globalWrite.matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
+
+        dataList.replaceChildren()
                 
         globalWrite.matches.forEach(match => {
             const option = d.createElement('option')
