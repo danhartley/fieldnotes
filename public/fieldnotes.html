@@ -122,8 +122,8 @@
             
             <div class="mt2 small">To add observations and species photos, you must first run an iNaturalist search.</div>
 
-            <button id="observations" type="button" value="observations" class="disabled">Observations</button>
-            <button id="species" type="button" value="species" class="mt disabled">Species</button>
+            <button id="observations" type="button" value="observations-write-template" class="disabled">Observations</button>
+            <button id="species" type="button" value="species-write-template" class="mt disabled">Species</button>
             <div class="mt2 small"><em>You can create multiple sections of each type, and change their order.</em></div>
           </fieldset>
         </section>
@@ -139,7 +139,7 @@
       </dialog>
     </main>
 
-    <!-- Add templates -->
+    <!-- Write templates -->
 
     <template id="checkbox-template">
       <div class="flex-row">                  
@@ -153,8 +153,7 @@
         <fieldset class="mt2">
           <legend></legend>
           <div></div>      
-          <button id="add-section-btn" class="small mt2 disabled add">Add section</button>
-          <!-- <button id="update-section-btn" class="small mt2 hidden add">Save changes</button> -->
+          <button id="add-or-update-section-btn" class="small mt2 disabled add">Add section</button>
           <button id="edit-section-btn" class="small mt2 edit hidden">Edit section</button>
           <button id="delete-section-btn" class="small mt2 edit">Delete section</button>
           <p class="mt2 small"><em>Your fieldnotes are automatically saved when you add, edit or delete sections in the journal.</em></p>
@@ -168,7 +167,7 @@
           <legend></legend>
           <button class="show-all-or-include-only-btn">Show only included</button>
           <div></div>      
-          <button id="add-section-btn" class="small mt2 disabled add">Add section</button>
+          <button id="add-or-update-section-btn" class="small mt2 disabled add">Add section</button>
           <button id="edit-section-btn" class="small mt2 edit hidden">Edit section</button>
           <button id="delete-section-btn" class="small mt2 edit">Delete section</button>
         </fieldset>
@@ -293,6 +292,14 @@
       <div class="edit hidden"></div>
     </template>
 
+    <template id="observations-write-template">      
+      <div></div>
+    </template>
+
+    <template id="species-write-template">      
+      <div></div>
+    </template>
+
     <!-- Preview templates -->
 
     <template id="h3-preview-template">
@@ -311,11 +318,11 @@
       <p></p>
     </template>
 
-    <template id="observations-template">      
+    <template id="observations-preview-template">      
       <div></div>
     </template>
 
-    <template id="species-template">      
+    <template id="species-preview-template">      
       <div></div>
     </template>
 

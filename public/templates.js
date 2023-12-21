@@ -78,18 +78,22 @@ export const term = {
 }
 
 export const species = {
-  id: 'species-template',
+  id: 'species-preview-template',
+  templateId: 'species-preview-template',
+  writeTemplateId: 'species-write-template',
   name: 'Species catalogue',
   parent: 'grid-template',
-  type: 'species',
+  type: 'species-preview-template',
   species: [],
 }
 
 export const observations = {
-  id: 'species-template',
-  name: 'Observations',
+  id: 'observations-preview-template',
+  templateId: 'observations-preview-template',
+  writeTemplateId: 'observations-write-template',
+  name: 'Observations catalogue',
   parent: 'grid-template',
-  type: 'observations',
+  type: 'observations-preview-template',
   species: [],
 }
 
@@ -145,6 +149,8 @@ export const previewTemplates = [
   , h4
   , xenocanto
   , textarea
+  , species
+  , observations
 ]
 
 export const writeTemplates = [
@@ -171,5 +177,17 @@ export const writeTemplates = [
     templateId: 'textarea-write-template',
     previewTemplateId: 'textarea-preview-template',
     element: 'textarea'
+  },
+  {
+    id: 'species-write-template',
+    templateId: 'species-write-template',
+    previewTemplateId: 'species-preview-template',
+    element: 'div'
+  },
+  {
+    id: 'observations-write-template',
+    templateId: 'observations-write-template',
+    previewTemplateId: 'observations-preview-template',
+    element: 'div'
   }
 ]

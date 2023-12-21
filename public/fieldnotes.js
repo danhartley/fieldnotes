@@ -449,7 +449,7 @@ export const fieldnotes = [
             ]
           },
           {
-            id: "species-template",
+            id: "species-preview-template",
             name: "Species catalogue",
             parent: "grid-template",
             type: "species",
@@ -480,7 +480,7 @@ export const fieldnotes = [
             ]
           },
           {
-            id: "species-template",
+            id: "species-preview-template",
             name: "Species catalogue",
             parent: "grid-template",
             type: "species",
@@ -508,7 +508,7 @@ export const fieldnotes = [
             ]
           },
           {
-            id: "species-template",
+            id: "species-preview-template",
             name: "Species catalogue",
             parent: "grid-template",
             type: "species",
@@ -568,7 +568,7 @@ export const fieldnotes = [
         id: "species-test-template",
         name: "Species-card-tests",
         parent: "grid-template",
-        pairedTemplateId: "species-template",
+        pairedTemplateId: "species-preview-template",
         isTest: true,
         targets: [
           {
@@ -584,7 +584,7 @@ export const fieldnotes = [
         scores: []
       },
       {
-        id: "species-template",
+        id: "species-preview-template",
         name: "Species catalogue",
         parent: "grid-template",
         pairedTemplateId: "species-test-template",
@@ -700,7 +700,7 @@ export const fieldnotes = [
         ]
       },
       {
-        id: "species-template",
+        id: "species-preview-template",
         sectionId: 'section-1',
         name: "Species catalogue",
         parent: "grid-template",
@@ -733,7 +733,7 @@ export const fieldnotes = [
         ]
       },
       {
-        id: "species-template",
+        id: "species-preview-template",
         sectionId: 'section-3',
         name: "Species catalogue",
         parent: "grid-template",
@@ -763,7 +763,7 @@ export const fieldnotes = [
         ]
       },
       {
-        id: "species-template",
+        id: "species-preview-template",
         sectionId: 'section-5',
         name: "Species catalogue",
         parent: "grid-template",

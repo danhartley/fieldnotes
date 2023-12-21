@@ -457,7 +457,7 @@ const init = () => {
 
                 let clone, h3, h4, iframe, a
                 switch(section.type) {
-                    case 'h3-write-template':
+                    case 'h3-preview-template':
                         clone = templateToClone.content.cloneNode(true)
                         h3 = clone.querySelector('h3')
                         h3.textContent = section.h3
@@ -465,7 +465,7 @@ const init = () => {
                         parent.appendChild(clone)
                         article.appendChild(parent)
                     break
-                    case 'h4-write-template':
+                    case 'h4-preview-template':
                         clone = templateToClone.content.cloneNode(true)
                         h4 = clone.querySelector('h4')
                         h4.textContent = section.h4
@@ -481,7 +481,7 @@ const init = () => {
                         parent.appendChild(clone)
                         article.appendChild(parent)
                     break
-                    case 'xenocanto-write-template':
+                    case 'xenocanto-preview-template':
                         clone = templateToClone.content.cloneNode(true)
                         iframe = clone.querySelector('iframe')
                         iframe.src = `https://xeno-canto.org/${section.input}/embed?simple=1`
@@ -489,7 +489,7 @@ const init = () => {
                         parent.appendChild(clone)
                         article.appendChild(parent)
                     break
-                    case 'h4-write-template':
+                    case 'h4-preview-template':
                         clone = templateToClone.content.cloneNode(true)
                         h4 = clone.querySelector('h4')
                         h4.textContent = section.h4
@@ -538,7 +538,7 @@ const init = () => {
                         })
                         article.appendChild(parent)
                         break
-                    case 'species':
+                    case 'species-preview-template':
                         section.species.forEach((sp, i) => {
                             try{
                                 const s = g.species.find(s => s.taxon.name === sp)
@@ -546,13 +546,13 @@ const init = () => {
                                 parent = parentClone.querySelector('div')
                                 parent.appendChild(clone)
                             } catch (e) {
-                                console.log('species', sp)
+
                                 console.log(e)
                             }
                         })
                         article.appendChild(parent)
                     break
-                    case 'observations':
+                    case 'observations-preview-template':
                         section.species.forEach((sp, i) => {
                             try{
                                 const s = g.species.find(s => s.taxon.name === sp)

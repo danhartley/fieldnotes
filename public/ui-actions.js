@@ -220,37 +220,38 @@ export const bgColour = taxon => {
 const handleSpeciesCheckState = async({e, sectionId, globalWrite}) => {
     const name = e.target.value    
 
-    const sectionToUpdateSpecies = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.species || []
+    // const sectionToUpdateSpecies = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.species || []
+    // selectedSpecies = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.species || []
     // const sectionToUpdateSpecies = sectionToUpdate ? globalWrite.sections.find(t => t.sectionId === sectionId).species : []
 
-    let sectionToUpdate = {
-          ...globalWrite.sections.find(t => t.sectionId === sectionId)
-        , species: sectionToUpdateSpecies
-    }
+    // let sectionToUpdate = {
+    //       ...globalWrite.sections.find(t => t.sectionId === sectionId)
+    //     , species: sectionToUpdateSpecies
+    // }
     let section = globalWrite.sections.find(t => t.sectionId === sectionId)    
     let sectionIndex = globalWrite.sections.findIndex(t => t.sectionId === sectionId)
 
     // Save to the db
-    const response = await addOrUpdateSection({
-          globalWrite
-        , sectionIndex
-        , sectionToUpdate
-        , sectionAddedOrUpdated: section
-    })
+    // const response = await addOrUpdateSection({
+    //       globalWrite
+    //     , sectionIndex
+    //     , sectionToUpdate
+    //     , sectionAddedOrUpdated: section
+    // })
 
-    if(response.success) {
+    // if(response.success) {
         // Update in-memory species list
         if(section) {
             section.species.find(sp => sp === name) 
                 ? section.species = section.species.filter(sp => sp !== name)
                 : section.species.push(name)
-            globalWrite.sections[sectionIndex] = section
+            globalWrite.sections[sectionIndex] = section            
         } else {
             const sp = [ name ]
             section = {...species, species: sp, templateId: species.id, sectionId }
             globalWrite.sections.push(section)
         }
-    }
+    // }
     
     // We should check also if a taxon needs to be removed from the list i.e. it appears in no species or observation section
     // But for now, we will content ourselves with addding taxon (which is harmless)
@@ -264,11 +265,11 @@ const handleSpeciesCheckState = async({e, sectionId, globalWrite}) => {
 
 export const cloneImages = ({globalWrite, parent, typeId, sectionId}) => {
 switch(typeId) {
-    case 'species':
-    case 'observations':
+    case 'species-write-template':
+    case 'observations-write-template':
         if(globalWrite.species.length > 0) {
             globalWrite.species.forEach((species, index) => {
-            const imgUrl = typeId === 'observations'
+            const imgUrl = typeId === 'observations-write-template'
             ? species.photos[0].url
             : species.taxon.default_photo.medium_url
             const clone = cloneImageTemplate({species, index, sectionId, imgUrl, globalWrite})            
@@ -318,7 +319,7 @@ const cloneImageTemplate = ({species, index, sectionId, imgUrl, globalWrite}) =>
     
     checkbox.id = `${sectionId}-${species.id || species.taxon.id}`
     checkbox.value = species.taxon.name
-    // checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionId, globalWrite}), true)
+    checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionId, globalWrite}), true)
     label.htmlFor = checkbox.id
 
     return clone
@@ -535,3 +536,11 @@ export const addOrUpdateSection = async ({globalWrite, sectionIndex, sectionToUp
         showNotificationsDialog({message: e.message, type: 'error'})
     }
 }
+
+export const addContentToPreviewContainer = ({previewTemplate, textContent, previewContainer}) => {
+    const t = d.getElementById(previewTemplate.templateId)
+    const clone = t.content.cloneNode(true)
+    const p = clone.querySelector(previewTemplate.element)
+    p.textContent = textContent
+    previewContainer.appendChild(clone)
+  }
