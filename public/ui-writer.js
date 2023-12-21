@@ -63,7 +63,7 @@ const init = () => {
         observations_count: 0,
         species_count: 0,
       },
-      sectionIndex: 0,
+      nextSectionIndex: 0,
       inatAutocompleteOptions: g.inatAutocompleteOptions,
       inatAutocomplete: g.inatAutocomplete,
     })
@@ -236,7 +236,7 @@ const init = () => {
     })
   }
 
-  const createSection = ({typeId, typeText, typeTemplateName, sectionTemplate, sectionId}) => {
+  const createSection = ({typeId, typeText, typeTemplateName, sectionTemplate, sectionIndex}) => {
     const sectionClone = sectionTemplate.content.cloneNode(true)
     const sectionContainer = sectionClone.querySelector('section')
     const fieldset = sectionClone.querySelector('fieldset')
@@ -249,7 +249,7 @@ const init = () => {
     const typeTemplate = d.getElementById(typeTemplateName)
     const typeClone = typeTemplate.content.cloneNode(true)
 
-    sectionContainer.setAttribute('id', sectionId)
+    sectionContainer.setAttribute('id', sectionIndex)
     sectionContainer.addEventListener('dragstart', dragstartHandler)
     
     let input, label, textarea, datalist, previewContainer, selectedItems, images, cbParent = null
@@ -264,32 +264,32 @@ const init = () => {
       case 'xenocanto-write-template':
         input = typeClone.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:input.value, previewContainer, sectionId}), true)
-        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionId}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:input.value, previewContainer, sectionIndex}), true)
+        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
         break
       case 'textarea-write-template':      
         textarea = typeClone.querySelector('textarea')
         textarea.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
-        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionId}), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:textarea.value, previewContainer, sectionId}), true)
+        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:textarea.value, previewContainer, sectionIndex}), true)
         break
       case 'observations-write-template':
       case 'species-write-template':       
-        cloneImages({globalWrite, parent:typeClone.querySelector('div'), typeId, sectionId })
-        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionId}), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:null, previewContainer, sectionId}), true)
+        cloneImages({globalWrite, parent:typeClone.querySelector('div'), typeId, sectionIndex })
+        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:null, previewContainer, sectionIndex}), true)
         addOrUpdateSectionBtn.classList.remove('disabled')
         break
       case 'terms':
         datalist = typeClone.querySelector('datalist')
-        datalist.id = `${sectionId}-dl-list`
+        datalist.id = `${sectionIndex}-dl-list`
         input = typeClone.querySelector('input')
-        input.id = `${sectionId}-dl-input-text`
+        input.id = `${sectionIndex}-dl-input-text`
         input.setAttribute('list', datalist.id)        
         label = typeClone.querySelector('label')
         label.htmlFor = input.id                  
-        // addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:selectedItems, previewContainer, sectionId }), true)
-        // editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionId}), true)
+        // addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:selectedItems, previewContainer, sectionIndex }), true)
+        // editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
         break
       case 'images':
         const url1 = typeClone.getElementById('image-url-input-one')
@@ -297,21 +297,21 @@ const init = () => {
         url1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)
         title1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)
         
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:images, previewContainer, sectionId}), true)
-        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionId}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:images, previewContainer, sectionIndex}), true)
+        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
         break
       case 'inat-lookup':
         datalist = typeClone.querySelector('datalist')
-        datalist.id = `${sectionId}-dl-list`
+        datalist.id = `${sectionIndex}-dl-list`
         input = typeClone.querySelector('input')
-        input.id = `${sectionId}-dl-input-text`
+        input.id = `${sectionIndex}-dl-input-text`
         input.setAttribute('list', datalist.id)
         label = typeClone.querySelector('label')
         label.htmlFor = input.id
         cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
-        cbParent.id = `${sectionId}-lookup-parent`
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:selectedItems, previewContainer, sectionId }), true)
-        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionId}), true)
+        cbParent.id = `${sectionIndex}-lookup-parent`
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:selectedItems, previewContainer, sectionIndex }), true)
+        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
         break
     }
     
@@ -329,7 +329,7 @@ const init = () => {
 
     draggableSections.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })
     
-    deleteSectionBtn.addEventListener('click', e => deleteSection({d, sectionId, globalWrite}), true)
+    deleteSectionBtn.addEventListener('click', e => deleteSection({d, sectionIndex, globalWrite}), true)
 
     // Add additional functionality once the DOM has been updated
     switch(typeId) {
@@ -350,7 +350,7 @@ const init = () => {
         const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
         const addNewTermBtn = fieldset.querySelector('#add-new-term-btn')
         
-        selectedItems = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.terms || []        
+        selectedItems = globalWrite?.sections?.find(t => t.sectionIndex === sectionIndex)?.terms || []        
 
         const handleOnClickAddSelectedTermBtn = ({selectedItems, selectedItem}) => {
           const selectedItemsListElement = fieldset.querySelector('#selected-terms-list')
@@ -370,15 +370,15 @@ const init = () => {
         const dx = fieldset.querySelector('#input-dx')
 
         // Update the term ids so that they are unique in the DOM
-        dt.id = `${sectionId}-input-dt`
+        dt.id = `${sectionIndex}-input-dt`
         d.querySelector('label[for="input-dt"]').htmlFor = dt.id
-        dd.id = `${sectionId}-input-dd`
+        dd.id = `${sectionIndex}-input-dd`
         d.querySelector('label[for="input-dd"]').htmlFor = dd.id
-        ds.id = `${sectionId}-input-ds`
+        ds.id = `${sectionIndex}-input-ds`
         d.querySelector('label[for="input-ds"]').htmlFor = ds.id
-        da.id = `${sectionId}-input-da`
+        da.id = `${sectionIndex}-input-da`
         d.querySelector('label[for="input-da"]').htmlFor = da.id
-        dx.id = `${sectionId}-input-dx`
+        dx.id = `${sectionIndex}-input-dx`
         d.querySelector('label[for="input-dx"]').htmlFor = dx.id
         
         dt.addEventListener('change', e => {
@@ -437,7 +437,7 @@ const init = () => {
           showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))
           Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
 
-          // selectedItems = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.items || []
+          // selectedItems = globalWrite?.sections?.find(t => t.sectionIndex === sectionIndex)?.items || []
 
           handleInatAutocomplete({ 
               inputText: input
@@ -448,7 +448,7 @@ const init = () => {
             , callback: createInatLookups
             , cbParent
             , typeId
-            , sectionId
+            , sectionIndex
           })
       break
     }
@@ -459,20 +459,20 @@ const init = () => {
     const typeId = e.target.value
     const typeText = e.target.innerText
     
-    createSection({typeId, typeText, typeTemplateName: typeId, sectionTemplate: getSectionTemplate({typeId}), sectionId: `section-${globalWrite.sectionIndex}`})
+    createSection({typeId, typeText, typeTemplateName: typeId, sectionTemplate: getSectionTemplate({typeId}), sectionIndex: globalWrite.nextSectionIndex})
   }, true))
 
-  const addOrUpdateSectionAndPreview = async ({parent, typeId, typeValue, previewContainer, sectionId}) => {
+  const addOrUpdateSectionAndPreview = async ({parent, typeId, typeValue, previewContainer, sectionIndex}) => {
     if(previewContainer) previewContainer.innerHTML = ''
 
-    let t, clone, header, input, sectionToUpdate, sectionIndex, sectionAddedOrUpdated, isEdit = null
+    let t, clone, header, input, sectionToUpdate, nextSectionIndex, sectionAddedOrUpdated, isEdit = null
 
-    sectionToUpdate = globalWrite.sections.find(t => t.sectionId === sectionId) || null
+    sectionToUpdate = globalWrite.sections.find(t => t.sectionIndex === sectionIndex) || null
 
     isEdit = !!sectionToUpdate
 
-    sectionIndex = isEdit
-      ? globalWrite.sections.findIndex(t => t.sectionId === sectionId)
+    nextSectionIndex = isEdit
+      ? globalWrite.sections.findIndex(t => t.sectionIndex === sectionIndex)
       : 0
 
     const writeTemplate = writeTemplates.find(template => template.templateId === typeId)
@@ -483,7 +483,7 @@ const init = () => {
       case 'h4-write-template':
       case 'xenocanto-write-template':
         previewTemplate[previewTemplate.element] = typeValue
-        sectionAddedOrUpdated = { ...previewTemplate, sectionId }
+        sectionAddedOrUpdated = { ...previewTemplate, sectionIndex }
         addContentToPreviewContainer({previewTemplate, textContent: typeValue, previewContainer})
         break
       case 'textarea-write-template':
@@ -494,14 +494,14 @@ const init = () => {
           }
         })
         previewTemplate[previewTemplate.element] = typeValue
-        sectionAddedOrUpdated = { ...previewTemplate, sectionId, paras }
+        sectionAddedOrUpdated = { ...previewTemplate, sectionIndex, paras }
         paras.forEach(text => addContentToPreviewContainer({previewTemplate, textContent:text.p, previewContainer}))
         break
       case 'observations-write-template':
       case 'species-write-template':
-        const sectionToUpdateSpecies = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.species || []
+        const sectionToUpdateSpecies = globalWrite?.sections?.find(t => t.sectionIndex === sectionIndex)?.species || []
         sectionAddedOrUpdated = {
-            ...globalWrite.sections.find(t => t.sectionId === sectionId)
+            ...globalWrite.sections.find(t => t.sectionIndex === sectionIndex)
           , species: sectionToUpdateSpecies
         }
         break
@@ -515,7 +515,7 @@ const init = () => {
         sectionAddedOrUpdated = { 
             ...term
           , templateId: term.id
-          , sectionId
+          , sectionIndex
           , terms: updatedTerms.map(term => {
             if(term.hasJustBeenAdded) delete term.hasJustBeenAdded
             return term
@@ -524,7 +524,7 @@ const init = () => {
         addItemToList({selectedItems: updatedTerms, selectedItem: null, selectedItemsListElement: previewContainer})
         break
       case 'images':
-        sectionAddedOrUpdated = { ...image, templateId: image.id, sectionId, imgs: typeValue }
+        sectionAddedOrUpdated = { ...image, templateId: image.id, sectionIndex, imgs: typeValue }
         break
       case 'inat-lookup':
         break
@@ -533,7 +533,7 @@ const init = () => {
     Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
     Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
 
-    addOrUpdateSection({globalWrite, sectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit})
+    addOrUpdateSection({globalWrite, index: nextSectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit})
   }
 
   const editSection = ({e}) => {
@@ -672,7 +672,7 @@ const init = () => {
             ...validProps,
           }
         }),
-        sectionOrder: globalWrite.sections.map(section => section.sectionId)
+        sectionOrder: globalWrite.sections.map(section => section.sectionIndex)
       })
       
       const response = await addFieldnotes({fieldnotes: notes})
@@ -710,8 +710,8 @@ const init = () => {
 
       Object.assign(globalWrite, {
         ...fieldnotes,
-        sections: fieldnotes.sectionOrder.map(sectionId => {
-          return fieldnotes.sections.find(section => section.sectionId === sectionId)
+        sections: fieldnotes.sectionOrder.map(sectionIndex => {
+          return fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
         })      
       })
 
@@ -735,8 +735,8 @@ const init = () => {
 
       importFieldNotesNotificationText.classList.add('hidden')
 
-      globalWrite.sectionIndex = globalWrite.sections.length > 0
-        ? globalWrite.sections.map(s => Number(s.sectionId.replace('section-', ''))).sort(function (a, b) { return a - b })[globalWrite.sections.length -1 ] + 1
+      globalWrite.nextSectionIndex = globalWrite.sections.length > 0
+        ? globalWrite.sections.map(s => s.sectionIndex).sort(function (a, b) { return a - b })[globalWrite.sections.length -1 ] + 1
         : 0
 
       // Remove existing sections
@@ -748,7 +748,7 @@ const init = () => {
           , typeText: section.name
           , typeTemplateName: section.writeTemplateId
           , sectionTemplate: getSectionTemplate({typeId: section.writeTemplateId})
-          , sectionId: section.sectionId     
+          , sectionIndex: section.sectionIndex     
         })
 
         const addOrUpdateSectionBtn = sectionContainer.querySelector('#add-or-update-section-btn')
@@ -790,7 +790,7 @@ const init = () => {
             const selectedItemsListElement = sectionContainer.querySelector('#selected-terms-list')
             addItemToList({selectedItems: section.terms, selectedItem: null, selectedItemsListElement})
             const editSectionBtn = sectionContainer.querySelector('#edit-section-btn')
-            editSectionBtn.addEventListener('click', e => editSection({e, typeId: section.type, previewContainer: sectionContainer.querySelector('.edit'), sectionId: section.sectionId, typeValue: section.terms}), true)
+            editSectionBtn.addEventListener('click', e => editSection({e, typeId: section.type, previewContainer: sectionContainer.querySelector('.edit'), sectionIndex: section.sectionIndex, typeValue: section.terms}), true)
         }
       })
 

@@ -673,20 +673,20 @@ export const fieldnotes = [
       }
     ],
     sectionOrder: [
-        'section-0',
-        'section-1',
-        'section-2',
-        'section-3',
-        'section-4',
-        'section-5',
-        'section-6',
-        'section-7',
-        'section-8'
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
     ],
     sections: [
       {
         id: "textarea-preview-template",
-        sectionId: 'section-0',
+        sectionIndex: 0,
         name: "Text block",
         parent: "non-grid-template",
         type: "text",
@@ -701,7 +701,7 @@ export const fieldnotes = [
       },
       {
         id: "species-preview-template",
-        sectionId: 'section-1',
+        sectionIndex: 1,
         name: "Species catalogue",
         parent: "grid-template",
         type: "species",
@@ -713,7 +713,7 @@ export const fieldnotes = [
       },
       {
         id: "textarea-preview-template",
-        sectionId: 'section-2',
+        sectionIndex: 2,
         name: "Text block",
         parent: "non-grid-template",
         type: "text",
@@ -734,7 +734,7 @@ export const fieldnotes = [
       },
       {
         id: "species-preview-template",
-        sectionId: 'section-3',
+        sectionIndex: 3,
         name: "Species catalogue",
         parent: "grid-template",
         type: "species",
@@ -749,7 +749,7 @@ export const fieldnotes = [
       },
       {
         id: "textarea-preview-template",
-        sectionId: 'section-4',
+        sectionIndex: 4,
         name: "Text block",
         parent: "non-grid-template",
         type: "text",
@@ -764,7 +764,7 @@ export const fieldnotes = [
       },
       {
         id: "species-preview-template",
-        sectionId: 'section-5',
+        sectionIndex: 5,
         name: "Species catalogue",
         parent: "grid-template",
         type: "species",
@@ -776,7 +776,7 @@ export const fieldnotes = [
       },
       {
         id: "textarea-preview-template",
-        sectionId: 'section-6',
+        sectionIndex: 6,
         name: "Text block",
         parent: "non-grid-template",
         type: "text",
@@ -803,7 +803,7 @@ export const fieldnotes = [
       },
       {
         id: "h4-input-template",
-        sectionId: 'section-7',
+        sectionIndex: 7,
         name: "Subheader",
         parent: "non-grid-template",
         type: "h4-input",
@@ -811,7 +811,7 @@ export const fieldnotes = [
       },
       {
         id: "textarea-preview-template",
-        sectionId: 'section-8',
+        sectionIndex: 8,
         name: "Text block",
         parent: "non-grid-template",
         type: "text",

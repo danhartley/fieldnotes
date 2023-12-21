@@ -40,7 +40,7 @@ const attachListenersToInatParams = g => {
   })
 }
 
-export const createInatParamsCheckboxGroup = ({g, parent, typeId, sectionId}) => {
+export const createInatParamsCheckboxGroup = ({g, parent, typeId, sectionIndex}) => {
     
     if(!parent) return
     
@@ -68,11 +68,11 @@ export const createInatParamsCheckboxGroup = ({g, parent, typeId, sectionId}) =>
     attachListenersToInatParams(g)
 }
 
-export const createInatLookups = ({globalWrite, parent, typeId, sectionId}) => {
-    cloneImages({globalWrite, parent, typeId, sectionId})
+export const createInatLookups = ({globalWrite, parent, typeId, sectionIndex}) => {
+    cloneImages({globalWrite, parent, typeId, sectionIndex})
 }
 
-export const handleInatAutocomplete = ({inputText, dataList, globalWrite, id, prop, callback, cbParent, typeId, sectionId}) => {
+export const handleInatAutocomplete = ({inputText, dataList, globalWrite, id, prop, callback, cbParent, typeId, sectionIndex}) => {
   inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
@@ -108,7 +108,7 @@ export const handleInatAutocomplete = ({inputText, dataList, globalWrite, id, pr
             if(option) option[name] = globalWrite.matches.find(m => m[prop] === match)
             
             globalWrite[prop] = match
-            callback({globalWrite, parent: cbParent, typeId, sectionId})
+            callback({globalWrite, parent: cbParent, typeId, sectionIndex})
         }
     })
 }
@@ -217,24 +217,24 @@ export const bgColour = taxon => {
     return getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
 }
 
-const handleSpeciesCheckState = async({e, sectionId, globalWrite}) => {
+const handleSpeciesCheckState = async({e, sectionIndex, globalWrite}) => {
     const name = e.target.value    
 
-    // const sectionToUpdateSpecies = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.species || []
-    // selectedSpecies = globalWrite?.sections?.find(t => t.sectionId === sectionId)?.species || []
-    // const sectionToUpdateSpecies = sectionToUpdate ? globalWrite.sections.find(t => t.sectionId === sectionId).species : []
+    // const sectionToUpdateSpecies = globalWrite?.sections?.find(t => t.sectionIndex === sectionIndex)?.species || []
+    // selectedSpecies = globalWrite?.sections?.find(t => t.sectionIndex === sectionIndex)?.species || []
+    // const sectionToUpdateSpecies = sectionToUpdate ? globalWrite.sections.find(t => t.sectionIndex === sectionIndex).species : []
 
     // let sectionToUpdate = {
-    //       ...globalWrite.sections.find(t => t.sectionId === sectionId)
+    //       ...globalWrite.sections.find(t => t.sectionIndex === sectionIndex)
     //     , species: sectionToUpdateSpecies
     // }
-    let section = globalWrite.sections.find(t => t.sectionId === sectionId)    
-    let sectionIndex = globalWrite.sections.findIndex(t => t.sectionId === sectionId)
+    let section = globalWrite.sections.find(t => t.sectionIndex === sectionIndex)    
+    let index = globalWrite.sections.findIndex(t => t.sectionIndex === sectionIndex)
 
     // Save to the db
     // const response = await addOrUpdateSection({
     //       globalWrite
-    //     , sectionIndex
+    //     , index
     //     , sectionToUpdate
     //     , sectionAddedOrUpdated: section
     // })
@@ -245,10 +245,10 @@ const handleSpeciesCheckState = async({e, sectionId, globalWrite}) => {
             section.species.find(sp => sp === name) 
                 ? section.species = section.species.filter(sp => sp !== name)
                 : section.species.push(name)
-            globalWrite.sections[sectionIndex] = section            
+            globalWrite.sections[index] = section            
         } else {
             const sp = [ name ]
-            section = {...species, species: sp, templateId: species.id, sectionId }
+            section = {...species, species: sp, templateId: species.id, sectionIndex }
             globalWrite.sections.push(section)
         }
     // }
@@ -263,7 +263,7 @@ const handleSpeciesCheckState = async({e, sectionId, globalWrite}) => {
     }
 }
 
-export const cloneImages = ({globalWrite, parent, typeId, sectionId}) => {
+export const cloneImages = ({globalWrite, parent, typeId, sectionIndex}) => {
 switch(typeId) {
     case 'species-write-template':
     case 'observations-write-template':
@@ -272,7 +272,7 @@ switch(typeId) {
             const imgUrl = typeId === 'observations-write-template'
             ? species.photos[0].url
             : species.taxon.default_photo.medium_url
-            const clone = cloneImageTemplate({species, index, sectionId, imgUrl, globalWrite})            
+            const clone = cloneImageTemplate({species, index, sectionIndex, imgUrl, globalWrite})            
             parent.appendChild(clone)
         })
         } 
@@ -281,7 +281,7 @@ switch(typeId) {
     if(globalWrite.name) {
         const match = globalWrite.matches.find(match => match.name === globalWrite.name)
         const imgUrl = match.default_photo.square_url
-        const clone = cloneImageTemplate({species: {taxon:match}, index: 0, sectionId, imgUrl, globalWrite})            
+        const clone = cloneImageTemplate({species: {taxon:match}, index: 0, sectionIndex, imgUrl, globalWrite})            
         parent.appendChild(clone)
 
         if(!globalWrite.taxa.find(taxon => taxon.id === match.id)) {                
@@ -295,7 +295,7 @@ switch(typeId) {
 }
 }
 
-const cloneImageTemplate = ({species, index, sectionId, imgUrl, globalWrite}) => {
+const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, globalWrite}) => {
     const templateToClone = d.getElementById('img-template')
     const clone = templateToClone.content.cloneNode(true)
 
@@ -317,9 +317,9 @@ const cloneImageTemplate = ({species, index, sectionId, imgUrl, globalWrite}) =>
     spans[1].textContent = species.taxon.name
     spans[1].classList.add('latin')
     
-    checkbox.id = `${sectionId}-${species.id || species.taxon.id}`
+    checkbox.id = `${sectionIndex}-${species.id || species.taxon.id}`
     checkbox.value = species.taxon.name
-    checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionId, globalWrite}), true)
+    checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionIndex, globalWrite}), true)
     label.htmlFor = checkbox.id
 
     return clone
@@ -407,13 +407,13 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
     if(sectionToMoveDOMIndex === sectionToJumpDOMIndex) return
 
     // Get the section to move
-    const sectionTemplateToMoveId = globalWrite.sectionOrder.find(sectionId => sectionId === sectionToDropId)
+    const sectionTemplateToMoveId = globalWrite.sectionOrder.find(sectionIndex => sectionIndex === sectionToDropId)
 
     // Remove the section to move
-    globalWrite.sectionOrder = globalWrite.sectionOrder.filter(sectionId => sectionId !== sectionToDropId)
+    globalWrite.sectionOrder = globalWrite.sectionOrder.filter(sectionIndex => sectionIndex !== sectionToDropId)
 
     // Calculate position of the jumped section
-    const indexOfJumpedSectionTemplate = globalWrite.sectionOrder.findIndex(sectionId => sectionId === sectionToJumpId)
+    const indexOfJumpedSectionTemplate = globalWrite.sectionOrder.findIndex(sectionIndex => sectionIndex === sectionToJumpId)
 
     if(indexOfJumpedSectionTemplate === -1) {
         throw new Error({
@@ -476,9 +476,9 @@ export const showNotificationsDialog = ({message, type = 'success', displayDurat
     }, displayDuration)
 }
 
-export const deleteSection = async ({d, sectionId, globalWrite}) => {
+export const deleteSection = async ({d, sectionIndex, globalWrite}) => {
     try {        
-    const elementToRemove = globalWrite.sections.find(t => t.sectionId == sectionId)
+    const elementToRemove = globalWrite.sections.find(t => t.sectionIndex == sectionIndex)
     
     // Remove section from fieldnotes in the db
     const response = !!elementToRemove 
@@ -489,13 +489,13 @@ export const deleteSection = async ({d, sectionId, globalWrite}) => {
         }
 
     if(response.success) {
-        const element = d.getElementById(sectionId)
+        const element = d.getElementById(sectionIndex)
         // Remove section from the DOM
         element.remove()
 
         // Remove section from the in-memory fieldnotes
-        globalWrite.sections = globalWrite.sections.filter(t => t.sectionId !== sectionId)
-        globalWrite.sectionOrder = globalWrite.sectionOrder.filter(id => id !== sectionId)
+        globalWrite.sections = globalWrite.sections.filter(t => t.sectionIndex !== sectionIndex)
+        globalWrite.sectionOrder = globalWrite.sectionOrder.filter(id => id !== sectionIndex)
 
         // Notify user
         showNotificationsDialog({message: response.message, type: 'success'})
@@ -505,7 +505,7 @@ export const deleteSection = async ({d, sectionId, globalWrite}) => {
     }
 }
 
-export const addOrUpdateSection = async ({globalWrite, sectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit}) => {
+export const addOrUpdateSection = async ({globalWrite, index, sectionToUpdate, sectionAddedOrUpdated, isEdit}) => {
     try {
         const array = 'sections'
 
@@ -516,14 +516,14 @@ export const addOrUpdateSection = async ({globalWrite, sectionIndex, sectionToUp
             response = await updateElementFromArray({fieldnotes: globalWrite, array, elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated})
             // Update changes in memory
             if(response.success) {                
-                globalWrite.sections[sectionIndex] = sectionAddedOrUpdated
+                globalWrite.sections[index] = sectionAddedOrUpdated
             }
         } else {
             response = await addElementToArray({fieldnotes: globalWrite, array, element: sectionAddedOrUpdated})
             // Update changes in memory
             if(response.success) {                
                 globalWrite.sections.push(sectionAddedOrUpdated)
-                globalWrite.sectionOrder.push(sectionAddedOrUpdated.sectionId)
+                globalWrite.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)
             }
         }
 

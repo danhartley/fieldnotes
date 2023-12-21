@@ -1237,7 +1237,7 @@ export const addElementToArray = async ({fieldnotes, array, element}) => {
 
     if(array === 'sections') {
       data = {
-        sectionOrder: arrayUnion(element.sectionId)
+        sectionOrder: arrayUnion(element.sectionIndex)
       }
       updateDoc(docRef, data)
     }
@@ -1269,7 +1269,7 @@ export const removeElementFromArray = async ({fieldnotes, array, element}) => {
     
     if(array === 'sections') {
       data = {
-        sectionOrder: arrayRemove(element.sectionId)
+        sectionOrder: arrayRemove(element.sectionIndex)
       }
       await updateDoc(docRef, data)            
 
