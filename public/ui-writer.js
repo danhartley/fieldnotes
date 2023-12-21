@@ -784,6 +784,9 @@ const init = () => {
         ? globalWrite.sections.map(s => Number(s.sectionId.replace('section-', ''))).sort(function (a, b) { return a - b })[globalWrite.sections.length -1 ] + 1
         : 0
 
+      // Remove existing sections
+      draggableSections.replaceChildren()
+
       globalWrite.sections.forEach(section => {
         const sectionContainer = createSection({
             typeId: section.writeTemplateId
