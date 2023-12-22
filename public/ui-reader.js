@@ -494,14 +494,6 @@ const init = () => {
                         parent.appendChild(clone)
                         article.appendChild(parent)
                     break
-                    case 'h4-preview-template':
-                        clone = templateToClone.content.cloneNode(true)
-                        h4 = clone.querySelector('h4')
-                        h4.textContent = section.h4
-                        parent = parentClone.querySelector('div')
-                        parent.appendChild(clone)
-                        article.appendChild(parent)
-                    break
                     case 'date':
                         clone = templateToClone.content.cloneNode(true)
                         h3 = clone.querySelector('h3')
@@ -745,44 +737,49 @@ const init = () => {
         ? await g.fieldnotesStubs
         : await getFieldnotesById({id: g.fieldnotesStubs.fieldnotesId})
 
-      if(!response.success) return 
+    if(!response.success) return 
 
-      const fieldnotes = { ...response.data, name: 'Field notes' }
+    const fieldnotes = { 
+        ...response.data
+        , name: 'Field notes'
+        , sections: response.data.sectionOrder.map(sectionIndex => {
+            return response.data.sections.find(section => section.sectionIndex === sectionIndex)
+          })  
+    }
 
-      console.log(fieldnotes)
+    console.log(fieldnotes)
 
-        g.guide = fieldnotes
-        g.templates = [ ...g.templates, { 
-            ...fieldnotes
-            , parent: 'non-grid-template' 
-            , type: 'fieldnotes'
-        }]
+    g.guide = fieldnotes
+    g.templates = [ ...g.templates, { 
+            ...fieldnotes            
+        , parent: 'non-grid-template' 
+        , type: 'fieldnotes'
+    }]
 
-        const taxaIds = g.guide.taxa
-            .map(t => t.id)
-        const taxaNames = g.guide.taxa
-            .map(t => t.name)
+    const taxaIds = g.guide.taxa
+        .map(t => t.id)
+    const taxaNames = g.guide.taxa
+        .map(t => t.name)
 
-        const inatTaxa = await getInatTaxa({ taxaIds, locale: g.language.id })
-        
-        g.species = inatTaxa.results
-            .filter(t => t.default_photo)
-            .map(t => { 
-                /**
-                 * Only allow one name for a taxon
-                 */
-                if(taxaNames.includes(t.name)) {
-                    return {
-                        taxon: mapTaxon({taxon: t})
-                    }
+    const inatTaxa = await getInatTaxa({ taxaIds, locale: g.language.id })
+    
+    g.species = inatTaxa.results
+        .filter(t => t.default_photo)
+        .map(t => { 
+            /**
+             * Only allow one name for a taxon
+             */
+            if(taxaNames.includes(t.name)) {
+                return {
+                    taxon: mapTaxon({taxon: t})
                 }
-            })
-            .filter(t => t)
-
+            }
+        })
+        .filter(t => t)
             
-        createRadioBtnTemplateGroup()
-        speciesDisplayContainer.classList.remove('disabled')
-        article.innerHTML = ''     
+    createRadioBtnTemplateGroup()
+    speciesDisplayContainer.classList.remove('disabled')
+    article.innerHTML = ''     
     }
 
     importFieldNotesBtn.addEventListener('click', importFieldNotes, true)
