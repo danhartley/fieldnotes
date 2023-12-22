@@ -10,7 +10,6 @@ import {
 
 import { 
       handleInatAutocomplete
-    // , createInatParamsCheckboxGroup
     , mapInatSpeciesToLTP
     , mapTaxon
     , bgColour
@@ -19,7 +18,6 @@ import {
 } from './ui-actions.js'
 
 import { templates } from './templates.js'
-import { fieldnotes, getAnnotations } from './fieldnotes.js'
 
 const init = () => {    
     Object.assign(g, {
@@ -106,7 +104,6 @@ const init = () => {
             }
             speciesDisplayContainer.classList.add('disabled')
             g.templates = templates
-            // createRadioBtnTemplateGroup()
         })    
     })
         
@@ -125,7 +122,6 @@ const init = () => {
     const article = d.getElementById('article')
     const rbTemplate = d.getElementById('radio-button-template')
     const testSubmitBtn = d.getElementById('check-answers-btn')
-    const guideGroupContainer = d.getElementById('guide-group-container')
     const languageGroupContainer = d.getElementById('language-group-container')
     const inatAutocompleteGroupContainer = d.getElementById('inat-autocomplete-group-container')
     const inatUseObservationSpeciesCountGroupContainer = d.getElementById('inat-use-observations-species-count-group-container')
@@ -143,7 +139,6 @@ const init = () => {
     const rbDateGroup = d.querySelectorAll('input[name="rbDate"]')
     
     let rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup
-    // let rbGuideGroup, rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup
     handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: g, fieldnotesStubsCallback: false ? _getFieldnotes : getFieldnotesStubs, importFieldNotesBtn}) 
     
     const createRadioBtnGroup = ({collection, checked, rbGroup, parent}) => {
@@ -347,7 +342,6 @@ const init = () => {
             input.value = t.id
         
             label.textContent = t.name
-            // label.textContent = t.name.replaceAll('-', ' ')
             label.htmlFor = input.id
     
             if(g.template && g.template.id === t.id) {
@@ -391,7 +385,6 @@ const init = () => {
         let parent = null
             
         lessonFieldsetLegend.innerText = g.template.name
-        // lessonFieldsetLegend.innerText = g.template.name.replaceAll('-', ' ')
     
         if(g.species) article.innerHTML = ''
     
@@ -703,41 +696,6 @@ const init = () => {
             })
         })
     
-        // const rbGuideGroupEventHander = rb => {
-        //     rb.addEventListener('change', async (e) => {
-        //         g.guide = g.guides.find(t => t.fnId === e.target.value)
-        //         g.templates = g.guide.templates
-     
-        //         const taxaIds = g.guide.taxa
-        //             .map(t => t.id)
-        //         const taxaNames = g.guide.taxa
-        //             .map(t => t.name)
-    
-        //         const inatTaxa = await getInatTaxa({ taxaIds, locale: g.language.id })
-                
-        //         g.species = inatTaxa.results
-        //             .filter(t => t.default_photo)
-        //             .map(t => { 
-        //                 /**
-        //                  * Only allow one name for a taxon
-        //                  */
-        //                 if(taxaNames.includes(t.name)) {
-        //                     return {
-        //                         taxon: mapTaxon({taxon: t})
-        //                     }
-        //                 }
-        //             })
-        //             .filter(t => t)
-        
-                    
-        //         createRadioBtnTemplateGroup()
-        //         speciesDisplayContainer.classList.remove('disabled')
-        //         article.innerHTML = ''                
-        //     })
-        // }
-    
-        // rbGuideGroup.forEach(rb => rbGuideGroupEventHander(rb))
-    
         const speciesCountInputNumber = d.getElementById('species-count-input-number')
     
         speciesCountInputNumber.value = g.count
@@ -766,17 +724,13 @@ const init = () => {
     
         const { id, prop } = g.inatAutocomplete
         handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g, id, prop, cbParent: d.getElementById('inat-params-input-check-box-group')})
-        // handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})
     })
 
     rbInatAutocompleteGroup = createRadioBtnGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroupContainer})    
-    // rbGuideGroup = createRadioBtnGroup({collection: g.guides, checked:g.guide, rbGroup:'guide', parent:guideGroupContainer})
     rbLanguageGroup = createRadioBtnGroup({collection: g.LANGUAGES, checked:g.language, rbGroup:'language', parent:languageGroupContainer})
     rbInatUseObservationSpeciesCountGroup = createRadioBtnGroup({collection: g.useObservationsSpeciesCountOptions, checked:g.useObservationsSpeciesCount, rbGroup:'inat-use-observations-species-count', parent:inatUseObservationSpeciesCountGroupContainer})
 
     createTaxaCheckboxGroup()
-    // createRadioBtnTemplateGroup()
-    // createInatParamsCheckboxGroup(g)
 
     const date = new Date()
     const today = `${date.getFullYear()}-${date.getMonth() + 1}-${("0" + date.getDate()).slice(-2)}`

@@ -19,7 +19,6 @@ import {
 
 import { 
     handleInatAutocomplete
-  , createInatParamsCheckboxGroup
   , createInatLookups
   , handleTermAutocomplete
   , handleFieldsnotesAutocomplete
@@ -197,7 +196,6 @@ const init = () => {
 
   const { id, prop } = globalWrite.inatAutocomplete
   handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, globalWrite, id, prop, cbParent: d.getElementById('inat-params-input-check-box-group')})  
-  // handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, globalWrite, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})  
   handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: globalWrite, fieldnotesStubsCallback: useLocal ? _getFieldnotes : getFieldnotesStubs, importFieldNotesBtn}) 
 
   const toggleBtnEnabledState = ({str, btn}) => {

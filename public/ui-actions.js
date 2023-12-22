@@ -26,49 +26,6 @@ const debounce = (func, wait) => {
   }
 }
 
-// const attachListenersToInatParams = g => {
-//   const cbInatParamGroup = d.querySelectorAll('input[name="inat-param"]')
-
-//   cbInatParamGroup.forEach(cb => {
-//       cb.addEventListener('click', e => {
-//           const name = e.target.value
-//           g.inatAutocompleteOptions.forEach(option => {
-//               if(option.name === name) {
-//                   option.isActive = !option.isActive
-//               }
-//           })
-//       })
-//   })
-// }
-
-// export const createInatParamsCheckboxGroup = ({g, parent, typeId, sectionIndex}) => {
-    
-//     if(!parent) return
-    
-//     const t = d.getElementById('checkbox-template')
-
-//     parent.innerHTML = ''
-
-//     g.inatAutocompleteOptions.filter(param => param.isActive).forEach(param => {
-//         const clone = t.content.cloneNode(true)
-
-//         const input = clone.querySelector('input')
-//         const label = clone.querySelector('label')
-//         label.setAttribute('class', 'text-initial')
-    
-//         input.setAttribute('name', 'inat-param')
-//         input.id = param.id
-//         if(param.isActive) input.setAttribute('checked', true)
-//         input.value = param.name
-//         label.textContent = param[param.name][param.prop]
-//         label.htmlFor = input.id
-
-//         parent.appendChild(clone)
-//     })
-
-//     attachListenersToInatParams(g)
-// }
-
 export const createInatLookups = ({globalWrite, parent, typeId, sectionIndex}) => {
     cloneImages({globalWrite, parent, typeId, sectionIndex})
 }
@@ -109,7 +66,6 @@ export const handleInatAutocomplete = ({inputText, dataList, globalWrite, id, pr
             if(option) option[name] = globalWrite.matches.find(m => m[prop] === match)
             
             globalWrite[prop] = match
-            // callback({globalWrite, parent: cbParent, typeId, sectionIndex})
         }
     })
 }
