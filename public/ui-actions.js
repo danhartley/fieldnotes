@@ -26,48 +26,48 @@ const debounce = (func, wait) => {
   }
 }
 
-const attachListenersToInatParams = g => {
-  const cbInatParamGroup = d.querySelectorAll('input[name="inat-param"]')
+// const attachListenersToInatParams = g => {
+//   const cbInatParamGroup = d.querySelectorAll('input[name="inat-param"]')
 
-  cbInatParamGroup.forEach(cb => {
-      cb.addEventListener('click', e => {
-          const name = e.target.value
-          g.inatAutocompleteOptions.forEach(option => {
-              if(option.name === name) {
-                  option.isActive = !option.isActive
-              }
-          })
-      })
-  })
-}
+//   cbInatParamGroup.forEach(cb => {
+//       cb.addEventListener('click', e => {
+//           const name = e.target.value
+//           g.inatAutocompleteOptions.forEach(option => {
+//               if(option.name === name) {
+//                   option.isActive = !option.isActive
+//               }
+//           })
+//       })
+//   })
+// }
 
-export const createInatParamsCheckboxGroup = ({g, parent, typeId, sectionIndex}) => {
+// export const createInatParamsCheckboxGroup = ({g, parent, typeId, sectionIndex}) => {
     
-    if(!parent) return
+//     if(!parent) return
     
-    const t = d.getElementById('checkbox-template')
+//     const t = d.getElementById('checkbox-template')
 
-    parent.innerHTML = ''
+//     parent.innerHTML = ''
 
-    g.inatAutocompleteOptions.filter(param => param.isActive).forEach(param => {
-        const clone = t.content.cloneNode(true)
+//     g.inatAutocompleteOptions.filter(param => param.isActive).forEach(param => {
+//         const clone = t.content.cloneNode(true)
 
-        const input = clone.querySelector('input')
-        const label = clone.querySelector('label')
-        label.setAttribute('class', 'text-initial')
+//         const input = clone.querySelector('input')
+//         const label = clone.querySelector('label')
+//         label.setAttribute('class', 'text-initial')
     
-        input.setAttribute('name', 'inat-param')
-        input.id = param.id
-        if(param.isActive) input.setAttribute('checked', true)
-        input.value = param.name
-        label.textContent = param[param.name][param.prop]
-        label.htmlFor = input.id
+//         input.setAttribute('name', 'inat-param')
+//         input.id = param.id
+//         if(param.isActive) input.setAttribute('checked', true)
+//         input.value = param.name
+//         label.textContent = param[param.name][param.prop]
+//         label.htmlFor = input.id
 
-        parent.appendChild(clone)
-    })
+//         parent.appendChild(clone)
+//     })
 
-    attachListenersToInatParams(g)
-}
+//     attachListenersToInatParams(g)
+// }
 
 export const createInatLookups = ({globalWrite, parent, typeId, sectionIndex}) => {
     cloneImages({globalWrite, parent, typeId, sectionIndex})
@@ -109,7 +109,7 @@ export const handleInatAutocomplete = ({inputText, dataList, globalWrite, id, pr
             if(option) option[name] = globalWrite.matches.find(m => m[prop] === match)
             
             globalWrite[prop] = match
-            callback({globalWrite, parent: cbParent, typeId, sectionIndex})
+            // callback({globalWrite, parent: cbParent, typeId, sectionIndex})
         }
     })
 }
@@ -154,7 +154,7 @@ export const handleTermAutocomplete = ({inputText, selectedItems, dataList, glob
     })
 }
 
-export const handleFieldsnotesAutocomplete = async ({inputText, dataList, globalWrite, fieldnotesStubsCallback, importFieldNotesBtn}) => {
+export const handleFieldsnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubsCallback, importFieldNotesBtn}) => {
     let stubs
     inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
@@ -180,7 +180,7 @@ export const handleFieldsnotesAutocomplete = async ({inputText, dataList, global
         const match = e.target.value
 
         if(match) {
-            globalWrite.fieldnotesStubs = stubs.find(option => option.title === match)
+            global.fieldnotesStubs = stubs.find(option => option.title === match)
             importFieldNotesBtn.classList.remove('disabled')        
         }
     })

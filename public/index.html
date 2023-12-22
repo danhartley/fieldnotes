@@ -41,13 +41,30 @@
         </section>        
       </fieldset>
 
-      <section>
+      <section class="edit-view">
+        <fieldset id="fieldnotes-search-container" class="mt2 hidden">
+          <legend>Fieldnotes search</legend>
+          <p class="mt0 small">Find and edit previous fieldnotes.</p>
+          <div class="centred-block">
+              <label for="ltp-autocomplete-title-input-text">Title</label>
+              <input id="ltp-autocomplete-title-input-text" list="ltp-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing to find existing fieldnotes by their title…">
+              <datalist id="ltp-autocomplete-title-data-list"></datalist>
+          </div>
+          <div id="field-notes-lookup-callback-parent" class="mt2"></div>
+          <div class="centred-block mt2">
+            <button id="import-fieldnotes-btn" class="mr disabled">Import fieldnotes</button>
+            <div id="import-fieldnotes-notification-text" class="small hidden">Fetching fieldnotes…</div>
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- <section>
         <fieldset id="fieldnotes-search-container" class="flex-row hidden">
           <legend>Fieldnotes</legend>
           <p class="mt0 mb1 small">Field journal, species lists and species accounts.</p>
           <div id="guide-group-container" class="grid"></div>
         </fieldset>
-      </section>
+      </section> -->
 
       <section>
         <div id="inat-search-container">

@@ -3,15 +3,19 @@ import {
     , getInatObservations
     , getInatTaxa
     , g
+    , _getFieldnotes
+    , getFieldnotesStubs
+    , getFieldnotesById
 } from './api.js'
 
 import { 
       handleInatAutocomplete
-    , createInatParamsCheckboxGroup
+    // , createInatParamsCheckboxGroup
     , mapInatSpeciesToLTP
     , mapTaxon
     , bgColour
     , toggleFilterCtrl
+    , handleFieldsnotesAutocomplete
 } from './ui-actions.js'
 
 import { templates } from './templates.js'
@@ -102,12 +106,16 @@ const init = () => {
             }
             speciesDisplayContainer.classList.add('disabled')
             g.templates = templates
-            createRadioBtnTemplateGroup()
+            // createRadioBtnTemplateGroup()
         })    
     })
         
     const inatSearchInputRb = d.getElementById('inat-search-input-rb')
     const fieldnotesInputRb = d.getElementById('fieldnotes-input-rb')
+    const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
+    const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
+    const importFieldNotesBtn = d.getElementById('import-fieldnotes-btn')
+    const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
     const lessonToggleVisibilityBtn = d.getElementById('lesson-toggle-visibility-btn')
     const displayToggleVisibilityBtn = d.getElementById('display-toggle-visibility-btn')
     const progressFieldset = d.getElementById('progress-fieldset')
@@ -134,7 +142,9 @@ const init = () => {
     const singleDate = d.getElementById('single-observations-input-date')
     const rbDateGroup = d.querySelectorAll('input[name="rbDate"]')
     
-    let rbGuideGroup, rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup
+    let rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup
+    // let rbGuideGroup, rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup
+    handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: g, fieldnotesStubsCallback: false ? _getFieldnotes : getFieldnotesStubs, importFieldNotesBtn}) 
     
     const createRadioBtnGroup = ({collection, checked, rbGroup, parent}) => {
         collection.forEach(item => {
@@ -336,7 +346,8 @@ const init = () => {
             input.id = t.name
             input.value = t.id
         
-            label.textContent = t.name.replaceAll('-', ' ')
+            label.textContent = t.name
+            // label.textContent = t.name.replaceAll('-', ' ')
             label.htmlFor = input.id
     
             if(g.template && g.template.id === t.id) {
@@ -379,7 +390,8 @@ const init = () => {
         let templateToClone = d.getElementById(g.template.id) 
         let parent = null
             
-        lessonFieldsetLegend.innerText = g.template.name.replaceAll('-', ' ')
+        lessonFieldsetLegend.innerText = g.template.name
+        // lessonFieldsetLegend.innerText = g.template.name.replaceAll('-', ' ')
     
         if(g.species) article.innerHTML = ''
     
@@ -691,40 +703,40 @@ const init = () => {
             })
         })
     
-        const rbGuideGroupEventHander = rb => {
-            rb.addEventListener('change', async (e) => {
-                g.guide = g.guides.find(t => t.fnId === e.target.value)
-                g.templates = g.guide.templates
+        // const rbGuideGroupEventHander = rb => {
+        //     rb.addEventListener('change', async (e) => {
+        //         g.guide = g.guides.find(t => t.fnId === e.target.value)
+        //         g.templates = g.guide.templates
      
-                const taxaIds = g.guide.taxa
-                    .map(t => t.id)
-                const taxaNames = g.guide.taxa
-                    .map(t => t.name)
+        //         const taxaIds = g.guide.taxa
+        //             .map(t => t.id)
+        //         const taxaNames = g.guide.taxa
+        //             .map(t => t.name)
     
-                const inatTaxa = await getInatTaxa({ taxaIds, locale: g.language.id })
+        //         const inatTaxa = await getInatTaxa({ taxaIds, locale: g.language.id })
                 
-                g.species = inatTaxa.results
-                    .filter(t => t.default_photo)
-                    .map(t => { 
-                        /**
-                         * Only allow one name for a taxon
-                         */
-                        if(taxaNames.includes(t.name)) {
-                            return {
-                                taxon: mapTaxon({taxon: t})
-                            }
-                        }
-                    })
-                    .filter(t => t)
+        //         g.species = inatTaxa.results
+        //             .filter(t => t.default_photo)
+        //             .map(t => { 
+        //                 /**
+        //                  * Only allow one name for a taxon
+        //                  */
+        //                 if(taxaNames.includes(t.name)) {
+        //                     return {
+        //                         taxon: mapTaxon({taxon: t})
+        //                     }
+        //                 }
+        //             })
+        //             .filter(t => t)
         
                     
-                createRadioBtnTemplateGroup()
-                speciesDisplayContainer.classList.remove('disabled')
-                article.innerHTML = ''                
-            })
-        }
+        //         createRadioBtnTemplateGroup()
+        //         speciesDisplayContainer.classList.remove('disabled')
+        //         article.innerHTML = ''                
+        //     })
+        // }
     
-        rbGuideGroup.forEach(rb => rbGuideGroupEventHander(rb))
+        // rbGuideGroup.forEach(rb => rbGuideGroupEventHander(rb))
     
         const speciesCountInputNumber = d.getElementById('species-count-input-number')
     
@@ -753,16 +765,17 @@ const init = () => {
         addImgClickEventHandlers()
     
         const { id, prop } = g.inatAutocomplete
-        handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})
+        handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g, id, prop, cbParent: d.getElementById('inat-params-input-check-box-group')})
+        // handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g, id, prop, callback: createInatParamsCheckboxGroup, cbParent: d.getElementById('inat-params-input-check-box-group')})
     })
 
     rbInatAutocompleteGroup = createRadioBtnGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroupContainer})    
-    rbGuideGroup = createRadioBtnGroup({collection: g.guides, checked:g.guide, rbGroup:'guide', parent:guideGroupContainer})
+    // rbGuideGroup = createRadioBtnGroup({collection: g.guides, checked:g.guide, rbGroup:'guide', parent:guideGroupContainer})
     rbLanguageGroup = createRadioBtnGroup({collection: g.LANGUAGES, checked:g.language, rbGroup:'language', parent:languageGroupContainer})
     rbInatUseObservationSpeciesCountGroup = createRadioBtnGroup({collection: g.useObservationsSpeciesCountOptions, checked:g.useObservationsSpeciesCount, rbGroup:'inat-use-observations-species-count', parent:inatUseObservationSpeciesCountGroupContainer})
 
     createTaxaCheckboxGroup()
-    createRadioBtnTemplateGroup()
+    // createRadioBtnTemplateGroup()
     // createInatParamsCheckboxGroup(g)
 
     const date = new Date()
@@ -788,6 +801,55 @@ const init = () => {
     singleDate.addEventListener('focus', () => {
         setDateOption(d.getElementById('rbSingleDate'))
     }, true)
+
+    const importFieldNotes = async () => {
+        importFieldNotesNotificationText.classList.remove('hidden')
+
+        const response = false 
+        ? await g.fieldnotesStubs
+        : await getFieldnotesById({id: g.fieldnotesStubs.fieldnotesId})
+
+      if(!response.success) return 
+
+      const fieldnotes = { ...response.data, name: 'Field notes' }
+
+      console.log(fieldnotes)
+
+        g.guide = fieldnotes
+        g.templates = [ ...g.templates, { 
+            ...fieldnotes
+            , parent: 'non-grid-template' 
+            , type: 'fieldnotes'
+        }]
+
+        const taxaIds = g.guide.taxa
+            .map(t => t.id)
+        const taxaNames = g.guide.taxa
+            .map(t => t.name)
+
+        const inatTaxa = await getInatTaxa({ taxaIds, locale: g.language.id })
+        
+        g.species = inatTaxa.results
+            .filter(t => t.default_photo)
+            .map(t => { 
+                /**
+                 * Only allow one name for a taxon
+                 */
+                if(taxaNames.includes(t.name)) {
+                    return {
+                        taxon: mapTaxon({taxon: t})
+                    }
+                }
+            })
+            .filter(t => t)
+
+            
+        createRadioBtnTemplateGroup()
+        speciesDisplayContainer.classList.remove('disabled')
+        article.innerHTML = ''     
+    }
+
+    importFieldNotesBtn.addEventListener('click', importFieldNotes, true)
 }
 
 init()
