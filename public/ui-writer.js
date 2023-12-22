@@ -274,20 +274,20 @@ const init = () => {
       case 'xenocanto-write-template':
         input = typeClone.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:input.value, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue:input.value, previewContainer, sectionIndex}), true)
         editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
         break
       case 'textarea-write-template':      
         textarea = typeClone.querySelector('textarea')
         textarea.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
         editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:textarea.value, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue:textarea.value, previewContainer, sectionIndex}), true)
         break
       case 'observations-write-template':
       case 'species-write-template':       
         cloneImages({globalWrite, parent:typeClone.querySelector('div'), typeId, sectionIndex })
         editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:null, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue:null, previewContainer, sectionIndex}), true)
         addOrUpdateSectionBtn.classList.remove('disabled')
         break
       case 'terms':
@@ -298,7 +298,7 @@ const init = () => {
         input.setAttribute('list', datalist.id)        
         label = typeClone.querySelector('label')
         label.htmlFor = input.id                  
-        // addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:selectedItems, previewContainer, sectionIndex }), true)
+        // addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue:selectedItems, previewContainer, sectionIndex }), true)
         // editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
         break
       case 'images':
@@ -307,7 +307,7 @@ const init = () => {
         url1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)
         title1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)
         
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:images, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue:images, previewContainer, sectionIndex}), true)
         editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
         break
       case 'inat-lookup':
@@ -320,7 +320,7 @@ const init = () => {
         label.htmlFor = input.id
         cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
         cbParent.id = `${sectionIndex}-lookup-parent`
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSectionAndPreview({parent: e.target.parentElement, typeId, typeValue:selectedItems, previewContainer, sectionIndex }), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue:selectedItems, previewContainer, sectionIndex }), true)
         editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
         break
     }
@@ -472,7 +472,7 @@ const init = () => {
     createSection({typeId, typeText, typeTemplateName: typeId, sectionTemplate: getSectionTemplate({typeId}), sectionIndex: globalWrite.nextSectionIndex})
   }, true))
 
-  const addOrUpdateSectionAndPreview = async ({parent, typeId, typeValue, previewContainer, sectionIndex}) => {
+  const addOrUpdateSection = async ({parent, typeId, typeValue, previewContainer, sectionIndex}) => {
     if(previewContainer) previewContainer.innerHTML = ''
 
     let t, clone, header, input, sectionToUpdate, nextSectionIndex, sectionAddedOrUpdated, isEdit = null
@@ -601,25 +601,27 @@ const init = () => {
   }
 
   const enableExportFieldNotesContainer = () => {
-    // Check fields added by the user
-    let areFieldsValid = true
-    
-    // Title
-    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.title.length > 2
+    if(globalWrite.view === 'create') {
+      // Check fields added by the user
+      let areFieldsValid = true
+      
+      // Title
+      areFieldsValid = areFieldsValid && globalWrite.fieldnotes.title.length > 2
 
-    // Author
-    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.author.length > 2
+      // Author
+      areFieldsValid = areFieldsValid && globalWrite.fieldnotes.author.length > 2
 
-    // Date
-    areFieldsValid = areFieldsValid && isValidDate({date: globalWrite.fieldnotes.d1})
-    areFieldsValid = areFieldsValid && isValidDate({date:globalWrite.fieldnotes.d2})
+      // Date
+      areFieldsValid = areFieldsValid && isValidDate({date: globalWrite.fieldnotes.d1})
+      areFieldsValid = areFieldsValid && isValidDate({date:globalWrite.fieldnotes.d2})
 
-    // Location
-    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.location.place_guess.length > 2
+      // Location
+      areFieldsValid = areFieldsValid && globalWrite.fieldnotes.location.place_guess.length > 2
 
-    areFieldsValid
-      ? exportFieldNotesContainer.classList.remove('disabled')
-      : exportFieldNotesContainer.classList.add('disabled')      
+      areFieldsValid
+        ? exportFieldNotesContainer.classList.remove('disabled')
+        : exportFieldNotesContainer.classList.add('disabled')      
+    }
   }
 
   const updateSingleFields = async ({prop, value}) => {
@@ -635,13 +637,15 @@ const init = () => {
 
   titleInputText.addEventListener('change', e => { 
     globalWrite.fieldnotes.title = e.target.value
-    enableExportFieldNotesContainer()
-    updateSingleFields({prop: 'title', value: globalWrite.fieldnotes.title})
+    globalWrite.view === 'create'
+      ? enableExportFieldNotesContainer()
+      : updateSingleFields({prop: 'title', value: globalWrite.fieldnotes.title})
   })
   authorInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.author = e.target.value
-    enableExportFieldNotesContainer()
-    updateSingleFields({prop: 'author', value: globalWrite.fieldnotes.author})
+    globalWrite.view === 'create'
+      ? enableExportFieldNotesContainer()
+      : updateSingleFields({prop: 'author', value: globalWrite.fieldnotes.author})
   })
   dateInputText.addEventListener('change', e => {
     const date = e.target.value    
@@ -655,8 +659,9 @@ const init = () => {
   })
   placeInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.location.place_guess = e.target.value
-    enableExportFieldNotesContainer()
-    updateSingleFields({prop: 'location', value: { place_guess: globalWrite.fieldnotes.location.place_guess }})
+    globalWrite.view === 'create'
+      ? enableExportFieldNotesContainer()
+      : updateSingleFields({prop: 'location', value: { place_guess: globalWrite.fieldnotes.location.place_guess }})
   })
   
   // Check state of iNat search button (enabled or disabled)
