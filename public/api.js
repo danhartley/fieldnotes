@@ -1225,12 +1225,26 @@ export const deleteFieldnoteProperty = async ({fieldnotes, prop}) => {
 }
 
 export const updateFieldnoteProperty = async ({fieldnotes, prop, value}) => {
-  const db = getDb()
-  const docRef = doc(db, 'fieldnotes', fieldnotes.id)
-  const data = {
-    [prop]: value
+  let docRef, data  = null
+
+  try {
+    const db = getDb()
+    docRef = doc(db, 'fieldnotes', fieldnotes.id)
+    data = {
+      [prop]: value
+    }
+    updateDoc(docRef, data)
+
+    return {
+      success: true,
+      message: `${prop.charAt(0).toUpperCase() + prop.slice(1)} updated`
+    }
+  } catch (e) {
+    console.log('API element to remove: ', element)
+    console.log('API docRef: ', docRef)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
   }
-  updateDoc(docRef, data)
 }
 
 export const addElementToArray = async ({fieldnotes, array, element}) => {

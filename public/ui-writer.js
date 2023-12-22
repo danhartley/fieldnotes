@@ -7,6 +7,7 @@ import {
 , getFieldnotesById
 , addFieldnotes
 , updateFieldNotes
+, updateFieldnoteProperty
 } from './api.js'
 
 import { 
@@ -41,31 +42,38 @@ const init = () => {
   const initGlobalWrite = () => {
     const globalWrite = {}
     Object.assign(globalWrite, {
-      iconicTaxa: g.ICONIC_TAXA,
-      language: g.LANGUAGES[1],
+      iconicTaxa: g.ICONIC_TAXA,      
       useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0],
       species: [],
-      taxa: [],
-      sections: [],
-      title: '',
-      author: '',
-      d1: '',
-      d2: '',
-      location: {
-        location: '',
-        place_guess: '',      
-      },
-      user: {
-        id: '',
-        icon: '',
-        identifications_count: 0,
-        login: '',
-        observations_count: 0,
-        species_count: 0,
-      },
       nextSectionIndex: 0,
       inatAutocompleteOptions: g.inatAutocompleteOptions,
       inatAutocomplete: g.inatAutocomplete,
+      view: 'create',
+      fieldnotesStubs: [],
+      fieldnotes: {
+        author: '',
+        d1: '',
+        d2: '',
+        fnId: '',
+        id: '',
+        language: g.LANGUAGES[1],
+        location: {
+          location: '',
+          place_guess: '',      
+        },
+        sectionOrder: [],
+        sections: [],
+        taxa: [],
+        title: '',
+        user: {
+          id: '',
+          icon: '',
+          identifications_count: 0,
+          login: '',
+          observations_count: 0,
+          species_count: 0,
+        },
+      }
     })
 
     return globalWrite
@@ -103,6 +111,8 @@ const init = () => {
   const toggleView = view => {
     Array.from(editView).forEach(view => view.classList.toggle('hidden'))
     Array.from(createView).forEach(view => view.classList.toggle('hidden'))
+    
+    globalWrite.view = view
 
     switch(view) {
       case 'create':
@@ -125,14 +135,14 @@ const init = () => {
       // Clear import search text to avoid confusion
       ltpAutocompleteTitleInputText.value = ''
 
-      globalWrite.user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')?.user
+      globalWrite.fieldnotes.user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')?.user
 
       globalWrite.species = await getInatObservations({ 
-          user_id: globalWrite.user.id,
+          user_id: globalWrite.fieldnotes.user.id,
           place_id: null,
           iconic_taxa: globalWrite.iconicTaxa,
           per_page: 200,
-          locale: globalWrite.language.id,
+          locale: globalWrite.fieldnotes.language.id,
           species_count: false,
           d1: singleObservationsInputDate.value,
           d2: singleObservationsInputDate.value,
@@ -163,11 +173,11 @@ const init = () => {
       dateInputText.value = date
       placeInputText.value = location.place_guess
 
-      globalWrite.title = title
-      globalWrite.author = author
-      globalWrite.d1 = date
-      globalWrite.d2 = date
-      globalWrite.location = location
+      globalWrite.fieldnotes.title = title
+      globalWrite.fieldnotes.author = author
+      globalWrite.fieldnotes.d1 = date
+      globalWrite.fieldnotes.d2 = date
+      globalWrite.fieldnotes.location = location
 
       // Enable the create observation and species section buttons
       selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
@@ -467,12 +477,12 @@ const init = () => {
 
     let t, clone, header, input, sectionToUpdate, nextSectionIndex, sectionAddedOrUpdated, isEdit = null
 
-    sectionToUpdate = globalWrite.sections.find(t => t.sectionIndex === sectionIndex) || null
+    sectionToUpdate = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex) || null
 
     isEdit = !!sectionToUpdate
 
     nextSectionIndex = isEdit
-      ? globalWrite.sections.findIndex(t => t.sectionIndex === sectionIndex)
+      ? globalWrite.fieldnotes.sections.findIndex(t => t.sectionIndex === sectionIndex)
       : 0
 
     const writeTemplate = writeTemplates.find(template => template.templateId === typeId)
@@ -501,7 +511,7 @@ const init = () => {
       case 'species-write-template':
         const sectionToUpdateSpecies = globalWrite?.sections?.find(t => t.sectionIndex === sectionIndex)?.species || []
         sectionAddedOrUpdated = {
-            ...globalWrite.sections.find(t => t.sectionIndex === sectionIndex)
+            ...globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
           , species: sectionToUpdateSpecies
         }
         break
@@ -586,47 +596,67 @@ const init = () => {
     return sectionTemplate
   }
 
+  const isValidDate = ({date}) => {
+    return date.length > 0 && Object.prototype.toString.call(new Date(date)) === '[object Date]'
+  }
+
   const enableExportFieldNotesContainer = () => {
     // Check fields added by the user
     let areFieldsValid = true
     
     // Title
-    areFieldsValid = areFieldsValid && globalWrite.title.length > 2
+    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.title.length > 2
 
     // Author
-    areFieldsValid = areFieldsValid && globalWrite.author.length > 2
+    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.author.length > 2
 
     // Date
-    areFieldsValid = areFieldsValid && globalWrite.d1.length > 0 && Object.prototype.toString.call(new Date(globalWrite.d1)) === '[object Date]'
-    areFieldsValid = areFieldsValid && globalWrite.d2.length > 0 && Object.prototype.toString.call(new Date(globalWrite.d2)) === '[object Date]'
+    areFieldsValid = areFieldsValid && isValidDate({date: globalWrite.fieldnotes.d1})
+    areFieldsValid = areFieldsValid && isValidDate({date:globalWrite.fieldnotes.d2})
 
     // Location
-    areFieldsValid = areFieldsValid && globalWrite.location.place_guess.length > 2
+    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.location.place_guess.length > 2
 
     areFieldsValid
       ? exportFieldNotesContainer.classList.remove('disabled')
-      : exportFieldNotesContainer.classList.add('disabled')
+      : exportFieldNotesContainer.classList.add('disabled')      
   }
 
-  titleInputText.addEventListener('blur', e => { 
-    globalWrite.title = e.target.value
+  const updateSingleFields = async ({prop, value}) => {
+    if(globalWrite.view === 'edit') {
+      try {
+      const response = await updateFieldnoteProperty({fieldnotes: globalWrite.fieldnotes, prop, value})      
+      showNotificationsDialog({message: response.message, type: response.type, displayDuration: 2000})
+      } catch (e) {
+        showNotificationsDialog({message: `${e.message} for ${prop}`, type: 'error'})
+      }
+    }
+  }
+
+  titleInputText.addEventListener('change', e => { 
+    globalWrite.fieldnotes.title = e.target.value
     enableExportFieldNotesContainer()
+    updateSingleFields({prop: 'title', value: globalWrite.fieldnotes.title})
   })
-  authorInputText.addEventListener('blur', e => {
-    globalWrite.author = e.target.value
+  authorInputText.addEventListener('change', e => {
+    globalWrite.fieldnotes.author = e.target.value
     enableExportFieldNotesContainer()
+    updateSingleFields({prop: 'author', value: globalWrite.fieldnotes.author})
   })
-  dateInputText.addEventListener('blur', e => {
-    const date = e.target.value
-    if(date.length > 0 && Object.prototype.toString.call(new Date(date)) === '[object Date]') {
-      globalWrite.d1 = date
-      globalWrite.d2 = date
+  dateInputText.addEventListener('change', e => {
+    const date = e.target.value    
+    if(isValidDate({date})) {
+      globalWrite.fieldnotes.d1 = date
+      globalWrite.fieldnotes.d2 = date
+      updateSingleFields({prop: 'd1', value: globalWrite.fieldnotes.d1})
+      updateSingleFields({prop: 'd2', value: globalWrite.fieldnotes.d2})
     }
     enableExportFieldNotesContainer()
   })
-  placeInputText.addEventListener('blur', e => {
-    globalWrite.location.place_guess = e.target.value
+  placeInputText.addEventListener('change', e => {
+    globalWrite.fieldnotes.location.place_guess = e.target.value
     enableExportFieldNotesContainer()
+    updateSingleFields({prop: 'location', value: { place_guess: globalWrite.fieldnotes.location.place_guess }})
   })
   
   // Check state of iNat search button (enabled or disabled)
@@ -649,35 +679,35 @@ const init = () => {
       const notes = {}
 
       Object.assign(notes, {
-        id: globalWrite.id || '',
-        fnId: globalWrite.title,
-        title: globalWrite.title,
-        author: globalWrite.author,
+        id: globalWrite.fieldnotes.id || '',
+        fnId: globalWrite.fieldnotes.title,
+        title: globalWrite.fieldnotes.title,
+        author: globalWrite.fieldnotes.author,
         user: {
-          id: globalWrite.user.id,
-          icon: globalWrite.user.icon,
-          identifications_count: globalWrite.user.identifications_count,
-          login: globalWrite.user.login,
-          observations_count: globalWrite.user.observations_count,
-          species_count: globalWrite.user.species_count,
+          id: globalWrite.fieldnotes.user.id,
+          icon: globalWrite.fieldnotes.user.icon,
+          identifications_count: globalWrite.fieldnotes.user.identifications_count,
+          login: globalWrite.fieldnotes.user.login,
+          observations_count: globalWrite.fieldnotes.user.observations_count,
+          species_count: globalWrite.fieldnotes.user.species_count,
         },
-        d1: globalWrite.d1,
-        d2: globalWrite.d2,
-        location: globalWrite.location,
-        language: globalWrite.language,
-        taxa: globalWrite.taxa,
-        sections: globalWrite.sections.map(t => {
+        d1: globalWrite.fieldnotes.d1,
+        d2: globalWrite.fieldnotes.d2,
+        location: globalWrite.fieldnotes.location,
+        language: globalWrite.fieldnotes.language,
+        taxa: globalWrite.fieldnotes.taxa,
+        sections: globalWrite.fieldnotes.sections.map(t => {
           const {templateId, ...validProps} = t
           return {
             ...validProps,
           }
         }),
-        sectionOrder: globalWrite.sections.map(section => section.sectionIndex)
+        sectionOrder: globalWrite.fieldnotes.sections.map(section => section.sectionIndex)
       })
       
       const response = await addFieldnotes({fieldnotes: notes})
 
-      globalWrite.id = response.id
+      globalWrite.fieldnotes.id = response.id
 
       // Show notification that Fieldnotes have been exported
       showNotificationsDialog({message: response.message, type: response.type, displayDuration: 2000})
@@ -693,13 +723,6 @@ const init = () => {
     try {
       importFieldNotesNotificationText.classList.remove('hidden')
 
-      const fieldnotesStubs = globalWrite.fieldnotesStubs
-
-      globalWrite = {
-        ...initGlobalWrite(),
-        fieldnotesStubs
-      }
-      
       const response = useLocal 
         ? await globalWrite.fieldnotesStubs
         : await getFieldnotesById({id: globalWrite.fieldnotesStubs.fieldnotesId})
@@ -709,13 +732,13 @@ const init = () => {
       const fieldnotes = response.data
 
       Object.assign(globalWrite, {
-        ...fieldnotes,
+        fieldnotes,
         sections: fieldnotes.sectionOrder.map(sectionIndex => {
           return fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
         })      
       })
 
-      const { title, author, d1, d2, location } = globalWrite
+      const { title, author, d1, d2, location } = globalWrite.fieldnotes
 
       titleInputText.value = title
       authorInputText.value = author
@@ -723,11 +746,11 @@ const init = () => {
       placeInputText.value = location.place_guess
 
       globalWrite.species = await getInatObservations({ 
-        user_id: globalWrite.user.id,
+        user_id: globalWrite.fieldnotes.user.id,
         place_id: null,
         iconic_taxa: globalWrite.iconicTaxa,
         per_page: 200,
-        locale: globalWrite.language.id,
+        locale: globalWrite.fieldnotes.language.id,
         species_count: false,
         d1,
         d2,
@@ -735,14 +758,14 @@ const init = () => {
 
       importFieldNotesNotificationText.classList.add('hidden')
 
-      globalWrite.nextSectionIndex = globalWrite.sections.length > 0
-        ? globalWrite.sections.map(s => s.sectionIndex).sort(function (a, b) { return a - b })[globalWrite.sections.length -1 ] + 1
+      globalWrite.nextSectionIndex = globalWrite.fieldnotes.sections.length > 0
+        ? globalWrite.fieldnotes.sections.map(s => s.sectionIndex).sort(function (a, b) { return a - b })[globalWrite.fieldnotes.sections.length -1 ] + 1
         : 0
 
       // Remove existing sections
       draggableSections.replaceChildren()
 
-      globalWrite.sections.forEach(section => {
+      globalWrite.fieldnotes.sections.forEach(section => {
         const sectionContainer = createSection({
             typeId: section.writeTemplateId
           , typeText: section.name

@@ -492,6 +492,10 @@ datalist {
   margin-right: calc(var(--d) * .25);
 }
 
+.capitalise {
+  text-transform: capitalize;
+}
+
 /* SELECTOR RULES */
 
 .grid {

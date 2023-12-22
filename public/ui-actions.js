@@ -219,26 +219,26 @@ export const bgColour = taxon => {
 const handleSpeciesCheckState = async({e, sectionIndex, globalWrite}) => {
     const name = e.target.value    
 
-    let section = globalWrite.sections.find(t => t.sectionIndex === sectionIndex)    
-    let index = globalWrite.sections.findIndex(t => t.sectionIndex === sectionIndex)
+    let section = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)    
+    let index = globalWrite.fieldnotes.sections.findIndex(t => t.sectionIndex === sectionIndex)
 
     if(section) {
         section.species.find(sp => sp === name) 
             ? section.species = section.species.filter(sp => sp !== name)
             : section.species.push(name)
-        globalWrite.sections[index] = section            
+        globalWrite.fieldnotes.sections[index] = section            
     } else {
         const sp = [ name ]
         section = {...species, species: sp, templateId: species.id, sectionIndex }
-        globalWrite.sections.push(section)
+        globalWrite.fieldnotes.sections.push(section)
     }
 
-    if(!globalWrite.taxa.find(t => t.name === name)) {
-        globalWrite.taxa.push({
+    if(!globalWrite.fieldnotes.taxa.find(t => t.name === name)) {
+        globalWrite.fieldnotes.taxa.push({
         id: globalWrite.species.find(sp => sp.taxon.name === name)?.taxon?.id,
         name
         })
-        updateFieldnoteProperty({fieldnotes: globalWrite, prop: 'taxa', value: globalWrite.taxa})
+        updateFieldnoteProperty({fieldnotes: globalWrite.fieldnotes, prop: 'taxa', value: globalWrite.fieldnotes.taxa})
     }
 }
 
@@ -263,8 +263,8 @@ switch(typeId) {
         const clone = cloneImageTemplate({species: {taxon:match}, index: 0, sectionIndex, imgUrl, globalWrite})            
         parent.appendChild(clone)
 
-        if(!globalWrite.taxa.find(taxon => taxon.id === match.id)) {                
-            globalWrite.taxa.push({
+        if(!globalWrite.fieldnotes.taxa.find(taxon => taxon.id === match.id)) {                
+            globalWrite.fieldnotes.taxa.push({
                 id: match.id,
                 name: match.name,
             })
@@ -386,13 +386,13 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
     if(sectionToMoveDOMIndex === sectionToJumpDOMIndex) return
 
     // Get the section to move
-    const sectionTemplateToMoveId = globalWrite.sectionOrder.find(sectionIndex => sectionIndex === sectionToDropId)
+    const sectionTemplateToMoveId = globalWrite.fieldnotes.sectionOrder.find(sectionIndex => sectionIndex === sectionToDropId)
 
     // Remove the section to move
-    globalWrite.sectionOrder = globalWrite.sectionOrder.filter(sectionIndex => sectionIndex !== sectionToDropId)
+    globalWrite.fieldnotes.sectionOrder = globalWrite.fieldnotes.sectionOrder.filter(sectionIndex => sectionIndex !== sectionToDropId)
 
     // Calculate position of the jumped section
-    const indexOfJumpedSectionTemplate = globalWrite.sectionOrder.findIndex(sectionIndex => sectionIndex === sectionToJumpId)
+    const indexOfJumpedSectionTemplate = globalWrite.fieldnotes.sectionOrder.findIndex(sectionIndex => sectionIndex === sectionToJumpId)
 
     if(indexOfJumpedSectionTemplate === -1) {
         throw new Error({
@@ -400,7 +400,7 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
         })
     }
 
-    let sectionOrder = globalWrite.sectionOrder
+    let sectionOrder = globalWrite.fieldnotes.sectionOrder
 
     const moveUp = sectionToMoveDOMIndex > sectionToJumpDOMIndex
 
@@ -410,13 +410,13 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
             : sectionOrder.splice(indexOfJumpedSectionTemplate + 1, 0, sectionTemplateToMoveId)
 
         // Save to the db
-        const response = await apiCallback({fieldnotes: globalWrite, data: {
+        const response = await apiCallback({fieldnotes: globalWrite.fieldnotes, data: {
             sectionOrder
         }})
 
         if(response.success) {
             // Update changes in memory
-            globalWrite.sectionOrder = sectionOrder
+            globalWrite.fieldnotes.sectionOrder = sectionOrder
 
             // Update changes to the DOM
             moveUp
@@ -457,11 +457,11 @@ export const showNotificationsDialog = ({message, type = 'success', displayDurat
 
 export const deleteSection = async ({d, sectionIndex, globalWrite}) => {
     try {        
-    const elementToRemove = globalWrite.sections.find(t => t.sectionIndex == sectionIndex)
+    const elementToRemove = globalWrite.fieldnotes.sections.find(t => t.sectionIndex == sectionIndex)
     
     // Remove section from fieldnotes in the db
     const response = !!elementToRemove 
-        ? await removeElementFromArray({fieldnotes: globalWrite, array: 'sections',  element: elementToRemove})
+        ? await removeElementFromArray({fieldnotes: globalWrite.fieldnotes, array: 'sections',  element: elementToRemove})
         : {
             success: true,
             message: 'Section removed'
@@ -473,8 +473,8 @@ export const deleteSection = async ({d, sectionIndex, globalWrite}) => {
         element.remove()
 
         // Remove section from the in-memory fieldnotes
-        globalWrite.sections = globalWrite.sections.filter(t => t.sectionIndex !== sectionIndex)
-        globalWrite.sectionOrder = globalWrite.sectionOrder.filter(id => id !== sectionIndex)
+        globalWrite.fieldnotes.sections = globalWrite.fieldnotes.sections.filter(t => t.sectionIndex !== sectionIndex)
+        globalWrite.fieldnotes.sectionOrder = globalWrite.fieldnotes.sectionOrder.filter(id => id !== sectionIndex)
 
         // Notify user
         showNotificationsDialog({message: response.message, type: 'success'})
@@ -492,17 +492,17 @@ export const addOrUpdateSection = async ({globalWrite, index, sectionToUpdate, s
         let response
         
         if(isEdit) {
-            response = await updateElementFromArray({fieldnotes: globalWrite, array, elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated})
+            response = await updateElementFromArray({fieldnotes: globalWrite.fieldnotes, array, elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated})
             // Update changes in memory
             if(response.success) {                
-                globalWrite.sections[index] = sectionAddedOrUpdated
+                globalWrite.fieldnotes.sections[index] = sectionAddedOrUpdated
             }
         } else {
-            response = await addElementToArray({fieldnotes: globalWrite, array, element: sectionAddedOrUpdated})
+            response = await addElementToArray({fieldnotes: globalWrite.fieldnotes, array, element: sectionAddedOrUpdated})
             // Update changes in memory
             if(response.success) {                
-                globalWrite.sections.push(sectionAddedOrUpdated)
-                globalWrite.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)
+                globalWrite.fieldnotes.sections.push(sectionAddedOrUpdated)
+                globalWrite.fieldnotes.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)
             }
         }
 
