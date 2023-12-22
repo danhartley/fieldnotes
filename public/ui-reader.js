@@ -607,24 +607,6 @@ const init = () => {
                         })
                         article.appendChild(parent)
                     break
-                    // case 'annotation':
-                    //     const annotations = getAnnotations(fieldnotes[0].observations)
-
-                    //     annotations.forEach(annotation => {
-                    //         const clone = templateToClone.content.cloneNode(true)
-                    //         const dt = clone.querySelector('dt')
-                    //         const dd = clone.querySelector('dd')
-                    //         const control = inatControls.find(ctrl => ctrl.id === annotation.controlled_attribute_id)
-                    //         const value = control.values.find(value => value.id === annotation.controlled_value_id)
-
-                    //         dt.textContent = `${control.label}: ${value.label}`
-                    //         dd.textContent = annotation.species.map(s => s.name).join(', ')
-
-                    //         parent = parentClone.querySelector('dl')
-                    //         parent.appendChild(clone)
-                    //     })
-                    //     article.appendChild(parent)
-                    // break
                 }
             })
         }
