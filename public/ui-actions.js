@@ -165,13 +165,11 @@ export const handleFieldsnotesAutocomplete = async ({inputText, dataList, global
 
         stubs = await fieldnotesStubsCallback()
 
-        globalWrite.matches = null
-
-        globalWrite.matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
+        const matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
 
         dataList.replaceChildren()
                 
-        globalWrite.matches.forEach(match => {
+        matches.forEach(match => {
             const option = d.createElement('option')
             option.value = match['title']
             dataList.appendChild(option)
