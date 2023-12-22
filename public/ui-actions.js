@@ -332,12 +332,12 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
   e.preventDefault()
 
   if(e.target.type === 'fieldset') {
-    const sectionToDropId = sectionToMove.id
-    const sectionToJumpId = e.target.parentNode.id
+    const sectionToDropId = Number(sectionToMove.id)
+    const sectionToJumpId = Number(e.target.parentNode.id)
 
     // Find out whether we are moving the section up or down
-    const sectionToMoveDOMIndex = Array.from(d.querySelectorAll('.draggable')).findIndex(section => section.id === sectionToDropId)
-    const sectionToJumpDOMIndex = Array.from(d.querySelectorAll('.draggable')).findIndex(section => section.id === sectionToJumpId)
+    const sectionToMoveDOMIndex = Array.from(d.querySelectorAll('.draggable')).findIndex(section => Number(section.id) === sectionToDropId)
+    const sectionToJumpDOMIndex = Array.from(d.querySelectorAll('.draggable')).findIndex(section => Number(section.id) === sectionToJumpId)
     
     if(sectionToMoveDOMIndex === sectionToJumpDOMIndex) return
 
@@ -440,7 +440,7 @@ export const deleteSection = async ({d, sectionIndex, globalWrite}) => {
     }
 }
 
-export const addOrUpdateSection = async ({globalWrite, index, sectionToUpdate, sectionAddedOrUpdated, isEdit}) => {
+export const addOrUpdateSectionArray = async ({globalWrite, index, sectionToUpdate, sectionAddedOrUpdated, isEdit}) => {
     try {
         const array = 'sections'
 

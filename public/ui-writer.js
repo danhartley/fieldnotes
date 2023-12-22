@@ -29,7 +29,7 @@ import {
   , dragleaveHandler
   , dropHandler
   , deleteSection
-  , addOrUpdateSection
+  , addOrUpdateSectionArray
   , showNotificationsDialog
   , addContentToPreviewContainer
 } from './ui-actions.js'
@@ -261,7 +261,7 @@ const init = () => {
     sectionContainer.setAttribute('id', sectionIndex)
     sectionContainer.addEventListener('dragstart', dragstartHandler)
     
-    let input, label, textarea, datalist, previewContainer, selectedItems, images, cbParent = null
+    let input, label, textarea, datalist, previewContainer, selectedItems, images, cbParent, typeValue = null
 
     legend.innerText = typeText
 
@@ -273,20 +273,17 @@ const init = () => {
       case 'xenocanto-write-template':
         input = typeClone.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue:input.value, previewContainer, sectionIndex}), true)
-        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue: input.value, previewContainer, sectionIndex}), true)
         break
       case 'textarea-write-template':      
         textarea = typeClone.querySelector('textarea')
         textarea.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
-        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue:textarea.value, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue: textarea.value, previewContainer, sectionIndex}), true)
         break
       case 'observations-write-template':
       case 'species-write-template':       
         cloneImages({globalWrite, parent:typeClone.querySelector('div'), typeId, sectionIndex })
-        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue:null, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue: null, previewContainer, sectionIndex}), true)
         addOrUpdateSectionBtn.classList.remove('disabled')
         break
       case 'terms':
@@ -297,17 +294,14 @@ const init = () => {
         input.setAttribute('list', datalist.id)        
         label = typeClone.querySelector('label')
         label.htmlFor = input.id                  
-        // addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue:selectedItems, previewContainer, sectionIndex }), true)
-        // editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
+        typeValue = selectedItems
         break
       case 'images':
         const url1 = typeClone.getElementById('image-url-input-one')
         const title1 = typeClone.getElementById('image-title-input-one')
         url1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)
         title1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)
-        
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue:images, previewContainer, sectionIndex}), true)
-        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
+        typeValue = images        
         break
       case 'inat-lookup':
         datalist = typeClone.querySelector('datalist')
@@ -319,10 +313,11 @@ const init = () => {
         label.htmlFor = input.id
         cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
         cbParent.id = `${sectionIndex}-lookup-parent`
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue:selectedItems, previewContainer, sectionIndex }), true)
-        editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue: selectedItems, previewContainer, sectionIndex}), true)
         break
     }
+    
+    editSectionBtn.addEventListener('click', e => editSection({e, typeId, previewContainer, sectionIndex}), true)
     
     // Add the child to its parent container
     parentContainer.appendChild(typeClone)
@@ -446,7 +441,7 @@ const init = () => {
           showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))
           Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
 
-          // selectedItems = globalWrite?.sections?.find(t => t.sectionIndex === sectionIndex)?.items || []
+          selectedItems = globalWrite?.sections?.find(t => t.sectionIndex === sectionIndex)?.items || []
 
           handleInatAutocomplete({ 
               inputText: input
@@ -542,7 +537,7 @@ const init = () => {
     Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
     Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
 
-    addOrUpdateSection({globalWrite, index: nextSectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit})
+    addOrUpdateSectionArray({globalWrite, index: nextSectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit})
   }
 
   const editSection = ({e}) => {
