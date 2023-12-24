@@ -23,6 +23,7 @@ import {
   , handleTermAutocomplete
   , handleFieldsnotesAutocomplete
   , cloneImages
+  , cloneImageTemplate
   , dragstartHandler
   , dragoverHandler
   , dragenterHandler
@@ -305,7 +306,7 @@ const init = () => {
         title1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)
         typeValue = images        
         break
-      case 'inat-lookup':
+      case 'inat-lookup-write-template':
         datalist = typeClone.querySelector('datalist')
         datalist.id = `${sectionIndex}-dl-list`
         input = typeClone.querySelector('input')
@@ -314,8 +315,9 @@ const init = () => {
         label = typeClone.querySelector('label')
         label.htmlFor = input.id
         cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
-        cbParent.id = `${sectionIndex}-lookup-parent`
+        cbParent.id = `section-${sectionIndex}-lookup-parent`
         addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: selectedItems, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.classList.remove('disabled')
         break
     }
     
@@ -439,11 +441,9 @@ const init = () => {
           input.addEventListener('input', e => handleImageTextChange({images, strValue:e.target.value, index: calcIndex(index), property:input.dataset.key}), true)
         })
         break
-      case 'inat-lookup':
+      case 'inat-lookup-write-template':
           showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))
           Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
-
-          selectedItems = globalWrite?.sections?.find(t => t.sectionIndex === sectionIndex)?.items || []
 
           handleInatAutocomplete({ 
               inputText: input
@@ -505,8 +505,10 @@ const init = () => {
         break
       case 'observations-write-template':
       case 'species-write-template':
+      case 'inat-lookup-write-template':
         sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
-        sectionToUpdate.species = structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === sectionToUpdate.sectionIndex)?.values)
+        const originalSpecies = structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === sectionToUpdate.sectionIndex)?.values)
+        sectionToUpdate.species = originalSpecies || sectionToUpdate.species
         // Since we've already added the section for this type, check it also has a valid value
         isEdit = !!sectionToUpdate?.species || false
         break
@@ -531,9 +533,6 @@ const init = () => {
         break
       case 'images':
         sectionAddedOrUpdated = { ...image, templateId: image.id, sectionIndex, imgs: typeValue }
-        break
-      case 'inat-lookup':
-        isEdit = !!sectionToUpdate // check for species…
         break
     }
     // Show the preview section and hide the edit section
@@ -584,7 +583,7 @@ const init = () => {
     switch (writeTemplateId) {
       case 'species-write-template':
       case 'observations-write-template':
-      case 'inat-lookup':
+      case 'inat-lookup-write-template':
         sectionTemplate = d.getElementById('section-include-template')
         break
       default:
@@ -789,7 +788,9 @@ const init = () => {
 
         const previewTemplate = previewTemplates.find(template => template.id === section.templateId)
 
-        switch(section.type) {
+        let typeValues, originalValues, speciesCheckboxes = null
+
+        switch(section.templateId) {
           case 'h3-preview-template':
           case 'h4-preview-template':
           case 'xenocanto-preview-template':
@@ -803,14 +804,14 @@ const init = () => {
             })          
             break
           case 'species-preview-template':
-          case 'observations-preview-template':
+          case 'observations-preview-template':          
             // Set the original type values to the current type values
             // Required for deleting an element in an array before re-adding the element with its new value
-            const typeValues = structuredClone({ 
+            typeValues = structuredClone({ 
                 values: section.species
               , sectionIndex: section.sectionIndex 
             })
-            const originalValues = globalWrite.originalTypeValues.find(type => type.sectionIndex === section.sectionIndex)
+            originalValues = globalWrite.originalTypeValues.find(type => type.sectionIndex === section.sectionIndex)
             if(originalValues) {
               globalWrite.originalTypeValues.forEach(values => {
                 if(values.sectionIndex === section.sectionIndex) {
@@ -820,12 +821,42 @@ const init = () => {
             } else {
               globalWrite.originalTypeValues.push(typeValues)
             }
-            const speciesCheckboxes = sectionContainer.querySelectorAll('input')
+            speciesCheckboxes = sectionContainer.querySelectorAll('input')
             speciesCheckboxes.forEach(checkbox => {
               if(section.species.includes(checkbox.value)) {
                 checkbox.setAttribute('checked', true)
               }
             })            
+            break
+          case 'inat-lookup-preview-template':
+            // Set the original type values to the current type values
+            // Required for deleting an element in an array before re-adding the element with its new value
+            typeValues = structuredClone({ 
+              values: section.species
+            , sectionIndex: section.sectionIndex 
+          })          
+          originalValues = globalWrite.originalTypeValues.find(type => type.sectionIndex === section.sectionIndex)
+          if(originalValues) {
+            globalWrite.originalTypeValues.forEach(values => {
+              if(values.sectionIndex === section.sectionIndex) {
+                values = typeValues
+              }
+            })
+          } else {
+            globalWrite.originalTypeValues.push(typeValues)
+          }
+          let parent = null
+          section.species.forEach((sp, index) => {
+            parent = sectionContainer.querySelector(`#section-${section.sectionIndex}-lookup-parent`)
+            const clone = cloneImageTemplate({species: sp, index, sectionIndex: section.sectionIndex, imgUrl: sp.taxon.default_photo.square_url, globalWrite, writeTemplateId: section.writeTemplateId})
+            parent.appendChild(clone)
+            const figure = parent.querySelector('figure')
+            figure.classList.remove('hidden')
+          })
+          speciesCheckboxes = parent.querySelectorAll('input')
+          speciesCheckboxes.forEach(checkbox => {
+            checkbox.setAttribute('checked', true)
+          }) 
             break
           case 'terms':
             const selectedItemsListElement = sectionContainer.querySelector('#selected-terms-list')

@@ -97,6 +97,16 @@ export const observations = {
   species: [],
 }
 
+export const inatlookup = {
+  id: 'inat-lookup-preview-template',
+  templateId: 'inat-lookup-preview-template',
+  writeTemplateId: 'inat-lookup-write-template',
+  name: 'iNat species',
+  parent: 'grid-template',
+  type: 'inat-lookup-preview-template',
+  species: [],
+}
+
 export const image = {
   id: 'img-template',
   parent: 'grid-template',
@@ -151,6 +161,7 @@ export const previewTemplates = [
   , textarea
   , species
   , observations
+  , inatlookup
 ]
 
 export const writeTemplates = [
@@ -188,6 +199,12 @@ export const writeTemplates = [
     id: 'observations-write-template',
     templateId: 'observations-write-template',
     previewTemplateId: 'observations-preview-template',
+    element: 'div'
+  },
+  {
+    id: 'inat-lookup-write-template',
+    templateId: 'inat-lookup-write-template',
+    previewTemplateId: 'inat-lookup-preview-template',
     element: 'div'
   }
 ]

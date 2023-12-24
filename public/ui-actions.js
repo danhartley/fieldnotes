@@ -9,6 +9,7 @@ import {
 import { 
       species
     , observations
+    , inatlookup
 } from './templates.js'
 
 const d = document
@@ -67,6 +68,7 @@ export const handleInatAutocomplete = ({inputText, dataList, globalWrite, id, pr
             if(option) option[name] = globalWrite.matches.find(m => m[prop] === match)
             
             globalWrite[prop] = match
+            callback({globalWrite, parent: cbParent, writeTemplateId, sectionIndex})
         }
     })
 }
@@ -173,25 +175,57 @@ export const bgColour = taxon => {
     return getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
 }
 
-const handleSpeciesCheckState = async({e, sectionIndex, globalWrite, writeTemplateId}) => {
+const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite, writeTemplateId}) => {
     const name = e.target.value    
 
     let section = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)    
     let index = globalWrite.fieldnotes.sections.findIndex(t => t.sectionIndex === sectionIndex)
 
+    const getSpeciesForInatLookup = ({taxon}) => {
+        return {
+            taxon: {
+                id: taxon.id,
+                name: taxon.name,
+                preferred_common_name: taxon.preferred_common_name,
+                iconic_taxon_name: taxon.iconic_taxon_name,
+                default_photo: {
+                    square_url: taxon.default_photo.square_url
+                },
+            }
+        }
+    }
+
     if(section) {
-        section.species.find(sp => sp === name)
-            ? section.species = section.species.filter(sp => sp !== name)
-            : section.species.push(name)            
-        globalWrite.fieldnotes.sections[index] = section        
+        switch(writeTemplateId) {
+            case 'species-write-template':
+            case 'observations-write-template':
+                section.species.find(sp => sp === name)
+                    ? section.species = section.species.filter(sp => sp !== name)
+                    : section.species.push(name)            
+                globalWrite.fieldnotes.sections[index] = section    
+                break
+                case 'inat-lookup-write-template':
+                    section.species.find(sp => sp === name)
+                        ? section.species = section.species.filter(sp => sp !== name)
+                        : section.species.push(getSpeciesForInatLookup({taxon})) 
+                    globalWrite.fieldnotes.sections[index] = section
+                break
+        }
     } else {
         const sp = [ name ]
         switch(writeTemplateId) {
             case 'species-write-template':
-                section = {...species, species: sp, templateId: species.id, sectionIndex }
+                section = {...species, species: sp, templateId: species.templateId, sectionIndex }
                 break
             case 'observations-write-template':
-                section = {...observations, species: sp, templateId: species.id, sectionIndex }
+                section = {...observations, species: sp, templateId: observations.templateId, sectionIndex }
+                break
+            case 'inat-lookup-write-template':
+                section = {
+                      ...inatlookup
+                    , species: [getSpeciesForInatLookup({taxon})]
+                    , templateId: inatlookup.templateId
+                    , sectionIndex }
                 break
         }
         globalWrite.fieldnotes.sections.push(section)
@@ -213,18 +247,18 @@ switch(writeTemplateId) {
         if(globalWrite.species.length > 0) {
             globalWrite.species.forEach((species, index) => {
             const imgUrl = writeTemplateId === 'observations-write-template'
-            ? species.photos[0].url
-            : species.taxon.default_photo.medium_url
+                ? species.photos[0].url
+                : species.taxon.default_photo.medium_url
             const clone = cloneImageTemplate({species, index, sectionIndex, imgUrl, globalWrite, writeTemplateId})            
             parent.appendChild(clone)
         })
         } 
         break
-    case 'inat-lookup':
+    case 'inat-lookup-write-template':
     if(globalWrite.name) {
         const match = globalWrite.matches.find(match => match.name === globalWrite.name)
         const imgUrl = match.default_photo.square_url
-        const clone = cloneImageTemplate({species: {taxon:match}, index: 0, sectionIndex, imgUrl, globalWrite})            
+        const clone = cloneImageTemplate({species: {taxon:match}, index: 0, sectionIndex, imgUrl, globalWrite, writeTemplateId})            
         parent.appendChild(clone)
 
         if(!globalWrite.fieldnotes.taxa.find(taxon => taxon.id === match.id)) {                
@@ -238,7 +272,7 @@ switch(writeTemplateId) {
 }
 }
 
-const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, globalWrite, writeTemplateId}) => {
+export const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, globalWrite, writeTemplateId}) => {
     const templateToClone = d.getElementById('img-template')
     const clone = templateToClone.content.cloneNode(true)
 
@@ -262,7 +296,7 @@ const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, globalWrite, 
     
     checkbox.id = `${sectionIndex}-${species.id || species.taxon.id}`
     checkbox.value = species.taxon.name
-    checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionIndex, globalWrite, writeTemplateId}), true)
+    checkbox.addEventListener('change', e => handleSpeciesCheckState({e, taxon:species.taxon, sectionIndex, globalWrite, writeTemplateId}), true)
     label.htmlFor = checkbox.id
 
     return clone
