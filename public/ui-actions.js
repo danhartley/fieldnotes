@@ -7,7 +7,8 @@ import {
 } from './api.js'
 
 import { 
-    species
+      species
+    , observations
 } from './templates.js'
 
 const d = document
@@ -172,7 +173,7 @@ export const bgColour = taxon => {
     return getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
 }
 
-const handleSpeciesCheckState = async({e, sectionIndex, globalWrite}) => {
+const handleSpeciesCheckState = async({e, sectionIndex, globalWrite, writeTemplateId}) => {
     const name = e.target.value    
 
     let section = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)    
@@ -185,7 +186,14 @@ const handleSpeciesCheckState = async({e, sectionIndex, globalWrite}) => {
         globalWrite.fieldnotes.sections[index] = section        
     } else {
         const sp = [ name ]
-        section = {...species, species: sp, templateId: species.id, sectionIndex }
+        switch(writeTemplateId) {
+            case 'species-write-template':
+                section = {...species, species: sp, templateId: species.id, sectionIndex }
+                break
+            case 'observations-write-template':
+                section = {...observations, species: sp, templateId: species.id, sectionIndex }
+                break
+        }
         globalWrite.fieldnotes.sections.push(section)
     }
 
@@ -207,7 +215,7 @@ switch(writeTemplateId) {
             const imgUrl = writeTemplateId === 'observations-write-template'
             ? species.photos[0].url
             : species.taxon.default_photo.medium_url
-            const clone = cloneImageTemplate({species, index, sectionIndex, imgUrl, globalWrite})            
+            const clone = cloneImageTemplate({species, index, sectionIndex, imgUrl, globalWrite, writeTemplateId})            
             parent.appendChild(clone)
         })
         } 
@@ -230,7 +238,7 @@ switch(writeTemplateId) {
 }
 }
 
-const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, globalWrite}) => {
+const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, globalWrite, writeTemplateId}) => {
     const templateToClone = d.getElementById('img-template')
     const clone = templateToClone.content.cloneNode(true)
 
@@ -254,7 +262,7 @@ const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, globalWrite})
     
     checkbox.id = `${sectionIndex}-${species.id || species.taxon.id}`
     checkbox.value = species.taxon.name
-    checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionIndex, globalWrite}), true)
+    checkbox.addEventListener('change', e => handleSpeciesCheckState({e, sectionIndex, globalWrite, writeTemplateId}), true)
     label.htmlFor = checkbox.id
 
     return clone

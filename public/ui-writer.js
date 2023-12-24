@@ -471,12 +471,10 @@ const init = () => {
   const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex}) => {
     if(previewContainer) previewContainer.innerHTML = ''
 
-    let t, clone, header, input, sectionToUpdate, nextSectionIndex, sectionAddedOrUpdated, isEdit = null
+    let sectionToUpdate, nextSectionIndex, sectionAddedOrUpdated, isEdit = null
 
     sectionToUpdate = structuredClone(globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)) || null
     
-    isEdit = !!sectionToUpdate
-
     nextSectionIndex = isEdit
       ? globalWrite.fieldnotes.sections.findIndex(t => t.sectionIndex === sectionIndex)
       : 0
@@ -491,6 +489,7 @@ const init = () => {
         previewTemplate[previewTemplate.element] = typeValue
         sectionAddedOrUpdated = { ...previewTemplate, sectionIndex }
         addContentToPreviewContainer({previewTemplate, textContent: typeValue, previewContainer})
+        isEdit = !!sectionToUpdate
         break
       case 'textarea-write-template':
         const ps = typeValue.split('\n').filter(p => p.length > 0)
@@ -502,13 +501,14 @@ const init = () => {
         previewTemplate[previewTemplate.element] = typeValue
         sectionAddedOrUpdated = { ...previewTemplate, sectionIndex, paras }
         paras.forEach(text => addContentToPreviewContainer({previewTemplate, textContent:text.p, previewContainer}))
+        isEdit = !!sectionToUpdate
         break
       case 'observations-write-template':
       case 'species-write-template':
         sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
         sectionToUpdate.species = structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === sectionToUpdate.sectionIndex)?.values)
-        // Since we've already added the section for this type, check it has a valid value
-        isEdit = !!sectionToUpdate.species
+        // Since we've already added the section for this type, check it also has a valid value
+        isEdit = !!sectionToUpdate?.species || false
         break
       case 'terms':                
         const originalTerms = typeValue.filter(term => !term.hasJustBeenAdded)
@@ -527,11 +527,13 @@ const init = () => {
           })
         }
         addItemToList({selectedItems: updatedTerms, selectedItem: null, selectedItemsListElement: previewContainer})
+        isEdit = !!sectionToUpdate?.terms || false // check for terms…
         break
       case 'images':
         sectionAddedOrUpdated = { ...image, templateId: image.id, sectionIndex, imgs: typeValue }
         break
       case 'inat-lookup':
+        isEdit = !!sectionToUpdate // check for species…
         break
     }
     // Show the preview section and hide the edit section
