@@ -463,7 +463,8 @@ export const addOrUpdateSectionArray = async ({globalWrite, index, sectionToUpda
         }
 
         if(response.success) {
-            // Update the original type values to the new type values
+            // Update the original type values to the new type values 
+            // Required for deleting an element in an array before re-adding the element with its new value
             const typeValues = structuredClone({ 
                 values: sectionAddedOrUpdated.species
             , sectionIndex: sectionAddedOrUpdated.sectionIndex 

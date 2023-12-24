@@ -507,7 +507,6 @@ const init = () => {
       case 'species-write-template':
         sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
         sectionToUpdate.species = structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === sectionToUpdate.sectionIndex)?.values)
-        console.log(globalWrite.originalTypeValues)
         break
       case 'terms':                
         const originalTerms = typeValue.filter(term => !term.hasJustBeenAdded)
@@ -802,6 +801,7 @@ const init = () => {
           case 'species-preview-template':
           case 'observations-preview-template':
             // Set the original type values to the current type values
+            // Required for deleting an element in an array before re-adding the element with its new value
             const typeValues = structuredClone({ 
                 values: section.species
               , sectionIndex: section.sectionIndex 
@@ -816,7 +816,6 @@ const init = () => {
             } else {
               globalWrite.originalTypeValues.push(typeValues)
             }
-            console.log(globalWrite.originalTypeValues)
             const speciesCheckboxes = sectionContainer.querySelectorAll('input')
             speciesCheckboxes.forEach(checkbox => {
               if(section.species.includes(checkbox.value)) {
