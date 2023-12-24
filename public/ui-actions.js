@@ -440,7 +440,7 @@ export const deleteSection = async ({d, sectionIndex, globalWrite}) => {
     }
 }
 
-export const addOrUpdateSectionArray = async ({globalWrite, index, sectionToUpdate, sectionAddedOrUpdated, isEdit}) => {
+export const addOrUpdateSectionArray = async ({globalWrite, nextSectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit}) => {
     try {
         const array = 'sections'
 
@@ -451,7 +451,9 @@ export const addOrUpdateSectionArray = async ({globalWrite, index, sectionToUpda
             response = await updateElementFromArray({fieldnotes: globalWrite.fieldnotes, array, elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated})
             // Update changes in memory
             if(response.success) {                
-                globalWrite.fieldnotes.sections[index] = sectionAddedOrUpdated
+                globalWrite.fieldnotes.sections[nextSectionIndex] = sectionAddedOrUpdated
+                // Update the index for the next section
+                nextSectionIndex++
             }
         } else {
             response = await addElementToArray({fieldnotes: globalWrite.fieldnotes, array, element: sectionAddedOrUpdated})

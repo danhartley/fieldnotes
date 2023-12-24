@@ -507,6 +507,8 @@ const init = () => {
       case 'species-write-template':
         sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
         sectionToUpdate.species = structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === sectionToUpdate.sectionIndex)?.values)
+        // Since we've already added the section for this type, check it has a valid value
+        isEdit = !!sectionToUpdate.species
         break
       case 'terms':                
         const originalTerms = typeValue.filter(term => !term.hasJustBeenAdded)
@@ -536,7 +538,7 @@ const init = () => {
     Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
     Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
 
-    addOrUpdateSectionArray({globalWrite, index: nextSectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit})
+    addOrUpdateSectionArray({globalWrite, nextSectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit})
   }
 
   const editSection = ({e}) => {
@@ -756,6 +758,7 @@ const init = () => {
 
       importFieldNotesNotificationText.classList.add('hidden')
 
+      // Set the index for the next section
       globalWrite.nextSectionIndex = globalWrite.fieldnotes.sections.length > 0
         ? globalWrite.fieldnotes.sections.map(s => s.sectionIndex).sort(function (a, b) { return a - b })[globalWrite.fieldnotes.sections.length -1 ] + 1
         : 0
