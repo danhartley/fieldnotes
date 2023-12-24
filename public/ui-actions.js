@@ -26,11 +26,11 @@ const debounce = (func, wait) => {
   }
 }
 
-export const createInatLookups = ({globalWrite, parent, typeId, sectionIndex}) => {
-    cloneImages({globalWrite, parent, typeId, sectionIndex})
+export const createInatLookups = ({globalWrite, parent, writeTemplateId, sectionIndex}) => {
+    cloneImages({globalWrite, parent, writeTemplateId, sectionIndex})
 }
 
-export const handleInatAutocomplete = ({inputText, dataList, globalWrite, id, prop, callback, cbParent, typeId, sectionIndex}) => {
+export const handleInatAutocomplete = ({inputText, dataList, globalWrite, id, prop, callback, cbParent, writeTemplateId, sectionIndex}) => {
   inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
@@ -198,13 +198,13 @@ const handleSpeciesCheckState = async({e, sectionIndex, globalWrite}) => {
     }
 }
 
-export const cloneImages = ({globalWrite, parent, typeId, sectionIndex}) => {
-switch(typeId) {
+export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}) => {
+switch(writeTemplateId) {
     case 'species-write-template':
     case 'observations-write-template':
         if(globalWrite.species.length > 0) {
             globalWrite.species.forEach((species, index) => {
-            const imgUrl = typeId === 'observations-write-template'
+            const imgUrl = writeTemplateId === 'observations-write-template'
             ? species.photos[0].url
             : species.taxon.default_photo.medium_url
             const clone = cloneImageTemplate({species, index, sectionIndex, imgUrl, globalWrite})            
