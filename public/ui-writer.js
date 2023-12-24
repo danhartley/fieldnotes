@@ -72,7 +72,8 @@ const init = () => {
           observations_count: 0,
           species_count: 0,
         },
-      }
+      },
+      originalTypeValues: []
     })
 
     return globalWrite
@@ -261,7 +262,8 @@ const init = () => {
     sectionContainer.setAttribute('id', sectionIndex)
     sectionContainer.addEventListener('dragstart', dragstartHandler)
     
-    let input, label, textarea, datalist, previewContainer, selectedItems, images, cbParent, typeValue = null
+    let input, label, textarea, datalist, previewContainer, images, cbParent, typeValue = null
+    let selectedItems = []
 
     legend.innerText = typeText
 
@@ -283,7 +285,7 @@ const init = () => {
       case 'observations-write-template':
       case 'species-write-template':       
         cloneImages({globalWrite, parent:typeClone.querySelector('div'), typeId, sectionIndex })
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue: null, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue: selectedItems, previewContainer, sectionIndex}), true)
         addOrUpdateSectionBtn.classList.remove('disabled')
         break
       case 'terms':
@@ -294,7 +296,7 @@ const init = () => {
         input.setAttribute('list', datalist.id)        
         label = typeClone.querySelector('label')
         label.htmlFor = input.id                  
-        typeValue = selectedItems
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, typeId, typeValue: selectedItems, previewContainer, sectionIndex}), true)
         break
       case 'images':
         const url1 = typeClone.getElementById('image-url-input-one')
@@ -344,7 +346,7 @@ const init = () => {
         break
       case 'species-write-template':
       case 'observations-write-template':      
-          showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))
+          showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))          
          break
       case 'textarea':
         Array.from(fieldset.getElementsByTagName('textarea'))[0]?.focus()
@@ -471,8 +473,8 @@ const init = () => {
 
     let t, clone, header, input, sectionToUpdate, nextSectionIndex, sectionAddedOrUpdated, isEdit = null
 
-    sectionToUpdate = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex) || null
-
+    sectionToUpdate = structuredClone(globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)) || null
+    
     isEdit = !!sectionToUpdate
 
     nextSectionIndex = isEdit
@@ -503,11 +505,9 @@ const init = () => {
         break
       case 'observations-write-template':
       case 'species-write-template':
-        const sectionToUpdateSpecies = globalWrite?.sections?.find(t => t.sectionIndex === sectionIndex)?.species || []
-        sectionAddedOrUpdated = {
-            ...globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
-          , species: sectionToUpdateSpecies
-        }
+        sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
+        sectionToUpdate.species = structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === sectionToUpdate.sectionIndex)?.values)
+        console.log(globalWrite.originalTypeValues)
         break
       case 'terms':                
         const originalTerms = typeValue.filter(term => !term.hasJustBeenAdded)
@@ -801,6 +801,22 @@ const init = () => {
             break
           case 'species-preview-template':
           case 'observations-preview-template':
+            // Set the original type values to the current type values
+            const typeValues = structuredClone({ 
+                values: section.species
+              , sectionIndex: section.sectionIndex 
+            })
+            const originalValues = globalWrite.originalTypeValues.find(type => type.sectionIndex === section.sectionIndex)
+            if(originalValues) {
+              globalWrite.originalTypeValues.forEach(values => {
+                if(values.sectionIndex === section.sectionIndex) {
+                  values = typeValues
+                }
+              })
+            } else {
+              globalWrite.originalTypeValues.push(typeValues)
+            }
+            console.log(globalWrite.originalTypeValues)
             const speciesCheckboxes = sectionContainer.querySelectorAll('input')
             speciesCheckboxes.forEach(checkbox => {
               if(section.species.includes(checkbox.value)) {

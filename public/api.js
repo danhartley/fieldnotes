@@ -1313,11 +1313,14 @@ export const removeElementFromArray = async ({fieldnotes, array, element}) => {
 export const updateElementFromArray = async ({fieldnotes, array, elementToUpdate, elementAddedOrUpdated}) => {
   // There is no native operation to update the element of an array
   // Instead, we remove the element, then add (the now updated) element
-  await removeElementFromArray({fieldnotes, array, element: elementToUpdate})
-  await addElementToArray({fieldnotes, array, element: elementAddedOrUpdated})
-
-  return {
-    success: true,
-    message: 'Section updated'
+  const response = await removeElementFromArray({fieldnotes, array, element: elementToUpdate})
+  if(response.success) {
+    await addElementToArray({fieldnotes, array, element: elementAddedOrUpdated})
+    
+    return {
+      success: true,
+      message: 'Section updated'
+    }
   }
+
 }

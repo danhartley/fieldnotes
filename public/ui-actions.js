@@ -179,10 +179,10 @@ const handleSpeciesCheckState = async({e, sectionIndex, globalWrite}) => {
     let index = globalWrite.fieldnotes.sections.findIndex(t => t.sectionIndex === sectionIndex)
 
     if(section) {
-        section.species.find(sp => sp === name) 
+        section.species.find(sp => sp === name)
             ? section.species = section.species.filter(sp => sp !== name)
-            : section.species.push(name)
-        globalWrite.fieldnotes.sections[index] = section            
+            : section.species.push(name)            
+        globalWrite.fieldnotes.sections[index] = section        
     } else {
         const sp = [ name ]
         section = {...species, species: sp, templateId: species.id, sectionIndex }
@@ -459,6 +459,24 @@ export const addOrUpdateSectionArray = async ({globalWrite, index, sectionToUpda
             if(response.success) {                
                 globalWrite.fieldnotes.sections.push(sectionAddedOrUpdated)
                 globalWrite.fieldnotes.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)
+            }
+        }
+
+        if(response.success) {
+            // Update the original type values to the new type values
+            const typeValues = structuredClone({ 
+                values: sectionAddedOrUpdated.species
+            , sectionIndex: sectionAddedOrUpdated.sectionIndex 
+            })
+            const originalValues = globalWrite.originalTypeValues.find(type => type.sectionIndex === sectionAddedOrUpdated.sectionIndex)
+            if(originalValues) {
+                globalWrite.originalTypeValues.forEach(type => {
+                    if(type.sectionIndex === sectionAddedOrUpdated.sectionIndex) {
+                        type.values = typeValues.values
+                    }
+                })
+            } else {
+                globalWrite.originalTypeValues.push(typeValues)
             }
         }
 
