@@ -12,7 +12,7 @@ import {
       handleInatAutocomplete
     , mapInatSpeciesToLTP
     , mapTaxon
-    , bgColour
+    , getTaxonGroupColour
     , toggleFilterCtrl
     , handleFieldsnotesAutocomplete
 } from './ui-actions.js'
@@ -272,8 +272,7 @@ const init = () => {
                 input.setAttribute('checked', true)
             }
         
-            const bgColour = getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.name.toLowerCase()}`)
-            div.style.setProperty("background-color", bgColour)
+            div.style.setProperty("background-color", getTaxonGroupColour({taxon:taxon.name.toLowerCase()}))
         
             parent.appendChild(clone)
         })
@@ -361,7 +360,7 @@ const init = () => {
         const figcaption = clone.querySelector('figcaption')
         const spans = figcaption.querySelectorAll('span')
      
-        figcaption.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
+        figcaption.style.setProperty("background-color", getTaxonGroupColour({taxon:species.taxon.iconic_taxon_name}))
     
         spans[0].textContent = species.taxon.preferred_common_name
         spans[1].textContent = species.taxon.name
@@ -422,7 +421,7 @@ const init = () => {
                 input.id = sp.taxon.id
                 label.htmlFor = input.id
     
-                div.style.setProperty("background-color", bgColour(sp.taxon.iconic_taxon_name))
+                div.style.setProperty("background-color", getTaxonGroupColour({taxon:sp.taxon.iconic_taxon_name}))
                 
                 switch(g.target.name) {
                 case 'common name':

@@ -171,7 +171,7 @@ export const mapInatSpeciesToLTP = ({species, count, taxa}) => {
         })
 }
 
-export const bgColour = taxon => {
+export const getTaxonGroupColour = ({taxon}) => {
     return getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
 }
 
@@ -282,7 +282,7 @@ export const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, global
     const checkbox = clone.querySelector('input')
     const label = clone.querySelector('label')
 
-    figure.style.setProperty("background-color", bgColour(species.taxon.iconic_taxon_name))
+    figure.style.setProperty("background-color", getTaxonGroupColour({taxon:species.taxon.iconic_taxon_name}))
 
     img.src = imgUrl
     img.alt = species.taxon.name
@@ -506,23 +506,8 @@ export const addOrUpdateSectionArray = async ({globalWrite, nextSectionIndex, se
             }
         }
 
-        if(response.success) {
-            // Update the original type values to the new type values 
-            // Required for deleting an element in an array before re-adding the element with its new value
-            const typeValues = structuredClone({ 
-                values: sectionAddedOrUpdated.species
-            , sectionIndex: sectionAddedOrUpdated.sectionIndex 
-            })
-            const originalValues = globalWrite.originalTypeValues.find(type => type.sectionIndex === sectionAddedOrUpdated.sectionIndex)
-            if(originalValues) {
-                globalWrite.originalTypeValues.forEach(type => {
-                    if(type.sectionIndex === sectionAddedOrUpdated.sectionIndex) {
-                        type.values = typeValues.values
-                    }
-                })
-            } else {
-                globalWrite.originalTypeValues.push(typeValues)
-            }
+        if(response.success) {            
+            setOriginalTypeValues({section:sectionAddedOrUpdated, globalWrite, type: 'species'})
         }
 
         // Notify user
@@ -542,3 +527,26 @@ export const addContentToPreviewContainer = ({previewTemplate, textContent, prev
     p.textContent = textContent
     previewContainer.appendChild(clone)
   }
+
+export const setOriginalTypeValues = ({globalWrite, section, type}) => {
+    // Updating an element in an array such as section in sections, requires us first to delete
+    // the original element as it was before it was changed. Which is why we need to track original values.
+    const typeValues = structuredClone({
+        values: section[type],
+        sectionIndex: section['sectionIndex']
+    })
+    const hasOriginalValues = globalWrite.originalTypeValues.find(type => type.sectionIndex === section['sectionIndex'])
+    if (hasOriginalValues) {
+        globalWrite.originalTypeValues.forEach(type => {
+            if (type.sectionIndex === section['sectionIndex']) {
+                type.values = typeValues.values
+            }
+        })
+    } else {
+        globalWrite.originalTypeValues.push(typeValues)
+    }
+}
+
+export const getOriginalTypeValues = ({globalWrite, section, type}) => {
+    return structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === section['sectionIndex'])?.values) || section[type]
+}

@@ -33,6 +33,8 @@ import {
   , addOrUpdateSectionArray
   , showNotificationsDialog
   , addContentToPreviewContainer
+  , setOriginalTypeValues
+  , getOriginalTypeValues
 } from './ui-actions.js'
 
 const init = () => {
@@ -507,8 +509,7 @@ const init = () => {
       case 'species-write-template':
       case 'inat-lookup-write-template':
         sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
-        const originalSpecies = structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === sectionToUpdate.sectionIndex)?.values)
-        sectionToUpdate.species = originalSpecies || sectionToUpdate.species
+        sectionToUpdate.species = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: 'species'})
         // Since we've already added the section for this type, check it also has a valid value
         isEdit = !!sectionToUpdate?.species || false
         break
@@ -805,22 +806,8 @@ const init = () => {
             break
           case 'species-preview-template':
           case 'observations-preview-template':          
-            // Set the original type values to the current type values
-            // Required for deleting an element in an array before re-adding the element with its new value
-            typeValues = structuredClone({ 
-                values: section.species
-              , sectionIndex: section.sectionIndex 
-            })
-            originalValues = globalWrite.originalTypeValues.find(type => type.sectionIndex === section.sectionIndex)
-            if(originalValues) {
-              globalWrite.originalTypeValues.forEach(values => {
-                if(values.sectionIndex === section.sectionIndex) {
-                  values = typeValues
-                }
-              })
-            } else {
-              globalWrite.originalTypeValues.push(typeValues)
-            }
+
+          setOriginalTypeValues({globalWrite, section, type:'species'})
             speciesCheckboxes = sectionContainer.querySelectorAll('input')
             speciesCheckboxes.forEach(checkbox => {
               if(section.species.includes(checkbox.value)) {
@@ -829,34 +816,19 @@ const init = () => {
             })            
             break
           case 'inat-lookup-preview-template':
-            // Set the original type values to the current type values
-            // Required for deleting an element in an array before re-adding the element with its new value
-            typeValues = structuredClone({ 
-              values: section.species
-            , sectionIndex: section.sectionIndex 
-          })          
-          originalValues = globalWrite.originalTypeValues.find(type => type.sectionIndex === section.sectionIndex)
-          if(originalValues) {
-            globalWrite.originalTypeValues.forEach(values => {
-              if(values.sectionIndex === section.sectionIndex) {
-                values = typeValues
-              }
+            setOriginalTypeValues({globalWrite, section, type:'species'})
+            let parent = null
+            section.species.forEach((sp, index) => {
+              parent = sectionContainer.querySelector(`#section-${section.sectionIndex}-lookup-parent`)
+              const clone = cloneImageTemplate({species: sp, index, sectionIndex: section.sectionIndex, imgUrl: sp.taxon.default_photo.square_url, globalWrite, writeTemplateId: section.writeTemplateId})
+              parent.appendChild(clone)
+              const figure = parent.querySelector('figure')
+              figure.classList.remove('hidden')
             })
-          } else {
-            globalWrite.originalTypeValues.push(typeValues)
-          }
-          let parent = null
-          section.species.forEach((sp, index) => {
-            parent = sectionContainer.querySelector(`#section-${section.sectionIndex}-lookup-parent`)
-            const clone = cloneImageTemplate({species: sp, index, sectionIndex: section.sectionIndex, imgUrl: sp.taxon.default_photo.square_url, globalWrite, writeTemplateId: section.writeTemplateId})
-            parent.appendChild(clone)
-            const figure = parent.querySelector('figure')
-            figure.classList.remove('hidden')
-          })
-          speciesCheckboxes = parent.querySelectorAll('input')
-          speciesCheckboxes.forEach(checkbox => {
-            checkbox.setAttribute('checked', true)
-          }) 
+            speciesCheckboxes = parent.querySelectorAll('input')
+            speciesCheckboxes.forEach(checkbox => {
+              checkbox.setAttribute('checked', true)
+            }) 
             break
           case 'terms':
             const selectedItemsListElement = sectionContainer.querySelector('#selected-terms-list')
