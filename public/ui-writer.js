@@ -226,7 +226,7 @@ const init = () => {
     sectionContainer.setAttribute('id', sectionIndex)
     sectionContainer.addEventListener('dragstart', dragstartHandler)
     
-    let input, label, textarea, datalist, previewContainer, images, cbParent, typeValue = null
+    let input, label, textarea, datalist, previewContainer, images, cbParent = null
 
     legend.innerText = typeText
 
@@ -240,7 +240,7 @@ const init = () => {
         input.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
         addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: input.value, previewContainer, sectionIndex}), true)
         break
-      case 'textarea-write-template':      
+      case 'textarea-write-template':    
         textarea = typeClone.querySelector('textarea')
         textarea.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
         addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: textarea.value, previewContainer, sectionIndex}), true)
@@ -312,8 +312,8 @@ const init = () => {
       case 'observations-write-template':      
           showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))          
          break
-      case 'textarea':
-        Array.from(fieldset.getElementsByTagName('textarea'))[0]?.focus()
+      case 'textarea-write-template':
+        fieldset.querySelector('textarea:not(.hidden)')?.focus()
         break
       case 'terms-write-template':
         const parent = fieldset.querySelector('#selected-term')
@@ -433,16 +433,12 @@ const init = () => {
   const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex}) => {
     // if(previewContainer) previewContainer.innerHTML = ''
 
-    let sectionToUpdate, nextSectionIndex, sectionAddedOrUpdated, isEdit = null
+    let sectionToUpdate, sectionAddedOrUpdated, isEdit = null
 
     sectionToUpdate = structuredClone(globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)) || null
 
     isEdit = hasOriginalTypeValues({globalWrite, section: sectionToUpdate}) && !!sectionToUpdate
     
-    nextSectionIndex = isEdit
-      ? globalWrite.fieldnotes.sections.findIndex(t => t.sectionIndex === sectionIndex)
-      : 0
-
     const writeTemplate = writeTemplates.find(template => template.templateId === writeTemplateId)
     const previewTemplate = previewTemplates.find(template => template.id === writeTemplate.previewTemplateId)
 
@@ -484,7 +480,7 @@ const init = () => {
     Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
     Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
 
-    addOrUpdateSectionArray({globalWrite, nextSectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit})
+    addOrUpdateSectionArray({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isEdit})
   }
 
   const editSection = ({e}) => {

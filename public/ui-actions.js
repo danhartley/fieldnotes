@@ -197,13 +197,6 @@ export const handleTermCheckState = ({e, globalWrite, selectedItem, li}) => {
 
 export const addTermToList = ({selectedItems, selectedItem, selectedItemsListElement, globalWrite, sectionIndex}) => {
 
-    // if(selectedItem) {
-    //     const isItemNewToList = selectedItems.findIndex(item => item.dt === selectedItem.dt) === -1
-    //     if(isItemNewToList) selectedItems.push(selectedItem)
-    // }
-
-    // selectedItemsListElement.innerHTML = ''
-    
     const items = [selectedItem]
 
     items.forEach(term => {
@@ -542,7 +535,7 @@ export const deleteSection = async ({d, sectionIndex, globalWrite}) => {
     }
 }
 
-export const addOrUpdateSectionArray = async ({globalWrite, nextSectionIndex, sectionToUpdate, sectionAddedOrUpdated, isEdit}) => {
+export const addOrUpdateSectionArray = async ({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isEdit}) => {
     try {
         const array = 'sections'
 
@@ -553,21 +546,22 @@ export const addOrUpdateSectionArray = async ({globalWrite, nextSectionIndex, se
             response = await updateElementFromArray({fieldnotes: globalWrite.fieldnotes, array, elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated})
             // Update changes in memory
             if(response.success) {                
-                globalWrite.fieldnotes.sections[nextSectionIndex] = sectionAddedOrUpdated
-                // Update the index for the next section
-                nextSectionIndex++
+                globalWrite.fieldnotes.sections[globalWrite.nextSectionIndex] = sectionAddedOrUpdated
             }
         } else {
             response = await addElementToArray({fieldnotes: globalWrite.fieldnotes, array, element: sectionAddedOrUpdated})
             // Update changes in memory
             if(response.success) {                
                 globalWrite.fieldnotes.sections.push(sectionAddedOrUpdated)
-                globalWrite.fieldnotes.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)
+                globalWrite.fieldnotes.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)                
             }
         }
 
-        if(response.success) {            
-            setOriginalTypeValues({section:sectionAddedOrUpdated, globalWrite, type: sectionToUpdate.type})
+        if(response.success) {
+            globalWrite.nextSectionIndex++
+            if(sectionToUpdate && sectionToUpdate.type) {
+                setOriginalTypeValues({section:sectionAddedOrUpdated, globalWrite, type: sectionToUpdate.type})
+            }
         }
 
         // Notify user
