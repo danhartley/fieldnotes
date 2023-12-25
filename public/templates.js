@@ -69,8 +69,10 @@ export const textarea = {
   element: 'p'
 }
 
-export const term = {
-  id: 'terms-template',
+export const terms = {
+  id: 'terms-preview-template',
+  templateId: 'terms-preview-template',
+  writeTemplateId: 'terms-write-template',
   name: 'Terms', 
   parent: 'dl-template',
   type: 'terms',                 
@@ -162,6 +164,7 @@ export const previewTemplates = [
   , species
   , observations
   , inatlookup
+  , terms
 ]
 
 export const writeTemplates = [
@@ -205,6 +208,12 @@ export const writeTemplates = [
     id: 'inat-lookup-write-template',
     templateId: 'inat-lookup-write-template',
     previewTemplateId: 'inat-lookup-preview-template',
+    element: 'div'
+  },
+  {
+    id: 'terms-write-template',
+    templateId: 'terms-write-template',
+    previewTemplateId: 'terms-preview-template',
     element: 'div'
   }
 ]

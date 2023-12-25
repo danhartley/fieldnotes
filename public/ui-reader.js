@@ -562,7 +562,7 @@ const init = () => {
                         })
                         article.appendChild(parent)
                     break
-                    case 'terms':
+                    case 'terms-preview-template':
                         section.terms.forEach(term => {
                             const clone = templateToClone.content.cloneNode(true)                      
                             const dt = clone.querySelector('dt')

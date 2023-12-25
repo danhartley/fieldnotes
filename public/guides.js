@@ -2,7 +2,7 @@ import {
     templates
   , h3
   , textarea
-  , term
+  , terms
   , species
   , image
 } from './templates.js'
@@ -98,7 +98,7 @@ export const guides = [
                 },                        
               ]
             },
-            { ...term, terms: [
+            { ...terms, terms: [
               'Sclerophyll',
               'Marcescence',
               'Conifer',
@@ -157,7 +157,7 @@ export const guides = [
                 p: 'The main Mediterranean vegetation types throughout the Mediterranean Basin are sclerophyllous or marcescent oak forests and woodlands at lower elevations, marcescent oak forests in middle elevations and conifer forests or woodlands at higher elevations.',
               },   
             ] },
-            { ...term, terms: [
+            { ...terms, terms: [
               'Convergent evolution',
               'Limestone',
               'Orthent',
@@ -467,7 +467,7 @@ export const guides = [
               ],
             },
             {
-              ...term,
+              ...terms,
               terms: [
                 'Sclerophyll',
                 'Marcescence',
@@ -543,7 +543,7 @@ export const guides = [
               ],
             },
             {
-              ...term,
+              ...terms,
               terms: [
                 'Sclerophyll',
                 'Marcescence',
@@ -903,7 +903,7 @@ export const guides = [
               ],
             },
             {
-              ...term,
+              ...terms,
               terms: [
                 'Serotiny',
                 'Secondary succession',

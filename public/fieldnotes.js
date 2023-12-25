@@ -5,7 +5,7 @@ import {
 , date
 , location
 , textarea
-, term
+, terms
 , species
 , image
 , annotation
@@ -226,7 +226,7 @@ export const fieldnotes = [
   //               ]
   //           },
   //           {
-  //               ...term,
+  //               ...terms,
   //               terms: [
   //               'Secondary succession',
   //               'Maquis',
@@ -332,7 +332,7 @@ export const fieldnotes = [
   //               ]
   //           },
   //           {
-  //               ...term,
+  //               ...terms,
   //               terms: [
   //               'Serotiny',
   //               'Sclerophyll',

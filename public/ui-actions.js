@@ -10,6 +10,7 @@ import {
       species
     , observations
     , inatlookup
+    , terms
 } from './templates.js'
 
 const d = document
@@ -175,7 +176,66 @@ export const getTaxonGroupColour = ({taxon}) => {
     return getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
 }
 
-const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite, writeTemplateId}) => {
+export const handleTermCheckState = ({e, globalWrite, selectedItem, li}) => {
+    const checkbox = e.target
+    const isChecked = checkbox.checked
+  
+    if(!isChecked) li.remove()
+
+    let section = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)    
+
+    if(section) {
+        isChecked
+            ? section.terms.push(selectedItem)
+            : section.terms = section.terms.filter(t => t !== selectedItem)
+        globalWrite.fieldnotes.sections[sectionIndex] = section    
+    } else {
+        section = {...terms, terms: [selectedItem], templateId: terms.templateId, sectionIndex }
+        globalWrite.fieldnotes.sections.push(section)
+    }
+}
+
+export const addTermToList = ({selectedItems, selectedItem, selectedItemsListElement, globalWrite, sectionIndex}) => {
+
+    // if(selectedItem) {
+    //     const isItemNewToList = selectedItems.findIndex(item => item.dt === selectedItem.dt) === -1
+    //     if(isItemNewToList) selectedItems.push(selectedItem)
+    // }
+
+    // selectedItemsListElement.innerHTML = ''
+    
+    const items = [selectedItem]
+
+    items.forEach(term => {
+      const li = d.createElement('li')
+      const checkbox = d.createElement('input')
+      checkbox.type = 'checkbox'
+      checkbox.id = term.dt
+      checkbox.setAttribute('checked', true)
+      checkbox.classList.add('fl')
+      checkbox.addEventListener('change', e => handleTermCheckState({e, globalWrite, selectedItem, li}), true)
+      const label = d.createElement('label')
+      label.innerText = term.dt
+      label.htmlFor = checkbox.id
+      li.appendChild(checkbox)
+      li.appendChild(label)
+      selectedItemsListElement.appendChild(li)
+    })
+
+    let section = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
+
+    if(selectedItems.findIndex(item => item.dt === selectedItem.dt) > -1) return
+
+    if(section) {
+        section.terms.push(selectedItem)      
+        globalWrite.fieldnotes.sections[sectionIndex] = section    
+    } else {
+        section = {...terms, terms: [selectedItem], templateId: terms.templateId, sectionIndex }
+        globalWrite.fieldnotes.sections.push(section)
+    }
+}
+
+const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  writeTemplateId}) => {
     const name = e.target.value    
 
     let section = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)    
@@ -507,7 +567,7 @@ export const addOrUpdateSectionArray = async ({globalWrite, nextSectionIndex, se
         }
 
         if(response.success) {            
-            setOriginalTypeValues({section:sectionAddedOrUpdated, globalWrite, type: 'species'})
+            setOriginalTypeValues({section:sectionAddedOrUpdated, globalWrite, type: sectionToUpdate.type})
         }
 
         // Notify user
@@ -548,5 +608,17 @@ export const setOriginalTypeValues = ({globalWrite, section, type}) => {
 }
 
 export const getOriginalTypeValues = ({globalWrite, section, type}) => {
-    return structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === section['sectionIndex'])?.values) || section[type]
+    const typeValues = section === null
+        ? []
+        : structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === section['sectionIndex'])?.values) || section[type]
+
+    return typeValues
+}
+
+export const hasOriginalTypeValues = ({globalWrite, section}) => {
+    const typeValues = section === null
+    ? []
+    : structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === section['sectionIndex'])?.values) || []
+
+return typeValues.length > 0
 }

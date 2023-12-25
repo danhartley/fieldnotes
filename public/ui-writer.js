@@ -11,7 +11,7 @@ import {
 } from './api.js'
 
 import { 
-  term
+  terms
 , image
 , previewTemplates
 , writeTemplates
@@ -35,6 +35,8 @@ import {
   , addContentToPreviewContainer
   , setOriginalTypeValues
   , getOriginalTypeValues
+  , hasOriginalTypeValues
+  , addTermToList
 } from './ui-actions.js'
 
 const init = () => {
@@ -208,47 +210,6 @@ const init = () => {
     : btn.classList.add('disabled')
   }
 
-  const addItemToList = ({selectedItems, selectedItem, selectedItemsListElement}) => {
-
-    if(selectedItem) {
-      const isItemNewToList = selectedItems.findIndex(item => item.dt === selectedItem.dt) === -1
-      if(isItemNewToList) selectedItems.push({
-            ...selectedItem
-          , hasJustBeenAdded: true
-      })
-    }
-
-    const removeTermFromList = ({e, li}) => {
-      const checkbox = e.target
-      if(!checkbox.checked) {        
-        selectedItems.forEach(item => {
-          if(item.dt.toLowerCase() === li.innerText.toLowerCase()) {
-            item.hasJustBeenDeleted = true
-          }
-        })
-        li.remove()
-      }
-    }
-
-    selectedItemsListElement.innerHTML = ''
-    
-    selectedItems.forEach(term => {
-      const li = d.createElement('li')
-      const checkbox = d.createElement('input')
-      checkbox.type = 'checkbox'
-      checkbox.id = term.dt
-      checkbox.setAttribute('checked', true)
-      checkbox.classList.add('fl')
-      checkbox.addEventListener('change', e => removeTermFromList({e, li}), true)
-      const label = d.createElement('label')
-      label.innerText = term.dt
-      label.htmlFor = checkbox.id
-      li.appendChild(checkbox)
-      li.appendChild(label)
-      selectedItemsListElement.appendChild(li)
-    })
-  }
-
   const createSection = ({writeTemplateId, typeText, sectionTemplate, sectionIndex}) => {
     const sectionClone = sectionTemplate.content.cloneNode(true)
     const sectionContainer = sectionClone.querySelector('section')
@@ -266,7 +227,6 @@ const init = () => {
     sectionContainer.addEventListener('dragstart', dragstartHandler)
     
     let input, label, textarea, datalist, previewContainer, images, cbParent, typeValue = null
-    let selectedItems = []
 
     legend.innerText = typeText
 
@@ -288,10 +248,10 @@ const init = () => {
       case 'observations-write-template':
       case 'species-write-template':       
         cloneImages({globalWrite, parent:typeClone.querySelector('div'), writeTemplateId, sectionIndex })
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: selectedItems, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: null, previewContainer, sectionIndex}), true)
         addOrUpdateSectionBtn.classList.remove('disabled')
         break
-      case 'terms':
+      case 'terms-write-template':
         datalist = typeClone.querySelector('datalist')
         datalist.id = `${sectionIndex}-dl-list`
         input = typeClone.querySelector('input')
@@ -299,7 +259,7 @@ const init = () => {
         input.setAttribute('list', datalist.id)        
         label = typeClone.querySelector('label')
         label.htmlFor = input.id                  
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: selectedItems, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: null, previewContainer, sectionIndex}), true)
         break
       case 'images':
         const url1 = typeClone.getElementById('image-url-input-one')
@@ -318,7 +278,7 @@ const init = () => {
         label.htmlFor = input.id
         cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
         cbParent.id = `section-${sectionIndex}-lookup-parent`
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: selectedItems, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: null, previewContainer, sectionIndex}), true)
         addOrUpdateSectionBtn.classList.remove('disabled')
         break
     }
@@ -355,16 +315,16 @@ const init = () => {
       case 'textarea':
         Array.from(fieldset.getElementsByTagName('textarea'))[0]?.focus()
         break
-      case 'terms':
+      case 'terms-write-template':
         const parent = fieldset.querySelector('#selected-term')
         const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
         const addNewTermBtn = fieldset.querySelector('#add-new-term-btn')
         
-        selectedItems = globalWrite?.sections?.find(t => t.sectionIndex === sectionIndex)?.terms || []        
+        const selectedItems = globalWrite?.fieldnotes.sections?.find(t => t.sectionIndex === sectionIndex)?.terms || []        
 
         const handleOnClickAddSelectedTermBtn = ({selectedItems, selectedItem}) => {
           const selectedItemsListElement = fieldset.querySelector('#selected-terms-list')
-          addItemToList({selectedItems: selectedItems.filter(item => !item.hasJustBeenDeleted), selectedItem, selectedItemsListElement})
+          addTermToList({selectedItems, selectedItem, selectedItemsListElement, globalWrite, sectionIndex})
           addSelectedTermBtn.classList.add('disabled')
           addOrUpdateSectionBtn.classList.remove('disabled')
           input.value = ''             
@@ -471,11 +431,13 @@ const init = () => {
   }, true))
 
   const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex}) => {
-    if(previewContainer) previewContainer.innerHTML = ''
+    // if(previewContainer) previewContainer.innerHTML = ''
 
     let sectionToUpdate, nextSectionIndex, sectionAddedOrUpdated, isEdit = null
 
     sectionToUpdate = structuredClone(globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)) || null
+
+    isEdit = hasOriginalTypeValues({globalWrite, section: sectionToUpdate}) && !!sectionToUpdate
     
     nextSectionIndex = isEdit
       ? globalWrite.fieldnotes.sections.findIndex(t => t.sectionIndex === sectionIndex)
@@ -491,7 +453,6 @@ const init = () => {
         previewTemplate[previewTemplate.element] = typeValue
         sectionAddedOrUpdated = { ...previewTemplate, sectionIndex }
         addContentToPreviewContainer({previewTemplate, textContent: typeValue, previewContainer})
-        isEdit = !!sectionToUpdate
         break
       case 'textarea-write-template':
         const ps = typeValue.split('\n').filter(p => p.length > 0)
@@ -503,39 +464,22 @@ const init = () => {
         previewTemplate[previewTemplate.element] = typeValue
         sectionAddedOrUpdated = { ...previewTemplate, sectionIndex, paras }
         paras.forEach(text => addContentToPreviewContainer({previewTemplate, textContent:text.p, previewContainer}))
-        isEdit = !!sectionToUpdate
         break
       case 'observations-write-template':
       case 'species-write-template':
       case 'inat-lookup-write-template':
         sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
-        sectionToUpdate.species = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: 'species'})
-        // Since we've already added the section for this type, check it also has a valid value
-        isEdit = !!sectionToUpdate?.species || false
+        if(sectionToUpdate) sectionToUpdate.species = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: 'species'})
         break
-      case 'terms':                
-        const originalTerms = typeValue.filter(term => !term.hasJustBeenAdded)
-        const updatedTerms = typeValue.filter(term => !term.hasJustBeenDeleted)
-        if(isEdit) sectionToUpdate.terms = originalTerms.map(term => {
-          if(term.hasJustBeenDeleted) delete term.hasJustBeenDeleted
-          return term
-        })
-        sectionAddedOrUpdated = { 
-            ...term
-          , templateId: term.id
-          , sectionIndex
-          , terms: updatedTerms.map(term => {
-            if(term.hasJustBeenAdded) delete term.hasJustBeenAdded
-            return term
-          })
-        }
-        addItemToList({selectedItems: updatedTerms, selectedItem: null, selectedItemsListElement: previewContainer})
-        isEdit = !!sectionToUpdate?.terms || false // check for terms…
+      case 'terms-write-template':                
+        sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
+        if(sectionToUpdate) sectionToUpdate.terms = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: 'terms'})
         break
       case 'images':
         sectionAddedOrUpdated = { ...image, templateId: image.id, sectionIndex, imgs: typeValue }
         break
     }
+    
     // Show the preview section and hide the edit section
     Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
     Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
@@ -789,7 +733,7 @@ const init = () => {
 
         const previewTemplate = previewTemplates.find(template => template.id === section.templateId)
 
-        let typeValues, originalValues, speciesCheckboxes = null
+        let speciesCheckboxes = null
 
         switch(section.templateId) {
           case 'h3-preview-template':
@@ -829,11 +773,12 @@ const init = () => {
               checkbox.setAttribute('checked', true)
             }) 
             break
-          case 'terms':
+          case 'terms-preview-template':
+            setOriginalTypeValues({globalWrite, section, type:'terms'})
             const selectedItemsListElement = sectionContainer.querySelector('#selected-terms-list')
-            addItemToList({selectedItems: section.terms, selectedItem: null, selectedItemsListElement})
-            const editSectionBtn = sectionContainer.querySelector('#edit-section-btn')
-            editSectionBtn.addEventListener('click', e => editSection({e}), true)
+            section.terms.forEach((term, index) => {
+              addTermToList({selectedItems: section.terms, selectedItem: term, selectedItemsListElement, globalWrite, sectionIndex: section.sectionIndex})
+            })
         }
       })
 

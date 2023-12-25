@@ -1240,7 +1240,7 @@ export const updateFieldnoteProperty = async ({fieldnotes, prop, value}) => {
       message: `${prop.charAt(0).toUpperCase() + prop.slice(1)} updated`
     }
   } catch (e) {
-    console.log('API element to remove: ', element)
+    console.log('API element to update: ', prop, value)
     console.log('API docRef: ', docRef)
     console.log('API data: ', data)
     console.warn('API error: ', e)
