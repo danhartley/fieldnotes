@@ -205,8 +205,8 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite, writ
                 globalWrite.fieldnotes.sections[index] = section    
                 break
                 case 'inat-lookup-write-template':
-                    section.species.find(sp => sp === name)
-                        ? section.species = section.species.filter(sp => sp !== name)
+                    section.species.find(sp => sp.taxon.name === name)
+                        ? section.species = section.species.filter(sp => sp.taxon.name !== name)
                         : section.species.push(getSpeciesForInatLookup({taxon})) 
                     globalWrite.fieldnotes.sections[index] = section
                 break

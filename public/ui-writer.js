@@ -805,8 +805,7 @@ const init = () => {
             })          
             break
           case 'species-preview-template':
-          case 'observations-preview-template':          
-
+          case 'observations-preview-template':
           setOriginalTypeValues({globalWrite, section, type:'species'})
             speciesCheckboxes = sectionContainer.querySelectorAll('input')
             speciesCheckboxes.forEach(checkbox => {
