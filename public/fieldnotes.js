@@ -882,6 +882,7 @@ export const fieldnotes = [
     templates: [
       {
         id: "species-test-template",
+        templateId: "species-test-template",
         name: "Species card tests",
         parent: "grid-template",
         pairedTemplateId: "species-preview-template",

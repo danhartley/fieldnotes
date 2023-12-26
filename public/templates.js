@@ -20,6 +20,7 @@ export const templates = [
   },
   {
       id: 'species-template',
+      templateId: 'species-template',
       name: 'Species catalogue',
       parent: 'grid-template',
       pairedTemplateId: 'species-test-template',
@@ -28,6 +29,7 @@ export const templates = [
   },
   {
     id: 'species-list-template',
+    templateId: 'species-list-template',
     name: 'Species list',
     parent: 'grid-template',
     isTest: false,

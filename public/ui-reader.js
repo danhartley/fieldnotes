@@ -278,10 +278,8 @@ const init = () => {
     
             rbGroupTemplate.forEach(template => {
                 template.addEventListener('change', e => {
-                    const templateId = e.target.value
-                    g.template = g.templates.find(t => t.id === templateId) 
+                    g.template = g.templates.find(t => t.templateId === e.target.value) 
                     resetTestOptions()
-                    
                     const toggleTestableTemplate = () => {      
                         g.template = g.templates.find(t => t.id === g.template.pairedTemplateId)
     
@@ -312,12 +310,10 @@ const init = () => {
     
                         startLesson()
                     }
-    
-                    showTestBtn.addEventListener('click', toggleTestableTemplate, true)
-                                
+                    showTestBtn.addEventListener('click', toggleTestableTemplate, true)                                
                     startLesson()                
                 })
-            })
+            })            
         }
         
         speciesDisplayContainer.innerHTML = ''
@@ -332,8 +328,8 @@ const init = () => {
         
             input.setAttribute('name', 'display-option-template')
             input.id = t.name
-            input.value = t.id
-        
+            input.value = t.templateId
+            input.checked = t.templateId === 'fieldnotes-template'        
             label.textContent = t.name
             label.htmlFor = input.id
     
@@ -344,7 +340,7 @@ const init = () => {
             speciesDisplayContainer.appendChild(clone)
         })
     
-        addHandlers()
+        addHandlers()        
     }    
     
     const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) => {
@@ -381,70 +377,70 @@ const init = () => {
     
         if(g.species) article.innerHTML = ''
     
-        switch(g.template.id) {
-        case 'species-template':
-            g.species.forEach((sp, i) => {
-                const clone = cloneSpeciesCardFromTemplate({templateToClone, species: sp, index: i})
-                parent = parentClone.querySelector('div')
-                parent.appendChild(clone)
-            })
-            article.appendChild(parent)
-            break
-        case 'species-list-template':            
-            g.species.forEach(sp => {
-              const clone = templateToClone.content.cloneNode(true)
-              const li = clone.querySelector('li')
-            
-              li.textContent = sp.taxon.name
-    
-              parent = parentClone.querySelector('div')          
-              parent.appendChild(clone)
-            })
-            article.appendChild(parent)
-            break
-        case 'species-test-template':
-            g.species.forEach((sp, i) => {
+        switch(g.template.templateId) {
+            case 'species-template':
+                g.species.forEach((sp, i) => {
+                    const clone = cloneSpeciesCardFromTemplate({templateToClone, species: sp, index: i})
+                    parent = parentClone.querySelector('div')
+                    parent.appendChild(clone)
+                })
+                article.appendChild(parent)
+                break
+            case 'species-list-template':            
+                g.species.forEach(sp => {
                 const clone = templateToClone.content.cloneNode(true)
-    
-                const span = clone.querySelector('span')
-                const label = clone.querySelector('label')
-                const input = clone.querySelector('input')
-                const img = clone.querySelector('img')      
-                const div = clone.querySelector('img + figcaption')
-    
-                input.id = sp.taxon.id
-                label.htmlFor = input.id
-    
-                div.style.setProperty("background-color", getTaxonGroupColour({taxon:sp.taxon.iconic_taxon_name}))
+                const li = clone.querySelector('li')
                 
-                switch(g.target.name) {
-                case 'common name':
-                    span.textContent = sp.taxon.name
-                    span.classList.add('latin')
-                    label.textContent = 'common name'
-                    break
-                case 'latin name':
-                    if(sp.taxon.preferred_common_name) {
-                    span.textContent = sp.taxon.preferred_common_name
-                    } else {
-                    span.textContent = sp.taxon.name
-                    span.classList.add('latin')
-                    }
-                    label.textContent = 'latin name'
-                    break
-                }
-                
-                img.src = sp.taxon.default_photo.square_url.replace('square', 'small')
-                img.alt = sp.taxon.name
-                img.id = sp.taxon.id
-                img.setAttribute('data-i', i + 1)
-                img.setAttribute('loading', 'lazy')
-                
+                li.textContent = sp.taxon.name
+        
                 parent = parentClone.querySelector('div')          
                 parent.appendChild(clone)
-            })
-            article.appendChild(parent)
-            break
+                })
+                article.appendChild(parent)
+                break
+            case 'species-test-template':
+                g.species.forEach((sp, i) => {
+                    const clone = templateToClone.content.cloneNode(true)
+        
+                    const span = clone.querySelector('span')
+                    const label = clone.querySelector('label')
+                    const input = clone.querySelector('input')
+                    const img = clone.querySelector('img')      
+                    const div = clone.querySelector('img + figcaption')
+        
+                    input.id = sp.taxon.id
+                    label.htmlFor = input.id
+        
+                    div.style.setProperty("background-color", getTaxonGroupColour({taxon:sp.taxon.iconic_taxon_name}))
+                    
+                    switch(g.target.name) {
+                    case 'common name':
+                        span.textContent = sp.taxon.name
+                        span.classList.add('latin')
+                        label.textContent = 'common name'
+                        break
+                    case 'latin name':
+                        if(sp.taxon.preferred_common_name) {
+                        span.textContent = sp.taxon.preferred_common_name
+                        } else {
+                        span.textContent = sp.taxon.name
+                        span.classList.add('latin')
+                        }
+                        label.textContent = 'latin name'
+                        break
+                    }
+                    
+                    img.src = sp.taxon.default_photo.square_url.replace('square', 'small')
+                    img.alt = sp.taxon.name
+                    img.id = sp.taxon.id
+                    img.setAttribute('data-i', i + 1)
+                    img.setAttribute('loading', 'lazy')
+                    
+                    parent = parentClone.querySelector('div')          
+                    parent.appendChild(clone)
+                })
+                article.appendChild(parent)
+                break
         }
         
         if(g.template.type === 'guide' || g.template.type === 'fieldnotes') {
@@ -737,6 +733,8 @@ const init = () => {
         const fieldnotes = { 
             ...response.data
             , name: 'Field notes'
+            , templateId: 'fieldnotes-template'
+            , isTestable: false
             , sections: response.data.sectionOrder.map(sectionIndex => {
                 return response.data.sections.find(section => section.sectionIndex === sectionIndex)
             })  
@@ -772,9 +770,13 @@ const init = () => {
             })
             .filter(t => t)
             
-    createRadioBtnTemplateGroup()
-    speciesDisplayContainer.classList.remove('disabled')
-    article.innerHTML = ''     
+        createRadioBtnTemplateGroup()
+        
+        article.innerHTML = ''
+        // We've set the field guides display option as checked by default, so we need to enable it (we don't want to programatically force a click event)
+        g.template = g.templates.find(t => t.templateId === 'fieldnotes-template')        
+        startLesson()
+        speciesDisplayContainer.classList.remove('disabled')
     }
 
     importFieldNotesBtn.addEventListener('click', importFieldNotes, true)
