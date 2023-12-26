@@ -13,7 +13,7 @@ import {
     , mapInatSpeciesToLTP
     , mapTaxon
     , getTaxonGroupColour
-    , toggleFilterCtrl
+    , toggleHideShow
     , handleFieldsnotesAutocomplete
 } from './ui-actions.js'
 
@@ -682,10 +682,10 @@ const init = () => {
         fieldnotesInputRb.addEventListener('click', toggleView, true)
         inatSearchInputRb.addEventListener('click', toggleView, true)
     
-        toggleFilterCtrl({ ctrl: displayToggleVisibilityBtn, fieldsetId: 'display-fieldset' })        
-        toggleFilterCtrl({ ctrl: lessonToggleVisibilityBtn, fieldsetId: 'lesson-fieldset' })
-        toggleFilterCtrl({ ctrl: progressToggleVisibilityBtn, fieldsetId: 'progress-fieldset' })
-        toggleFilterCtrl({ ctrl: preferencesToggleVisibilityBtn, fieldsetId: 'preferences' })
+        displayToggleVisibilityBtn.addEventListener('click', toggleHideShow, true)
+        lessonToggleVisibilityBtn.addEventListener('click', toggleHideShow, true)
+        progressToggleVisibilityBtn.addEventListener('click', toggleHideShow, true)
+        preferencesToggleVisibilityBtn.addEventListener('click', toggleHideShow, true)
     
         addImgClickEventHandlers()
     

@@ -355,15 +355,12 @@ export const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, global
     return clone
 }
 
-export const toggleFilterCtrl = (({ ctrl, fieldsetId }) => {
-ctrl.addEventListener('click', () => {
-    ctrl.classList.toggle('hide')
+export const toggleHideShow = e => {
+    const ctrl = e.target
     ctrl.innerText = ctrl.innerText === 'HIDE' ? 'SHOW' : 'HIDE'
-
-    const fieldset = d.getElementById(fieldsetId)
+    const fieldset = d.getElementById(ctrl.value)
     fieldset.classList.toggle('hidden')
-})
-})
+}
 
 let sectionToMove = null
 
