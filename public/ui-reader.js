@@ -292,7 +292,7 @@ const init = () => {
                                 test.addEventListener('change', e => {
                                     const testId = e.target.value
                                     g.target = g.template.targets.find(t => t.id === testId)
-                                    startLesson()
+                                    renderDisplayTemplate()
                                 })
                             })
                         }
@@ -308,10 +308,10 @@ const init = () => {
     
                         progressFieldset.classList.toggle('disabled')
     
-                        startLesson()
+                        renderDisplayTemplate()
                     }
                     showTestBtn.addEventListener('click', toggleTestableTemplate, true)                                
-                    startLesson()                
+                    renderDisplayTemplate()                
                 })
             })            
         }
@@ -365,7 +365,7 @@ const init = () => {
         return clone
     }
     
-    const startLesson = () => {
+    const renderDisplayTemplate = () => {
         if(!g.template) return
 
         let template = d.getElementById(g.template.parent)
@@ -640,7 +640,7 @@ const init = () => {
     
             g.species = mapInatSpeciesToLTP({species: g.inatSpecies, count: g.count, taxa: g.iconicTaxa})
         
-            startLesson()
+            renderDisplayTemplate()
     
             searchInatObservationsNotificationText.classList.toggle('hidden')
             searchInatObservationsBtn.classList.toggle('disabled')
@@ -773,9 +773,9 @@ const init = () => {
         createRadioBtnTemplateGroup()
         
         article.innerHTML = ''
-        // We've set the field guides display option as checked by default, so we need to enable it (we don't want to programatically force a click event)
+        // We've set the display option as checked by default, so we need to enable it (we don't want to programatically force a click event)
         g.template = g.templates.find(t => t.templateId === 'fieldnotes-template')        
-        startLesson()
+        renderDisplayTemplate()
         speciesDisplayContainer.classList.remove('disabled')
     }
 
