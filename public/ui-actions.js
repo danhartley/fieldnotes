@@ -616,3 +616,7 @@ export const hasOriginalTypeValues = ({globalWrite, section}) => {
 
 return typeValues.length > 0
 }
+
+export const isValidDate = ({date}) => {
+    return date.length > 0 && Object.prototype.toString.call(new Date(date)) === '[object Date]'
+}

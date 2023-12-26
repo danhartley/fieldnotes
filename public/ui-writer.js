@@ -37,6 +37,7 @@ import {
   , getOriginalTypeValues
   , hasOriginalTypeValues
   , addTermToList
+  , isValidDate
 } from './ui-actions.js'
 
 const init = () => {
@@ -113,7 +114,9 @@ const init = () => {
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
 
-  const toggleView = view => {
+  const toggleView = e => {
+    const view = e.target.value
+
     Array.from(editView).forEach(view => view.classList.toggle('hidden'))
     Array.from(createView).forEach(view => view.classList.toggle('hidden'))
     
@@ -129,8 +132,8 @@ const init = () => {
     }    
   }
 
-  createFieldnotesInputRadio.addEventListener('click', e => toggleView('create'), true)
-  editFieldnotesInputRadio.addEventListener('click', e => toggleView('edit'), true)
+  createFieldnotesInputRadio.addEventListener('click', toggleView, true)
+  editFieldnotesInputRadio.addEventListener('click', toggleView, true)
 
   const searchInatObservations = async ({userId}) => {
   try {
@@ -423,12 +426,7 @@ const init = () => {
     return sectionContainer
   }
 
-  selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { 
-    const writeTemplateId = e.target.value
-    const typeText = e.target.innerText
-    
-    createSection({writeTemplateId, typeText, sectionTemplate: getSectionTemplate({writeTemplateId}), sectionIndex: globalWrite.nextSectionIndex})
-  }, true))
+  selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { createSection({writeTemplateId: e.target.value, typeText: e.target.innerText, sectionTemplate: getSectionTemplate({writeTemplateId}), sectionIndex: globalWrite.nextSectionIndex})}, true))
 
   const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex}) => {
     // if(previewContainer) previewContainer.innerHTML = ''
@@ -533,10 +531,6 @@ const init = () => {
     return sectionTemplate
   }
 
-  const isValidDate = ({date}) => {
-    return date.length > 0 && Object.prototype.toString.call(new Date(date)) === '[object Date]'
-  }
-
   const enableExportFieldNotesContainer = () => {
     if(globalWrite.view === 'create') {
       // Check fields added by the user
@@ -615,7 +609,6 @@ const init = () => {
   singleObservationsInputDate.addEventListener('blur', enableSearchBtn, true)
   iNatAutocompleteInputText.addEventListener('blur', enableSearchBtn, true)
 
-  // Export fieldnotes
   const exportFieldNotes = async() => {
     try {
       const notes = {}
@@ -660,7 +653,6 @@ const init = () => {
 
   exportFieldNotesBtn.addEventListener('click', exportFieldNotes, true)
 
-  // Import fieldnotes
   const importFieldNotes = async () => {
     try {
       importFieldNotesNotificationText.classList.remove('hidden')

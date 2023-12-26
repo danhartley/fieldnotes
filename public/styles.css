@@ -348,7 +348,7 @@ fieldset.fieldset-reset fieldset {
 
 legend, .species-list button.show-all-or-include-only-btn {
   position: absolute;
-  top: 0;
+  top: calc(var(--d) *.5);
   left: var(--d);
   width: 50%;
   padding: calc(var(--d) * 1.5) var(--d);
@@ -360,7 +360,7 @@ legend, .species-list button.show-all-or-include-only-btn {
 
 .species-list button.show-all-or-include-only-btn {
   left: initial;
-  right: var(--d);
+  right: calc(var(--d) *.5);
   width: initial;
   border: none;
   font-size: var(--s2);

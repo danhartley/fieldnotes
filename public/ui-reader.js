@@ -80,35 +80,29 @@ const init = () => {
         g.template.score = g.template.scores.filter(score => score.isCorrect).length
     }
     
-    const toggleLessonStyle = (({ ctrl, fieldsetId }) => {
-        ctrl.addEventListener('click', () => {
-            const fieldset = d.getElementById(fieldsetId)
+    const toggleView = e => {
+        const view = e.target.value
+
+        inatSearchView.classList.toggle('hidden')
+        fieldnotesSearchView.classList.toggle('hidden')
     
-            if(fieldset.classList.contains('hidden')) {
-                
-                fieldset.classList.toggle('hidden')
-    
-                let searchFilters
-    
-                switch(ctrl.value) {
-                    case 'Guides':
-                        searchFilters = d.getElementById('inat-search-container')
-                        searchFilters.classList.toggle('hidden')                    
-                        break
-                    case 'iNaturalist':
-                        searchFilters = d.getElementById('fieldnotes-search-container')
-                        searchFilters.classList.toggle('hidden')
-                        g.templates = templates
-                        break
-                }
-            }
-            speciesDisplayContainer.classList.add('disabled')
-            g.templates = templates
-        })    
-    })
+        switch(view) {                    
+            case 'fieldnotes':                
+                ltpAutocompleteTitleInputText.focus()
+                break
+            case 'iNaturalist':
+                g.templates = templates
+                iNatAutocompleteInputText.focus()            
+                break
+        }
+        speciesDisplayContainer.classList.add('disabled')
+        g.templates = templates
+    }    
         
-    const inatSearchInputRb = d.getElementById('inat-search-input-rb')
     const fieldnotesInputRb = d.getElementById('fieldnotes-input-rb')
+    const inatSearchInputRb = d.getElementById('inat-search-input-rb')
+    const fieldnotesSearchView = d.getElementById('fieldnotes-search-view')
+    const inatSearchView = d.getElementById('inat-search-view')
     const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
     const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
     const importFieldNotesBtn = d.getElementById('import-fieldnotes-btn')
@@ -685,8 +679,8 @@ const init = () => {
             rb.addEventListener('change', () => g.useObservationsSpeciesCount = g.useObservationsSpeciesCountOptions.find(o => o.id === rb.value))
         })
     
-        toggleLessonStyle({ ctrl: inatSearchInputRb, fieldsetId: 'inat-search-container' })
-        toggleLessonStyle({ ctrl: fieldnotesInputRb, fieldsetId: 'fieldnotes-search-container' })
+        fieldnotesInputRb.addEventListener('click', toggleView, true)
+        inatSearchInputRb.addEventListener('click', toggleView, true)
     
         toggleFilterCtrl({ ctrl: displayToggleVisibilityBtn, fieldsetId: 'display-fieldset' })        
         toggleFilterCtrl({ ctrl: lessonToggleVisibilityBtn, fieldsetId: 'lesson-fieldset' })
@@ -736,45 +730,47 @@ const init = () => {
         ? await g.fieldnotesStubs
         : await getFieldnotesById({id: g.fieldnotesStubs.fieldnotesId})
 
-    if(!response.success) return 
+        importFieldNotesNotificationText.classList.add('hidden')
 
-    const fieldnotes = { 
-        ...response.data
-        , name: 'Field notes'
-        , sections: response.data.sectionOrder.map(sectionIndex => {
-            return response.data.sections.find(section => section.sectionIndex === sectionIndex)
-          })  
-    }
+        if(!response.success) return 
 
-    console.log(fieldnotes)
+        const fieldnotes = { 
+            ...response.data
+            , name: 'Field notes'
+            , sections: response.data.sectionOrder.map(sectionIndex => {
+                return response.data.sections.find(section => section.sectionIndex === sectionIndex)
+            })  
+        }
 
-    g.guide = fieldnotes
-    g.templates = [ ...g.templates, { 
-            ...fieldnotes            
-        , parent: 'non-grid-template' 
-        , type: 'fieldnotes'
-    }]
+        console.log(fieldnotes)
 
-    const taxaIds = g.guide.taxa
-        .map(t => t.id)
-    const taxaNames = g.guide.taxa
-        .map(t => t.name)
+        g.guide = fieldnotes
+        g.templates = [ ...g.templates, { 
+                ...fieldnotes            
+            , parent: 'non-grid-template' 
+            , type: 'fieldnotes'
+        }]
 
-    const inatTaxa = await getInatTaxa({ taxaIds, locale: g.language.id })
-    
-    g.species = inatTaxa.results
-        .filter(t => t.default_photo)
-        .map(t => { 
-            /**
-             * Only allow one name for a taxon
-             */
-            if(taxaNames.includes(t.name)) {
-                return {
-                    taxon: mapTaxon({taxon: t})
+        const taxaIds = g.guide.taxa
+            .map(t => t.id)
+        const taxaNames = g.guide.taxa
+            .map(t => t.name)
+
+        const inatTaxa = await getInatTaxa({ taxaIds, locale: g.language.id })
+        
+        g.species = inatTaxa.results
+            .filter(t => t.default_photo)
+            .map(t => { 
+                /**
+                 * Only allow one name for a taxon
+                 */
+                if(taxaNames.includes(t.name)) {
+                    return {
+                        taxon: mapTaxon({taxon: t})
+                    }
                 }
-            }
-        })
-        .filter(t => t)
+            })
+            .filter(t => t)
             
     createRadioBtnTemplateGroup()
     speciesDisplayContainer.classList.remove('disabled')
