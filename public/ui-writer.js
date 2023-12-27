@@ -654,9 +654,7 @@ const init = () => {
     try {
       importFieldNotesNotificationText.classList.remove('hidden')
 
-      const response = useLocal 
-        ? await globalWrite.fieldnotesStubs
-        : await getFieldnotesById({id: globalWrite.fieldnotesStubs.fieldnotesId})
+      const response = await getFieldnotesById({id: globalWrite.fieldnotesStubs.fieldnotesId})
 
       if(!response.success) return 
 

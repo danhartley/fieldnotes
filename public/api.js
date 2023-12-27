@@ -894,7 +894,6 @@ export const g = {
     templates: templates,
     count: 12,
     species: null,
-    guides: [],
     terms: terms,
     inatSpecies: [],
     inatAutocompleteOptions: [

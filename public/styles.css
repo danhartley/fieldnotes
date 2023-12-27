@@ -506,10 +506,6 @@ datalist {
   background-color: var(--c0);
 }
 
-#guide-group-container.grid {
-  grid-template-columns: 1fr;
-}
-
 .grid:has(figure, img) {
   margin: 0 auto calc(var(--d) * 4) auto;
 }
