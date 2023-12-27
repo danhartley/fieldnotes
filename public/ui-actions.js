@@ -33,7 +33,7 @@ export const createInatLookups = ({globalWrite, parent, writeTemplateId, section
     cloneImages({globalWrite, parent, writeTemplateId, sectionIndex})
 }
 
-export const handleInatAutocomplete = ({inputText, dataList, globalWrite, id, prop, callback, cbParent, writeTemplateId, sectionIndex}) => {
+export const handleInatAutocomplete = ({globalWrite, inputText, dataList, id, prop, callback, cbParent, writeTemplateId, sectionIndex}) => {
   inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
@@ -69,7 +69,7 @@ export const handleInatAutocomplete = ({inputText, dataList, globalWrite, id, pr
             if(option) option[name] = globalWrite.matches.find(m => m[prop] === match)
             
             globalWrite[prop] = match
-            callback({globalWrite, parent: cbParent, writeTemplateId, sectionIndex})
+            if(callback) callback({globalWrite, parent: cbParent, writeTemplateId, sectionIndex})
         }
     })
 }

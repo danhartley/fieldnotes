@@ -143,7 +143,7 @@ const init = () => {
     
             input.setAttribute('name', rbGroup)
             input.id = item.name || item.title
-            input.value = item.fnId
+            input.value = item.fnId || item.id
             label.textContent = item.name || item.title
             label.htmlFor = input.id
             label.setAttribute('position', 'absolute')
@@ -643,7 +643,8 @@ const init = () => {
             searchInatObservationsNotificationText.classList.toggle('hidden')
             searchInatObservationsBtn.classList.toggle('disabled')
             speciesDisplayContainer.classList.toggle('disabled')
-            speciesDisplayContainer.querySelector('input').click()
+            const input = speciesDisplayContainer.querySelector('input')
+            if(input) input.click()
         }
     
         searchInatObservationsBtn.addEventListener('click', fetchInatSpecies, false)
@@ -684,7 +685,7 @@ const init = () => {
         addImgClickEventHandlers()
     
         const { id, prop } = g.inatAutocomplete
-        handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g, id, prop, cbParent: d.getElementById('inat-params-input-check-box-group')})
+        handleInatAutocomplete({ globalWrite:g, inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g, id, prop, cbParent: d.getElementById('inat-params-input-check-box-group')})
     })
 
     rbInatAutocompleteGroup = createRadioBtnGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroupContainer})    

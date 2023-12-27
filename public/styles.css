@@ -334,14 +334,14 @@ fieldset {
   background-color: var(--c0);  
 }
 
-fieldset.fieldset-reset {
+.fieldset-reset {
   margin: 0;
   border: none;
-  padding: calc(var(--d) * 2) 0 0 0;
+  padding: var(--d) 0 0 0;
   background-color: initial;
 }
 
-fieldset.fieldset-reset fieldset {
+.fieldset-reset fieldset {
   border-color: var(--c5);
   border-top: none;
 }
@@ -797,6 +797,10 @@ datalist {
 
 .p0 {
   padding: 0;
+}
+
+.pb0 {
+  padding-bottom: 0;
 }
 
 /* SIZE */
