@@ -334,14 +334,14 @@ fieldset {
   background-color: var(--c0);  
 }
 
-.fieldset-reset {
+fieldset.fieldset-reset {
   margin: 0;
   border: none;
   padding: var(--d) 0 0 0;
   background-color: initial;
 }
 
-.fieldset-reset fieldset {
+fieldset.fieldset-reset fieldset {
   border-color: var(--c5);
   border-top: none;
 }

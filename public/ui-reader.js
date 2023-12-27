@@ -14,6 +14,7 @@ import {
     , getTaxonGroupColour
     , toggleHideShow
     , handleFieldsnotesAutocomplete
+    , showNotificationsDialog
 } from './ui-actions.js'
 
 import { templates } from './templates.js'
@@ -90,12 +91,15 @@ const init = () => {
                 ltpAutocompleteTitleInputText.focus()
                 break
             case 'iNaturalist':
-                g.templates = templates
                 iNatAutocompleteInputText.focus()            
                 break
         }
+
+        // Reset the page
         speciesDisplayContainer.classList.add('disabled')
         g.templates = templates
+        sectionsWithHeader.forEach(sh => sh.classList.add('hidden'))
+        article.innerHTML = ''
     }    
         
     const fieldnotesInputRb = d.getElementById('fieldnotes-input-rb')
@@ -104,6 +108,7 @@ const init = () => {
     const inatSearchView = d.getElementById('inat-search-view')
     const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
     const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
+    const sectionsWithHeader = d.querySelectorAll('section:has(.section-header:not(.section-group))')
     const importFieldNotesBtn = d.getElementById('import-fieldnotes-btn')
     const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
     const lessonToggleVisibilityBtn = d.getElementById('lesson-toggle-visibility-btn')
@@ -365,234 +370,238 @@ const init = () => {
     }
     
     const renderDisplayTemplate = () => {
-        if(!g.template) return
+        try {
+            let template = d.getElementById(g.template.parent)
+            let parentClone = template.content.cloneNode(true)
+            let templateToClone = d.getElementById(g.template.id) 
+            let parent = null
 
-        let template = d.getElementById(g.template.parent)
-        let parentClone = template.content.cloneNode(true)
-        let templateToClone = d.getElementById(g.template.id) 
-        let parent = null
-            
-        lessonFieldsetLegend.innerText = g.template.name
-    
-        if(g.species) article.innerHTML = ''
-    
-        switch(g.template.templateId) {
-            case 'species-template':
-                g.species.forEach((sp, i) => {
-                    const clone = cloneSpeciesCardFromTemplate({templateToClone, species: sp, index: i})
-                    parent = parentClone.querySelector('div')
-                    parent.appendChild(clone)
-                })
-                article.appendChild(parent)
-                break
-            case 'species-list-template':            
-                g.species.forEach(sp => {
-                const clone = templateToClone.content.cloneNode(true)
-                const li = clone.querySelector('li')
+            sectionsWithHeader.forEach(sh => sh.classList.toggle('hidden'))
                 
-                li.textContent = sp.taxon.name
+            lessonFieldsetLegend.innerText = g.template.name
         
-                parent = parentClone.querySelector('div')          
-                parent.appendChild(clone)
-                })
-                article.appendChild(parent)
-                break
-            case 'species-test-template':
-                g.species.forEach((sp, i) => {
+            if(g.species) article.innerHTML = ''
+        
+            switch(g.template.templateId) {
+                case 'species-template':
+                    g.species.forEach((sp, i) => {
+                        const clone = cloneSpeciesCardFromTemplate({templateToClone, species: sp, index: i})
+                        parent = parentClone.querySelector('div')
+                        parent.appendChild(clone)
+                    })
+                    article.appendChild(parent)
+                    break
+                case 'species-list-template':            
+                    g.species.forEach(sp => {
                     const clone = templateToClone.content.cloneNode(true)
-        
-                    const span = clone.querySelector('span')
-                    const label = clone.querySelector('label')
-                    const input = clone.querySelector('input')
-                    const img = clone.querySelector('img')      
-                    const div = clone.querySelector('img + figcaption')
-        
-                    input.id = sp.taxon.id
-                    label.htmlFor = input.id
-        
-                    div.style.setProperty("background-color", getTaxonGroupColour({taxon:sp.taxon.iconic_taxon_name}))
+                    const li = clone.querySelector('li')
                     
-                    switch(g.target.name) {
-                    case 'common name':
-                        span.textContent = sp.taxon.name
-                        span.classList.add('latin')
-                        label.textContent = 'common name'
-                        break
-                    case 'latin name':
-                        if(sp.taxon.preferred_common_name) {
-                        span.textContent = sp.taxon.preferred_common_name
-                        } else {
-                        span.textContent = sp.taxon.name
-                        span.classList.add('latin')
-                        }
-                        label.textContent = 'latin name'
-                        break
-                    }
-                    
-                    img.src = sp.taxon.default_photo.square_url.replace('square', 'small')
-                    img.alt = sp.taxon.name
-                    img.id = sp.taxon.id
-                    img.setAttribute('data-i', i + 1)
-                    img.setAttribute('loading', 'lazy')
-                    
+                    li.textContent = sp.taxon.name
+            
                     parent = parentClone.querySelector('div')          
                     parent.appendChild(clone)
-                })
-                article.appendChild(parent)
-                break
-            case 'fieldnotes-template':
-                g.template.sections.forEach(section => {            
-                    template = d.getElementById(section.parent)
-                    parentClone = template.content.cloneNode(true)
-                    templateToClone = d.getElementById(section.id)
-    
-                    let clone, h3, h4, iframe, a
-                    switch(section.type) {
-                        case 'h3-preview-template':
-                            clone = templateToClone.content.cloneNode(true)
-                            h3 = clone.querySelector('h3')
-                            h3.textContent = section.h3
-                            parent = parentClone.querySelector('div')
-                            parent.appendChild(clone)
-                            article.appendChild(parent)
-                        break
-                        case 'h4-preview-template':
-                            clone = templateToClone.content.cloneNode(true)
-                            h4 = clone.querySelector('h4')
-                            h4.textContent = section.h4
-                            parent = parentClone.querySelector('div')
-                            parent.appendChild(clone)
-                            article.appendChild(parent)
-                        break
-                        case 'author':
-                            clone = templateToClone.content.cloneNode(true)
-                            h3 = clone.querySelector('h3')
-                            h3.textContent = section.author
-                            parent = parentClone.querySelector('div')
-                            parent.appendChild(clone)
-                            article.appendChild(parent)
-                        break
-                        case 'xenocanto-preview-template':
-                            clone = templateToClone.content.cloneNode(true)
-                            iframe = clone.querySelector('iframe')
-                            iframe.src = `https://xeno-canto.org/${section.input}/embed?simple=1`
-                            parent = parentClone.querySelector('div')
-                            parent.appendChild(clone)
-                            article.appendChild(parent)
-                        break
-                        case 'date':
-                            clone = templateToClone.content.cloneNode(true)
-                            h3 = clone.querySelector('h3')
-                            h3.textContent = new Date(section.date).toDateString()
-                            parent = parentClone.querySelector('div')
-                            parent.appendChild(clone)
-                            article.appendChild(parent)
-                        break
-                        case 'location':
-                            clone = templateToClone.content.cloneNode(true)
-                            a = clone.querySelector('a')
-                            a.textContent = section.location.place_guess
-                            a.setAttribute('href', `https://www.google.com/maps/place/${section.location.location}`)
-                            parent = parentClone.querySelector('div')
-                            parent.appendChild(clone)
-                            article.appendChild(parent)
-                        break
-                        case 'img':
-                            section.imgs.forEach(img => {
-                                const clone = templateToClone.content.cloneNode(true)
-                                const image = clone.querySelector('img')
-                                const caption = clone.querySelector('figcaption')
-                                image.src = img.src
-                                image.setAttribute('alt', img.alt)
-                                image.setAttribute('loading', 'eager')
-                                caption.textContent = img.alt
-                                parent = parentClone.querySelector('div')
-                                parent.appendChild(clone)
-                            })
-                            article.appendChild(parent)
-                        break
-                        case 'textarea-preview-template':
-                            section.paras.forEach(text => {
-                                const clone = templateToClone.content.cloneNode(true)                      
-                                const md = clone.querySelector('p')
-                                md.textContent = text.p                            
-                                parent = parentClone.querySelector('div')
-                                parent.appendChild(clone)
-                            })
-                            article.appendChild(parent)
+                    })
+                    article.appendChild(parent)
+                    break
+                case 'species-test-template':
+                    g.species.forEach((sp, i) => {
+                        const clone = templateToClone.content.cloneNode(true)
+            
+                        const span = clone.querySelector('span')
+                        const label = clone.querySelector('label')
+                        const input = clone.querySelector('input')
+                        const img = clone.querySelector('img')      
+                        const div = clone.querySelector('img + figcaption')
+            
+                        input.id = sp.taxon.id
+                        label.htmlFor = input.id
+            
+                        div.style.setProperty("background-color", getTaxonGroupColour({taxon:sp.taxon.iconic_taxon_name}))
+                        
+                        switch(g.target.name) {
+                        case 'common name':
+                            span.textContent = sp.taxon.name
+                            span.classList.add('latin')
+                            label.textContent = 'common name'
                             break
-                        case 'species-preview-template':
-                            section.species.forEach((sp, i) => {
-                                try{
-                                    const s = g.species.find(s => s.taxon.name === sp)
-                                    const clone = cloneSpeciesCardFromTemplate({templateToClone, species: s, index: i})
-                                    parent = parentClone.querySelector('div')
-                                    parent.appendChild(clone)
-                                } catch (e) {
-    
-                                    console.log(e)
-                                }
-                            })
-                            article.appendChild(parent)
-                        break
-                        case 'observations-preview-template':
-                            section.species.forEach((sp, i) => {
-                                try{
-                                    const s = g.species.find(s => s.taxon.name === sp)
-                                    const clone = cloneSpeciesCardFromTemplate({templateToClone, species: s, index: i})
-                                    parent = parentClone.querySelector('div')
-                                    parent.appendChild(clone)
-                                } catch (e) {
-                                    console.log('species', sp)
-                                    console.log(e)
-                                }
-                            })
-                            article.appendChild(parent)
-                        break
-                        case 'terms-preview-template':
-                            section.terms.forEach(term => {
-                                const clone = templateToClone.content.cloneNode(true)                      
-                                const dt = clone.querySelector('dt')
-                                const dd = clone.querySelector('dd')                        
-                                const div1 = clone.querySelectorAll('div')[0]
-                                const div2 = clone.querySelectorAll('div')[1]
-                                const eg = div1.querySelector('span')
-                                const dx = div1.querySelector('em')
-                                const ds = div2.querySelector('a')
-    
-                                const def = g.terms.find(t => t.dt === term || term.dt)
-                                
-                                dt.textContent = def.dt
-                                dd.textContent = def.dd
-    
-                                if(def.dx) {                                
-                                    eg.textContent = 'e.g.'                                
-                                    dx.append(def.dx.join(', '))
-                                } else {
-                                    clone.removeChild(div1)
-                                }
-                                if(def.ds) {
-                                    const spans = ds.querySelectorAll('span')                                 
-                                    spans[0].textContent = def.da || 'Source'
-                                    ds.setAttribute('href', def.ds)
-                                    ds.setAttribute('target', '_blank')
-                                } else {
-                                    clone.removeChild(div2)
-                                }
-    
-                                parent = parentClone.querySelector('dl')
-                                parent.appendChild(clone)                    
-                            })
-                            article.appendChild(parent)
-                        break
-                    }
-                })
-                break
-        }
+                        case 'latin name':
+                            if(sp.taxon.preferred_common_name) {
+                            span.textContent = sp.taxon.preferred_common_name
+                            } else {
+                            span.textContent = sp.taxon.name
+                            span.classList.add('latin')
+                            }
+                            label.textContent = 'latin name'
+                            break
+                        }
+                        
+                        img.src = sp.taxon.default_photo.square_url.replace('square', 'small')
+                        img.alt = sp.taxon.name
+                        img.id = sp.taxon.id
+                        img.setAttribute('data-i', i + 1)
+                        img.setAttribute('loading', 'lazy')
+                        
+                        parent = parentClone.querySelector('div')          
+                        parent.appendChild(clone)
+                    })
+                    article.appendChild(parent)
+                    break
+                case 'fieldnotes-template':
+                    g.template.sections.forEach(section => {            
+                        template = d.getElementById(section.parent)
+                        parentClone = template.content.cloneNode(true)
+                        templateToClone = d.getElementById(section.id)
         
-        addImgClickEventHandlers()
-    
-        lessonToggleVisibilityBtn.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
+                        let clone, h3, h4, iframe, a
+                        switch(section.type) {
+                            case 'h3-preview-template':
+                                clone = templateToClone.content.cloneNode(true)
+                                h3 = clone.querySelector('h3')
+                                h3.textContent = section.h3
+                                parent = parentClone.querySelector('div')
+                                parent.appendChild(clone)
+                                article.appendChild(parent)
+                            break
+                            case 'h4-preview-template':
+                                clone = templateToClone.content.cloneNode(true)
+                                h4 = clone.querySelector('h4')
+                                h4.textContent = section.h4
+                                parent = parentClone.querySelector('div')
+                                parent.appendChild(clone)
+                                article.appendChild(parent)
+                            break
+                            case 'author':
+                                clone = templateToClone.content.cloneNode(true)
+                                h3 = clone.querySelector('h3')
+                                h3.textContent = section.author
+                                parent = parentClone.querySelector('div')
+                                parent.appendChild(clone)
+                                article.appendChild(parent)
+                            break
+                            case 'xenocanto-preview-template':
+                                clone = templateToClone.content.cloneNode(true)
+                                iframe = clone.querySelector('iframe')
+                                iframe.src = `https://xeno-canto.org/${section.input}/embed?simple=1`
+                                parent = parentClone.querySelector('div')
+                                parent.appendChild(clone)
+                                article.appendChild(parent)
+                            break
+                            case 'date':
+                                clone = templateToClone.content.cloneNode(true)
+                                h3 = clone.querySelector('h3')
+                                h3.textContent = new Date(section.date).toDateString()
+                                parent = parentClone.querySelector('div')
+                                parent.appendChild(clone)
+                                article.appendChild(parent)
+                            break
+                            case 'location':
+                                clone = templateToClone.content.cloneNode(true)
+                                a = clone.querySelector('a')
+                                a.textContent = section.location.place_guess
+                                a.setAttribute('href', `https://www.google.com/maps/place/${section.location.location}`)
+                                parent = parentClone.querySelector('div')
+                                parent.appendChild(clone)
+                                article.appendChild(parent)
+                            break
+                            case 'img':
+                                section.imgs.forEach(img => {
+                                    const clone = templateToClone.content.cloneNode(true)
+                                    const image = clone.querySelector('img')
+                                    const caption = clone.querySelector('figcaption')
+                                    image.src = img.src
+                                    image.setAttribute('alt', img.alt)
+                                    image.setAttribute('loading', 'eager')
+                                    caption.textContent = img.alt
+                                    parent = parentClone.querySelector('div')
+                                    parent.appendChild(clone)
+                                })
+                                article.appendChild(parent)
+                            break
+                            case 'textarea-preview-template':
+                                section.paras.forEach(text => {
+                                    const clone = templateToClone.content.cloneNode(true)                      
+                                    const md = clone.querySelector('p')
+                                    md.textContent = text.p                            
+                                    parent = parentClone.querySelector('div')
+                                    parent.appendChild(clone)
+                                })
+                                article.appendChild(parent)
+                                break
+                            case 'species-preview-template':
+                                section.species.forEach((sp, i) => {
+                                    try{
+                                        const s = g.species.find(s => s.taxon.name === sp)
+                                        const clone = cloneSpeciesCardFromTemplate({templateToClone, species: s, index: i})
+                                        parent = parentClone.querySelector('div')
+                                        parent.appendChild(clone)
+                                    } catch (e) {
+        
+                                        console.log(e)
+                                    }
+                                })
+                                article.appendChild(parent)
+                            break
+                            case 'observations-preview-template':
+                                section.species.forEach((sp, i) => {
+                                    try{
+                                        const s = g.species.find(s => s.taxon.name === sp)
+                                        const clone = cloneSpeciesCardFromTemplate({templateToClone, species: s, index: i})
+                                        parent = parentClone.querySelector('div')
+                                        parent.appendChild(clone)
+                                    } catch (e) {
+                                        console.log('species', sp)
+                                        console.log(e)
+                                    }
+                                })
+                                article.appendChild(parent)
+                            break
+                            case 'terms-preview-template':
+                                section.terms.forEach(term => {
+                                    const clone = templateToClone.content.cloneNode(true)                      
+                                    const dt = clone.querySelector('dt')
+                                    const dd = clone.querySelector('dd')                        
+                                    const div1 = clone.querySelectorAll('div')[0]
+                                    const div2 = clone.querySelectorAll('div')[1]
+                                    const eg = div1.querySelector('span')
+                                    const dx = div1.querySelector('em')
+                                    const ds = div2.querySelector('a')
+        
+                                    const def = g.terms.find(t => t.dt === term || term.dt)
+                                    
+                                    dt.textContent = def.dt
+                                    dd.textContent = def.dd
+        
+                                    if(def.dx) {                                
+                                        eg.textContent = 'e.g.'                                
+                                        dx.append(def.dx.join(', '))
+                                    } else {
+                                        clone.removeChild(div1)
+                                    }
+                                    if(def.ds) {
+                                        const spans = ds.querySelectorAll('span')                                 
+                                        spans[0].textContent = def.da || 'Source'
+                                        ds.setAttribute('href', def.ds)
+                                        ds.setAttribute('target', '_blank')
+                                    } else {
+                                        clone.removeChild(div2)
+                                    }
+        
+                                    parent = parentClone.querySelector('dl')
+                                    parent.appendChild(clone)                    
+                                })
+                                article.appendChild(parent)
+                            break
+                        }
+                    })
+                    break
+            }
+            
+            addImgClickEventHandlers()
+        
+            lessonToggleVisibilityBtn.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
+        } catch (e) {
+            showNotificationsDialog({message: e.message, type: 'error'})
+        }
     }     
     
     rbDateGroup.forEach(date => {
@@ -685,7 +694,15 @@ const init = () => {
         addImgClickEventHandlers()
     
         const { id, prop } = g.inatAutocomplete
-        handleInatAutocomplete({ globalWrite:g, inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, g, id, prop, cbParent: d.getElementById('inat-params-input-check-box-group')})
+        handleInatAutocomplete({ 
+              globalWrite:g
+            , inputText: iNatAutocompleteInputText
+            , dataList: iNatAutocompleteDatalist
+            , g
+            , id
+            , prop
+            , cbParent: d.getElementById('inat-params-input-check-box-group')
+        })
     })
 
     rbInatAutocompleteGroup = createRadioBtnGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroupContainer})    
@@ -779,6 +796,10 @@ const init = () => {
     }
 
     importFieldNotesBtn.addEventListener('click', importFieldNotes, true)
+
+    createRadioBtnTemplateGroup()
+
+    sectionsWithHeader.forEach(sh => sh.classList.toggle('hidden'))
 }
 
 init()

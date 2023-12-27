@@ -194,7 +194,7 @@ const init = () => {
       // Notify user that observations are available
       showNotificationsDialog({message: 'iNaturalist observations now available', type: 'success'})
       } catch (e) {
-      showNotificationsDialog({message: e.message, type: 'error'})
+        showNotificationsDialog({message: e.message, type: 'error'})
     }
   }
 
