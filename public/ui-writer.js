@@ -2,7 +2,6 @@ import {
   getInatObservations
 , g
 , getTerms
-, _getFieldnotes
 , getFieldnotesStubs
 , getFieldnotesById
 , addFieldnotes
@@ -41,8 +40,6 @@ import {
 } from './ui-actions.js'
 
 const init = () => {
-
-  const useLocal = false
 
   const initGlobalWrite = () => {
     const globalWrite = {}
@@ -205,7 +202,7 @@ const init = () => {
 
   const { id, prop } = globalWrite.inatAutocomplete
   handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, globalWrite, id, prop, cbParent: d.getElementById('inat-params-input-check-box-group')})  
-  handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: globalWrite, fieldnotesStubsCallback: useLocal ? _getFieldnotes : getFieldnotesStubs, importFieldNotesBtn}) 
+  handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: globalWrite, fieldnotesStubsCallback: getFieldnotesStubs, importFieldNotesBtn}) 
 
   const toggleBtnEnabledState = ({str, btn}) => {
     str.length > 0

@@ -4,8 +4,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getFirestore, collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-lite.js"
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"
 
-import { guides } from "./guides.js"
-import { fieldnotes } from './fieldnotes.js'
 import { templates } from './templates.js'
 
 // INAT API
@@ -68,8 +66,6 @@ export const getInatTaxa = async({
 }
 
 // LTP API
-
-export const _getFieldnotes = () => fieldnotes
 
 // HARD-CODED DATA
 
@@ -898,8 +894,7 @@ export const g = {
     templates: templates,
     count: 12,
     species: null,
-    guides: fieldnotes,
-    // guides: [ ...guides, ...fieldnotes],
+    guides: [],
     terms: terms,
     inatSpecies: [],
     inatAutocompleteOptions: [

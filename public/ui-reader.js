@@ -3,7 +3,6 @@ import {
     , getInatObservations
     , getInatTaxa
     , g
-    , _getFieldnotes
     , getFieldnotesStubs
     , getFieldnotesById
 } from './api.js'
@@ -133,7 +132,7 @@ const init = () => {
     const rbDateGroup = d.querySelectorAll('input[name="rbDate"]')
     
     let rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup
-    handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: g, fieldnotesStubsCallback: false ? _getFieldnotes : getFieldnotesStubs, importFieldNotesBtn}) 
+    handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: g, fieldnotesStubsCallback: getFieldnotesStubs, importFieldNotesBtn}) 
     
     const createRadioBtnGroup = ({collection, checked, rbGroup, parent}) => {
         collection.forEach(item => {
