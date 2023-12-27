@@ -26,8 +26,43 @@ const init = () => {
         useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0],
     })
 
-    const d = document
-    
+    const d = document   
+        
+    const fieldnotesInputRb = d.getElementById('fieldnotes-input-rb')
+    const inatSearchInputRb = d.getElementById('inat-search-input-rb')
+    const fieldnotesSearchView = d.getElementById('fieldnotes-search-view')
+    const inatSearchView = d.getElementById('inat-search-view')
+    const testView = d.getElementById('test-view')
+    const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
+    const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
+    const sectionsWithHeader = d.querySelectorAll('section:has(.section-header:not(.section-group))')
+    const importFieldNotesBtn = d.getElementById('import-fieldnotes-btn')
+    const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
+    const lessonToggleVisibilityBtn = d.getElementById('lesson-toggle-visibility-btn')
+    const displayToggleVisibilityBtn = d.getElementById('display-toggle-visibility-btn')
+    const progressFieldset = d.getElementById('progress-fieldset')
+    const progressToggleVisibilityBtn = d.getElementById('progress-toggle-visibility-btn')
+    const preferencesToggleVisibilityBtn = d.getElementById('preferences-toggle-visibility-btn')
+    const lessonFieldsetLegend = d.querySelector('#lesson-fieldset > legend')
+    const article = d.getElementById('article')
+    const rbTemplate = d.getElementById('radio-button-template')
+    const testSubmitBtn = d.getElementById('check-answers-btn')
+    const languageGroupContainer = d.getElementById('language-group-container')
+    const inatAutocompleteGroupContainer = d.getElementById('inat-autocomplete-group-container')
+    const inatUseObservationSpeciesCountGroupContainer = d.getElementById('inat-use-observations-species-count-group-container')
+    const targetGroupContainer = d.getElementById('target-group-container')
+    const targetsFieldset = d.getElementById('targets-fieldset')
+    const speciesDisplayContainer = d.getElementById('species-display-container')
+    const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
+    const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
+    const showTestBtn = d.getElementById('show-test-btn')
+    const searchInatObservationsBtn = d.getElementById('search-inat-observations-btn')
+    const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
+    const startDate = d.getElementById('observations-start-date')
+    const endDate = d.getElementById('observations-end-date')
+    const singleDate = d.getElementById('single-observations-input-date')
+    const rbDateGroup = d.querySelectorAll('input[name="rbDate"]')
+
     const getInatSpecies = async ({user, place}) => {
     
         let d1 = null
@@ -85,56 +120,24 @@ const init = () => {
 
         inatSearchView.classList.toggle('hidden')
         fieldnotesSearchView.classList.toggle('hidden')
-    
+        
         switch(view) {                    
             case 'fieldnotes':                
                 ltpAutocompleteTitleInputText.focus()
+                testView.classList.add('hidden')
                 break
             case 'iNaturalist':
                 iNatAutocompleteInputText.focus()            
+                testView.classList.remove('hidden')
                 break
         }
-
+    
         // Reset the page
         speciesDisplayContainer.classList.add('disabled')
         g.templates = templates
         sectionsWithHeader.forEach(sh => sh.classList.add('hidden'))
         article.innerHTML = ''
-    }    
-        
-    const fieldnotesInputRb = d.getElementById('fieldnotes-input-rb')
-    const inatSearchInputRb = d.getElementById('inat-search-input-rb')
-    const fieldnotesSearchView = d.getElementById('fieldnotes-search-view')
-    const inatSearchView = d.getElementById('inat-search-view')
-    const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
-    const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
-    const sectionsWithHeader = d.querySelectorAll('section:has(.section-header:not(.section-group))')
-    const importFieldNotesBtn = d.getElementById('import-fieldnotes-btn')
-    const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
-    const lessonToggleVisibilityBtn = d.getElementById('lesson-toggle-visibility-btn')
-    const displayToggleVisibilityBtn = d.getElementById('display-toggle-visibility-btn')
-    const progressFieldset = d.getElementById('progress-fieldset')
-    const progressToggleVisibilityBtn = d.getElementById('progress-toggle-visibility-btn')
-    const preferencesToggleVisibilityBtn = d.getElementById('preferences-toggle-visibility-btn')
-    const lessonFieldsetLegend = d.querySelector('#lesson-fieldset > legend')
-    const article = d.getElementById('article')
-    const rbTemplate = d.getElementById('radio-button-template')
-    const testSubmitBtn = d.getElementById('check-answers-btn')
-    const languageGroupContainer = d.getElementById('language-group-container')
-    const inatAutocompleteGroupContainer = d.getElementById('inat-autocomplete-group-container')
-    const inatUseObservationSpeciesCountGroupContainer = d.getElementById('inat-use-observations-species-count-group-container')
-    const targetGroupContainer = d.getElementById('target-group-container')
-    const targetsFieldset = d.getElementById('targets-fieldset')
-    const speciesDisplayContainer = d.getElementById('species-display-container')
-    const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
-    const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
-    const showTestBtn = d.getElementById('show-test-btn')
-    const searchInatObservationsBtn = d.getElementById('search-inat-observations-btn')
-    const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
-    const startDate = d.getElementById('observations-start-date')
-    const endDate = d.getElementById('observations-end-date')
-    const singleDate = d.getElementById('single-observations-input-date')
-    const rbDateGroup = d.querySelectorAll('input[name="rbDate"]')
+    } 
     
     let rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup
     handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: g, fieldnotesStubsCallback: getFieldnotesStubs, importFieldNotesBtn}) 
@@ -742,7 +745,12 @@ const init = () => {
         ? await g.fieldnotesStubs
         : await getFieldnotesById({id: g.fieldnotesStubs.fieldnotesId})
 
-        importFieldNotesNotificationText.classList.add('hidden')
+        importFieldNotesNotificationText.innerText = 'Fetching iNaturalist species…'
+
+        setTimeout(() => {
+            importFieldNotesNotificationText.classList.add('hidden')
+            importFieldNotesNotificationText.innerText = 'Fetching fieldnotes…'
+        }, 2000)
 
         if(!response.success) return 
 
@@ -755,8 +763,6 @@ const init = () => {
                 return response.data.sections.find(section => section.sectionIndex === sectionIndex)
             })  
         }
-
-        console.log(fieldnotes)
 
         g.fieldnotes = fieldnotes
         g.templates = [ ...g.templates, { 
