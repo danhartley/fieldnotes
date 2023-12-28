@@ -536,7 +536,7 @@ const init = () => {
                                 section.species.forEach((sp, i) => {
                                     try {
                                         const s = g.species.find(s => s.taxon.name === sp) || g.species.find(s => s.taxon.name === sp.taxon.name)
-                                        const clone = cloneSpeciesCardFromTemplate({templateToClone, species: s, index: i})
+                                        const clone = cloneSpeciesCardFromTemplate({templateToClone, species: s || sp, index: i})
                                         parent = parentClone.querySelector('div')
                                         parent.appendChild(clone)
                                     } catch (e) {

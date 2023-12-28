@@ -664,10 +664,12 @@ const init = () => {
       const fieldnotes = response.data
 
       Object.assign(globalWrite, {
-        fieldnotes,
-        sections: fieldnotes.sectionOrder.map(sectionIndex => {
-          return fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
-        })      
+        fieldnotes: {
+          ...fieldnotes,
+          sections: fieldnotes.sectionOrder.map(sectionIndex => {
+            return fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
+          })
+        }
       })
 
       const { title, author, d1, d2, location } = globalWrite.fieldnotes
