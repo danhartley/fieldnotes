@@ -453,10 +453,10 @@ const init = () => {
                     g.template.sections.forEach(section => {            
                         template = d.getElementById(section.parent)
                         parentClone = template.content.cloneNode(true)
-                        templateToClone = d.getElementById(section.id)
+                        templateToClone = d.getElementById(section.templateId)
         
                         let clone, h3, h4, iframe, a
-                        switch(section.type) {
+                        switch(section.templateId) {
                             case 'h3-preview-template':
                                 clone = templateToClone.content.cloneNode(true)
                                 h3 = clone.querySelector('h3')
@@ -531,23 +531,11 @@ const init = () => {
                                 article.appendChild(parent)
                                 break
                             case 'species-preview-template':
-                                section.species.forEach((sp, i) => {
-                                    try{
-                                        const s = g.species.find(s => s.taxon.name === sp)
-                                        const clone = cloneSpeciesCardFromTemplate({templateToClone, species: s, index: i})
-                                        parent = parentClone.querySelector('div')
-                                        parent.appendChild(clone)
-                                    } catch (e) {
-        
-                                        console.log(e)
-                                    }
-                                })
-                                article.appendChild(parent)
-                            break
                             case 'observations-preview-template':
+                            case 'inat-lookup-preview-template':
                                 section.species.forEach((sp, i) => {
-                                    try{
-                                        const s = g.species.find(s => s.taxon.name === sp)
+                                    try {
+                                        const s = g.species.find(s => s.taxon.name === sp) || g.species.find(s => s.taxon.name === sp.taxon.name)
                                         const clone = cloneSpeciesCardFromTemplate({templateToClone, species: s, index: i})
                                         parent = parentClone.querySelector('div')
                                         parent.appendChild(clone)
