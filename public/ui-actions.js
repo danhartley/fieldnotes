@@ -308,8 +308,10 @@ switch(writeTemplateId) {
         } 
         break
     case 'inat-lookup-write-template':
-    if(globalWrite.name) {
-        const match = globalWrite.matches.find(match => match.name === globalWrite.name)
+    const term = globalWrite.name || globalWrite.matched_term
+    if(term) {
+        // match.name is the scientific name, match.matched_term is the preferred common name in the given language (default en)
+        const match = globalWrite.matches.find(match => match.name === term || match.matched_term === term)
         const imgUrl = match.default_photo.square_url
         const clone = cloneImageTemplate({species: {taxon:match}, index: 0, sectionIndex, imgUrl, globalWrite, writeTemplateId})            
         parent.appendChild(clone)

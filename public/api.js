@@ -920,7 +920,15 @@ export const g = {
             prop: '',
             isActive: false,
             project: null,
-        }
+        },
+        {
+            id: 'taxa',
+            name: 'taxon',
+            placeholder: 'Start typing the common or scientific name…',
+            prop: 'matched_term',
+            isActive: false,
+            species: null,
+        },
     ],
     inatAutocomplete: {
         id: 'users',

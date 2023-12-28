@@ -407,12 +407,15 @@ const init = () => {
           showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))
           Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
 
+          globalWrite.inatAutocomplete = globalWrite.inatAutocompleteOptions.find(option => option.id === 'taxa')
+          const { id, prop } = globalWrite.inatAutocomplete
+
           handleInatAutocomplete({ 
               inputText: input
             , dataList: datalist
             , globalWrite
-            , id: 'taxa'
-            , prop: 'name'
+            , id
+            , prop
             , callback: createInatLookups
             , cbParent
             , writeTemplateId
@@ -423,7 +426,7 @@ const init = () => {
     return sectionContainer
   }
 
-  selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { createSection({writeTemplateId: e.target.value, typeText: e.target.innerText, sectionTemplate: getSectionTemplate({writeTemplateId}), sectionIndex: globalWrite.nextSectionIndex})}, true))
+  selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { createSection({writeTemplateId: e.target.value, typeText: e.target.innerText, sectionTemplate: getSectionTemplate({writeTemplateId: e.target.value}), sectionIndex: globalWrite.nextSectionIndex})}, true))
 
   const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex}) => {
     // if(previewContainer) previewContainer.innerHTML = ''
