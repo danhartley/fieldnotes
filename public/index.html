@@ -169,7 +169,7 @@
       </section>
 
       <section>
-        <div id="test-view">
+        <div class="inat-only-sections">
           <div class="section-header">
             <h2>Progress</h2>
             <button id="progress-toggle-visibility-btn" value="progress-fieldset" class="show-hide">HIDE</button>
@@ -204,15 +204,17 @@
       </section>
 
       <section>
-        <div class="section-header">
-          <h2>Preferences</h2>
-          <button id="preferences-toggle-visibility-btn" value="preferences" class="show-hide">HIDE</button>
+        <div class="inat-only-sections">
+          <div class="section-header">
+            <h2>Preferences</h2>
+            <button id="preferences-toggle-visibility-btn" value="preferences" class="show-hide">HIDE</button>
+          </div>
+          <fieldset id="preferences">
+            <legend>Language</legend>
+            <div id="language-group-container" class="grid"></div>
+            <p class="small">Language determines the locale preference for taxon common names.</p>
+          </fieldset>
         </div>
-        <fieldset id="preferences">
-          <legend>Language</legend>
-          <div id="language-group-container" class="grid"></div>
-          <p class="small">Language determines the locale preference for taxon common names.</p>
-        </fieldset>
       </section>
     </main>    
 

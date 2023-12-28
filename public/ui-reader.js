@@ -32,7 +32,7 @@ const init = () => {
     const inatSearchInputRb = d.getElementById('inat-search-input-rb')
     const fieldnotesSearchView = d.getElementById('fieldnotes-search-view')
     const inatSearchView = d.getElementById('inat-search-view')
-    const testView = d.getElementById('test-view')
+    const inatOnlySections = d.querySelectorAll('.inat-only-sections')
     const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
     const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
     const sectionsWithHeader = d.querySelectorAll('section:has(.section-header:not(.section-group))')
@@ -124,17 +124,15 @@ const init = () => {
         switch(view) {                    
             case 'fieldnotes':                
                 ltpAutocompleteTitleInputText.focus()
-                testView.classList.add('hidden')
+                inatOnlySections.forEach(section => section.classList.add('hidden'))
                 break
             case 'iNaturalist':
                 iNatAutocompleteInputText.focus()            
-                testView.classList.remove('hidden')
+                inatOnlySections.forEach(section => section.classList.remove('hidden'))
                 break
         }
     
         // Reset the page
-        speciesDisplayContainer.classList.add('disabled')
-        g.templates = templates
         sectionsWithHeader.forEach(sh => sh.classList.add('hidden'))
         article.innerHTML = ''
     } 
@@ -379,7 +377,7 @@ const init = () => {
             let templateToClone = d.getElementById(g.template.id) 
             let parent = null
 
-            sectionsWithHeader.forEach(sh => sh.classList.toggle('hidden'))
+            sectionsWithHeader.forEach(sh => sh.classList.remove('hidden'))
                 
             lessonFieldsetLegend.innerText = g.template.name
         
@@ -753,6 +751,7 @@ const init = () => {
         }
 
         g.fieldnotes = fieldnotes
+        g.templates = g.templates.filter(template => template.type !== 'fieldnotes')
         g.templates = [ ...g.templates, { 
                 ...fieldnotes            
             , parent: 'non-grid-template' 
