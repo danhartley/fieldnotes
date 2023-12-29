@@ -1217,6 +1217,25 @@ export const updateFieldNotes = async ({fieldnotes, data}) => {
   }
 }
 
+export const updateFieldNotesStubs = async ({fieldnotesStubs, data}) => {
+  let docRef  = null
+
+  try {
+    const db = getDb()
+    docRef = doc(db, 'fieldnotes-stubs', fieldnotesStubs.id)  
+    updateDoc(docRef, data)
+
+    return {
+      success: true,
+      message: 'Fieldnotes stubs updated'
+    }
+  } catch (e) {
+    console.log('API docRef: ', docRef)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
+  }
+}
+
 export const deleteFieldnoteProperty = async ({fieldnotes, prop}) => {
   const db = getDb()
   const docRef = doc(db, 'fieldnotes', fieldnotes.id)
@@ -1245,6 +1264,46 @@ export const updateFieldnoteProperty = async ({fieldnotes, prop, value}) => {
     console.log('API element to update: ', prop, value)
     console.log('API docRef: ', docRef)
     console.log('API data: ', data)
+    console.warn('API error: ', e)
+  }
+}
+
+export const updateFieldnoteStubProperty = async ({fieldnotesStubs, prop, value}) => {
+  let docRef, data  = null
+
+  try {
+    const db = getDb()
+    docRef = doc(db, 'fieldnotes-stubs', fieldnotesStubs.id)
+    data = {
+      [prop]: value
+    }
+    updateDoc(docRef, data)
+
+    return {
+      success: true,
+      message: `${prop.charAt(0).toUpperCase() + prop.slice(1)} updated`
+    }
+  } catch (e) {
+    console.log('API element to update: ', prop, value)
+    console.log('API docRef: ', docRef)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
+  }
+}
+
+export const updateFieldnotesTitle = async ({fieldnotes, prop, value, fieldnotesStubs}) => {
+  let response
+
+  try {
+    response = await updateFieldnoteProperty({fieldnotes, prop, value})
+    if(response.success) {
+      response = await updateFieldnoteStubProperty({fieldnotesStubs, prop, value})
+      return {
+        success: true,
+        message: 'Title updated'
+      }
+    }
+  } catch (e) {
     console.warn('API error: ', e)
   }
 }

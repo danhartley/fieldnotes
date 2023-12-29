@@ -7,6 +7,7 @@ import {
 , addFieldnotes
 , updateFieldNotes
 , updateFieldnoteProperty
+, updateFieldnotesTitle
 } from './api.js'
 
 import { 
@@ -557,9 +558,13 @@ const init = () => {
 
   const updateSingleFields = async ({prop, value}) => {
     if(globalWrite.view === 'edit') {
+      let response
       try {
-      const response = await updateFieldnoteProperty({fieldnotes: globalWrite.fieldnotes, prop, value})      
-      showNotificationsDialog({message: response.message, type: response.type, displayDuration: 2000})
+        response = prop === 'title'
+          ? await updateFieldnotesTitle({fieldnotes: globalWrite.fieldnotes, prop, value, fieldnotesStubs: globalWrite.fieldnotesStubs})
+          : await updateFieldnoteProperty({fieldnotes: globalWrite.fieldnotes, prop, value})
+        
+        showNotificationsDialog({message: response.message, type: response.type, displayDuration: 2000})
       } catch (e) {
         showNotificationsDialog({message: `${e.message} for ${prop}`, type: 'error'})
       }
