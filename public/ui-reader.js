@@ -456,7 +456,7 @@ const init = () => {
                     const metaList = metaClone.querySelector('ul')
                     const items = metaList.querySelectorAll('li > strong')
                     items[0].innerText = g.fieldnotes.author
-                    items[1].innerText = new Date(g.fieldnotes.d1).toLocaleDateString('en-gb', { weekday:"long", year:"numeric", month:"short", day:"numeric"})
+                    items[1].innerText = new Date(g.fieldnotes.d1).toLocaleDateString('en-gb', { weekday:"long", year:"numeric", month:"long", day:"numeric"})
                     items[2].innerText = g.fieldnotes.location.place_guess
                     article.appendChild(metaClone)
                     // Then iterate through the sections
