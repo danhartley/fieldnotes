@@ -94,9 +94,8 @@ h3 {
 h4 {
   margin: var(--d) 0;
   font-family: Elena, "PT Serif", serif;
-  font-size: var(--s3);
+  font-size: var(--s4);
   letter-spacing: calc(var(--d) / 10);
-  color: var(--c6);
 }
 
 ul {
@@ -549,10 +548,6 @@ th, td {
 
 .non-grid:has(h3), .non-grid:has(h4) {
   margin-bottom: 0;
-}
-
-.non-grid:has(h4) {
-  margin: initial;
 }
 
 .non-grid p {

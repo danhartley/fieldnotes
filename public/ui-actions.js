@@ -328,7 +328,7 @@ switch(writeTemplateId) {
 }
 
 export const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, globalWrite, writeTemplateId}) => {
-    const templateToClone = d.getElementById('img-template')
+    const templateToClone = d.getElementById('images-preview-template')
     const clone = templateToClone.content.cloneNode(true)
 
     const spans = clone.querySelectorAll('span')

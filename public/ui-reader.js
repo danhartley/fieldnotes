@@ -504,7 +504,7 @@ const init = () => {
                                 parent.appendChild(clone)
                                 article.appendChild(parent)
                             break
-                            case 'img':
+                            case 'images-preview-template':
                                 section.imgs.forEach(img => {
                                     const clone = templateToClone.content.cloneNode(true)
                                     const image = clone.querySelector('img')

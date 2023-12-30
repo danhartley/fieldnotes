@@ -12,7 +12,7 @@ import {
 
 import { 
   terms
-, image
+, images
 , previewTemplates
 , writeTemplates
 } from './templates.js'
@@ -262,12 +262,11 @@ const init = () => {
         label.htmlFor = input.id                  
         addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: null, previewContainer, sectionIndex}), true)
         break
-      case 'images':
-        const url1 = typeClone.getElementById('image-url-input-one')
-        const title1 = typeClone.getElementById('image-title-input-one')
+      case 'images-write-template':
+        const url1 = typeClone.getElementById('image-url-input-0')
+        const title1 = typeClone.getElementById('image-title-input-0')
         url1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)
-        title1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)
-        typeValue = images        
+        title1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)        
         break
       case 'inat-lookup-write-template':
         datalist = typeClone.querySelector('datalist')
@@ -368,13 +367,13 @@ const init = () => {
           handleOnClickAddSelectedTermBtn({selectedItems, selectedItem: newTerm})
         })
         break
-      case 'images':
-        const url1 = fieldset.querySelector('#image-url-input-one')
-        const title1 = fieldset.querySelector('#image-title-input-one')
-        const url2 = fieldset.querySelector('#image-url-input-two')
-        const title2 = fieldset.querySelector('#image-title-input-two')
-        const url3 = fieldset.querySelector('#image-url-input-three')
-        const title3 = fieldset.querySelector('#image-title-input-three')
+      case 'images-write-template':
+        const url1 = fieldset.querySelector('#image-url-input-0')
+        const title1 = fieldset.querySelector('#image-title-input-0')
+        const url2 = fieldset.querySelector('#image-url-input-1')
+        const title2 = fieldset.querySelector('#image-title-input-1')
+        const url3 = fieldset.querySelector('#image-url-input-2')
+        const title3 = fieldset.querySelector('#image-title-input-2')
         
         const handleImageTextChange = ({images, index, strValue, property}) => {
           const image = images[index]
@@ -403,6 +402,8 @@ const init = () => {
         [url1, title1, url2, title2, url3, title3].forEach((input, index) => {
           input.addEventListener('input', e => handleImageTextChange({images, strValue:e.target.value, index: calcIndex(index), property:input.dataset.key}), true)
         })
+        Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: images, previewContainer, sectionIndex}), true)
         break
       case 'inat-lookup-write-template':
           showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))
@@ -470,8 +471,9 @@ const init = () => {
         sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
         if(sectionToUpdate) sectionToUpdate.terms = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: 'terms'})
         break
-      case 'images':
-        sectionAddedOrUpdated = { ...image, templateId: image.id, sectionIndex, imgs: typeValue }
+      case 'images-write-template':
+        sectionAddedOrUpdated = { ...images, templateId: images.templateId, sectionIndex, imgs: typeValue }
+        if(sectionToUpdate) sectionToUpdate.imgs = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: 'images'})
         break
     }
     
@@ -739,7 +741,7 @@ const init = () => {
             section.paras.forEach(text => {
               addContentToPreviewContainer({previewTemplate, textContent: text.p, previewContainer})
               add.innerText += text.p
-            })          
+            })     
             break
           case 'species-preview-template':
           case 'observations-preview-template':
@@ -765,6 +767,15 @@ const init = () => {
             speciesCheckboxes.forEach(checkbox => {
               checkbox.setAttribute('checked', true)
             }) 
+            break
+          case 'images-preview-template':
+            setOriginalTypeValues({globalWrite, section, type:'images'})       
+            section.imgs.forEach((img, i) => {
+              if(img.src.length > 0) {
+                d.querySelector(`#image-url-input-${i}`).value = img.src
+                d.querySelector(`#image-title-input-${i}`).value = img.alt
+              }
+            })
             break
           case 'terms-preview-template':
             setOriginalTypeValues({globalWrite, section, type:'terms'})
@@ -794,6 +805,7 @@ const init = () => {
       showNotificationsDialog({message: 'Fieldnotes imported', type: 'success', displayDuration: 2000})
     } catch (e) {
       console.log('Error importing fieldnotes')
+      console.log(e.stack)
       showNotificationsDialog({message: e.message, type: 'error'})
     }
   }

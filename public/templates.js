@@ -111,10 +111,13 @@ export const inatlookup = {
   species: [],
 }
 
-export const image = {
-  id: 'img-template',
+export const images = {
+  id: 'images-preview-template',
+  templateId: 'images-preview-template',
+  writeTemplateId: 'images-write-template',
+  name: 'Context images',
   parent: 'grid-template',
-  type: 'img',
+  type: 'images-preview-template',
   imgs: [],
 }
 
@@ -167,6 +170,7 @@ export const previewTemplates = [
   , observations
   , inatlookup
   , terms
+  , images
 ]
 
 export const writeTemplates = [
@@ -217,5 +221,11 @@ export const writeTemplates = [
     templateId: 'terms-write-template',
     previewTemplateId: 'terms-preview-template',
     element: 'div'
-  }
+  },
+  {
+    id: 'images-write-template',
+    templateId: 'images-write-template',
+    previewTemplateId: 'images-preview-template',
+    element: 'div'
+  },
 ]
