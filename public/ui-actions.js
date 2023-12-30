@@ -585,7 +585,7 @@ export const addContentToPreviewContainer = ({previewTemplate, textContent, prev
     const t = d.getElementById(previewTemplate.templateId)
     const clone = t.content.cloneNode(true)
     const p = clone.querySelector(previewTemplate.element)
-    p.textContent = textContent
+    p.textContent = textContent    
     previewContainer.appendChild(clone)
   }
 

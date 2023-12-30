@@ -431,13 +431,11 @@ const init = () => {
   selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { createSection({writeTemplateId: e.target.value, typeText: e.target.innerText, sectionTemplate: getSectionTemplate({writeTemplateId: e.target.value}), sectionIndex: globalWrite.nextSectionIndex})}, true))
 
   const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex}) => {
-    // if(previewContainer) previewContainer.innerHTML = ''
-
     let sectionToUpdate, sectionAddedOrUpdated, isEdit = null
 
     sectionToUpdate = structuredClone(globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)) || null
 
-    isEdit = hasOriginalTypeValues({globalWrite, section: sectionToUpdate}) && !!sectionToUpdate
+    isEdit = sectionToUpdate !== null || hasOriginalTypeValues({globalWrite, section: sectionToUpdate})
     
     const writeTemplate = writeTemplates.find(template => template.templateId === writeTemplateId)
     const previewTemplate = previewTemplates.find(template => template.id === writeTemplate.previewTemplateId)
@@ -448,6 +446,7 @@ const init = () => {
       case 'xenocanto-write-template':
         previewTemplate[previewTemplate.element] = typeValue
         sectionAddedOrUpdated = { ...previewTemplate, sectionIndex }
+        previewContainer.replaceChildren()
         addContentToPreviewContainer({previewTemplate, textContent: typeValue, previewContainer})
         break
       case 'textarea-write-template':
@@ -457,8 +456,8 @@ const init = () => {
             p
           }
         })
-        previewTemplate[previewTemplate.element] = typeValue
         sectionAddedOrUpdated = { ...previewTemplate, sectionIndex, paras }
+        previewContainer.replaceChildren()
         paras.forEach(text => addContentToPreviewContainer({previewTemplate, textContent:text.p, previewContainer}))
         break
       case 'observations-write-template':
