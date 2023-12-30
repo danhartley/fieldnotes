@@ -20,8 +20,8 @@ const debounce = (func, wait) => {
 
   return function executedFunction(...args) {
       const later = () => {
-      clearTimeout(timeout)
-      func(...args)
+        clearTimeout(timeout)
+        func(...args)
       }
 
       clearTimeout(timeout)
@@ -114,26 +114,34 @@ export const handleTermAutocomplete = ({inputText, selectedItems, dataList, glob
     })
 }
 
-export const handleFieldsnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubsCallback, importFieldNotesBtn}) => {
+const addTitlesToList = async ({dataList, strToComplete, fieldnotesStubsCallback}) => {
     let stubs
+
+    while (dataList.firstChild) {
+        dataList.removeChild(dataList.firstChild)
+    }
+
+    stubs = await fieldnotesStubsCallback()
+
+    const matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
+
+    dataList.replaceChildren()
+
+    matches.forEach(match => {
+        const option = d.createElement('option')
+        option.value = match['title']
+        dataList.appendChild(option)
+    })
+
+    return stubs
+}
+
+export const handleFieldsnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubsCallback, importFieldNotesBtn}) => {
+    // The list of titles will initially be short, so we load it at once, in its entirety
+    let stubs = await addTitlesToList({dataList, strToComplete: '', fieldnotesStubsCallback})
+
     inputText.addEventListener('input', debounce(async (e) => {
-        while (dataList.firstChild) {
-            dataList.removeChild(dataList.firstChild)
-        }
-
-        const strToComplete = e.target.value
-
-        stubs = await fieldnotesStubsCallback()
-
-        const matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
-
-        dataList.replaceChildren()
-                
-        matches.forEach(match => {
-            const option = d.createElement('option')
-            option.value = match['title']
-            dataList.appendChild(option)
-        })
+        stubs = await addTitlesToList({dataList, strToComplete: e.target.value, fieldnotesStubsCallback})
     }, 0))
 
     inputText.addEventListener('change', e => {

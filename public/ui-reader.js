@@ -123,12 +123,15 @@ const init = () => {
         
         switch(view) {                    
             case 'fieldnotes':                
-                ltpAutocompleteTitleInputText.focus()
                 inatOnlySections.forEach(section => section.classList.add('hidden'))
+                iNatAutocompleteInputText.value = ''
+                handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: g, fieldnotesStubsCallback: getFieldnotesStubs, importFieldNotesBtn})
+                ltpAutocompleteTitleInputText.focus()
                 break
             case 'iNaturalist':
+                ltpAutocompleteTitleInputText.value = ''
                 iNatAutocompleteInputText.focus()            
-                inatOnlySections.forEach(section => section.classList.remove('hidden'))
+                inatOnlySections.forEach(section => section.classList.remove('hidden'))                
                 break
         }
     
@@ -137,8 +140,7 @@ const init = () => {
         article.innerHTML = ''
     } 
     
-    let rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup
-    handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: g, fieldnotesStubsCallback: getFieldnotesStubs, importFieldNotesBtn}) 
+    let rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup    
     
     const createRadioBtnGroup = ({collection, checked, rbGroup, parent}) => {
         collection.forEach(item => {
