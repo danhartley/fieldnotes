@@ -490,6 +490,10 @@ th, td {
   text-transform: capitalize;
 }
 
+.serif {
+  font-family: Elena, "PT Serif", serif;
+}
+
 /* SELECTOR RULES */
 
 .grid {
@@ -565,7 +569,7 @@ th, td {
   height: calc(6 * var(--d));
   padding: var(--d);
   font-size: var(--s3);
-  text-transform: lowercase;
+  /* text-transform: lowercase; */
 }
 
 #lesson legend:empty {

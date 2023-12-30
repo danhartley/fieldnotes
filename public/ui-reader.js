@@ -17,7 +17,7 @@ import {
     , showNotificationsDialog
 } from './ui-actions.js'
 
-import { templates } from './templates.js'
+// import { templates } from './templates.js'
 
 const init = () => {    
     Object.assign(g, {
@@ -450,6 +450,16 @@ const init = () => {
                     article.appendChild(parent)
                     break
                 case 'fieldnotes-template':
+                    // Display metadata from the fieldtrip to the fieldnotes
+                    const metaTemplate = d.getElementById('meta-preview-template')
+                    const metaClone = metaTemplate.content.cloneNode(true)
+                    const metaList = metaClone.querySelector('ul')
+                    const items = metaList.querySelectorAll('li > strong')
+                    items[0].innerText = g.fieldnotes.author
+                    items[1].innerText = new Date(g.fieldnotes.d1).toLocaleDateString('en-gb', { weekday:"long", year:"numeric", month:"short", day:"numeric"})
+                    items[2].innerText = g.fieldnotes.location.place_guess
+                    article.appendChild(metaClone)
+                    // Then iterate through the sections
                     g.template.sections.forEach(section => {            
                         template = d.getElementById(section.parent)
                         parentClone = template.content.cloneNode(true)
@@ -784,7 +794,7 @@ const init = () => {
         createRadioBtnTemplateGroup()
         
         article.innerHTML = ''
-        // We've set the display option as checked by default, so we need to enable it (we don't want to programatically force a click event)
+        // We've set the display option as checked by default, so we need to enable it (we don't want to, or cannot, programatically force a click event)
         g.template = g.templates.find(t => t.templateId === 'fieldnotes-template')        
         renderDisplayTemplate()
         speciesDisplayContainer.classList.remove('disabled')
