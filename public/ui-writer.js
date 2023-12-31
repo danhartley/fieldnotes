@@ -598,7 +598,10 @@ const init = () => {
     globalWrite.fieldnotes.location.place_guess = e.target.value
     globalWrite.view === 'create'
       ? enableExportFieldNotesContainer()
-      : updateSingleFields({prop: 'location', value: { place_guess: globalWrite.fieldnotes.location.place_guess }})
+      : updateSingleFields({prop: 'location', value: { 
+          place_guess: globalWrite.fieldnotes.location.place_guess,
+          location: globalWrite.fieldnotes.location.location
+      }})
   })
   
   // Check state of iNat search button (enabled or disabled)
@@ -737,9 +740,12 @@ const init = () => {
             add.value = section[section.element]
             break
           case 'textarea-preview-template':          
-            section.paras.forEach(text => {
+            section.paras.forEach((text, i) => {
               addContentToPreviewContainer({previewTemplate, textContent: text.p, previewContainer})
-              add.innerText += text.p
+              add.value += text.p
+              if(i < section.paras.length - 1) {
+                add.value += '\r\n\n'
+              }
             })     
             break
           case 'species-preview-template':

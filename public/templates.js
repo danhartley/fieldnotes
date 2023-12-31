@@ -140,8 +140,10 @@ export const location = {
   id: 'h3-input-template',
   parent: 'non-grid-template',
   type: 'location',
-  location: 'location',
-  place_guess: 'place_guess',
+  location: {
+    place_guess: 'place_guess',
+    location: 'lat,long',
+  }  
 }
 
 export const author = {

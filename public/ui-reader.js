@@ -457,7 +457,9 @@ const init = () => {
                     const items = metaList.querySelectorAll('li > strong')
                     items[0].innerText = g.fieldnotes.author
                     items[1].innerText = new Date(g.fieldnotes.d1).toLocaleDateString('en-gb', { weekday:"long", year:"numeric", month:"long", day:"numeric"})
-                    items[2].innerText = g.fieldnotes.location.place_guess
+                    const a = metaList.querySelector('a')
+                    a.textContent = g.fieldnotes.location.place_guess
+                    a.setAttribute('href', `https://www.google.com/maps/place/${g.fieldnotes.location.location}`)
                     article.appendChild(metaClone)
                     // Then iterate through the sections
                     g.template.sections.forEach(section => {            
@@ -483,14 +485,14 @@ const init = () => {
                                 parent.appendChild(clone)
                                 article.appendChild(parent)
                             break
-                            case 'author':
-                                clone = templateToClone.content.cloneNode(true)
-                                h3 = clone.querySelector('h3')
-                                h3.textContent = section.author
-                                parent = parentClone.querySelector('div')
-                                parent.appendChild(clone)
-                                article.appendChild(parent)
-                            break
+                            // case 'author':
+                            //     clone = templateToClone.content.cloneNode(true)
+                            //     h3 = clone.querySelector('h3')
+                            //     h3.textContent = section.author
+                            //     parent = parentClone.querySelector('div')
+                            //     parent.appendChild(clone)
+                            //     article.appendChild(parent)
+                            // break
                             case 'xenocanto-preview-template':
                                 clone = templateToClone.content.cloneNode(true)
                                 iframe = clone.querySelector('iframe')
@@ -499,23 +501,23 @@ const init = () => {
                                 parent.appendChild(clone)
                                 article.appendChild(parent)
                             break
-                            case 'date':
-                                clone = templateToClone.content.cloneNode(true)
-                                h3 = clone.querySelector('h3')
-                                h3.textContent = new Date(section.date).toDateString()
-                                parent = parentClone.querySelector('div')
-                                parent.appendChild(clone)
-                                article.appendChild(parent)
-                            break
-                            case 'location':
-                                clone = templateToClone.content.cloneNode(true)
-                                a = clone.querySelector('a')
-                                a.textContent = section.location.place_guess
-                                a.setAttribute('href', `https://www.google.com/maps/place/${section.location.location}`)
-                                parent = parentClone.querySelector('div')
-                                parent.appendChild(clone)
-                                article.appendChild(parent)
-                            break
+                            // case 'date':
+                            //     clone = templateToClone.content.cloneNode(true)
+                            //     h3 = clone.querySelector('h3')
+                            //     h3.textContent = new Date(section.date).toDateString()
+                            //     parent = parentClone.querySelector('div')
+                            //     parent.appendChild(clone)
+                            //     article.appendChild(parent)
+                            // break
+                            // case 'location':
+                            //     clone = templateToClone.content.cloneNode(true)
+                            //     a = clone.querySelector('a')
+                            //     a.textContent = section.location.place_guess
+                            //     a.setAttribute('href', `https://www.google.com/maps/place/${section.location.location}`)
+                            //     parent = parentClone.querySelector('div')
+                            //     parent.appendChild(clone)
+                            //     article.appendChild(parent)
+                            // break
                             case 'images-preview-template':
                                 section.imgs.forEach(img => {
                                     const clone = templateToClone.content.cloneNode(true)
