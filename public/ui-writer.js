@@ -38,6 +38,8 @@ import {
   , hasOriginalTypeValues
   , addTermToList
   , isValidDate
+  , mapTaxon
+  , mapUser
 } from './ui-actions.js'
 
 const init = () => {
@@ -688,7 +690,7 @@ const init = () => {
       dateInputText.value = d1
       placeInputText.value = location.place_guess
 
-      globalWrite.species = await getInatObservations({ 
+      const species = await getInatObservations({ 
         user_id: globalWrite.fieldnotes.user.id,
         place_id: null,
         iconic_taxa: globalWrite.iconicTaxa,
@@ -697,6 +699,18 @@ const init = () => {
         species_count: false,
         d1,
         d2,
+      })
+
+      globalWrite.species = species.map(sp => {
+        return {
+            id: sp.id
+          , observation_photos: sp.observation_photos
+          , photos: sp.photos
+          , place_guess: sp.place_guess
+          , species_guess: sp.species_guess
+          , taxon: mapTaxon({taxon: sp.taxon})
+          , user: mapUser({user: sp.user})
+        }
       })
 
       importFieldNotesNotificationText.classList.add('hidden')
@@ -750,7 +764,7 @@ const init = () => {
             break
           case 'species-preview-template':
           case 'observations-preview-template':
-          setOriginalTypeValues({globalWrite, section, type:'species'})
+            setOriginalTypeValues({globalWrite, section, type:'species'})
             speciesCheckboxes = sectionContainer.querySelectorAll('input')
             speciesCheckboxes.forEach(checkbox => {
               if(section.species.includes(checkbox.value)) {

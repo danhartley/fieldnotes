@@ -165,6 +165,19 @@ export const mapTaxon = ({taxon}) => {
     }
 }
 
+export const mapUser = ({user}) => {
+    return {
+          icon: user.icon
+        , id: user.id
+        , identifications_count: user.identifications_count
+        , journal_posts_count: user.journal_posts_count
+        , login: user.login
+        , name: user.name
+        , observations_count: user.observations_count
+        , species_count: user.species_count
+    }
+}
+
 export const mapInatSpeciesToLTP = ({species, count, taxa}) => {
     return species
         .filter(sp => sp.taxon)
@@ -304,16 +317,24 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
 export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}) => {
 switch(writeTemplateId) {
     case 'species-write-template':
+        if(globalWrite.species.length > 0) {
+            const uniqueSpecies = []
+            globalWrite.species.forEach((sp, index) => {
+            if(uniqueSpecies.findIndex(us => us === sp.taxon.name) === -1) {
+                    const clone = cloneImageTemplate({species: sp, index, sectionIndex, imgUrl: sp.taxon.default_photo.medium_url, globalWrite, writeTemplateId})            
+                    parent.appendChild(clone)
+                    uniqueSpecies.push(sp.taxon.name)                
+                }
+            })
+        }
+        break
     case 'observations-write-template':
         if(globalWrite.species.length > 0) {
-            globalWrite.species.forEach((species, index) => {
-            const imgUrl = writeTemplateId === 'observations-write-template'
-                ? species.photos[0].url
-                : species.taxon.default_photo.medium_url
-            const clone = cloneImageTemplate({species, index, sectionIndex, imgUrl, globalWrite, writeTemplateId})            
-            parent.appendChild(clone)
-        })
-        } 
+                globalWrite.species.forEach((species, index) => {
+                const clone = cloneImageTemplate({species, index, sectionIndex, imgUrl: species.photos[0].url, globalWrite, writeTemplateId})            
+                parent.appendChild(clone)
+            })
+        }
         break
     case 'inat-lookup-write-template':
     const term = globalWrite.name || globalWrite.matched_term
@@ -560,12 +581,12 @@ export const addOrUpdateSectionArray = async ({globalWrite, sectionToUpdate, sec
             // Update changes in memory
             if(response.success) {                
                 globalWrite.fieldnotes.sections.push(sectionAddedOrUpdated)
-                globalWrite.fieldnotes.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)                
+                globalWrite.fieldnotes.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)   
+                globalWrite.nextSectionIndex++             
             }
         }
 
-        if(response.success) {
-            globalWrite.nextSectionIndex++
+        if(response.success) {            
             if(sectionToUpdate && sectionToUpdate.type) {
                 setOriginalTypeValues({section:sectionAddedOrUpdated, globalWrite, type: sectionToUpdate.type})
             }
