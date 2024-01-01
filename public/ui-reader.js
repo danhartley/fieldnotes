@@ -17,8 +17,6 @@ import {
     , showNotificationsDialog
 } from './ui-actions.js'
 
-// import { templates } from './templates.js'
-
 const init = () => {    
     Object.assign(g, {
         iconicTaxa: g.ICONIC_TAXA,
@@ -486,14 +484,6 @@ const init = () => {
                                 parent.appendChild(clone)
                                 article.appendChild(parent)
                             break
-                            // case 'author':
-                            //     clone = templateToClone.content.cloneNode(true)
-                            //     h3 = clone.querySelector('h3')
-                            //     h3.textContent = section.author
-                            //     parent = parentClone.querySelector('div')
-                            //     parent.appendChild(clone)
-                            //     article.appendChild(parent)
-                            // break
                             case 'xenocanto-preview-template':
                                 clone = templateToClone.content.cloneNode(true)
                                 iframe = clone.querySelector('iframe')
@@ -502,23 +492,6 @@ const init = () => {
                                 parent.appendChild(clone)
                                 article.appendChild(parent)
                             break
-                            // case 'date':
-                            //     clone = templateToClone.content.cloneNode(true)
-                            //     h3 = clone.querySelector('h3')
-                            //     h3.textContent = new Date(section.date).toDateString()
-                            //     parent = parentClone.querySelector('div')
-                            //     parent.appendChild(clone)
-                            //     article.appendChild(parent)
-                            // break
-                            // case 'location':
-                            //     clone = templateToClone.content.cloneNode(true)
-                            //     a = clone.querySelector('a')
-                            //     a.textContent = section.location.place_guess
-                            //     a.setAttribute('href', `https://www.google.com/maps/place/${section.location.location}`)
-                            //     parent = parentClone.querySelector('div')
-                            //     parent.appendChild(clone)
-                            //     article.appendChild(parent)
-                            // break
                             case 'images-preview-template':
                                 section.images.forEach(img => {
                                     const clone = templateToClone.content.cloneNode(true)

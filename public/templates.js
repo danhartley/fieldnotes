@@ -129,30 +129,6 @@ export const annotation = {
   annotations: [],
 }
 
-export const date = {
-  id: 'h3-input-template',
-  parent: 'non-grid-template',
-  type: 'date',
-  date: 'date',
-}
-
-export const location = {
-  id: 'h3-input-template',
-  parent: 'non-grid-template',
-  type: 'location',
-  location: {
-    place_guess: 'place_guess',
-    location: 'lat,long',
-  }  
-}
-
-export const author = {
-  id: 'h3-input-template',
-  parent: 'non-grid-template',
-  type: 'author',
-  author: 'author',
-}
-
 export const xenocanto = {
   id: 'xenocanto-preview-template',
   name: 'Xeno-canto',
