@@ -363,7 +363,8 @@ const init = () => {
         spans[1].textContent = species.taxon.name
         spans[1].classList.add('latin')
         
-        img.src = species.taxon.default_photo.square_url.replace('square', 'small') // or observation…
+        const url = species.observation_url || species.taxon.default_photo.square_url
+        img.src = url.replace('square', 'small')
         img.alt = species.taxon.name
         img.id = species.taxon.id
         img.setAttribute('data-i', index + 1)
@@ -519,7 +520,7 @@ const init = () => {
                             //     article.appendChild(parent)
                             // break
                             case 'images-preview-template':
-                                section.imgs.forEach(img => {
+                                section.images.forEach(img => {
                                     const clone = templateToClone.content.cloneNode(true)
                                     const image = clone.querySelector('img')
                                     const caption = clone.querySelector('figcaption')
@@ -547,8 +548,13 @@ const init = () => {
                             case 'inat-lookup-preview-template':
                                 section.species.forEach((sp, i) => {
                                     try {
-                                        const s = g.species.find(s => s.taxon.name === sp) || g.species.find(s => s.taxon.name === sp.taxon.name)
-                                        const clone = cloneSpeciesCardFromTemplate({templateToClone, species: s || sp, index: i})
+                                        let s = g.species.find(s => s.taxon.name === sp) || g.species.find(s => s.taxon.name === sp) || g.species.find(s => s.taxon.name === sp.name)
+                                        if(sp.src) s.observation_url = sp.src
+                                        const clone = cloneSpeciesCardFromTemplate({
+                                              templateToClone
+                                            , species: s || sp
+                                            , index: i
+                                        })
                                         parent = parentClone.querySelector('div')
                                         parent.appendChild(clone)
                                     } catch (e) {
@@ -715,7 +721,8 @@ const init = () => {
     createTaxaCheckboxGroup()
 
     const date = new Date()
-    const today = `${date.getFullYear()}-${date.getMonth() + 1}-${("0" + date.getDate()).slice(-2)}`
+    const month = date.getMonth() + 1
+    const today = `${date.getFullYear()}-${month.length === 2 ? month : `0${month}`}-${("0" + date.getDate()).slice(-2)}`
 
     singleDate.value = today
     startDate.value = today

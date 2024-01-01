@@ -87,7 +87,7 @@ export const species = {
   writeTemplateId: 'species-write-template',
   name: 'Species catalogue',
   parent: 'grid-template',
-  type: 'species-preview-template',
+  type: 'species',
   species: [],
 }
 
@@ -97,7 +97,7 @@ export const observations = {
   writeTemplateId: 'observations-write-template',
   name: 'Observations catalogue',
   parent: 'grid-template',
-  type: 'observations-preview-template',
+  type: 'species',
   species: [],
 }
 
@@ -107,7 +107,7 @@ export const inatlookup = {
   writeTemplateId: 'inat-lookup-write-template',
   name: 'iNat species',
   parent: 'grid-template',
-  type: 'inat-lookup-preview-template',
+  type: 'species',
   species: [],
 }
 
@@ -117,8 +117,8 @@ export const images = {
   writeTemplateId: 'images-write-template',
   name: 'Context images',
   parent: 'grid-template',
-  type: 'images-preview-template',
-  imgs: [],
+  type: 'images',
+  images: [],
 }
 
 export const annotation = {

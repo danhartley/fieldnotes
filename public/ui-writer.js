@@ -466,15 +466,15 @@ const init = () => {
       case 'species-write-template':
       case 'inat-lookup-write-template':
         sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
-        if(sectionToUpdate) sectionToUpdate.species = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: 'species'})
+        if(sectionToUpdate) sectionToUpdate.species = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: sectionToUpdate.type})
         break
       case 'terms-write-template':                
         sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
-        if(sectionToUpdate) sectionToUpdate.terms = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: 'terms'})
+        if(sectionToUpdate) sectionToUpdate.terms = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: sectionToUpdate.type})
         break
       case 'images-write-template':
-        sectionAddedOrUpdated = { ...images, templateId: images.templateId, sectionIndex, imgs: typeValue }
-        if(sectionToUpdate) sectionToUpdate.imgs = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: 'images'})
+        sectionAddedOrUpdated = { ...images, templateId: images.templateId, sectionIndex, images: typeValue }
+        if(sectionToUpdate) sectionToUpdate.images = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: sectionToUpdate.type})
         break
     }
     
@@ -764,16 +764,16 @@ const init = () => {
             break
           case 'species-preview-template':
           case 'observations-preview-template':
-            setOriginalTypeValues({globalWrite, section, type:'species'})
+            setOriginalTypeValues({globalWrite, section, type:section.type})
             speciesCheckboxes = sectionContainer.querySelectorAll('input')
             speciesCheckboxes.forEach(checkbox => {
-              if(section.species.includes(checkbox.value)) {
+              if(section.species.includes(checkbox.value) || section.species.map(sp => sp.name).includes(checkbox.value)) {
                 checkbox.setAttribute('checked', true)
               }
             })            
             break
           case 'inat-lookup-preview-template':
-            setOriginalTypeValues({globalWrite, section, type:'species'})
+            setOriginalTypeValues({globalWrite, section, type:section.type})
             let parent = null
             section.species.forEach((sp, index) => {
               parent = sectionContainer.querySelector(`#section-${section.sectionIndex}-lookup-parent`)
@@ -789,7 +789,7 @@ const init = () => {
             break
           case 'images-preview-template':
             setOriginalTypeValues({globalWrite, section, type:'images'})       
-            section.imgs.forEach((img, i) => {
+            section.images.forEach((img, i) => {
               if(img.src.length > 0) {
                 d.querySelector(`#image-url-input-${i}`).value = img.src
                 d.querySelector(`#image-title-input-${i}`).value = img.alt

@@ -159,7 +159,7 @@ export const mapTaxon = ({taxon}) => {
         iconic_taxon_id: taxon.iconic_taxon_id,
         name: taxon.name,
         id: taxon.id,
-        default_photo: taxon.default_photo,
+        default_photo: taxon.default_photo, // map again to remove properties that aren't needed
         iconic_taxon_name: taxon.iconic_taxon_name,
         preferred_common_name: taxon.preferred_common_name || '-'
     }
@@ -272,13 +272,23 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
     if(section) {
         switch(writeTemplateId) {
             case 'species-write-template':
-            case 'observations-write-template':
+                const observation = globalWrite.species.find(sp => sp.name === name)
                 section.species.find(sp => sp === name)
                     ? section.species = section.species.filter(sp => sp !== name)
-                    : section.species.push(name)            
-                globalWrite.fieldnotes.sections[index] = section    
+                    : section.species.push({
+                          name
+                        , observation_id: observation.id
+                        , src: observation.photos[0].url
+                    })
+                globalWrite.fieldnotes.sections[index] = section
                 break
-                case 'inat-lookup-write-template':
+            case 'observations-write-template':
+                section.species.find(sp => sp === name)
+                    ? section.species = section.species.filter(sp => sp !== sp.name)
+                    : section.species.push({name})            
+                globalWrite.fieldnotes.sections[index] = section
+                break
+            case 'inat-lookup-write-template':
                     section.species.find(sp => sp.taxon.name === name)
                         ? section.species = section.species.filter(sp => sp.taxon.name !== name)
                         : section.species.push(getSpeciesForInatLookup({taxon})) 
@@ -479,7 +489,7 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
         })
     }
 
-    let sectionOrder = globalWrite.fieldnotes.sectionOrder
+    let sectionOrder = globalWrite.fieldnotes.sectionOrder.map(so => so)
 
     const moveUp = sectionToMoveDOMIndex > sectionToJumpDOMIndex
 
