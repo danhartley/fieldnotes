@@ -581,13 +581,13 @@ export const addOrUpdateSectionArray = async ({globalWrite, sectionToUpdate, sec
         let response
         
         if(isEdit) {
-            response = await updateElementFromArray({fieldnotes: globalWrite.fieldnotes, array, elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated})
+            response = await updateElementFromArray({fieldnotes: globalWrite.fieldnotes, array, elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated, isEdit})
             // Update changes in memory
             if(response.success) {                
                 globalWrite.fieldnotes.sections[globalWrite.nextSectionIndex] = sectionAddedOrUpdated
             }
         } else {
-            response = await addElementToArray({fieldnotes: globalWrite.fieldnotes, array, element: sectionAddedOrUpdated})
+            response = await addElementToArray({fieldnotes: globalWrite.fieldnotes, array, element: sectionAddedOrUpdated, isEdit})
             // Update changes in memory
             if(response.success) {                
                 globalWrite.fieldnotes.sections.push(sectionAddedOrUpdated)

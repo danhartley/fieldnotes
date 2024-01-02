@@ -11,8 +11,7 @@ import {
 } from './api.js'
 
 import { 
-  terms
-, images
+  images
 , previewTemplates
 , writeTemplates
 } from './templates.js'
@@ -229,7 +228,7 @@ const init = () => {
     sectionContainer.setAttribute('id', sectionIndex)
     sectionContainer.addEventListener('dragstart', dragstartHandler)
     
-    let input, label, textarea, datalist, previewContainer, images, cbParent = null
+    let input, label, textarea, datalist, previewContainer, imageSrcs, cbParent = null
 
     legend.innerText = typeText
 
@@ -268,7 +267,8 @@ const init = () => {
         const url1 = typeClone.getElementById('image-url-input-0')
         const title1 = typeClone.getElementById('image-title-input-0')
         url1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)
-        title1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)        
+        title1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: null, previewContainer, sectionIndex}), true)  
         break
       case 'inat-lookup-write-template':
         datalist = typeClone.querySelector('datalist')
@@ -377,15 +377,22 @@ const init = () => {
         const url3 = fieldset.querySelector('#image-url-input-2')
         const title3 = fieldset.querySelector('#image-title-input-2')
         
-        const handleImageTextChange = ({images, index, strValue, property}) => {
-          const image = images[index]
+        const handleImageTextChange = ({imageSrcs, index, strValue, property}) => {
+          const image = imageSrcs[index]
           if(image) {
             image[property] = strValue
-            images[index] = image
+            imageSrcs[index] = image
           } else {
-            images.push({
-              [property]: strValue
-            })
+            imageSrcs.push({
+              [property]: strValue              
+            })            
+          }
+          let section = globalWrite.fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
+          if(section) {
+            section.images = imageSrcs
+          } else {
+            section = {...images, images: imageSrcs, templateId: images.templateId, sectionIndex: globalWrite.nextSectionIndex }
+            globalWrite.fieldnotes.sections.push(section)
           }
         }
         
@@ -395,17 +402,18 @@ const init = () => {
           : ((index -1) / 2)
         }
         
-        images = []
+        imageSrcs = globalWrite.fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)?.images || []
         
-        for (let i = 0; i < 3; i++) {
-          images.push({src:'', alt:''})
+        if(imageSrcs.length === 0) {
+          for (let i = 0; i < 3; i++) {
+            imageSrcs.push({src:'', alt:''})            
+          }
         }
         
         [url1, title1, url2, title2, url3, title3].forEach((input, index) => {
-          input.addEventListener('input', e => handleImageTextChange({images, strValue:e.target.value, index: calcIndex(index), property:input.dataset.key}), true)
+          input.addEventListener('input', e => handleImageTextChange({imageSrcs, strValue:e.target.value, index: calcIndex(index), property:input.dataset.key}), true)
         })
         Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: images, previewContainer, sectionIndex}), true)
         break
       case 'inat-lookup-write-template':
           showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))
@@ -437,7 +445,7 @@ const init = () => {
 
     sectionToUpdate = structuredClone(globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)) || null
 
-    isEdit = sectionToUpdate !== null || hasOriginalTypeValues({globalWrite, section: sectionToUpdate})
+    isEdit = (sectionToUpdate !== null && globalWrite.fieldnotes.sectionOrder.includes(sectionToUpdate.sectionIndex)) || hasOriginalTypeValues({globalWrite, section: sectionToUpdate})
     
     const writeTemplate = writeTemplates.find(template => template.templateId === writeTemplateId)
     const previewTemplate = previewTemplates.find(template => template.id === writeTemplate.previewTemplateId)
@@ -473,7 +481,7 @@ const init = () => {
         if(sectionToUpdate) sectionToUpdate.terms = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: sectionToUpdate.type})
         break
       case 'images-write-template':
-        sectionAddedOrUpdated = { ...images, templateId: images.templateId, sectionIndex, images: typeValue }
+        sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
         if(sectionToUpdate) sectionToUpdate.images = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: sectionToUpdate.type})
         break
     }
@@ -795,6 +803,7 @@ const init = () => {
                 d.querySelector(`#image-title-input-${i}`).value = img.alt
               }
             })
+            console.log(globalWrite.fieldnotes.sections)
             break
           case 'terms-preview-template':
             setOriginalTypeValues({globalWrite, section, type:'terms'})

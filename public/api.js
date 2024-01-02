@@ -1204,7 +1204,7 @@ export const updateFieldNotes = async ({fieldnotes, data}) => {
   try {
     const db = getDb()
     docRef = doc(db, 'fieldnotes', fieldnotes.id)  
-    updateDoc(docRef, data)
+    await updateDoc(docRef, data)
 
     return {
       success: true,
@@ -1242,7 +1242,7 @@ export const deleteFieldnoteProperty = async ({fieldnotes, prop}) => {
   const data = {
     [prop]: deleteField()
   }
-  updateDoc(docRef, data)
+  await updateDoc(docRef, data)
 }
 
 export const updateFieldnoteProperty = async ({fieldnotes, prop, value}) => {
@@ -1254,7 +1254,7 @@ export const updateFieldnoteProperty = async ({fieldnotes, prop, value}) => {
     data = {
       [prop]: value
     }
-    updateDoc(docRef, data)
+    await updateDoc(docRef, data)
 
     return {
       success: true,
@@ -1277,7 +1277,7 @@ export const updateFieldnoteStubProperty = async ({fieldnotesStubs, prop, value}
     data = {
       [prop]: value
     }
-    updateDoc(docRef, data)
+    await updateDoc(docRef, data)
 
     return {
       success: true,
@@ -1308,7 +1308,7 @@ export const updateFieldnotesTitle = async ({fieldnotes, prop, value, fieldnotes
   }
 }
 
-export const addElementToArray = async ({fieldnotes, array, element}) => {
+export const addElementToArray = async ({fieldnotes, array, element, isEdit = false}) => {
   let docRef, data  = null
 
   try {
@@ -1318,18 +1318,23 @@ export const addElementToArray = async ({fieldnotes, array, element}) => {
     data = {
       [array]: arrayUnion(element)
     }
-    updateDoc(docRef, data)
+    await updateDoc(docRef, data)
 
-    if(array === 'sections') {
+    if(array === 'sections' && !isEdit) {
       data = {
         sectionOrder: arrayUnion(element.sectionIndex)
       }
-      updateDoc(docRef, data)
-    }
+      await updateDoc(docRef, data)
 
-    return {
-      success: true,
-      message: 'Section added'
+      return {
+        success: true,
+        message: 'Section added'
+      }
+    } else {
+      return {
+        success: true,
+        message: 'Section added'
+      }
     }
   } catch (e) {
     console.log('API element to remove: ', element)
@@ -1339,7 +1344,7 @@ export const addElementToArray = async ({fieldnotes, array, element}) => {
   }
 }
 
-export const removeElementFromArray = async ({fieldnotes, array, element}) => {
+export const removeElementFromArray = async ({fieldnotes, array, element, isEdit = false}) => {
   let docRef, data  = null
 
   try {
@@ -1352,12 +1357,17 @@ export const removeElementFromArray = async ({fieldnotes, array, element}) => {
     
     await updateDoc(docRef, data)
     
-    if(array === 'sections') {
+    if(array === 'sections' && !isEdit) {
       data = {
         sectionOrder: arrayRemove(element.sectionIndex)
       }
       await updateDoc(docRef, data)            
 
+      return {
+        success: true,
+        message: 'Section removed'
+      }
+    } else {
       return {
         success: true,
         message: 'Section removed'
@@ -1371,12 +1381,12 @@ export const removeElementFromArray = async ({fieldnotes, array, element}) => {
   }
 }
 
-export const updateElementFromArray = async ({fieldnotes, array, elementToUpdate, elementAddedOrUpdated}) => {
+export const updateElementFromArray = async ({fieldnotes, array, elementToUpdate, elementAddedOrUpdated, isEdit}) => {
   // There is no native operation to update the element of an array
   // Instead, we remove the element, then add (the now updated) element
-  const response = await removeElementFromArray({fieldnotes, array, element: elementToUpdate})
+  const response = await removeElementFromArray({fieldnotes, array, element: elementToUpdate, isEdit})
   if(response.success) {
-    await addElementToArray({fieldnotes, array, element: elementAddedOrUpdated})
+    await addElementToArray({fieldnotes, array, element: elementAddedOrUpdated, isEdit})
     
     return {
       success: true,
