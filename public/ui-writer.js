@@ -40,6 +40,11 @@ import {
   , mapUser
   , handleImageTextChange
   , calcImageIndex
+  , toggleBtnEnabledState
+  , handleInputChangeEvent
+  , handleImageInputChangeEvent
+  , toggleAllOrIncludedInSpeciesList
+  , getSectionTemplate
 } from './ui-actions.js'
 
 const init = () => {
@@ -207,12 +212,6 @@ const init = () => {
   handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, globalWrite, id, prop, cbParent: d.getElementById('inat-params-input-check-box-group')})  
   handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: globalWrite, fieldnotesStubsCallback: getFieldnotesStubs, importFieldNotesBtn}) 
 
-  const toggleBtnEnabledState = ({str, btn}) => {
-    str.length > 0
-    ? btn.classList.remove('disabled')
-    : btn.classList.add('disabled')
-  }
-
   const createSection = ({writeTemplateId, typeText, sectionTemplate, sectionIndex}) => {
     const sectionClone = sectionTemplate.content.cloneNode(true)
     const sectionContainer = sectionClone.querySelector('section')
@@ -267,8 +266,8 @@ const init = () => {
       case 'images-write-template':
         const url1 = typeClone.getElementById('image-url-input-0')
         const title1 = typeClone.getElementById('image-title-input-0')
-        url1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)
-        title1.addEventListener('input', e => handleImageInputChangeEvent({e, addBtn: addOrUpdateSectionBtn, url1, title1}), true)
+        url1.addEventListener('input', () => handleImageInputChangeEvent({addBtn: addOrUpdateSectionBtn, url1, title1}), true)
+        title1.addEventListener('input', () => handleImageInputChangeEvent({addBtn: addOrUpdateSectionBtn, url1, title1}), true)
         addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: null, previewContainer, sectionIndex}), true)  
         break
       case 'inat-lookup-write-template':
@@ -477,46 +476,6 @@ const init = () => {
 
     Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
     Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
-  }
-
-  const handleInputChangeEvent = (e, addBtn) => {
-    toggleBtnEnabledState({str: e.target.value, btn: addBtn})
-  }
-
-  const handleImageInputChangeEvent = ({e, addBtn, url1, title1}) => {
-      (url1.value.length >= 5 && title1.value.length >= 2)
-        ? addBtn.classList.remove('disabled')
-        : addBtn.classList.add('disabled')    
-  }
-
-  const toggleAllOrIncludedInSpeciesList = ({btn, fieldset}) => {
-    {
-      if(btn.innerText.toLowerCase() === 'show only included') {
-        fieldset.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(input => {
-          input.closest('figure').classList.add('hidden')
-        })
-        btn.innerText = 'show all'
-      } else {
-        fieldset.querySelectorAll('input[type="checkbox"]').forEach(input => {
-          input.closest('figure').classList.remove('hidden')
-        })
-        btn.innerText = 'show only included'
-      }
-    }
-  }
-
-  const getSectionTemplate = ({writeTemplateId}) => {
-    let sectionTemplate = null
-    switch (writeTemplateId) {
-      case 'species-write-template':
-      case 'observations-write-template':
-      case 'inat-lookup-write-template':
-        sectionTemplate = d.getElementById('section-include-template')
-        break
-      default:
-        sectionTemplate = d.getElementById('section-template')
-    }
-    return sectionTemplate
   }
 
   const enableExportFieldNotesContainer = () => {

@@ -684,3 +684,47 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
     ? index / 2
     : ((index -1) / 2)
   }
+
+  export const toggleBtnEnabledState = ({str, btn}) => {
+    str.length > 0
+    ? btn.classList.remove('disabled')
+    : btn.classList.add('disabled')
+  }
+
+  export const handleInputChangeEvent = (e, addBtn) => {
+    toggleBtnEnabledState({str: e.target.value, btn: addBtn})
+  }
+
+  export const handleImageInputChangeEvent = ({addBtn, url1, title1}) => {
+      (url1.value.length >= 5 && title1.value.length >= 2)
+        ? addBtn.classList.remove('disabled')
+        : addBtn.classList.add('disabled')    
+  }
+
+  export const toggleAllOrIncludedInSpeciesList = ({btn, fieldset}) => {    
+    if(btn.innerText.toLowerCase() === 'show only included') {
+      fieldset.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(input => {
+        input.closest('figure').classList.add('hidden')
+      })
+      btn.innerText = 'show all'
+    } else {
+      fieldset.querySelectorAll('input[type="checkbox"]').forEach(input => {
+        input.closest('figure').classList.remove('hidden')
+      })
+      btn.innerText = 'show only included'
+    }
+  }
+
+  export const getSectionTemplate = ({writeTemplateId}) => {
+    let sectionTemplate = null
+    switch (writeTemplateId) {
+      case 'species-write-template':
+      case 'observations-write-template':
+      case 'inat-lookup-write-template':
+        sectionTemplate = d.getElementById('section-include-template')
+        break
+      default:
+        sectionTemplate = d.getElementById('section-template')
+    }
+    return sectionTemplate
+  }
