@@ -387,7 +387,7 @@ const init = () => {
         }
         
         [url1, title1, url2, title2, url3, title3].forEach((input, index) => {
-          input.addEventListener('input', e => handleImageTextChange({globalWrite, imageSrcs: images, strValue:e.target.value, index: calcImageIndex(index), property:input.dataset.key}), true)
+          input.addEventListener('input', e => handleImageTextChange({globalWrite, sectionIndex, imageSrcs: images, strValue:e.target.value, index: calcImageIndex(index), property:input.dataset.key}), true)
         })
         Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
         break
@@ -590,7 +590,6 @@ const init = () => {
       }})
   })
   
-  // Check state of iNat search button (enabled or disabled)
   const enableSearchBtn = () => {
     const hasUser = globalWrite.login && globalWrite.login.length > 0
     const date = new Date(singleObservationsInputDate.value)
@@ -772,7 +771,7 @@ const init = () => {
             }) 
             break
           case 'images-preview-template':
-            setOriginalTypeValues({globalWrite, section, type:'images'})       
+            setOriginalTypeValues({globalWrite, section, type:section.type})       
             section.images.forEach((img, i) => {
               if(img.src.length > 0) {
                 d.querySelector(`#image-url-input-${i}`).value = img.src

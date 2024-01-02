@@ -585,7 +585,7 @@ export const addOrUpdateSectionArray = async ({globalWrite, sectionToUpdate, sec
             response = await updateElementFromArray({fieldnotes: globalWrite.fieldnotes, array, elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated, isEdit})
             // Update changes in memory
             if(response.success) {                
-                globalWrite.fieldnotes.sections[globalWrite.nextSectionIndex] = sectionAddedOrUpdated
+                console.log('Section updated')
             }
         } else {
             response = await addElementToArray({fieldnotes: globalWrite.fieldnotes, array, element: sectionAddedOrUpdated, isEdit})
@@ -593,7 +593,7 @@ export const addOrUpdateSectionArray = async ({globalWrite, sectionToUpdate, sec
             if(response.success) {                
                 globalWrite.fieldnotes.sections.push(sectionAddedOrUpdated)
                 globalWrite.fieldnotes.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)   
-                globalWrite.nextSectionIndex++             
+                globalWrite.nextSectionIndex++  
             }
         }
 
@@ -660,7 +660,7 @@ export const isValidDate = ({date}) => {
     return date.length > 0 && Object.prototype.toString.call(new Date(date)) === '[object Date]'
 }
 
-export const handleImageTextChange = ({globalWrite, imageSrcs, index, strValue, property}) => {
+export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, index, strValue, property}) => {
     const image = imageSrcs[index]
     if(image) {
       image[property] = strValue
