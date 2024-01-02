@@ -11,8 +11,7 @@ import {
 } from './api.js'
 
 import { 
-  images
-, previewTemplates
+  previewTemplates
 , writeTemplates
 } from './templates.js'
 
@@ -39,6 +38,8 @@ import {
   , isValidDate
   , mapTaxon
   , mapUser
+  , handleImageTextChange
+  , calcImageIndex
 } from './ui-actions.js'
 
 const init = () => {
@@ -228,7 +229,7 @@ const init = () => {
     sectionContainer.setAttribute('id', sectionIndex)
     sectionContainer.addEventListener('dragstart', dragstartHandler)
     
-    let input, label, textarea, datalist, previewContainer, imageSrcs, cbParent = null
+    let input, label, textarea, datalist, previewContainer, images, cbParent = null
 
     legend.innerText = typeText
 
@@ -322,17 +323,17 @@ const init = () => {
         const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
         const addNewTermBtn = fieldset.querySelector('#add-new-term-btn')
         
-        const selectedItems = globalWrite?.fieldnotes.sections?.find(t => t.sectionIndex === sectionIndex)?.terms || []        
+        const selectedTerms = globalWrite?.fieldnotes.sections?.find(t => t.sectionIndex === sectionIndex)?.terms || []        
 
-        const handleOnClickAddSelectedTermBtn = ({selectedItems, selectedItem}) => {
+        const handleOnClickAddSelectedTermBtn = ({selectedTerms, selectedTerm}) => {
           const selectedItemsListElement = fieldset.querySelector('#selected-terms-list')
-          addTermToList({selectedItems, selectedItem, selectedItemsListElement, globalWrite, sectionIndex})
+          addTermToList({selectedTerms, selectedTerm, selectedItemsListElement, globalWrite, sectionIndex})
           addSelectedTermBtn.classList.add('disabled')
           addOrUpdateSectionBtn.classList.remove('disabled')
           input.value = ''             
         }
         input.focus()
-        handleTermAutocomplete({ inputText: input, selectedItems, dataList: datalist, globalWrite, data: getTerms(), parent, addSelectedTermBtn, handleOnClickAddSelectedTermBtn})
+        handleTermAutocomplete({ inputText: input, selectedTerms, dataList: datalist, globalWrite, data: getTerms(), parent, addSelectedTermBtn, handleOnClickAddSelectedTermBtn})
         
         // Create a new term
         const dt = fieldset.querySelector('#input-dt')
@@ -366,7 +367,7 @@ const init = () => {
             dx: dx.value,
           })
           
-          handleOnClickAddSelectedTermBtn({selectedItems, selectedItem: newTerm})
+          handleOnClickAddSelectedTermBtn({selectedTerms, selectedTerm: newTerm})
         })
         break
       case 'images-write-template':
@@ -375,43 +376,18 @@ const init = () => {
         const url2 = fieldset.querySelector('#image-url-input-1')
         const title2 = fieldset.querySelector('#image-title-input-1')
         const url3 = fieldset.querySelector('#image-url-input-2')
-        const title3 = fieldset.querySelector('#image-title-input-2')
+        const title3 = fieldset.querySelector('#image-title-input-2')      
         
-        const handleImageTextChange = ({imageSrcs, index, strValue, property}) => {
-          const image = imageSrcs[index]
-          if(image) {
-            image[property] = strValue
-            imageSrcs[index] = image
-          } else {
-            imageSrcs.push({
-              [property]: strValue              
-            })            
-          }
-          let section = globalWrite.fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
-          if(section) {
-            section.images = imageSrcs
-          } else {
-            section = {...images, images: imageSrcs, templateId: images.templateId, sectionIndex: globalWrite.nextSectionIndex }
-            globalWrite.fieldnotes.sections.push(section)
-          }
-        }
+        images = globalWrite.fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)?.images || []
         
-        const calcIndex = (index) => {
-          return (index % 2 === 0)
-          ? index / 2
-          : ((index -1) / 2)
-        }
-        
-        imageSrcs = globalWrite.fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)?.images || []
-        
-        if(imageSrcs.length === 0) {
+        if(images.length === 0) {
           for (let i = 0; i < 3; i++) {
-            imageSrcs.push({src:'', alt:''})            
+            images.push({src:'', alt:''})            
           }
         }
         
         [url1, title1, url2, title2, url3, title3].forEach((input, index) => {
-          input.addEventListener('input', e => handleImageTextChange({imageSrcs, strValue:e.target.value, index: calcIndex(index), property:input.dataset.key}), true)
+          input.addEventListener('input', e => handleImageTextChange({globalWrite, imageSrcs: images, strValue:e.target.value, index: calcImageIndex(index), property:input.dataset.key}), true)
         })
         Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
         break
@@ -809,7 +785,7 @@ const init = () => {
             setOriginalTypeValues({globalWrite, section, type:'terms'})
             const selectedItemsListElement = sectionContainer.querySelector('#selected-terms-list')
             section.terms.forEach((term, index) => {
-              addTermToList({selectedItems: section.terms, selectedItem: term, selectedItemsListElement, globalWrite, sectionIndex: section.sectionIndex})
+              addTermToList({selectedTerms: section.terms, selectedTerm: term, selectedItemsListElement, globalWrite, sectionIndex: section.sectionIndex})
             })
         }
       })

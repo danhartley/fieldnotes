@@ -11,6 +11,7 @@ import {
     , observations
     , inatlookup
     , terms
+    , images
 } from './templates.js'
 
 const d = document
@@ -74,7 +75,7 @@ export const handleInatAutocomplete = ({globalWrite, inputText, dataList, id, pr
     })
 }
 
-export const handleTermAutocomplete = ({inputText, selectedItems, dataList, globalWrite, data, parent, addSelectedTermBtn, handleOnClickAddSelectedTermBtn}) => {
+export const handleTermAutocomplete = ({inputText, selectedTerms, dataList, globalWrite, data, parent, addSelectedTermBtn, handleOnClickAddSelectedTermBtn}) => {
   inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
@@ -106,10 +107,10 @@ export const handleTermAutocomplete = ({inputText, selectedItems, dataList, glob
             spans[3].innerText = term.da
             if(spans[4]) spans[4].innerText = term.dx || '--'
 
-            if(selectedItems.find(t => t.dt.toLowerCase() === match.toLowerCase())) return 
+            if(selectedTerms.find(t => t.dt.toLowerCase() === match.toLowerCase())) return 
 
             addSelectedTermBtn.classList.remove('disabled')
-            addSelectedTermBtn.addEventListener('click', e => handleOnClickAddSelectedTermBtn({selectedItems, selectedItem: term}), true)
+            addSelectedTermBtn.addEventListener('click', e => handleOnClickAddSelectedTermBtn({selectedTerms, selectedTerm: term}), true)
         }
     })
 }
@@ -197,7 +198,7 @@ export const getTaxonGroupColour = ({taxon}) => {
     return getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
 }
 
-export const handleTermCheckState = ({e, globalWrite, selectedItem, li}) => {
+export const handleTermCheckState = ({e, globalWrite, selectedTerm, li}) => {
     const checkbox = e.target
     const isChecked = checkbox.checked
   
@@ -207,18 +208,18 @@ export const handleTermCheckState = ({e, globalWrite, selectedItem, li}) => {
 
     if(section) {
         isChecked
-            ? section.terms.push(selectedItem)
-            : section.terms = section.terms.filter(t => t !== selectedItem)
+            ? section.terms.push(selectedTerm)
+            : section.terms = section.terms.filter(t => t !== selectedTerm)
         globalWrite.fieldnotes.sections[sectionIndex] = section    
     } else {
-        section = {...terms, terms: [selectedItem], templateId: terms.templateId, sectionIndex }
+        section = {...terms, terms: [selectedTerm], templateId: terms.templateId, sectionIndex }
         globalWrite.fieldnotes.sections.push(section)
     }
 }
 
-export const addTermToList = ({selectedItems, selectedItem, selectedItemsListElement, globalWrite, sectionIndex}) => {
+export const addTermToList = ({selectedTerms, selectedTerm, selectedItemsListElement, globalWrite, sectionIndex}) => {
 
-    const items = [selectedItem]
+    const items = [selectedTerm]
 
     items.forEach(term => {
       const li = d.createElement('li')
@@ -227,7 +228,7 @@ export const addTermToList = ({selectedItems, selectedItem, selectedItemsListEle
       checkbox.id = term.dt
       checkbox.setAttribute('checked', true)
       checkbox.classList.add('fl')
-      checkbox.addEventListener('change', e => handleTermCheckState({e, globalWrite, selectedItem, li}), true)
+      checkbox.addEventListener('change', e => handleTermCheckState({e, globalWrite, selectedTerm, li}), true)
       const label = d.createElement('label')
       label.innerText = term.dt
       label.htmlFor = checkbox.id
@@ -238,13 +239,13 @@ export const addTermToList = ({selectedItems, selectedItem, selectedItemsListEle
 
     let section = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
 
-    if(selectedItems.findIndex(item => item.dt === selectedItem.dt) > -1) return
+    if(selectedTerms.findIndex(item => item.dt === selectedTerm.dt) > -1) return
 
     if(section) {
-        section.terms.push(selectedItem)      
+        section.terms.push(selectedTerm)      
         globalWrite.fieldnotes.sections[sectionIndex] = section    
     } else {
-        section = {...terms, terms: [selectedItem], templateId: terms.templateId, sectionIndex }
+        section = {...terms, terms: [selectedTerm], templateId: terms.templateId, sectionIndex }
         globalWrite.fieldnotes.sections.push(section)
     }
 }
@@ -658,3 +659,28 @@ return typeValues.length > 0
 export const isValidDate = ({date}) => {
     return date.length > 0 && Object.prototype.toString.call(new Date(date)) === '[object Date]'
 }
+
+export const handleImageTextChange = ({globalWrite, imageSrcs, index, strValue, property}) => {
+    const image = imageSrcs[index]
+    if(image) {
+      image[property] = strValue
+      imageSrcs[index] = image
+    } else {
+      imageSrcs.push({
+        [property]: strValue              
+      })            
+    }
+    let section = globalWrite.fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
+    if(section) {
+      section.images = imageSrcs
+    } else {
+      section = {...images, images: imageSrcs, templateId: images.templateId, sectionIndex: globalWrite.nextSectionIndex }
+      globalWrite.fieldnotes.sections.push(section)
+    }
+  }
+  
+  export const calcImageIndex = (index) => {
+    return (index % 2 === 0)
+    ? index / 2
+    : ((index -1) / 2)
+  }
