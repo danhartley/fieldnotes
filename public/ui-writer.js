@@ -108,7 +108,6 @@ const init = () => {
   const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
   const singleObservationsInputDate = d.getElementById('single-observations-input-date')
   const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
-  const importFieldNotesBtn = d.getElementById('import-fieldnotes-btn')
   const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
   const titleInputText = d.getElementById('title-input-text')
   const authorInputText = d.getElementById('author-input-text')
@@ -116,7 +115,6 @@ const init = () => {
   const placeInputText = d.getElementById('place-input-text')
   const selectSectionTypeSection = d.getElementById('select-section-type-section')
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
-  const exportFieldNotesBtn = d.getElementById('export-fieldnotes-btn')
   const exportFieldNotesContainer = d.getElementById('export-fieldnotes-container')
 
   draggableSections.addEventListener('dragover', dragoverHandler)
@@ -216,10 +214,10 @@ const init = () => {
     }
   }
 
-const searchInatObservationsBtn = new ButtonComponent({
-    elementId: 'search-inat-observations-btn'
-  , clickHandler: searchInatObservations
-})
+  const searchInatObservationsBtn = new ButtonComponent({
+      elementId: 'search-inat-observations-btn'
+    , clickHandler: searchInatObservations
+  })
 
   handleInatAutocomplete({ 
       inputText: iNatAutocompleteInputText
@@ -229,14 +227,6 @@ const searchInatObservationsBtn = new ButtonComponent({
     , prop: globalWrite.inatAutocomplete.prop
     , cbParent: d.getElementById('inat-params-input-check-box-group')
   })
-
-  handleFieldsnotesAutocomplete({ 
-      inputText: ltpAutocompleteTitleInputText
-    , dataList: ltpAutocompleteTitleDatalist
-    , global: globalWrite
-    , fieldnotesStubsCallback: getFieldnotesStubs
-    , importFieldNotesBtn
-  }) 
 
   const createSection = ({writeTemplateId, typeText, sectionTemplate, sectionIndex}) => {
     const sectionClone = sectionTemplate.content.cloneNode(true)
@@ -722,7 +712,7 @@ const searchInatObservationsBtn = new ButtonComponent({
   singleObservationsInputDate.addEventListener('blur', enableSearchBtn, true)
   iNatAutocompleteInputText.addEventListener('blur', enableSearchBtn, true)
 
-  const exportFieldNotes = async() => {
+  const exportFieldnotes = async() => {
     try {
       const notes = {}
 
@@ -771,9 +761,12 @@ const searchInatObservationsBtn = new ButtonComponent({
     }
   }
 
-  exportFieldNotesBtn.addEventListener('click', exportFieldNotes, true)
+  const exportFieldNotesBtn = new ButtonComponent({
+      elementId: 'export-fieldnotes-btn'
+    , clickHandler: exportFieldnotes
+  })
 
-  const importFieldNotes = async () => {
+  const importFieldnotes = async () => {
     try {
       importFieldNotesNotificationText.classList.remove('hidden')
 
@@ -986,7 +979,18 @@ const searchInatObservationsBtn = new ButtonComponent({
     }
   }
 
-  importFieldNotesBtn.addEventListener('click', importFieldNotes, true)
+  const importFieldnotesBtn = new ButtonComponent({
+      elementId: 'import-fieldnotes-btn'
+    , clickHandler: importFieldnotes
+  })
+
+  handleFieldsnotesAutocomplete({ 
+      inputText: ltpAutocompleteTitleInputText
+    , dataList: ltpAutocompleteTitleDatalist
+    , global: globalWrite
+    , fieldnotesStubsCallback: getFieldnotesStubs
+    , importFieldnotesBtn
+  })
 }
 
 init()

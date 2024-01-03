@@ -34,7 +34,7 @@ const init = () => {
     const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
     const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
     const sectionsWithHeader = d.querySelectorAll('section:has(.section-header:not(.section-group))')
-    const importFieldNotesBtn = d.getElementById('import-fieldnotes-btn')
+    const importFieldnotesBtn = d.getElementById('import-fieldnotes-btn')
     const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
     const lessonToggleVisibilityBtn = d.getElementById('lesson-toggle-visibility-btn')
     const displayToggleVisibilityBtn = d.getElementById('display-toggle-visibility-btn')
@@ -123,7 +123,7 @@ const init = () => {
             case 'fieldnotes':                
                 inatOnlySections.forEach(section => section.classList.add('hidden'))
                 iNatAutocompleteInputText.value = ''
-                handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: g, fieldnotesStubsCallback: getFieldnotesStubs, importFieldNotesBtn})
+                handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: g, fieldnotesStubsCallback: getFieldnotesStubs, importFieldnotesBtn})
                 ltpAutocompleteTitleInputText.focus()
                 break
             case 'iNaturalist':
@@ -718,7 +718,7 @@ const init = () => {
         setDateOption(d.getElementById('rbSingleDate'))
     }, true)
 
-    const importFieldNotes = async () => {
+    const importFieldnotes = async () => {
         importFieldNotesNotificationText.classList.remove('hidden')
 
         const response = false 
@@ -782,7 +782,7 @@ const init = () => {
         speciesDisplayContainer.classList.remove('disabled')
     }
 
-    importFieldNotesBtn.addEventListener('click', importFieldNotes, true)
+    importFieldnotesBtn.addEventListener('click', importFieldnotes, true)
 
     createRadioBtnTemplateGroup()
 

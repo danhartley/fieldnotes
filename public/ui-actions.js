@@ -137,7 +137,7 @@ const addTitlesToList = async ({dataList, strToComplete, fieldnotesStubsCallback
     return stubs
 }
 
-export const handleFieldsnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubsCallback, importFieldNotesBtn}) => {
+export const handleFieldsnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubsCallback, importFieldnotesBtn}) => {
     // The list of titles will initially be short, so we load it at once, in its entirety
     let stubs = await addTitlesToList({dataList, strToComplete: '', fieldnotesStubsCallback})
 
@@ -150,7 +150,7 @@ export const handleFieldsnotesAutocomplete = async ({inputText, dataList, global
 
         if(match) {
             global.fieldnotesStubs = stubs.find(option => option.title === match)
-            importFieldNotesBtn.classList.remove('disabled')        
+            importFieldnotesBtn.enable() 
         }
     })
 }
