@@ -12,10 +12,15 @@ import {
     , mapInatSpeciesToLTP
     , mapTaxon
     , getTaxonGroupColour
-    , toggleHideShow
     , handleFieldsnotesAutocomplete
     , showNotificationsDialog
 } from './ui-actions.js'
+
+import {
+      ButtonComponent
+    , ButtonHideShowComponent
+  } from './ui-components.js'
+  
 
 const init = () => {    
     Object.assign(g, {
@@ -34,13 +39,8 @@ const init = () => {
     const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
     const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
     const sectionsWithHeader = d.querySelectorAll('section:has(.section-header:not(.section-group))')
-    const importFieldnotesBtn = d.getElementById('import-fieldnotes-btn')
     const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
-    const lessonToggleVisibilityBtn = d.getElementById('lesson-toggle-visibility-btn')
-    const displayToggleVisibilityBtn = d.getElementById('display-toggle-visibility-btn')
     const progressFieldset = d.getElementById('progress-fieldset')
-    const progressToggleVisibilityBtn = d.getElementById('progress-toggle-visibility-btn')
-    const preferencesToggleVisibilityBtn = d.getElementById('preferences-toggle-visibility-btn')
     const lessonFieldsetLegend = d.querySelector('#lesson-fieldset > legend')
     const article = d.getElementById('article')
     const rbTemplate = d.getElementById('radio-button-template')
@@ -54,12 +54,24 @@ const init = () => {
     const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
     const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
     const showTestBtn = d.getElementById('show-test-btn')
-    const searchInatObservationsBtn = d.getElementById('search-inat-observations-btn')
     const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
     const startDate = d.getElementById('observations-start-date')
     const endDate = d.getElementById('observations-end-date')
     const singleDate = d.getElementById('single-observations-input-date')
     const rbDateGroup = d.querySelectorAll('input[name="rbDate"]')
+
+    const displayOptionsToggleVisibilityBtn = new ButtonHideShowComponent({
+        elementId: 'display-options-toggle-visibility-btn'
+    })    
+    const contentToggleVisibilityBtn = new ButtonHideShowComponent({
+        elementId: 'content-toggle-visibility-btn'
+    })    
+    const progressToggleVisibilityBtn = new ButtonHideShowComponent({
+        elementId: 'progress-toggle-visibility-btn'
+    })    
+    const preferencesToggleVisibilityBtn = new ButtonHideShowComponent({
+        elementId: 'preferences-toggle-visibility-btn'
+    })
 
     const getInatSpecies = async ({user, place}) => {
     
@@ -580,7 +592,7 @@ const init = () => {
             
             addImgClickEventHandlers()
         
-            lessonToggleVisibilityBtn.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
+            contentToggleVisibilityBtn.scrollIntoView()
         } catch (e) {
             showNotificationsDialog({message: e.message, type: 'error'})
         }
@@ -620,7 +632,7 @@ const init = () => {
             const place = g.inatAutocompleteOptions.find(o => o.id === 'places')        
     
             searchInatObservationsNotificationText.classList.toggle('hidden')
-            searchInatObservationsBtn.classList.toggle('disabled')
+            searchInatObservationsBtn.toggleActiveState()
     
             g.inatSpecies = await getInatSpecies({
                   user: user.isActive ? user.user : null
@@ -632,13 +644,16 @@ const init = () => {
             renderDisplayTemplate()
     
             searchInatObservationsNotificationText.classList.toggle('hidden')
-            searchInatObservationsBtn.classList.toggle('disabled')
+            searchInatObservationsBtn.toggleActiveState()
             speciesDisplayContainer.classList.toggle('disabled')
             const input = speciesDisplayContainer.querySelector('input')
             if(input) input.click()
         }
     
-        searchInatObservationsBtn.addEventListener('click', fetchInatSpecies, false)
+        const searchInatObservationsBtn = new ButtonComponent({
+            elementId: 'search-inat-observations-btn'
+          , clickHandler: fetchInatSpecies
+        })
     
         rbInatAutocompleteGroup.forEach(rb => {
             rb.addEventListener('change', e => {
@@ -667,11 +682,6 @@ const init = () => {
     
         fieldnotesInputRb.addEventListener('click', toggleView, true)
         inatSearchInputRb.addEventListener('click', toggleView, true)
-    
-        displayToggleVisibilityBtn.addEventListener('click', toggleHideShow, true)
-        lessonToggleVisibilityBtn.addEventListener('click', toggleHideShow, true)
-        progressToggleVisibilityBtn.addEventListener('click', toggleHideShow, true)
-        preferencesToggleVisibilityBtn.addEventListener('click', toggleHideShow, true)
     
         addImgClickEventHandlers()
     
@@ -782,7 +792,10 @@ const init = () => {
         speciesDisplayContainer.classList.remove('disabled')
     }
 
-    importFieldnotesBtn.addEventListener('click', importFieldnotes, true)
+    const importFieldnotesBtn = new ButtonComponent({
+        elementId: 'import-fieldnotes-btn'
+      , clickHandler: importFieldnotes
+    })
 
     createRadioBtnTemplateGroup()
 

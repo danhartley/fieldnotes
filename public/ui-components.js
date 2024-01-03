@@ -1,20 +1,15 @@
-// Button component constructor function
 export class ButtonComponent {
-  // Find the element with the specified ID
   constructor({elementId, clickHandler}) {
     this.buttonElement = document.getElementById(elementId)
 
-    // Check if the element exists
     if (!this.buttonElement) {
       console.error(`Element with ID ${elementId} not found.`)
       return
     }
 
-    // Add styles to the button
-    // buttonElement.classList.add('button-component')
-
-    // Add click event listener
-    this.buttonElement.addEventListener('click', clickHandler)
+    if(clickHandler) {
+      this.buttonElement.addEventListener('click', clickHandler)
+    }
   }
 
   disable() {
@@ -27,5 +22,25 @@ export class ButtonComponent {
 
   toggleActiveState() {
     this.buttonElement.classList.toggle('disabled')
+  }
+}
+
+export class ButtonHideShowComponent extends ButtonComponent {
+  constructor({
+    elementId
+  }) {
+    super({
+        elementId
+      , clickHandler: (e) => {
+          const ctrl = e.target
+          ctrl.innerText = ctrl.innerText === 'HIDE' ? 'SHOW' : 'HIDE'
+          const fieldset = document.getElementById(ctrl.value)
+          fieldset.classList.toggle('hidden')
+      }
+    })
+  }
+
+  scrollIntoView({ behavior = 'smooth', block = 'start', inline = 'nearest' }) {
+    this.buttonElement.scrollIntoView({ behavior, block, inline })
   }
 }
