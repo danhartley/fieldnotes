@@ -24,9 +24,9 @@ import {
 
 const init = () => {    
     Object.assign(g, {
-        iconicTaxa: g.ICONIC_TAXA,
-        language: g.LANGUAGES[1],
-        useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0],
+          iconicTaxa: g.ICONIC_TAXA
+        , language: g.LANGUAGES[1]
+        , useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0]
     })
 
     const d = document   
@@ -89,14 +89,14 @@ const init = () => {
         }
     
         return await getInatObservations({ 
-            user_id: user ? user.id : null,
-            place_id: place ? place.id : null,
-            iconic_taxa: g.iconicTaxa,
-            per_page: g.count + 10,
-            locale: g.language.id,
-            species_count: (g.useObservationsSpeciesCount.id === "true"),
-            d1,
-            d2,
+              user_id: user ? user.id : null
+            , place_id: place ? place.id : null
+            , iconic_taxa: g.iconicTaxa
+            , per_page: g.count + 10
+            , locale: g.language.id
+            , species_count: (g.useObservationsSpeciesCount.id === "true")
+            , d1
+            , d2
         })
     }
     
@@ -115,14 +115,14 @@ const init = () => {
             }
     
             const score = {
-              id: sp.taxon.id,
-              isCorrect,               
+                id: sp.taxon.id
+              , isCorrect
             }
     
             g.template.scores.push(score)  
         })
     
-        g.template.score = g.template.scores.filter(score => score.isCorrect).length
+        g.template.score = g.template.scores.filter(score => score.isCorrect)?.length || 0
     }
     
     const toggleView = e => {
@@ -240,7 +240,11 @@ const init = () => {
     
             endOfRowContainer.after(panel)       
             
-            panel.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
+            panel.scrollIntoView({ 
+                  behavior: 'smooth'
+                , block: 'end'
+                , inline: 'nearest' 
+            })
         }
     
         speciesImages.forEach(img => {
@@ -304,7 +308,12 @@ const init = () => {
                             targetGroupContainer.innerHTML = ''
                             targetsFieldset.classList.remove('hidden')
                             g.target = g.template.targets[0]
-                            rbTestForGroup = createRadioBtnGroup({collection: g.template.targets, checked:g.target, rbGroup:'target', parent:targetGroupContainer})
+                            rbTestForGroup = createRadioBtnGroup({
+                                  collection: g.template.targets
+                                , checked:g.target
+                                , rbGroup:'target'
+                                , parent:targetGroupContainer
+                            })
                             rbTestForGroup.forEach(test => {
                                 test.addEventListener('change', e => {
                                     const testId = e.target.value
@@ -367,7 +376,9 @@ const init = () => {
         const figcaption = clone.querySelector('figcaption')
         const spans = figcaption.querySelectorAll('span')
      
-        figcaption.style.setProperty("background-color", getTaxonGroupColour({taxon:species.taxon.iconic_taxon_name}))
+        figcaption.style.setProperty("background-color", getTaxonGroupColour({
+            taxon:species.taxon.iconic_taxon_name
+        }))
     
         spans[0].textContent = species.taxon.preferred_common_name
         spans[1].textContent = species.taxon.name
@@ -399,7 +410,11 @@ const init = () => {
             switch(g.template.templateId) {
                 case 'species-template':
                     g.species.forEach((sp, i) => {
-                        const clone = cloneSpeciesCardFromTemplate({templateToClone, species: sp, index: i})
+                        const clone = cloneSpeciesCardFromTemplate({
+                              templateToClone
+                            , species: sp
+                            , index: i
+                        })
                         parent = parentClone.querySelector('div')
                         parent.appendChild(clone)
                     })
@@ -407,13 +422,13 @@ const init = () => {
                     break
                 case 'species-list-template':            
                     g.species.forEach(sp => {
-                    const clone = templateToClone.content.cloneNode(true)
-                    const li = clone.querySelector('li')
-                    
-                    li.textContent = sp.taxon.name
-            
-                    parent = parentClone.querySelector('div')          
-                    parent.appendChild(clone)
+                        const clone = templateToClone.content.cloneNode(true)
+                        const li = clone.querySelector('li')
+                        
+                        li.textContent = sp.taxon.name
+                
+                        parent = parentClone.querySelector('div')          
+                        parent.appendChild(clone)
                     })
                     article.appendChild(parent)
                     break
@@ -430,7 +445,9 @@ const init = () => {
                         input.id = sp.taxon.id
                         label.htmlFor = input.id
             
-                        div.style.setProperty("background-color", getTaxonGroupColour({taxon:sp.taxon.iconic_taxon_name}))
+                        div.style.setProperty("background-color", getTaxonGroupColour({
+                            taxon:sp.taxon.iconic_taxon_name
+                        }))
                         
                         switch(g.target.name) {
                         case 'common name':
@@ -440,10 +457,10 @@ const init = () => {
                             break
                         case 'latin name':
                             if(sp.taxon.preferred_common_name) {
-                            span.textContent = sp.taxon.preferred_common_name
+                                span.textContent = sp.taxon.preferred_common_name
                             } else {
-                            span.textContent = sp.taxon.name
-                            span.classList.add('latin')
+                                span.textContent = sp.taxon.name
+                                span.classList.add('latin')
                             }
                             label.textContent = 'latin name'
                             break
@@ -467,7 +484,12 @@ const init = () => {
                     const metaList = metaClone.querySelector('ul')
                     const items = metaList.querySelectorAll('li > strong')
                     items[0].innerText = g.fieldnotes.author
-                    items[1].innerText = new Date(g.fieldnotes.d1).toLocaleDateString('en-gb', { weekday:"long", year:"numeric", month:"long", day:"numeric"})
+                    items[1].innerText = new Date(g.fieldnotes.d1).toLocaleDateString('en-gb', { 
+                          weekday: 'long'
+                        , year: 'numeric'
+                        , month: 'long'
+                        , day: 'numeric'
+                    })
                     const a = metaList.querySelector('a')
                     a.textContent = g.fieldnotes.location.place_guess
                     a.setAttribute('href', `https://www.google.com/maps/place/${g.fieldnotes.location.location}`)
@@ -639,7 +661,11 @@ const init = () => {
                 , place: place.isActive ? place.place : null
             })
     
-            g.species = mapInatSpeciesToLTP({species: g.inatSpecies, count: g.count, taxa: g.iconicTaxa})
+            g.species = mapInatSpeciesToLTP({
+                  species: g.inatSpecies
+                , count: g.count
+                , taxa: g.iconicTaxa
+            })
         
             renderDisplayTemplate()
     
@@ -757,7 +783,7 @@ const init = () => {
         g.fieldnotes = fieldnotes
         g.templates = g.templates.filter(template => template.type !== 'fieldnotes')
         g.templates = [ ...g.templates, { 
-                ...fieldnotes            
+              ...fieldnotes
             , parent: 'non-grid-template' 
             , type: 'fieldnotes'
         }]
@@ -767,7 +793,10 @@ const init = () => {
         const taxaNames = g.fieldnotes.taxa
             .map(t => t.name)
 
-        const inatTaxa = await getInatTaxa({ taxaIds, locale: g.language.id })
+        const inatTaxa = await getInatTaxa({ 
+              taxaIds
+            , locale: g.language.id 
+        })
         
         g.species = inatTaxa.results
             .filter(t => t.default_photo)
@@ -777,7 +806,9 @@ const init = () => {
                  */
                 if(taxaNames.includes(t.name)) {
                     return {
-                        taxon: mapTaxon({taxon: t})
+                        taxon: mapTaxon({
+                            taxon: t
+                        })
                     }
                 }
             })
