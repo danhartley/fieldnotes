@@ -3,7 +3,7 @@ export class ButtonComponent {
     this.buttonElement = document.getElementById(elementId)
 
     if (!this.buttonElement) {
-      console.error(`Element with ID ${elementId} not found.`)
+      console.error(`Element with Id ${elementId} not found.`)
       return
     }
 
@@ -42,5 +42,20 @@ export class ButtonHideShowComponent extends ButtonComponent {
 
   scrollIntoView({ behavior = 'smooth', block = 'start', inline = 'nearest' }) {
     this.buttonElement.scrollIntoView({ behavior, block, inline })
+  }
+}
+
+export class RadioButtonComponent {
+  constructor({elementId, clickHandler}) {
+    this.radioButtonElement = document.getElementById(elementId)
+
+    if (!this.radioButtonElement) {
+      console.error(`Element with Id ${elementId} not found.`)
+      return
+    }
+
+    if(clickHandler) {
+      this.radioButtonElement.addEventListener('click', clickHandler)
+    }
   }
 }

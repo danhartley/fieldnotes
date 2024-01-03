@@ -19,9 +19,9 @@ import {
 import {
       ButtonComponent
     , ButtonHideShowComponent
-  } from './ui-components.js'
+    , RadioButtonComponent
+} from './ui-components.js'
   
-
 const init = () => {    
     Object.assign(g, {
           iconicTaxa: g.ICONIC_TAXA
@@ -31,8 +31,6 @@ const init = () => {
 
     const d = document   
         
-    const fieldnotesInputRb = d.getElementById('fieldnotes-input-rb')
-    const inatSearchInputRb = d.getElementById('inat-search-input-rb')
     const fieldnotesSearchView = d.getElementById('fieldnotes-search-view')
     const inatSearchView = d.getElementById('inat-search-view')
     const inatOnlySections = d.querySelectorAll('.inat-only-sections')
@@ -706,8 +704,15 @@ const init = () => {
             rb.addEventListener('change', () => g.useObservationsSpeciesCount = g.useObservationsSpeciesCountOptions.find(o => o.id === rb.value))
         })
     
-        fieldnotesInputRb.addEventListener('click', toggleView, true)
-        inatSearchInputRb.addEventListener('click', toggleView, true)
+        const fieldnotesInputRb = new RadioButtonComponent({
+              elementId: 'fieldnotes-input-rb'
+            , clickHandler: toggleView
+        })
+        const inatSearchInputRb = new RadioButtonComponent({
+              elementId: 'inat-search-input-rb'
+            , clickHandler: toggleView
+        })
+        
     
         addImgClickEventHandlers()
     
