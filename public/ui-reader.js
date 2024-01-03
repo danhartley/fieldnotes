@@ -343,6 +343,9 @@ const init = () => {
         speciesDisplayContainer.innerHTML = ''
   
         g.templates.filter(t => !t.isTest).forEach(t => {
+
+            if(t.requiresSpecies && (!g.species || g.species.length === 0)) return
+
             const clone = rbTemplate.content.cloneNode(true)
         
             const input = clone.querySelector('input')
