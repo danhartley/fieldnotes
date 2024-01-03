@@ -47,6 +47,10 @@ import {
   , getSectionTemplate
 } from './ui-actions.js'
 
+import {
+  ButtonComponent
+} from './ui-components.js'
+
 const init = () => {
 
   const initGlobalWrite = () => {
@@ -103,7 +107,6 @@ const init = () => {
   const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
   const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
   const singleObservationsInputDate = d.getElementById('single-observations-input-date')
-  const searchInatObservationsBtn = d.getElementById('search-inat-observations-btn')
   const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
   const importFieldNotesBtn = d.getElementById('import-fieldnotes-btn')
   const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
@@ -143,7 +146,7 @@ const init = () => {
   const searchInatObservations = async ({userId}) => {
   try {
       searchInatObservationsNotificationText.classList.toggle('hidden')
-      searchInatObservationsBtn.classList.toggle('disabled')
+      searchInatObservationsBtn.toggleActiveState()
 
       // Clear import search text to avoid confusion
       ltpAutocompleteTitleInputText.value = ''
@@ -161,7 +164,7 @@ const init = () => {
           , d2: singleObservationsInputDate.value
       })    
       
-      searchInatObservationsBtn.classList.toggle('disabled')
+      searchInatObservationsBtn.toggleActiveState()
 
       searchInatObservationsNotificationText.innerText = 'Search complete'
 
@@ -213,7 +216,10 @@ const init = () => {
     }
   }
 
-  searchInatObservationsBtn.addEventListener('click', searchInatObservations, false)
+const searchInatObservationsBtn = new ButtonComponent({
+    elementId: 'search-inat-observations-btn'
+  , clickHandler: searchInatObservations
+})
 
   handleInatAutocomplete({ 
       inputText: iNatAutocompleteInputText
@@ -709,8 +715,8 @@ const init = () => {
     const hasDate = singleObservationsInputDate.value.length > 0 && Object.prototype.toString.call(date) === '[object Date]'
 
     hasUser && hasDate
-      ? searchInatObservationsBtn.classList.remove('disabled')
-      : searchInatObservationsBtn.classList.add('disabled')
+      ? searchInatObservationsBtn.enable()
+      : searchInatObservationsBtn.disable()
   }
   
   singleObservationsInputDate.addEventListener('blur', enableSearchBtn, true)
