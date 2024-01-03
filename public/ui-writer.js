@@ -52,39 +52,39 @@ const init = () => {
   const initGlobalWrite = () => {
     const globalWrite = {}
     Object.assign(globalWrite, {
-      iconicTaxa: g.ICONIC_TAXA,      
-      useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0],
-      species: [],
-      nextSectionIndex: 0,
-      inatAutocompleteOptions: g.inatAutocompleteOptions,
-      inatAutocomplete: g.inatAutocomplete,
-      view: 'create',
-      fieldnotesStubs: [],
-      fieldnotes: {
-        author: '',
-        d1: '',
-        d2: '',
-        fnId: '',
-        id: '',
-        language: g.LANGUAGES[1],
-        location: {
-          location: '',
-          place_guess: '',      
-        },
-        sectionOrder: [],
-        sections: [],
-        taxa: [],
-        title: '',
-        user: {
-          id: '',
-          icon: '',
-          identifications_count: 0,
-          login: '',
-          observations_count: 0,
-          species_count: 0,
-        },
-      },
-      originalTypeValues: []
+        iconicTaxa: g.ICONIC_TAXA
+      , useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0]
+      , species: []
+      , nextSectionIndex: 0
+      , inatAutocompleteOptions: g.inatAutocompleteOptions
+      , inatAutocomplete: g.inatAutocomplete
+      , view: 'create'
+      , fieldnotesStubs: []
+      , fieldnotes: {
+        author: ''
+      , d1: ''
+      , d2: ''
+      , fnId: ''
+      , id: ''
+      , language: g.LANGUAGES[1]
+      , location: {
+            location: ''
+          , place_guess: ''
+        }
+      , sectionOrder: []
+      , sections: []
+      , taxa: []
+      , title: ''
+      , user: {
+            id: ''
+          , icon: ''
+          , identifications_count: 0
+          , login: ''
+          , observations_count: 0
+          , species_count: 0
+        }
+      }
+      , originalTypeValues: []
     })
 
     return globalWrite
@@ -151,14 +151,14 @@ const init = () => {
       globalWrite.fieldnotes.user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')?.user
 
       globalWrite.species = await getInatObservations({ 
-          user_id: globalWrite.fieldnotes.user.id,
-          place_id: null,
-          iconic_taxa: globalWrite.iconicTaxa,
-          per_page: 200,
-          locale: globalWrite.fieldnotes.language.id,
-          species_count: false,
-          d1: singleObservationsInputDate.value,
-          d2: singleObservationsInputDate.value,
+            user_id: globalWrite.fieldnotes.user.id
+          , place_id: null
+          , iconic_taxa: globalWrite.iconicTaxa
+          , per_page: 200
+          ,locale: globalWrite.fieldnotes.language.id
+          , species_count: false
+          , d1: singleObservationsInputDate.value
+          , d2: singleObservationsInputDate.value
       })    
       
       searchInatObservationsBtn.classList.toggle('disabled')
@@ -173,10 +173,11 @@ const init = () => {
       if(globalWrite.species.length === 0) return
 
       const { author, date, location } = {
-        author: globalWrite.species[0].user.name,
-        date: globalWrite.species[0].observed_on,
-        location: {
-          location: globalWrite.species[0].location, place_guess: globalWrite.species[0].place_guess
+          author: globalWrite.species[0].user.name
+        , date: globalWrite.species[0].observed_on
+        , location: {
+            location: globalWrite.species[0].location
+          , place_guess: globalWrite.species[0].place_guess
         }
       }
       const title = `${location.place_guess}, ${(new Date(date)).toDateString()}`
@@ -200,17 +201,36 @@ const init = () => {
       exportFieldNotesContainer.classList.remove('disabled')
 
       // Notify user that observations are available
-      showNotificationsDialog({message: 'iNaturalist observations now available', type: 'success'})
-      } catch (e) {
-        showNotificationsDialog({message: e.message, type: 'error'})
+      showNotificationsDialog({
+          message: 'iNaturalist observations now available'
+        , type: 'success'
+      })
+    } catch (e) {
+        showNotificationsDialog({
+            message: e.message
+          , type: 'error'
+        })
     }
   }
 
   searchInatObservationsBtn.addEventListener('click', searchInatObservations, false)
 
-  const { id, prop } = globalWrite.inatAutocomplete
-  handleInatAutocomplete({ inputText: iNatAutocompleteInputText, dataList: iNatAutocompleteDatalist, globalWrite, id, prop, cbParent: d.getElementById('inat-params-input-check-box-group')})  
-  handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: globalWrite, fieldnotesStubsCallback: getFieldnotesStubs, importFieldNotesBtn}) 
+  handleInatAutocomplete({ 
+      inputText: iNatAutocompleteInputText
+    , dataList: iNatAutocompleteDatalist
+    , globalWrite
+    , id: globalWrite.inatAutocomplete.id
+    , prop: globalWrite.inatAutocomplete.prop
+    , cbParent: d.getElementById('inat-params-input-check-box-group')
+  })
+
+  handleFieldsnotesAutocomplete({ 
+      inputText: ltpAutocompleteTitleInputText
+    , dataList: ltpAutocompleteTitleDatalist
+    , global: globalWrite
+    , fieldnotesStubsCallback: getFieldnotesStubs
+    , importFieldNotesBtn
+  }) 
 
   const createSection = ({writeTemplateId, typeText, sectionTemplate, sectionIndex}) => {
     const sectionClone = sectionTemplate.content.cloneNode(true)
@@ -240,17 +260,40 @@ const init = () => {
       case 'xenocanto-write-template':
         input = typeClone.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: input.value, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({
+            parent: e.target.parentElement
+          , writeTemplateId
+          , typeValue: input.value
+          , previewContainer
+          , sectionIndex
+        }), true)
         break
       case 'textarea-write-template':    
         textarea = typeClone.querySelector('textarea')
         textarea.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: textarea.value, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({
+            parent: e.target.parentElement
+          , writeTemplateId
+          , typeValue: textarea.value
+          , previewContainer
+          , sectionIndex
+        }), true)
         break
       case 'observations-write-template':
       case 'species-write-template':       
-        cloneImages({globalWrite, parent:typeClone.querySelector('div'), writeTemplateId, sectionIndex })
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: null, previewContainer, sectionIndex}), true)
+        cloneImages({
+            globalWrite
+          , parent:typeClone.querySelector('div')
+          , writeTemplateId
+          , sectionIndex
+        })
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({
+            parent: e.target.parentElement
+          , writeTemplateId
+          , typeValue: null
+          , previewContainer
+          , sectionIndex
+        }), true)
         addOrUpdateSectionBtn.classList.remove('disabled')
         break
       case 'terms-write-template':
@@ -261,14 +304,34 @@ const init = () => {
         input.setAttribute('list', datalist.id)        
         label = typeClone.querySelector('label')
         label.htmlFor = input.id                  
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: null, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({
+            parent: e.target.parentElement
+          , writeTemplateId
+          , typeValue: null
+          , previewContainer
+          , sectionIndex
+        }), true)
         break
       case 'images-write-template':
         const url1 = typeClone.getElementById('image-url-input-0')
         const title1 = typeClone.getElementById('image-title-input-0')
-        url1.addEventListener('input', () => handleImageInputChangeEvent({addBtn: addOrUpdateSectionBtn, url1, title1}), true)
-        title1.addEventListener('input', () => handleImageInputChangeEvent({addBtn: addOrUpdateSectionBtn, url1, title1}), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: null, previewContainer, sectionIndex}), true)  
+        url1.addEventListener('input', () => handleImageInputChangeEvent({
+            addBtn: addOrUpdateSectionBtn
+          , url1
+          , title1
+        }), true)
+        title1.addEventListener('input', () => handleImageInputChangeEvent({
+            addBtn: addOrUpdateSectionBtn
+          , url1
+          , title1
+        }), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({
+            parent: e.target.parentElement
+          , writeTemplateId
+          , typeValue: null
+          , previewContainer
+          , sectionIndex
+        }), true)  
         break
       case 'inat-lookup-write-template':
         datalist = typeClone.querySelector('datalist')
@@ -280,7 +343,13 @@ const init = () => {
         label.htmlFor = input.id
         cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
         cbParent.id = `section-${sectionIndex}-lookup-parent`
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({parent: e.target.parentElement, writeTemplateId, typeValue: null, previewContainer, sectionIndex}), true)
+        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({
+            parent: e.target.parentElement
+          , writeTemplateId
+          , typeValue: null
+          , previewContainer
+          , sectionIndex
+        }), true)
         addOrUpdateSectionBtn.classList.remove('disabled')
         break
     }
@@ -312,7 +381,10 @@ const init = () => {
         break
       case 'species-write-template':
       case 'observations-write-template':      
-          showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))          
+          showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({
+              btn:showAllOrIncludedBtn
+            , fieldset
+          }))          
          break
       case 'textarea-write-template':
         fieldset.querySelector('textarea:not(.hidden)')?.focus()
@@ -332,7 +404,16 @@ const init = () => {
           input.value = ''             
         }
         input.focus()
-        handleTermAutocomplete({ inputText: input, selectedTerms, dataList: datalist, globalWrite, data: getTerms(), parent, addSelectedTermBtn, handleOnClickAddSelectedTermBtn})
+        handleTermAutocomplete({ 
+            inputText: input
+          , selectedTerms
+          , dataList: datalist
+          , globalWrite
+          , data: getTerms()
+          , parent
+          , addSelectedTermBtn
+          , handleOnClickAddSelectedTermBtn
+        })
         
         // Create a new term
         const dt = fieldset.querySelector('#input-dt')
@@ -354,19 +435,25 @@ const init = () => {
         d.querySelector('label[for="input-dx"]').htmlFor = dx.id
         
         dt.addEventListener('change', e => {
-          toggleBtnEnabledState({str: e.target.value, btn: addNewTermBtn })          
+          toggleBtnEnabledState({
+              str: e.target.value
+            , btn: addNewTermBtn 
+          })  
         })
         
         addNewTermBtn.addEventListener('click', e => {
           const newTerm = Object.assign({}, {
-            dt: dt.value,
-            dd: dd.value,
-            ds: ds.value,
-            da: da.value,
-            dx: dx.value,
+              dt: dt.value
+            , dd: dd.value
+            , ds: ds.value
+            , da: da.value
+            , dx: dx.value
           })
           
-          handleOnClickAddSelectedTermBtn({selectedTerms, selectedTerm: newTerm})
+          handleOnClickAddSelectedTermBtn({
+              selectedTerms
+            , selectedTerm: newTerm
+          })
         })
         break
       case 'images-write-template':
@@ -381,12 +468,22 @@ const init = () => {
         
         if(images.length === 0) {
           for (let i = 0; i < 3; i++) {
-            images.push({src:'', alt:''})            
+            images.push({
+                src:''
+              , alt:''
+            })  
           }
         }
         
         [url1, title1, url2, title2, url3, title3].forEach((input, index) => {
-          input.addEventListener('input', e => handleImageTextChange({globalWrite, sectionIndex, imageSrcs: images, strValue:e.target.value, index: calcImageIndex(index), property:input.dataset.key}), true)
+          input.addEventListener('input', e => handleImageTextChange({
+              globalWrite
+            , sectionIndex
+            , imageSrcs: images
+            , strValue:e.target.value
+            , index: calcImageIndex(index)
+            , property:input.dataset.key
+          }), true)
         })
         Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
         break
@@ -413,14 +510,21 @@ const init = () => {
     return sectionContainer
   }
 
-  selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { createSection({writeTemplateId: e.target.value, typeText: e.target.innerText, sectionTemplate: getSectionTemplate({writeTemplateId: e.target.value}), sectionIndex: globalWrite.nextSectionIndex})}, true))
+  selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { 
+    createSection({
+        writeTemplateId: e.target.value
+      , typeText: e.target.innerText
+      , sectionTemplate: getSectionTemplate({writeTemplateId: e.target.value})
+      , sectionIndex: globalWrite.nextSectionIndex
+    })}, true))
 
   const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex}) => {
     let sectionToUpdate, sectionAddedOrUpdated, isEdit = null
 
     sectionToUpdate = structuredClone(globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)) || null
 
-    isEdit = (sectionToUpdate !== null && globalWrite.fieldnotes.sectionOrder.includes(sectionToUpdate.sectionIndex)) || hasOriginalTypeValues({globalWrite, section: sectionToUpdate})
+    isEdit = (sectionToUpdate !== null && globalWrite.fieldnotes.sectionOrder.includes(sectionToUpdate.sectionIndex)) 
+          || hasOriginalTypeValues({globalWrite, section: sectionToUpdate})
     
     const writeTemplate = writeTemplates.find(template => template.templateId === writeTemplateId)
     const previewTemplate = previewTemplates.find(template => template.id === writeTemplate.previewTemplateId)
@@ -432,7 +536,11 @@ const init = () => {
         previewTemplate[previewTemplate.element] = typeValue
         sectionAddedOrUpdated = { ...previewTemplate, sectionIndex }
         previewContainer.replaceChildren()
-        addContentToPreviewContainer({previewTemplate, textContent: typeValue, previewContainer})
+        addContentToPreviewContainer({
+            previewTemplate
+          , textContent: typeValue
+          , previewContainer
+        })
         break
       case 'textarea-write-template':
         const ps = typeValue.split('\n').filter(p => p.length > 0)
@@ -443,21 +551,36 @@ const init = () => {
         })
         sectionAddedOrUpdated = { ...previewTemplate, sectionIndex, paras }
         previewContainer.replaceChildren()
-        paras.forEach(text => addContentToPreviewContainer({previewTemplate, textContent:text.p, previewContainer}))
+        paras.forEach(text => addContentToPreviewContainer({
+            previewTemplate
+          , textContent:text.p
+          , previewContainer}))
         break
       case 'observations-write-template':
       case 'species-write-template':
       case 'inat-lookup-write-template':
         sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
-        if(sectionToUpdate) sectionToUpdate.species = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: sectionToUpdate.type})
+        if(sectionToUpdate) sectionToUpdate.species = getOriginalTypeValues({
+            globalWrite
+          , section: sectionToUpdate
+          , type: sectionToUpdate.type
+        })
         break
       case 'terms-write-template':                
         sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
-        if(sectionToUpdate) sectionToUpdate.terms = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: sectionToUpdate.type})
+        if(sectionToUpdate) sectionToUpdate.terms = getOriginalTypeValues({
+            globalWrite
+          , section: sectionToUpdate
+          , type: sectionToUpdate.type
+        })
         break
       case 'images-write-template':
         sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
-        if(sectionToUpdate) sectionToUpdate.images = getOriginalTypeValues({globalWrite, section: sectionToUpdate, type: sectionToUpdate.type})
+        if(sectionToUpdate) sectionToUpdate.images = getOriginalTypeValues({
+            globalWrite
+          , section: sectionToUpdate
+          , type: sectionToUpdate.type
+        })
         break
     }
     
@@ -507,12 +630,28 @@ const init = () => {
       let response
       try {
         response = prop === 'title'
-          ? await updateFieldnotesTitle({fieldnotes: globalWrite.fieldnotes, prop, value, fieldnotesStubs: globalWrite.fieldnotesStubs})
-          : await updateFieldnoteProperty({fieldnotes: globalWrite.fieldnotes, prop, value})
+          ? await updateFieldnotesTitle({
+              fieldnotes: globalWrite.fieldnotes
+            , prop
+            , value
+            , fieldnotesStubs: globalWrite.fieldnotesStubs
+          })
+          : await updateFieldnoteProperty({
+              fieldnotes: globalWrite.fieldnotes
+            , prop
+            , value
+          })
         
-        showNotificationsDialog({message: response.message, type: response.type, displayDuration: 2000})
+        showNotificationsDialog({
+            message: response.message
+          , type: response.type
+          , displayDuration: 2000
+        })
       } catch (e) {
-        showNotificationsDialog({message: `${e.message} for ${prop}`, type: 'error'})
+        showNotificationsDialog({
+            message: `${e.message} for ${prop}`
+          , type: 'error'
+        })
       }
     }
   }
@@ -521,21 +660,33 @@ const init = () => {
     globalWrite.fieldnotes.title = e.target.value
     globalWrite.view === 'create'
       ? enableExportFieldNotesContainer()
-      : updateSingleFields({prop: 'title', value: globalWrite.fieldnotes.title})
+      : updateSingleFields({
+          prop: 'title'
+        , value: globalWrite.fieldnotes.title
+      })
   })
   authorInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.author = e.target.value
     globalWrite.view === 'create'
       ? enableExportFieldNotesContainer()
-      : updateSingleFields({prop: 'author', value: globalWrite.fieldnotes.author})
+      : updateSingleFields({
+          prop: 'author'
+        , value: globalWrite.fieldnotes.author
+      })
   })
   dateInputText.addEventListener('change', e => {
     const date = e.target.value    
     if(isValidDate({date})) {
       globalWrite.fieldnotes.d1 = date
       globalWrite.fieldnotes.d2 = date
-      updateSingleFields({prop: 'd1', value: globalWrite.fieldnotes.d1})
-      updateSingleFields({prop: 'd2', value: globalWrite.fieldnotes.d2})
+      updateSingleFields({
+         prop: 'd1'
+        , value: globalWrite.fieldnotes.d1
+      })
+      updateSingleFields({
+          prop: 'd2'
+        , value: globalWrite.fieldnotes.d2
+      })
     }
     enableExportFieldNotesContainer()
   })
@@ -543,10 +694,13 @@ const init = () => {
     globalWrite.fieldnotes.location.place_guess = e.target.value
     globalWrite.view === 'create'
       ? enableExportFieldNotesContainer()
-      : updateSingleFields({prop: 'location', value: { 
-          place_guess: globalWrite.fieldnotes.location.place_guess,
-          location: globalWrite.fieldnotes.location.location
-      }})
+      : updateSingleFields({
+          prop: 'location'
+        , value: { 
+            place_guess: globalWrite.fieldnotes.location.place_guess
+          , location: globalWrite.fieldnotes.location.location
+      }
+    })
   })
   
   const enableSearchBtn = () => {
@@ -567,30 +721,30 @@ const init = () => {
       const notes = {}
 
       Object.assign(notes, {
-        id: globalWrite.fieldnotes.id || '',
-        fnId: globalWrite.fieldnotes.title,
-        title: globalWrite.fieldnotes.title,
-        author: globalWrite.fieldnotes.author,
-        user: {
-          id: globalWrite.fieldnotes.user.id,
-          icon: globalWrite.fieldnotes.user.icon,
-          identifications_count: globalWrite.fieldnotes.user.identifications_count,
-          login: globalWrite.fieldnotes.user.login,
-          observations_count: globalWrite.fieldnotes.user.observations_count,
-          species_count: globalWrite.fieldnotes.user.species_count,
-        },
-        d1: globalWrite.fieldnotes.d1,
-        d2: globalWrite.fieldnotes.d2,
-        location: globalWrite.fieldnotes.location,
-        language: globalWrite.fieldnotes.language,
-        taxa: globalWrite.fieldnotes.taxa,
-        sections: globalWrite.fieldnotes.sections.map(t => {
+          id: globalWrite.fieldnotes.id || ''
+        , fnId: globalWrite.fieldnotes.title
+        , title: globalWrite.fieldnotes.title
+        , author: globalWrite.fieldnotes.author
+        , user: {
+            id: globalWrite.fieldnotes.user.id
+          , icon: globalWrite.fieldnotes.user.icon
+          , identifications_count: globalWrite.fieldnotes.user.identifications_count
+          , login: globalWrite.fieldnotes.user.login
+          , observations_count: globalWrite.fieldnotes.user.observations_count
+          , species_count: globalWrite.fieldnotes.user.species_count
+        }
+        , d1: globalWrite.fieldnotes.d1
+        , d2: globalWrite.fieldnotes.d2
+        , location: globalWrite.fieldnotes.location
+        , language: globalWrite.fieldnotes.language
+        , taxa: globalWrite.fieldnotes.taxa
+        , sections: globalWrite.fieldnotes.sections.map(t => {
           const {templateId, ...validProps} = t
           return {
             ...validProps,
           }
-        }),
-        sectionOrder: globalWrite.fieldnotes.sections.map(section => section.sectionIndex)
+        })
+        , sectionOrder: globalWrite.fieldnotes.sections.map(section => section.sectionIndex)
       })
       
       const response = await addFieldnotes({fieldnotes: notes})
@@ -598,9 +752,16 @@ const init = () => {
       globalWrite.fieldnotes.id = response.id
 
       // Show notification that Fieldnotes have been exported
-      showNotificationsDialog({message: response.message, type: response.type, displayDuration: 2000})
+      showNotificationsDialog({
+          message: response.message
+        , type: response.type
+        , displayDuration: 2000
+      })
     } catch (e) {
-      showNotificationsDialog({message: e.message, type: 'error'})
+      showNotificationsDialog({
+          message: e.message
+        , type: 'error'
+      })
     }
   }
 
@@ -610,7 +771,9 @@ const init = () => {
     try {
       importFieldNotesNotificationText.classList.remove('hidden')
 
-      const response = await getFieldnotesById({id: globalWrite.fieldnotesStubs.fieldnotesId})
+      const response = await getFieldnotesById({
+        id: globalWrite.fieldnotesStubs.fieldnotesId
+      })
 
       if(!response.success) return 
 
@@ -618,8 +781,8 @@ const init = () => {
 
       Object.assign(globalWrite, {
         fieldnotes: {
-          ...fieldnotes,
-          sections: fieldnotes.sectionOrder.map(sectionIndex => {
+            ...fieldnotes
+          , sections: fieldnotes.sectionOrder.map(sectionIndex => {
             return fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
           })
         }
@@ -633,14 +796,14 @@ const init = () => {
       placeInputText.value = location.place_guess
 
       const species = await getInatObservations({ 
-        user_id: globalWrite.fieldnotes.user.id,
-        place_id: null,
-        iconic_taxa: globalWrite.iconicTaxa,
-        per_page: 200,
-        locale: globalWrite.fieldnotes.language.id,
-        species_count: false,
-        d1,
-        d2,
+          user_id: globalWrite.fieldnotes.user.id
+        , place_id: null
+        , iconic_taxa: globalWrite.iconicTaxa
+        , per_page: 200
+        , locale: globalWrite.fieldnotes.language.id
+        , species_count: false
+        , d1
+        , d2
       })
 
       globalWrite.species = species.map(sp => {
@@ -692,12 +855,20 @@ const init = () => {
           case 'h3-preview-template':
           case 'h4-preview-template':
           case 'xenocanto-preview-template':
-            addContentToPreviewContainer({previewTemplate, textContent: section[section.element], previewContainer})
+            addContentToPreviewContainer({
+                previewTemplate
+              , textContent: section[section.element]
+              , previewContainer
+            })
             add.value = section[section.element]
             break
           case 'textarea-preview-template':          
             section.paras.forEach((text, i) => {
-              addContentToPreviewContainer({previewTemplate, textContent: text.p, previewContainer})
+              addContentToPreviewContainer({
+                  previewTemplate
+                , textContent: text.p
+                , previewContainer
+              })
               add.value += text.p
               if(i < section.paras.length - 1) {
                 add.value += '\r\n\n'
@@ -706,7 +877,11 @@ const init = () => {
             break
           case 'species-preview-template':
           case 'observations-preview-template':
-            setOriginalTypeValues({globalWrite, section, type:section.type})
+            setOriginalTypeValues({
+                globalWrite
+              , section
+              , type:section.type
+            })
             speciesCheckboxes = sectionContainer.querySelectorAll('input')
             speciesCheckboxes.forEach(checkbox => {
               if(section.species.includes(checkbox.value) || section.species.map(sp => sp.name).includes(checkbox.value)) {
@@ -715,11 +890,21 @@ const init = () => {
             })            
             break
           case 'inat-lookup-preview-template':
-            setOriginalTypeValues({globalWrite, section, type:section.type})
+            setOriginalTypeValues({
+                globalWrite
+              , section
+              , type:section.type})
             let parent = null
             section.species.forEach((sp, index) => {
               parent = sectionContainer.querySelector(`#section-${section.sectionIndex}-lookup-parent`)
-              const clone = cloneImageTemplate({species: sp, index, sectionIndex: section.sectionIndex, imgUrl: sp.taxon.default_photo.square_url, globalWrite, writeTemplateId: section.writeTemplateId})
+              const clone = cloneImageTemplate({
+                  species: sp
+                , index
+                , sectionIndex: section.sectionIndex
+                , imgUrl: sp.taxon.default_photo.square_url
+                , globalWrite
+                , writeTemplateId: section.writeTemplateId
+              })
               parent.appendChild(clone)
               const figure = parent.querySelector('figure')
               figure.classList.remove('hidden')
@@ -730,20 +915,33 @@ const init = () => {
             }) 
             break
           case 'images-preview-template':
-            setOriginalTypeValues({globalWrite, section, type:section.type})       
+            setOriginalTypeValues({
+                globalWrite
+              , section
+              , type:section.type
+            })       
             section.images.forEach((img, i) => {
               if(img.src.length > 0) {
                 d.querySelector(`#image-url-input-${i}`).value = img.src
                 d.querySelector(`#image-title-input-${i}`).value = img.alt
               }
             })
-            console.log(globalWrite.fieldnotes.sections)
             break
           case 'terms-preview-template':
-            setOriginalTypeValues({globalWrite, section, type:'terms'})
+            setOriginalTypeValues({
+                globalWrite
+              , section
+              , type:'terms'
+            })
             const selectedItemsListElement = sectionContainer.querySelector('#selected-terms-list')
             section.terms.forEach((term, index) => {
-              addTermToList({selectedTerms: section.terms, selectedTerm: term, selectedItemsListElement, globalWrite, sectionIndex: section.sectionIndex})
+              addTermToList({
+                  selectedTerms: section.terms
+                , selectedTerm: term
+                , selectedItemsListElement
+                , globalWrite
+                , sectionIndex: section.sectionIndex
+              })
             })
         }
       })
@@ -757,18 +955,28 @@ const init = () => {
       btns.forEach(btn => {
         btn.innerText = 'show only included'
         const fieldset = btn.parentElement
-        toggleAllOrIncludedInSpeciesList({btn, fieldset})
+        toggleAllOrIncludedInSpeciesList({
+            btn
+          , fieldset
+        })
       })
 
       // Enable saving fieldnotes
       exportFieldNotesContainer.classList.remove('disabled')
 
       // Show notification that Fieldnotes have been imported
-      showNotificationsDialog({message: 'Fieldnotes imported', type: 'success', displayDuration: 2000})
+      showNotificationsDialog({
+          message: 'Fieldnotes imported'
+        , type: 'success'
+        , displayDuration: 2000
+      })
     } catch (e) {
       console.log('Error importing fieldnotes')
       console.log(e.stack)
-      showNotificationsDialog({message: e.message, type: 'error'})
+      showNotificationsDialog({
+          message: e.message
+        , type: 'error'
+      })
     }
   }
 
