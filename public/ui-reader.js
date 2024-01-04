@@ -615,7 +615,7 @@ const init = () => {
             
             addImgClickEventHandlers()
         
-            contentToggleVisibilityBtn.scrollIntoView()
+            contentToggleVisibilityBtn.scrollIntoView({})
         } catch (e) {
             showNotificationsDialog({message: e.message, type: 'error'})
         }
