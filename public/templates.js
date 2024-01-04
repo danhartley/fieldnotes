@@ -1,6 +1,7 @@
 export const templates = [
   {
         id: 'species-test-template'
+      , templateId: 'species-test-template'
       , name: 'Species catalogue tests'
       , parent: 'grid-template'
       , pairedTemplateId: 'species-template'

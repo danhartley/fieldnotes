@@ -27,6 +27,7 @@ const init = () => {
           iconicTaxa: g.ICONIC_TAXA
         , language: g.LANGUAGES[1]
         , useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0]
+        , template: g.templates.find(template => template.templateId === 'species-template')
     })
 
     const d = document   
@@ -397,8 +398,9 @@ const init = () => {
     
     const renderDisplayTemplate = () => {
         try {
-            let template = d.getElementById(g.template.parent)
-            let parentClone = template.content.cloneNode(true)
+            // if(!g.template) g.template = g.templates.find(template => template.templateId === 'species-template')
+            let parentTemplate = d.getElementById(g.template.parent)
+            let parentClone = parentTemplate.content.cloneNode(true)
             let templateToClone = d.getElementById(g.template.id) 
             let parent = null
 
@@ -668,6 +670,7 @@ const init = () => {
                 , taxa: g.iconicTaxa
             })
         
+            createRadioBtnTemplateGroup()
             renderDisplayTemplate()
     
             searchInatObservationsNotificationText.classList.toggle('hidden')
