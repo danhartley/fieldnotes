@@ -522,7 +522,7 @@ const init = () => {
                             case 'xenocanto-preview-template':
                                 clone = templateToClone.content.cloneNode(true)
                                 iframe = clone.querySelector('iframe')
-                                iframe.src = `https://xeno-canto.org/${section.input}/embed?simple=1`
+                                iframe.src = `https://xeno-canto.org/${section.p}/embed?simple=1`
                                 parent = parentClone.querySelector('div')
                                 parent.appendChild(clone)
                                 article.appendChild(parent)
