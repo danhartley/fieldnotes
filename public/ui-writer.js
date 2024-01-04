@@ -243,7 +243,10 @@ const init = () => {
         parent: sectionClone
       , elementId: 'edit-section-btn'
     })
-    const deleteSectionBtn = sectionClone.getElementById('delete-section-btn')    
+    const deleteSectionBtn = new ButtonComponent({
+      parent: sectionClone
+    , elementId: 'delete-section-btn'
+  })
     const typeTemplate = d.getElementById(writeTemplateId)
     const typeClone = typeTemplate.content.cloneNode(true)
 
@@ -385,7 +388,9 @@ const init = () => {
 
     draggableSections.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })
     
-    deleteSectionBtn.addEventListener('click', e => deleteSection({d, sectionIndex, globalWrite}), true)
+    deleteSectionBtn.addClickHandler({
+      clickHandler: () => deleteSection({d, sectionIndex, globalWrite})
+    })
 
     // Add additional functionality once the DOM has been updated
     switch(writeTemplateId) {
