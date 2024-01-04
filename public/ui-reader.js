@@ -36,7 +36,7 @@ const init = () => {
     const inatOnlySections = d.querySelectorAll('.inat-only-sections')
     const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
     const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
-    const sectionsWithHeader = d.querySelectorAll('section:has(.section-header:not(.section-group))')
+    const sectionsWithHeader = d.querySelectorAll('.section-with-header')
     const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
     const progressFieldset = d.getElementById('progress-fieldset')
     const lessonFieldsetLegend = d.querySelector('#lesson-fieldset > legend')

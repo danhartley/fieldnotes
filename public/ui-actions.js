@@ -685,7 +685,10 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
   }
 
   export const handleInputChangeEvent = (e, addBtn) => {
-    toggleBtnEnabledState({str: e.target.value, btn: addBtn})
+    // toggleBtnEnabledState({str: e.target.value, btn: addBtn})
+    addBtn.toggleActiveStateByInput({
+        str: e.target.value
+    })
   }
 
   export const handleImageInputChangeEvent = ({addBtn, url1, title1}) => {

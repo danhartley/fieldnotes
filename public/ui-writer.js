@@ -235,8 +235,14 @@ const init = () => {
     const legend = sectionClone.querySelector('legend')
     const showAllOrIncludedBtn = sectionClone.querySelector('.show-all-or-include-only-btn')
     const parentContainer = sectionClone.querySelector('div')
-    const addOrUpdateSectionBtn = sectionClone.getElementById('add-or-update-section-btn')
-    const editSectionBtn = sectionClone.getElementById('edit-section-btn')
+    const addOrUpdateSectionBtn = new ButtonComponent({
+        parent: sectionClone
+      , elementId: 'add-or-update-section-btn'
+    })
+    const editSectionBtn = new ButtonComponent({
+        parent: sectionClone
+      , elementId: 'edit-section-btn'
+    })
     const deleteSectionBtn = sectionClone.getElementById('delete-section-btn')    
     const typeTemplate = d.getElementById(writeTemplateId)
     const typeClone = typeTemplate.content.cloneNode(true)
@@ -256,24 +262,28 @@ const init = () => {
       case 'xenocanto-write-template':
         input = typeClone.querySelector('input')
         input.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({
-            parent: e.target.parentElement
-          , writeTemplateId
-          , typeValue: input.value
-          , previewContainer
-          , sectionIndex
-        }), true)
+        addOrUpdateSectionBtn.addClickHandler({
+          clickHandler: e => addOrUpdateSection({
+              parent: e.target.parentElement
+            , writeTemplateId
+            , typeValue: input.value
+            , previewContainer
+            , sectionIndex
+          })
+        })
         break
       case 'textarea-write-template':    
         textarea = typeClone.querySelector('textarea')
         textarea.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({
-            parent: e.target.parentElement
-          , writeTemplateId
-          , typeValue: textarea.value
-          , previewContainer
-          , sectionIndex
-        }), true)
+        addOrUpdateSectionBtn.addClickHandler({
+          clickHandler: e => addOrUpdateSection({
+              parent: e.target.parentElement
+            , writeTemplateId
+            , typeValue: textarea.value
+            , previewContainer
+            , sectionIndex
+          })
+        })
         break
       case 'observations-write-template':
       case 'species-write-template':       
@@ -283,14 +293,16 @@ const init = () => {
           , writeTemplateId
           , sectionIndex
         })
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({
-            parent: e.target.parentElement
-          , writeTemplateId
-          , typeValue: null
-          , previewContainer
-          , sectionIndex
-        }), true)
-        addOrUpdateSectionBtn.classList.remove('disabled')
+        addOrUpdateSectionBtn.addClickHandler({
+          clickHandler: e => addOrUpdateSection({
+              parent: e.target.parentElement
+            , writeTemplateId
+            , typeValue: null
+            , previewContainer
+            , sectionIndex
+          })
+        })
+        addOrUpdateSectionBtn.enable()
         break
       case 'terms-write-template':
         datalist = typeClone.querySelector('datalist')
@@ -300,13 +312,15 @@ const init = () => {
         input.setAttribute('list', datalist.id)        
         label = typeClone.querySelector('label')
         label.htmlFor = input.id                  
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({
-            parent: e.target.parentElement
-          , writeTemplateId
-          , typeValue: null
-          , previewContainer
-          , sectionIndex
-        }), true)
+        addOrUpdateSectionBtn.addClickHandler({
+          clickHandler: e => addOrUpdateSection({
+              parent: e.target.parentElement
+            , writeTemplateId
+            , typeValue: null
+            , previewContainer
+            , sectionIndex
+          })
+        })
         break
       case 'images-write-template':
         const url1 = typeClone.getElementById('image-url-input-0')
@@ -321,13 +335,15 @@ const init = () => {
           , url1
           , title1
         }), true)
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({
-            parent: e.target.parentElement
-          , writeTemplateId
-          , typeValue: null
-          , previewContainer
-          , sectionIndex
-        }), true)  
+        addOrUpdateSectionBtn.addClickHandler({
+          clickHandler: e => addOrUpdateSection({
+              parent: e.target.parentElement
+            , writeTemplateId
+            , typeValue: null
+            , previewContainer
+            , sectionIndex
+          })
+        })
         break
       case 'inat-lookup-write-template':
         datalist = typeClone.querySelector('datalist')
@@ -339,19 +355,22 @@ const init = () => {
         label.htmlFor = input.id
         cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
         cbParent.id = `section-${sectionIndex}-lookup-parent`
-        addOrUpdateSectionBtn.addEventListener('click', e => addOrUpdateSection({
-            parent: e.target.parentElement
-          , writeTemplateId
-          , typeValue: null
-          , previewContainer
-          , sectionIndex
-        }), true)
-        addOrUpdateSectionBtn.classList.remove('disabled')
+        addOrUpdateSectionBtn.addClickHandler({
+            clickHandler: e => addOrUpdateSection({
+              parent: e.target.parentElement
+            , writeTemplateId
+            , typeValue: null
+            , previewContainer
+            , sectionIndex
+          })
+        })
+        addOrUpdateSectionBtn.enable()
         break
     }
-    
-    editSectionBtn.addEventListener('click', e => editSection({e}), true)
-    
+    editSectionBtn.addClickHandler({
+      clickHandler: e => editSection({e})
+    })
+
     // Add the child to its parent container
     parentContainer.appendChild(typeClone)
 
@@ -396,7 +415,7 @@ const init = () => {
           const selectedItemsListElement = fieldset.querySelector('#selected-terms-list')
           addTermToList({selectedTerms, selectedTerm, selectedItemsListElement, globalWrite, sectionIndex})
           addSelectedTermBtn.classList.add('disabled')
-          addOrUpdateSectionBtn.classList.remove('disabled')
+          addOrUpdateSectionBtn.enable()
           input.value = ''             
         }
         input.focus()
@@ -431,6 +450,7 @@ const init = () => {
         d.querySelector('label[for="input-dx"]').htmlFor = dx.id
         
         dt.addEventListener('change', e => {
+
           toggleBtnEnabledState({
               str: e.target.value
             , btn: addNewTermBtn 
@@ -589,9 +609,16 @@ const init = () => {
 
   const editSection = ({e}) => {
     const parent = e.target.parentElement
-    const addOrUpdateSectionBtn = parent.querySelector('#add-or-update-section-btn')
-    addOrUpdateSectionBtn.innerText = 'Save changes'
-    addOrUpdateSectionBtn.classList.remove('disabled')
+
+    const addOrUpdateSectionBtn = new ButtonComponent({
+        parent
+      , elementId: 'add-or-update-section-btn'
+    })
+
+    addOrUpdateSectionBtn.setText({
+      text: 'Save changes' 
+    })
+    addOrUpdateSectionBtn.enable()
 
     Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
     Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
@@ -835,11 +862,17 @@ const init = () => {
           , sectionIndex: section.sectionIndex     
         })
 
-        const addOrUpdateSectionBtn = sectionContainer.querySelector('#add-or-update-section-btn')
-        const editSectionBtn = sectionContainer.querySelector('#edit-section-btn')      
+        const addOrUpdateSectionBtn = new ButtonComponent({
+          parent: sectionContainer
+        , elementId: 'add-or-update-section-btn'
+      })
+        const editSectionBtn = new ButtonComponent({
+          parent: sectionContainer
+        , elementId: 'edit-section-btn'
+      })
 
-        if(addOrUpdateSectionBtn) addOrUpdateSectionBtn.classList.add('hidden')
-        if(editSectionBtn) editSectionBtn.classList.remove('hidden')
+        if(addOrUpdateSectionBtn) addOrUpdateSectionBtn.hide() // messy hide and disable… perhaps simply a separate button
+        if(editSectionBtn) editSectionBtn.show()
 
         const previewContainer = sectionContainer.querySelector('.edit')
         previewContainer.classList.remove('hidden')

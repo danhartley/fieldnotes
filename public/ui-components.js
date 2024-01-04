@@ -1,6 +1,6 @@
 export class ButtonComponent {
-  constructor({elementId, clickHandler}) {
-    this.buttonElement = document.getElementById(elementId)
+  constructor({parent = document, elementId, clickHandler}) {
+    this.buttonElement = parent.querySelector(`#${elementId}`)
 
     if (!this.buttonElement) {
       console.error(`Element with Id ${elementId} not found.`)
@@ -22,6 +22,28 @@ export class ButtonComponent {
 
   toggleActiveState() {
     this.buttonElement.classList.toggle('disabled')
+  }
+
+  toggleActiveStateByInput({str}) {
+    str.length > 0
+      ? this.enable()
+      : this.disable()
+  }
+
+  addClickHandler({clickHandler}) {
+    this.buttonElement.addEventListener('click', clickHandler)
+  }
+
+  setText({text}) {
+    this.buttonElement.innerText = text
+  }
+
+  hide() {
+    this.buttonElement.classList.add('hidden')
+  }
+
+  show() {
+    this.buttonElement.classList.remove('hidden')
   }
 }
 
