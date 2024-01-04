@@ -619,6 +619,8 @@ const init = () => {
 
   const editSection = ({e}) => {
     const parent = e.target.parentElement
+    const container = parent.querySelector('div')
+    container.classList.remove('disabled')
 
     const addOrUpdateSectionBtn = new ButtonComponent({
         parent

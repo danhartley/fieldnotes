@@ -724,7 +724,7 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
       case 'species-write-template':
       case 'observations-write-template':
       case 'inat-lookup-write-template':
-        sectionTemplate = d.getElementById('section-include-template')
+        sectionTemplate = d.getElementById('section-with-species-template')
         break
       default:
         sectionTemplate = d.getElementById('section-template')
