@@ -75,7 +75,7 @@ export const handleInatAutocomplete = ({globalWrite, inputText, dataList, id, pr
     })
 }
 
-export const handleTermAutocomplete = ({inputText, selectedTerms, dataList, globalWrite, data, parent, addSelectedTermBtn, handleOnClickAddSelectedTermBtn}) => {
+export const handleTermAutocomplete = ({selectedTerms, inputText, dataList, globalWrite, data, parent, addSelectedTermBtn, handleOnClickAddSelectedTermBtn}) => {
   inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
@@ -110,7 +110,7 @@ export const handleTermAutocomplete = ({inputText, selectedTerms, dataList, glob
             if(selectedTerms.find(t => t.dt.toLowerCase() === match.toLowerCase())) return 
 
             addSelectedTermBtn.classList.remove('disabled')
-            addSelectedTermBtn.addEventListener('click', e => handleOnClickAddSelectedTermBtn({selectedTerms, selectedTerm: term}), true)
+            addSelectedTermBtn.addEventListener('click', e => handleOnClickAddSelectedTermBtn({selectedTerm: term}), true)
         }
     })
 }
@@ -198,7 +198,7 @@ export const getTaxonGroupColour = ({taxon}) => {
     return getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
 }
 
-export const handleTermCheckState = ({e, globalWrite, selectedTerm, li}) => {
+export const handleTermCheckState = ({e, globalWrite, selectedTerm, li, sectionIndex}) => {
     const checkbox = e.target
     const isChecked = checkbox.checked
   
@@ -209,8 +209,7 @@ export const handleTermCheckState = ({e, globalWrite, selectedTerm, li}) => {
     if(section) {
         isChecked
             ? section.terms.push(selectedTerm)
-            : section.terms = section.terms.filter(t => t !== selectedTerm)
-        globalWrite.fieldnotes.sections[sectionIndex] = section    
+            : section.terms = section.terms.filter(t => t !== selectedTerm) 
     } else {
         section = {...terms, terms: [selectedTerm], templateId: terms.templateId, sectionIndex }
         globalWrite.fieldnotes.sections.push(section)
@@ -219,35 +218,43 @@ export const handleTermCheckState = ({e, globalWrite, selectedTerm, li}) => {
 
 export const addTermToList = ({selectedTerms, selectedTerm, selectedItemsListElement, globalWrite, sectionIndex}) => {
 
-    const items = [selectedTerm]
-
-    items.forEach(term => {
-      const li = d.createElement('li')
-      const checkbox = d.createElement('input')
-      checkbox.type = 'checkbox'
-      checkbox.id = term.dt
-      checkbox.setAttribute('checked', true)
-      checkbox.classList.add('fl')
-      checkbox.addEventListener('change', e => handleTermCheckState({e, globalWrite, selectedTerm, li}), true)
-      const label = d.createElement('label')
-      label.innerText = term.dt
-      label.htmlFor = checkbox.id
-      li.appendChild(checkbox)
-      li.appendChild(label)
-      selectedItemsListElement.appendChild(li)
-    })
-
     let section = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
 
+    // Check the new term hasn't been added in memory i.e. not yet saved to db
     if(selectedTerms.findIndex(item => item.dt === selectedTerm.dt) > -1) return
 
     if(section) {
-        section.terms.push(selectedTerm)      
-        globalWrite.fieldnotes.sections[sectionIndex] = section    
+        // Check that the new term hasn't previously been added i.e. has been saved to db
+        if(section.terms.findIndex(term => term.dt === selectedTerm.dt) === -1) {
+            section.terms.push(selectedTerm)
+        }
     } else {
         section = {...terms, terms: [selectedTerm], templateId: terms.templateId, sectionIndex }
         globalWrite.fieldnotes.sections.push(section)
     }
+
+    // Add the new term to the list
+    [selectedTerm].forEach(term => {
+        const li = d.createElement('li')
+        const checkbox = d.createElement('input')
+        checkbox.type = 'checkbox'
+        checkbox.id = term.dt
+        checkbox.setAttribute('checked', true)
+        checkbox.classList.add('fl')
+        checkbox.addEventListener('change', e => handleTermCheckState({
+              e
+            , globalWrite
+            , selectedTerm
+            , li
+            , sectionIndex
+        }), true)
+        const label = d.createElement('label')
+        label.innerText = term.dt
+        label.htmlFor = checkbox.id
+        li.appendChild(checkbox)
+        li.appendChild(label)
+        selectedItemsListElement.appendChild(li)
+      })
 }
 
 const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  writeTemplateId}) => {

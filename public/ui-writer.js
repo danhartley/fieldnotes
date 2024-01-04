@@ -413,20 +413,25 @@ const init = () => {
         const parent = fieldset.querySelector('#selected-term')
         const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
         const addNewTermBtn = fieldset.querySelector('#add-new-term-btn')
-        
-        const selectedTerms = globalWrite?.fieldnotes.sections?.find(t => t.sectionIndex === sectionIndex)?.terms || []        
 
-        const handleOnClickAddSelectedTermBtn = ({selectedTerms, selectedTerm}) => {
+        const selectedTerms = []
+        const handleOnClickAddSelectedTermBtn = ({selectedTerm}) => {
           const selectedItemsListElement = fieldset.querySelector('#selected-terms-list')
-          addTermToList({selectedTerms, selectedTerm, selectedItemsListElement, globalWrite, sectionIndex})
+          addTermToList({
+              selectedTerms
+            , selectedTerm
+            , selectedItemsListElement
+            , globalWrite, sectionIndex
+          })
           addSelectedTermBtn.classList.add('disabled')
           addOrUpdateSectionBtn.enable()
-          input.value = ''             
+          input.value = ''
+          selectedTerms.push(selectedTerm)
         }
         input.focus()
         handleTermAutocomplete({ 
-            inputText: input
-          , selectedTerms
+            selectedTerms
+          , inputText: input
           , dataList: datalist
           , globalWrite
           , data: getTerms()
@@ -971,14 +976,16 @@ const init = () => {
               , type:'terms'
             })
             const selectedItemsListElement = sectionContainer.querySelector('#selected-terms-list')
-            section.terms.forEach((term, index) => {
+            const selectedTerms = []        
+            section.terms.forEach((term) => {
               addTermToList({
-                  selectedTerms: section.terms
+                  selectedTerms
                 , selectedTerm: term
                 , selectedItemsListElement
                 , globalWrite
                 , sectionIndex: section.sectionIndex
               })
+              selectedTerms.push(term)
             })
         }
       })
