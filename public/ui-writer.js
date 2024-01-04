@@ -244,9 +244,13 @@ const init = () => {
       , elementId: 'edit-section-btn'
     })
     const deleteSectionBtn = new ButtonComponent({
-      parent: sectionClone
-    , elementId: 'delete-section-btn'
-  })
+        parent: sectionClone
+      , elementId: 'delete-section-btn'
+    })
+    const cancelActionBtn = new ButtonComponent({
+        parent: sectionClone
+      , elementId: 'cancel-action-btn'
+    })
     const typeTemplate = d.getElementById(writeTemplateId)
     const typeClone = typeTemplate.content.cloneNode(true)
 
@@ -272,6 +276,7 @@ const init = () => {
             , typeValue: input.value
             , previewContainer
             , sectionIndex
+            , cancelActionBtn
           })
         })
         break
@@ -285,6 +290,7 @@ const init = () => {
             , typeValue: textarea.value
             , previewContainer
             , sectionIndex
+            , cancelActionBtn
           })
         })
         break
@@ -303,6 +309,7 @@ const init = () => {
             , typeValue: null
             , previewContainer
             , sectionIndex
+            , cancelActionBtn
           })
         })
         addOrUpdateSectionBtn.enable()
@@ -322,6 +329,7 @@ const init = () => {
             , typeValue: null
             , previewContainer
             , sectionIndex
+            , cancelActionBtn
           })
         })
         break
@@ -345,6 +353,7 @@ const init = () => {
             , typeValue: null
             , previewContainer
             , sectionIndex
+            , cancelActionBtn
           })
         })
         break
@@ -365,13 +374,19 @@ const init = () => {
             , typeValue: null
             , previewContainer
             , sectionIndex
+            , cancelActionBtn
           })
         })
         addOrUpdateSectionBtn.enable()
         break
     }
     editSectionBtn.addClickHandler({
-      clickHandler: e => editSection({e})
+      clickHandler: e => editSection({
+          e
+        , addOrUpdateSectionBtn
+        , editSectionBtn
+        , cancelActionBtn
+      })
     })
 
     // Add the child to its parent container
@@ -390,6 +405,18 @@ const init = () => {
     
     deleteSectionBtn.addClickHandler({
       clickHandler: () => deleteSection({d, sectionIndex, globalWrite})
+    })
+
+    cancelActionBtn.addClickHandler({
+      clickHandler: e => {
+        cancelActionBtn.hide()
+        addOrUpdateSectionBtn.hide()
+        editSectionBtn.show()
+        deleteSectionBtn.show()
+        const parent = e.target.parentElement
+        const container = parent.querySelector('.section-container')
+        container.classList.toggle('disabled')
+      }
     })
 
     // Add additional functionality once the DOM has been updated
@@ -544,7 +571,9 @@ const init = () => {
       , sectionIndex: globalWrite.nextSectionIndex
     })}, true))
 
-  const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex}) => {
+  const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex, cancelActionBtn}) => {
+    cancelActionBtn.hide()
+
     let sectionToUpdate, sectionAddedOrUpdated, isEdit = null
 
     sectionToUpdate = structuredClone(globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)) || null
@@ -617,20 +646,17 @@ const init = () => {
     addOrUpdateSectionArray({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isEdit})
   }
 
-  const editSection = ({e}) => {
+  const editSection = ({e, addOrUpdateSectionBtn, editSectionBtn, cancelActionBtn}) => {
     const parent = e.target.parentElement
-    const container = parent.querySelector('div')
-    container.classList.remove('disabled')
-
-    const addOrUpdateSectionBtn = new ButtonComponent({
-        parent
-      , elementId: 'add-or-update-section-btn'
-    })
+    const container = parent.querySelector('.section-container')
+    container.classList.toggle('disabled')
 
     addOrUpdateSectionBtn.setText({
       text: 'Save changes' 
     })
     addOrUpdateSectionBtn.enable()
+    editSectionBtn.hide()
+    cancelActionBtn.show()
 
     Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
     Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
