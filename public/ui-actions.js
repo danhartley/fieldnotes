@@ -31,7 +31,12 @@ const debounce = (func, wait) => {
 }
 
 export const createInatLookups = ({globalWrite, parent, writeTemplateId, sectionIndex}) => {
-    cloneImages({globalWrite, parent, writeTemplateId, sectionIndex})
+    cloneImages({
+          globalWrite
+        , parent
+        , writeTemplateId
+        , sectionIndex
+    })
 }
 
 export const handleInatAutocomplete = ({globalWrite, inputText, dataList, id, prop, callback, cbParent, writeTemplateId, sectionIndex}) => {
@@ -266,13 +271,13 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
     const getSpeciesForInatLookup = ({taxon}) => {
         return {
             taxon: {
-                id: taxon.id,
-                name: taxon.name,
-                preferred_common_name: taxon.preferred_common_name,
-                iconic_taxon_name: taxon.iconic_taxon_name,
-                default_photo: {
+                  id: taxon.id
+                , name: taxon.name
+                , preferred_common_name: taxon.preferred_common_name
+                , iconic_taxon_name: taxon.iconic_taxon_name
+                , default_photo: {
                     square_url: taxon.default_photo.square_url
-                },
+                }
             }
         }
     }
@@ -299,12 +304,14 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
             case 'inat-lookup-write-template':
                     section.species.find(sp => sp.taxon.name === name)
                         ? section.species = section.species.filter(sp => sp.taxon.name !== name)
-                        : section.species.push(getSpeciesForInatLookup({taxon})) 
+                        : section.species.push(getSpeciesForInatLookup({
+                            taxon
+                          })) 
                     globalWrite.fieldnotes.sections[index] = section
                 break
         }
     } else {
-        const sp = [ name ]
+        const sp = [name]
         switch(writeTemplateId) {
             case 'species-write-template':
                 section = {...species, species: sp, templateId: species.templateId, sectionIndex }
@@ -315,9 +322,12 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
             case 'inat-lookup-write-template':
                 section = {
                       ...inatlookup
-                    , species: [getSpeciesForInatLookup({taxon})]
+                    , species: [getSpeciesForInatLookup({
+                        taxon
+                      })]
                     , templateId: inatlookup.templateId
-                    , sectionIndex }
+                    , sectionIndex 
+                }
                 break
         }
         globalWrite.fieldnotes.sections.push(section)
@@ -325,59 +335,85 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
 
     if(!globalWrite.fieldnotes.taxa.find(t => t.name === name)) {
         globalWrite.fieldnotes.taxa.push({
-        id: globalWrite.species.find(sp => sp.taxon.name === name)?.taxon?.id,
-        name
+              id: globalWrite.species.find(sp => sp.taxon.name === name)?.taxon?.id
+            , name
         })
-        updateFieldnoteProperty({fieldnotes: globalWrite.fieldnotes, prop: 'taxa', value: globalWrite.fieldnotes.taxa})
+        updateFieldnoteProperty({
+              fieldnotes: globalWrite.fieldnotes
+            , prop: 'taxa'
+            , value: globalWrite.fieldnotes.taxa
+        })
     }
 }
 
 export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}) => {
-switch(writeTemplateId) {
-    case 'species-write-template':
-        if(globalWrite.species.length > 0) {
-            const uniqueSpecies = []
-            globalWrite.species.forEach((sp, index) => {
-            if(uniqueSpecies.findIndex(us => us === sp.taxon.name) === -1) {
-                    const clone = cloneImageTemplate({species: sp, index, sectionIndex, imgUrl: sp.taxon.default_photo.medium_url, globalWrite, writeTemplateId})            
+    switch(writeTemplateId) {
+        case 'species-write-template':
+            if(globalWrite.species.length > 0) {
+                const uniqueSpecies = []
+                globalWrite.species.forEach((sp, index) => {
+                if(uniqueSpecies.findIndex(us => us === sp.taxon.name) === -1) {
+                        const clone = cloneImageTemplate({
+                              species: sp
+                            , index
+                            , sectionIndex
+                            , imgUrl: sp.taxon.default_photo.medium_url
+                            , globalWrite
+                            , writeTemplateId
+                        })   
+                        parent.appendChild(clone)
+                        uniqueSpecies.push(sp.taxon.name)                
+                    }
+                })
+            }
+            break
+        case 'observations-write-template':
+            if(globalWrite.species.length > 0) {
+                    globalWrite.species.forEach((species, index) => {
+                    const clone = cloneImageTemplate({
+                          species
+                        , index
+                        , sectionIndex
+                        , imgUrl: species.photos[0].url
+                        , globalWrite
+                        , writeTemplateId
+                    })  
                     parent.appendChild(clone)
-                    uniqueSpecies.push(sp.taxon.name)                
-                }
-            })
-        }
-        break
-    case 'observations-write-template':
-        if(globalWrite.species.length > 0) {
-                globalWrite.species.forEach((species, index) => {
-                const clone = cloneImageTemplate({species, index, sectionIndex, imgUrl: species.photos[0].url, globalWrite, writeTemplateId})            
-                parent.appendChild(clone)
-            })
-        }
-        break
-    case 'inat-lookup-write-template':
-    const term = globalWrite.name || globalWrite.matched_term
-    if(term) {
-        // match.name is the scientific name, match.matched_term is the preferred common name in the given language (default en)
-        const match = globalWrite.matches.find(match => match.name === term || match.matched_term === term)
-        const imgUrl = match.default_photo.square_url
-        const clone = cloneImageTemplate({species: {taxon:match}, index: 0, sectionIndex, imgUrl, globalWrite, writeTemplateId})            
-        parent.appendChild(clone)
+                })
+            }
+            break
+        case 'inat-lookup-write-template':
+        const term = globalWrite.name || globalWrite.matched_term
+        if(term) {
+            // match.name is the scientific name, match.matched_term is the preferred common name in the given language (default en)
+            const match = globalWrite.matches.find(match => match.name === term || match.matched_term === term)
+            const imgUrl = match.default_photo.square_url
+            const clone = cloneImageTemplate({
+                  species: {
+                    taxon: match
+                  }
+                , index: 0
+                , sectionIndex
+                , imgUrl
+                , globalWrite
+                , writeTemplateId
+            })           
+            parent.appendChild(clone)
 
-        if(!globalWrite.fieldnotes.taxa.find(taxon => taxon.id === match.id)) {                
-            globalWrite.fieldnotes.taxa.push({
-                id: match.id,
-                name: match.name,
-            })
+            if(!globalWrite.fieldnotes.taxa.find(taxon => taxon.id === match.id)) {                
+                globalWrite.fieldnotes.taxa.push({
+                      id: match.id
+                    , name: match.name
+                })
+            }
         }
+        break
     }
-    break
-}
 }
 
 export const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, globalWrite, writeTemplateId}) => {
     const templateToClone = d.getElementById('images-preview-template')
     const clone = templateToClone.content.cloneNode(true)
-
     const spans = clone.querySelectorAll('span')
     const img = clone.querySelector('img')      
     const figure = clone.querySelector('figure')
@@ -398,7 +434,13 @@ export const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, global
     
     checkbox.id = `${sectionIndex}-${species.id || species.taxon.id}`
     checkbox.value = species.taxon.name
-    checkbox.addEventListener('change', e => handleSpeciesCheckState({e, taxon:species.taxon, sectionIndex, globalWrite, writeTemplateId}), true)
+    checkbox.addEventListener('change', e => handleSpeciesCheckState({
+          e 
+        , taxon: species.taxon
+        , sectionIndex
+        , globalWrite
+        , writeTemplateId
+    }), true)
     label.htmlFor = checkbox.id
 
     return clone
@@ -527,7 +569,7 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
 }
 
 export const showNotificationsDialog = ({message, type = 'success', displayDuration = 3500, icon = 'success-icon'}) => {
-    const dialog = document.getElementById('state-notifications')
+    const dialog = d.getElementById('state-notifications')
     const div1 = dialog.querySelector('div > div:nth-child(1)')
 
     div1.innerText = message
@@ -545,30 +587,30 @@ export const showNotificationsDialog = ({message, type = 'success', displayDurat
     }, displayDuration)
 }
 
-export const deleteSection = async ({d, sectionIndex, globalWrite}) => {
+export const deleteSection = async ({sectionIndex, globalWrite}) => {
     try {        
-    const elementToRemove = globalWrite.fieldnotes.sections.find(t => t.sectionIndex == sectionIndex)
-    
-    // Remove section from fieldnotes in the db
-    const response = !!elementToRemove 
-        ? await removeElementFromArray({fieldnotes: globalWrite.fieldnotes, array: 'sections',  element: elementToRemove})
-        : {
-            success: true,
-            message: 'Section removed'
-        }
+        const elementToRemove = globalWrite.fieldnotes.sections.find(t => t.sectionIndex == sectionIndex)
+        
+        // Remove section from fieldnotes in the db, or from memory if not previously saved
+        const response = !!elementToRemove 
+            ? await removeElementFromArray({fieldnotes: globalWrite.fieldnotes, array: 'sections',  element: elementToRemove})
+            : {
+                success: true,
+                message: 'Section removed'
+            }
 
-    if(response.success) {
-        const element = d.getElementById(sectionIndex)
-        // Remove section from the DOM
-        element.remove()
+        if(response.success) {
+            const element = d.getElementById(sectionIndex)
+            // Remove section from the DOM
+            element.remove()
 
-        // Remove section from the in-memory fieldnotes
-        globalWrite.fieldnotes.sections = globalWrite.fieldnotes.sections.filter(t => t.sectionIndex !== sectionIndex)
-        globalWrite.fieldnotes.sectionOrder = globalWrite.fieldnotes.sectionOrder.filter(id => id !== sectionIndex)
+            // Remove section from the in-memory fieldnotes
+            globalWrite.fieldnotes.sections = globalWrite.fieldnotes.sections.filter(t => t.sectionIndex !== sectionIndex)
+            globalWrite.fieldnotes.sectionOrder = globalWrite.fieldnotes.sectionOrder.filter(id => id !== sectionIndex)
 
-        // Notify user
-        showNotificationsDialog({message: response.message, type: 'success'})
-    }    
+            // Notify user
+            showNotificationsDialog({message: response.message, type: 'success'})
+        }    
     } catch (e) {
       showNotificationsDialog({message: e.message, type: 'error'})
     }
@@ -703,7 +745,7 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
         : addBtn.classList.add('disabled')    
   }
 
-  export const toggleSpeciesIncludeAll = ({btn, fieldset}) => {    
+  export const toggleSpeciesList = ({btn, fieldset}) => {    
     if(btn.getText().toLowerCase() === 'show only included') {
       fieldset.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(input => {
         input.closest('figure').classList.add('hidden')

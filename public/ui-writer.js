@@ -43,7 +43,7 @@ import {
   , toggleBtnEnabledState
   , handleInputChangeEvent
   , handleImageInputChangeEvent
-  , toggleSpeciesIncludeAll
+  , toggleSpeciesList
 } from './ui-actions.js'
 
 import {
@@ -235,7 +235,7 @@ const init = () => {
     const legend = sectionClone.querySelector('legend')
     const parentContainer = sectionClone.querySelector('div')
     
-    const toggleSpeciesIncludeAllBtn = new ButtonComponent({
+    const toggleSpeciesListBtn = new ButtonComponent({
         parent: sectionClone
       , elementId: 'tpggle-species-include-all-btn'
     })
@@ -377,7 +377,7 @@ const init = () => {
         label = typeClone.querySelector('label')
         label.htmlFor = input.id
         cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
-        cbParent.id = `section-${sectionIndex}-lookup-parent`
+        cbParent.id = `inat-looup-parent-${sectionIndex}`
         addOrUpdateSectionBtn.addClickHandler({
             clickHandler: e => addOrUpdateSection({
               parent: e.target.parentElement
@@ -388,7 +388,7 @@ const init = () => {
             , cancelActionBtn
           })
         })
-        addOrUpdateSectionBtn.enable()
+        // addOrUpdateSectionBtn.enable()
         break
     }
     editSectionBtn.addClickHandler({
@@ -416,7 +416,10 @@ const init = () => {
     draggableSections.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })
     
     deleteSectionBtn.addClickHandler({
-      clickHandler: () => deleteSection({d, sectionIndex, globalWrite})
+      clickHandler: () => deleteSection({
+          sectionIndex
+        , globalWrite
+      })
     })
 
     cancelActionBtn.addClickHandler({
@@ -431,7 +434,9 @@ const init = () => {
 
     const section = globalWrite.fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
 
-    if(!section) contentContainer.classList.toggle('disabled')
+    if(!section) {
+      contentContainer.classList.toggle('disabled')
+    }
 
     // Add additional functionality once the DOM has been updated
     switch(writeTemplateId) {
@@ -442,9 +447,9 @@ const init = () => {
         break
       case 'species-write-template':
       case 'observations-write-template':
-          toggleSpeciesIncludeAllBtn.addClickHandler({
-            clickHandler: () => toggleSpeciesIncludeAll({
-                btn:toggleSpeciesIncludeAllBtn
+          toggleSpeciesListBtn.addClickHandler({
+            clickHandler: () => toggleSpeciesList({
+                btn:toggleSpeciesListBtn
               , fieldset
             })
           }) 
@@ -557,23 +562,22 @@ const init = () => {
         Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
         break
       case 'inat-lookup-write-template':
-        toggleSpeciesIncludeAllBtn.addClickHandler({
-          clickHandler: () => toggleSpeciesIncludeAll({
-              btn:toggleSpeciesIncludeAllBtn
+        toggleSpeciesListBtn.addClickHandler({
+          clickHandler: () => toggleSpeciesList({
+              btn: toggleSpeciesListBtn
             , fieldset
           })
         })
         Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
 
         globalWrite.inatAutocomplete = globalWrite.inatAutocompleteOptions.find(option => option.id === 'taxa')
-        const { id, prop } = globalWrite.inatAutocomplete
 
         handleInatAutocomplete({ 
             inputText: input
           , dataList: datalist
           , globalWrite
-          , id
-          , prop
+          , id: globalWrite.inatAutocomplete.id
+          , prop: globalWrite.inatAutocomplete.prop
           , callback: createInatLookups
           , cbParent
           , writeTemplateId
@@ -589,12 +593,14 @@ const init = () => {
     const parentTemplateId = 
          globalWrite.fieldnotes.sections.find(section => section.writeTemplateId === writeTemplateId)?.writeParentTemplateId 
       || writeTemplates.find(template => template.templateId === writeTemplateId).writeParentTemplateId
+    
     createSection({
         writeTemplateId
       , typeText: e.target.innerText
       , sectionTemplate: d.getElementById(parentTemplateId)
       , sectionIndex: globalWrite.nextSectionIndex
-    })}, true))
+    })
+  }, true))
 
   const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex, cancelActionBtn}) => {
     cancelActionBtn.hide()
@@ -673,8 +679,6 @@ const init = () => {
 
   const editSection = ({e, addOrUpdateSectionBtn, editSectionBtn, cancelActionBtn, contentContainer}) => {
     const parent = e.target.parentElement
-    // const container = parent.querySelector('.content-container')
-    // container.classList.toggle('disabled')
     contentContainer.classList.toggle('disabled')
 
     addOrUpdateSectionBtn.setText({
@@ -992,7 +996,7 @@ const init = () => {
               , type:section.type})
             let parent = null
             section.species.forEach((sp, index) => {
-              parent = draggableSection.querySelector(`#section-${section.sectionIndex}-lookup-parent`)
+              parent = draggableSection.querySelector(`#inat-looup-parent-${section.sectionIndex}`)
               const clone = cloneImageTemplate({
                   species: sp
                 , index
@@ -1053,7 +1057,7 @@ const init = () => {
       btns.forEach(btn => {
         btn.innerText = 'show only included'
         const fieldset = btn.parentElement
-        toggleSpeciesIncludeAll({
+        toggleSpeciesList({
             btn
           , fieldset
         })
