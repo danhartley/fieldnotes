@@ -43,7 +43,7 @@ import {
   , toggleBtnEnabledState
   , handleInputChangeEvent
   , handleImageInputChangeEvent
-  , toggleAllOrIncludedInSpeciesList
+  , toggleSpeciesIncludeAll
 } from './ui-actions.js'
 
 import {
@@ -235,9 +235,9 @@ const init = () => {
     const legend = sectionClone.querySelector('legend')
     const parentContainer = sectionClone.querySelector('div')
     
-    const showAllOrIncludedBtn = new ButtonComponent({
+    const toggleSpeciesIncludeAllBtn = new ButtonComponent({
         parent: sectionClone
-      , elementId: 'show-all-or-include-only-btn'
+      , elementId: 'tpggle-species-include-all-btn'
     })
     const addOrUpdateSectionBtn = new ButtonComponent({
         parent: sectionClone
@@ -436,9 +436,9 @@ const init = () => {
         break
       case 'species-write-template':
       case 'observations-write-template':
-          showAllOrIncludedBtn.addClickHandler({
-            clickHandler: () => toggleAllOrIncludedInSpeciesList({
-                btn:showAllOrIncludedBtn
+          toggleSpeciesIncludeAllBtn.addClickHandler({
+            clickHandler: () => toggleSpeciesIncludeAll({
+                btn:toggleSpeciesIncludeAllBtn
               , fieldset
             })
           }) 
@@ -551,9 +551,9 @@ const init = () => {
         Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
         break
       case 'inat-lookup-write-template':
-        showAllOrIncludedBtn.addClickHandler({
-          clickHandler: () => toggleAllOrIncludedInSpeciesList({
-              btn:showAllOrIncludedBtn
+        toggleSpeciesIncludeAllBtn.addClickHandler({
+          clickHandler: () => toggleSpeciesIncludeAll({
+              btn:toggleSpeciesIncludeAllBtn
             , fieldset
           })
         })
@@ -1043,11 +1043,11 @@ const init = () => {
       selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
 
       // Hide all species that are not included
-      const btns = d.querySelectorAll('.show-all-or-include-only-btn')
+      const btns = d.querySelectorAll('.tpggle-species-include-all-btn')
       btns.forEach(btn => {
         btn.innerText = 'show only included'
         const fieldset = btn.parentElement
-        toggleAllOrIncludedInSpeciesList({
+        toggleSpeciesIncludeAll({
             btn
           , fieldset
         })

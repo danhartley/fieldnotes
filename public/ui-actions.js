@@ -704,16 +704,20 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
         : addBtn.classList.add('disabled')    
   }
 
-  export const toggleAllOrIncludedInSpeciesList = ({btn, fieldset}) => {    
-    if(btn.innerText.toLowerCase() === 'show only included') {
+  export const toggleSpeciesIncludeAll = ({btn, fieldset}) => {    
+    if(btn.getText().toLowerCase() === 'show only included') {
       fieldset.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(input => {
         input.closest('figure').classList.add('hidden')
       })
-      btn.innerText = 'show all'
+        btn.setText({
+            text: 'show all'
+        })
     } else {
-      fieldset.querySelectorAll('input[type="checkbox"]').forEach(input => {
-        input.closest('figure').classList.remove('hidden')
-      })
-      btn.innerText = 'show only included'
+        fieldset.querySelectorAll('input[type="checkbox"]').forEach(input => {
+            input.closest('figure').classList.remove('hidden')
+        })
+        btn.setText({
+            text: 'show only included'
+        })
     }
   }

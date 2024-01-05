@@ -38,6 +38,10 @@ export class ButtonComponent {
     this.buttonElement.innerText = text
   }
 
+  getText() {
+    return this.buttonElement.innerText
+  }
+
   hide() {
     this.buttonElement.classList.add('hidden')
   }
