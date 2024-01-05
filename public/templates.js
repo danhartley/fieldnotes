@@ -160,54 +160,63 @@ export const writeTemplates = [
       id: 'h3-write-template'
     , templateId: 'h3-write-template'
     , previewTemplateId: 'h3-preview-template'
+    , writeParentTemplateId: 'section-parent-template'
     , element: 'input'
   },
   {
       id: 'h4-write-template'
     , templateId: 'h4-write-template'
     , previewTemplateId: 'h4-preview-template'
+    , writeParentTemplateId: 'section-parent-template'
     , element: 'input'
   },
   {
       id: 'xenocanto-write-template'
     , templateId: 'xenocanto-write-template'
     , previewTemplateId: 'xenocanto-preview-template'
+    , writeParentTemplateId: 'section-parent-template'
     , element: 'input'
   },
   {
       id: 'textarea-write-template'
     , templateId: 'textarea-write-template'
     , previewTemplateId: 'textarea-preview-template'
+    , writeParentTemplateId: 'section-parent-template'
     , element: 'textarea'
   },
   {
       id: 'species-write-template'
     , templateId: 'species-write-template'
     , previewTemplateId: 'species-preview-template'
+    , writeParentTemplateId: 'section-with-species-parent-template'
     , element: 'div'
   },
   {
       id: 'observations-write-template'
     , templateId: 'observations-write-template'
     , previewTemplateId: 'observations-preview-template'
+    , writeParentTemplateId: 'section-with-species-parent-template'
     , element: 'div'
   },
   {
       id: 'inat-lookup-write-template'
     , templateId: 'inat-lookup-write-template'
     , previewTemplateId: 'inat-lookup-preview-template'
+    , writeParentTemplateId: 'section-with-species-parent-template'
     , element: 'div'
   },
   {
       id: 'terms-write-template'
     , templateId: 'terms-write-template'
     , previewTemplateId: 'terms-preview-template'
+    , writeParentTemplateId: 'section-parent-template'
     , element: 'div'
   },
   {
       id: 'images-write-template'
     , templateId: 'images-write-template'
     , previewTemplateId: 'images-preview-template'
+    , writeParentTemplateId: 'section-parent-template'
     , element: 'div'
   },
 ]

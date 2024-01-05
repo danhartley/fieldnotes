@@ -44,7 +44,6 @@ import {
   , handleInputChangeEvent
   , handleImageInputChangeEvent
   , toggleAllOrIncludedInSpeciesList
-  , getSectionTemplate
 } from './ui-actions.js'
 
 import {
@@ -567,7 +566,7 @@ const init = () => {
     createSection({
         writeTemplateId: e.target.value
       , typeText: e.target.innerText
-      , sectionTemplate: getSectionTemplate({writeTemplateId: e.target.value})
+      , sectionTemplate: d.getElementById(globalWrite.fieldnotes.sections.find(section => section.writeTemplateId === e.target.value).writeParentTemplateId)
       , sectionIndex: globalWrite.nextSectionIndex
     })}, true))
 
@@ -896,7 +895,7 @@ const init = () => {
         const sectionContainer = createSection({
             writeTemplateId: section.writeTemplateId
           , typeText: section.name
-          , sectionTemplate: getSectionTemplate({writeTemplateId: section.writeTemplateId})
+          , sectionTemplate: d.getElementById(section.writeParentTemplateId)
           , sectionIndex: section.sectionIndex     
         })
 
