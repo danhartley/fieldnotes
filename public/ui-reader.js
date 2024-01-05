@@ -23,12 +23,19 @@ import {
 } from './ui-components.js'
 
 const init = () => {    
-    Object.assign(g, {
-          iconicTaxa: g.ICONIC_TAXA
-        , language: g.LANGUAGES[1]
-        , useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0]
-        , template: g.templates.find(template => template.templateId === 'species-template')
-    })
+    const initGlobalRead = () => {
+        const globalRead = {}
+        Object.assign(globalRead, {
+            ...g
+          , iconicTaxa: g.ICONIC_TAXA
+          , language: g.LANGUAGES[1]
+          , useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0]          
+          , template: g.templates.find(template => template.templateId === 'species-template')
+      })
+      return globalRead
+    }
+
+    const globalRead = initGlobalRead()
 
     const d = document   
         
@@ -77,7 +84,7 @@ const init = () => {
         let d1 = null
         let d2 = null
     
-        switch(g.dateOption) {
+        switch(globalRead.dateOption) {
             case 'single':
                 d2 = d1 = singleDate.value
             break
@@ -90,10 +97,10 @@ const init = () => {
         return await getInatObservations({ 
               user_id: user ? user.id : null
             , place_id: place ? place.id : null
-            , iconic_taxa: g.iconicTaxa
-            , per_page: g.count + 10
-            , locale: g.language.id
-            , species_count: (g.useObservationsSpeciesCount.id === "true")
+            , iconic_taxa: globalRead.iconicTaxa
+            , per_page: globalRead.count + 10
+            , locale: globalRead.language.id
+            , species_count: (globalRead.useObservationsSpeciesCount.id === "true")
             , d1
             , d2
         })
@@ -101,14 +108,14 @@ const init = () => {
     
     const scoreLesson = answers => {
         answers.forEach(answer => {
-            const sp = g.species.find(s => s.taxon.id === Number(answer.id))
+            const sp = globalRead.species.find(s => s.taxon.id === Number(answer.id))
     
             if(!sp) return
     
             let isCorrect = false
     
             if(answer.value.length) {
-                isCorrect = g.target.name === 'common name' 
+                isCorrect = globalRead.target.name === 'common name' 
                   ? sp.taxon.preferred_common_name.toLowerCase() === answer.value.toLowerCase()
                   : sp.taxon.name.toLowerCase() === answer.value.toLowerCase()            
             }
@@ -118,10 +125,10 @@ const init = () => {
               , isCorrect
             }
     
-            g.template.scores.push(score)  
+            globalRead.template.scores.push(score)  
         })
     
-        g.template.score = g.template.scores.filter(score => score.isCorrect)?.length || 0
+        globalRead.template.score = globalRead.template.scores.filter(score => score.isCorrect)?.length || 0
     }
     
     const toggleView = e => {
@@ -134,16 +141,16 @@ const init = () => {
             case 'fieldnotes':                
                 inatOnlySections.forEach(section => section.classList.add('hidden'))
                 iNatAutocompleteInputText.value = ''
-                handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: g, fieldnotesStubsCallback: getFieldnotesStubs, importFieldnotesBtn})
+                handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: globalRead, fieldnotesStubsCallback: getFieldnotesStubs, importFieldnotesBtn})
                 ltpAutocompleteTitleInputText.focus()
-                // g.templates = g.templates.filter(template => !template.types.includes['fieldnotes'])
+                // globalRead.templates = globalRead.templates.filter(template => !template.types.includes['fieldnotes'])
                 break
             case 'iNaturalist':
                 ltpAutocompleteTitleInputText.value = ''
                 iNatAutocompleteInputText.focus()            
                 inatOnlySections.forEach(section => section.classList.remove('hidden'))
-                g.template = g.templates.find(template => template.templateId === 'species-template')
-                // g.templates = g.templates.filter(template => !template.types.includes['fieldnotes'])
+                globalRead.template = globalRead.templates.find(template => template.templateId === 'species-template')
+                // globalRead.templates = globalRead.templates.filter(template => !template.types.includes['fieldnotes'])
                 break
         }
     
@@ -197,7 +204,7 @@ const init = () => {
             
             /*
                 Work out how many columns we need to count along the row
-                e.g. if there are 3 columns, and the user clicks the first, we have to off set 2 to get to the end
+                e.globalRead. if there are 3 columns, and the user clicks the first, we have to off set 2 to get to the end
             */
             const i = img.getAttribute('data-i')
             const remainder = (Number(i) % colSpan)
@@ -259,7 +266,7 @@ const init = () => {
         
         testSubmitBtn.classList.add(cssClass)
     
-        if(g.template.isTestable) {
+        if(globalRead.template.isTestable) {
             showTestBtn.classList.remove(cssClass)
             showTestBtn.innerText = 'SHOW TESTS'
         } else {
@@ -272,7 +279,7 @@ const init = () => {
         const parent = d.getElementById('iconic-taxa-container')
         const t = d.getElementById('checkbox-template')
         
-        g.ICONIC_TAXA.forEach(taxon => {
+        globalRead.ICONIC_TAXA.forEach(taxon => {
             const clone = t.content.cloneNode(true)
         
             const div = clone.querySelector('div')
@@ -285,7 +292,7 @@ const init = () => {
             label.textContent = taxon.name
             label.htmlFor = input.id
         
-            if(g.iconicTaxa.map(t => t.name).includes(taxon.name)) {
+            if(globalRead.iconicTaxa.map(t => t.name).includes(taxon.name)) {
                 input.setAttribute('checked', true)
             }
         
@@ -301,31 +308,31 @@ const init = () => {
     
             rbGroupTemplate.forEach(template => {
                 template.addEventListener('change', e => {
-                    g.template = g.templates.find(t => t.templateId === e.target.value) 
+                    globalRead.template = globalRead.templates.find(t => t.templateId === e.target.value) 
                     resetTestOptions()
                     const toggleTestableTemplate = () => {      
-                        g.template = g.templates.find(t => t.id === g.template.pairedTemplateId)
+                        globalRead.template = globalRead.templates.find(t => t.id === globalRead.template.pairedTemplateId)
     
-                        if(g.template.targets) {
+                        if(globalRead.template.targets) {
                             targetGroupContainer.innerHTML = ''
                             targetsFieldset.classList.remove('hidden')
-                            g.target = g.template.targets[0]
+                            globalRead.target = globalRead.template.targets[0]
                             rbTestForGroup = createRadioBtnGroup({
-                                  collection: g.template.targets
-                                , checked:g.target
+                                  collection: globalRead.template.targets
+                                , checked:globalRead.target
                                 , rbGroup:'target'
                                 , parent:targetGroupContainer
                             })
                             rbTestForGroup.forEach(test => {
                                 test.addEventListener('change', e => {
                                     const testId = e.target.value
-                                    g.target = g.template.targets.find(t => t.id === testId)
+                                    globalRead.target = globalRead.template.targets.find(t => t.id === testId)
                                     renderDisplayTemplate()
                                 })
                             })
                         }
     
-                        if(g.template.isTest) {
+                        if(globalRead.template.isTest) {
                             showTestBtn.innerText = 'HIDE TESTS'                
                             testSubmitBtn.classList.remove('hidden')                        
                         } 
@@ -346,9 +353,9 @@ const init = () => {
         
         speciesDisplayContainer.innerHTML = ''
   
-        g.templates.filter(t => !t.isTest).forEach(t => {
+        globalRead.templates.filter(t => !t.isTest).forEach(t => {
 
-            if(t.requiresSpecies && (!g.species || g.species.length === 0)) return
+            if(t.requiresSpecies && (!globalRead.species || globalRead.species.length === 0)) return
 
             const clone = rbTemplate.content.cloneNode(true)
         
@@ -364,7 +371,7 @@ const init = () => {
             label.textContent = t.name
             label.htmlFor = input.id
     
-            if(g.template && g.template.templateId === t.templateId) {
+            if(globalRead.template && globalRead.template.templateId === t.templateId) {
                 input.setAttribute('checked', true)
             }
         
@@ -401,20 +408,20 @@ const init = () => {
     
     const renderDisplayTemplate = () => {
         try {
-            let parentTemplate = d.getElementById(g.template.parent)
+            let parentTemplate = d.getElementById(globalRead.template.parent)
             let parentClone = parentTemplate.content.cloneNode(true)
-            let templateToClone = d.getElementById(g.template.templateId) 
+            let templateToClone = d.getElementById(globalRead.template.templateId) 
             let parent = null
 
             sectionsWithHeader.forEach(sh => sh.classList.remove('hidden'))
                 
-            lessonFieldsetLegend.innerText = g.template.name
+            lessonFieldsetLegend.innerText = globalRead.template.name
         
-            if(g.species) article.innerHTML = ''
+            if(globalRead.species) article.innerHTML = ''
         
-            switch(g.template.templateId) {
+            switch(globalRead.template.templateId) {
                 case 'species-template':
-                    g.species.forEach((sp, i) => {
+                    globalRead.species.forEach((sp, i) => {
                         const clone = cloneSpeciesCardFromTemplate({
                               templateToClone
                             , species: sp
@@ -426,7 +433,7 @@ const init = () => {
                     article.appendChild(parent)
                     break
                 case 'species-list-template':            
-                    g.species.forEach(sp => {
+                    globalRead.species.forEach(sp => {
                         const clone = templateToClone.content.cloneNode(true)
                         const li = clone.querySelector('li')
                         
@@ -438,7 +445,7 @@ const init = () => {
                     article.appendChild(parent)
                     break
                 case 'species-test-template':
-                    g.species.forEach((sp, i) => {
+                    globalRead.species.forEach((sp, i) => {
                         const clone = templateToClone.content.cloneNode(true)
             
                         const span = clone.querySelector('span')
@@ -454,7 +461,7 @@ const init = () => {
                             taxon:sp.taxon.iconic_taxon_name
                         }))
                         
-                        switch(g.target.name) {
+                        switch(globalRead.target.name) {
                         case 'common name':
                             span.textContent = sp.taxon.name
                             span.classList.add('latin')
@@ -488,19 +495,19 @@ const init = () => {
                     const metaClone = metaTemplate.content.cloneNode(true)
                     const metaList = metaClone.querySelector('ul')
                     const items = metaList.querySelectorAll('li > strong')
-                    items[0].innerText = g.fieldnotes.author
-                    items[1].innerText = new Date(g.fieldnotes.d1).toLocaleDateString('en-gb', { 
+                    items[0].innerText = globalRead.fieldnotes.author
+                    items[1].innerText = new Date(globalRead.fieldnotes.d1).toLocaleDateString('en-gb', { 
                           weekday: 'long'
                         , year: 'numeric'
                         , month: 'long'
                         , day: 'numeric'
                     })
                     const a = metaList.querySelector('a')
-                    a.textContent = g.fieldnotes.location.place_guess
-                    a.setAttribute('href', `https://www.google.com/maps/place/${g.fieldnotes.location.location}`)
+                    a.textContent = globalRead.fieldnotes.location.place_guess
+                    a.setAttribute('href', `https://www.google.com/maps/place/${globalRead.fieldnotes.location.location}`)
                     article.appendChild(metaClone)
                     // Then iterate through the sections
-                    g.template.sections.forEach(section => {            
+                    globalRead.template.sections.forEach(section => {            
                         const template = d.getElementById(section.parent)
                         parentClone = template.content.cloneNode(true)
                         templateToClone = d.getElementById(section.templateId)
@@ -560,7 +567,7 @@ const init = () => {
                             case 'inat-lookup-preview-template':
                                 section.species.forEach((sp, i) => {
                                     try {
-                                        let s = g.species.find(s => s.taxon.name === sp) || g.species.find(s => s.taxon.name === sp) || g.species.find(s => s.taxon.name === sp.name)
+                                        let s = globalRead.species.find(s => s.taxon.name === sp) || globalRead.species.find(s => s.taxon.name === sp) || globalRead.species.find(s => s.taxon.name === sp.name)
                                         if(sp.src) s.observation_url = sp.src
                                         const clone = cloneSpeciesCardFromTemplate({
                                               templateToClone
@@ -587,13 +594,13 @@ const init = () => {
                                     const dx = div1.querySelector('em')
                                     const ds = div2.querySelector('a')
         
-                                    const def = g.terms.find(t => t.dt === term || term.dt)
+                                    const def = globalRead.terms.find(t => t.dt === term || term.dt)
                                     
                                     dt.textContent = def.dt
                                     dd.textContent = def.dd
         
                                     if(def.dx) {                                
-                                        eg.textContent = 'e.g.'                                
+                                        eg.textContent = 'e.globalRead.'                                
                                         dx.append(def.dx.join(', '))
                                     } else {
                                         clone.removeChild(div1)
@@ -627,7 +634,7 @@ const init = () => {
     
     rbDateGroup.forEach(date => {
         date.addEventListener('click', e => {
-            g.dateOption = e.target.value
+            globalRead.dateOption = e.target.value
         }, true)
     })
     
@@ -635,11 +642,11 @@ const init = () => {
     
         const updateScore = () => {
             const scoreCountTd = d.getElementById('score-count-td')
-            scoreCountTd.innerText = g.species.length
+            scoreCountTd.innerText = globalRead.species.length
             const scoreCorrectTd = d.getElementById('score-correct-td')
-            scoreCorrectTd.innerText = g.template.score
+            scoreCorrectTd.innerText = globalRead.template.score
             const scoreIncorrectTd = d.getElementById('score-incorrect-td')
-            scoreIncorrectTd.innerText = g.species.length - g.template.score
+            scoreIncorrectTd.innerText = globalRead.species.length - globalRead.template.score
         }
     
         const scoreHandler = () => {
@@ -653,23 +660,23 @@ const init = () => {
         const fetchInatSpecies = async () => {
             const filters = Array.from(d.getElementById('iconic-taxa-container').querySelectorAll('input'))
             
-            g.iconicTaxa = g.ICONIC_TAXA.filter(taxon => filters.filter(t => t.checked).map(t => t.id.toLowerCase()).includes(taxon.name))
+            globalRead.iconicTaxa = globalRead.ICONIC_TAXA.filter(taxon => filters.filter(t => t.checked).map(t => t.id.toLowerCase()).includes(taxon.name))
             
-            const user = g.inatAutocompleteOptions.find(o => o.id === 'users')
-            const place = g.inatAutocompleteOptions.find(o => o.id === 'places')        
+            const user = globalRead.inatAutocompleteOptions.find(o => o.id === 'users')
+            const place = globalRead.inatAutocompleteOptions.find(o => o.id === 'places')        
     
             searchInatObservationsNotificationText.classList.toggle('hidden')
             searchInatObservationsBtn.toggleActiveState()
     
-            g.inatSpecies = await getInatSpecies({
+            globalRead.inatSpecies = await getInatSpecies({
                   user: user.isActive ? user.user : null
                 , place: place.isActive ? place.place : null
             })
     
-            g.species = mapInatSpeciesToLTP({
-                  species: g.inatSpecies
-                , count: g.count
-                , taxa: g.iconicTaxa
+            globalRead.species = mapInatSpeciesToLTP({
+                  species: globalRead.inatSpecies
+                , count: globalRead.count
+                , taxa: globalRead.iconicTaxa
             })
         
             createRadioBtnTemplateGroup()
@@ -689,27 +696,27 @@ const init = () => {
     
         rbInatAutocompleteGroup.forEach(rb => {
             rb.addEventListener('change', e => {
-                g.inatAutocomplete = g.inatAutocompleteOptions.find(o => o.id === e.target.value)
+                globalRead.inatAutocomplete = globalRead.inatAutocompleteOptions.find(o => o.id === e.target.value)
     
                 iNatAutocompleteInputText.value = ''
-                iNatAutocompleteInputText.setAttribute('placeholder', g.inatAutocomplete.placeholder)
+                iNatAutocompleteInputText.setAttribute('placeholder', globalRead.inatAutocomplete.placeholder)
             })
         })
     
         const speciesCountInputNumber = d.getElementById('species-count-input-number')
     
-        speciesCountInputNumber.value = g.count
+        speciesCountInputNumber.value = globalRead.count
     
         speciesCountInputNumber.addEventListener('change', () => {
-            g.count = Number(speciesCountInputNumber.value)
+            globalRead.count = Number(speciesCountInputNumber.value)
         })
     
         rbLanguageGroup.forEach(rb => {
-            rb.addEventListener('change', () => g.language = g.LANGUAGES.find(l => l.id === rb.value))
+            rb.addEventListener('change', () => globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value))
         })
     
         rbInatUseObservationSpeciesCountGroup.forEach(rb => {
-            rb.addEventListener('change', () => g.useObservationsSpeciesCount = g.useObservationsSpeciesCountOptions.find(o => o.id === rb.value))
+            rb.addEventListener('change', () => globalRead.useObservationsSpeciesCount = globalRead.useObservationsSpeciesCountOptions.find(o => o.id === rb.value))
         })
     
         const fieldnotesInputRb = new RadioButtonComponent({
@@ -721,24 +728,23 @@ const init = () => {
             , clickHandler: toggleView
         })
         
-    
         addImgClickEventHandlers()
     
-        const { id, prop } = g.inatAutocomplete
+        const { id, prop } = globalRead.inatAutocomplete
         handleInatAutocomplete({ 
-              globalWrite:g
+              globalWrite:globalRead
             , inputText: iNatAutocompleteInputText
             , dataList: iNatAutocompleteDatalist
-            , g
+            // , g
             , id
             , prop
             , cbParent: d.getElementById('inat-params-input-check-box-group')
         })
     })
 
-    rbInatAutocompleteGroup = createRadioBtnGroup({collection: g.inatAutocompleteOptions, checked:g.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroupContainer})    
-    rbLanguageGroup = createRadioBtnGroup({collection: g.LANGUAGES, checked:g.language, rbGroup:'language', parent:languageGroupContainer})
-    rbInatUseObservationSpeciesCountGroup = createRadioBtnGroup({collection: g.useObservationsSpeciesCountOptions, checked:g.useObservationsSpeciesCount, rbGroup:'inat-use-observations-species-count', parent:inatUseObservationSpeciesCountGroupContainer})
+    rbInatAutocompleteGroup = createRadioBtnGroup({collection: globalRead.inatAutocompleteOptions, checked:globalRead.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroupContainer})    
+    rbLanguageGroup = createRadioBtnGroup({collection: globalRead.LANGUAGES, checked:globalRead.language, rbGroup:'language', parent:languageGroupContainer})
+    rbInatUseObservationSpeciesCountGroup = createRadioBtnGroup({collection: globalRead.useObservationsSpeciesCountOptions, checked:globalRead.useObservationsSpeciesCount, rbGroup:'inat-use-observations-species-count', parent:inatUseObservationSpeciesCountGroupContainer})
 
     createTaxaCheckboxGroup()
 
@@ -752,7 +758,7 @@ const init = () => {
 
     const setDateOption = date => {
         date.checked = true
-        g.dateOption = date.value
+        globalRead.dateOption = date.value
     }
 
     startDate.addEventListener('focus', () => {
@@ -771,8 +777,8 @@ const init = () => {
         importFieldNotesNotificationText.classList.remove('hidden')
 
         const response = false 
-        ? await g.fieldnotesStubs
-        : await getFieldnotesById({id: g.fieldnotesStubs.fieldnotesId})
+        ? await globalRead.fieldnotesStubs
+        : await getFieldnotesById({id: globalRead.fieldnotesStubs.fieldnotesId})
 
         importFieldNotesNotificationText.innerText = 'Fetching iNaturalist species…'
 
@@ -790,21 +796,21 @@ const init = () => {
             })  
         }
 
-        g.fieldnotes = fieldnotes
-        g.template = g.templates.find(template => template.templateId === 'fieldnotes-template')
-        Object.assign(g.template, fieldnotes)
+        globalRead.fieldnotes = fieldnotes
+        globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
+        Object.assign(globalRead.template, fieldnotes)
 
-        const taxaIds = g.fieldnotes.taxa
+        const taxaIds = globalRead.fieldnotes.taxa
             .map(t => t.id)
-        const taxaNames = g.fieldnotes.taxa
+        const taxaNames = globalRead.fieldnotes.taxa
             .map(t => t.name)
 
         const inatTaxa = await getInatTaxa({ 
               taxaIds
-            , locale: g.language.id 
+            , locale: globalRead.language.id 
         })
         
-        g.species = inatTaxa.results
+        globalRead.species = inatTaxa.results
             .filter(t => t.default_photo)
             .map(t => { 
                 /**
