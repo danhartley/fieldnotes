@@ -143,14 +143,15 @@ const init = () => {
                 iNatAutocompleteInputText.value = ''
                 handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: globalRead, fieldnotesStubsCallback: getFieldnotesStubs, importFieldnotesBtn})
                 ltpAutocompleteTitleInputText.focus()
-                // globalRead.templates = globalRead.templates.filter(template => !template.types.includes['fieldnotes'])
+                globalRead.templates = g.templates.filter(template => template.types.includes('fieldnotes'))
+                globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
                 break
             case 'iNaturalist':
                 ltpAutocompleteTitleInputText.value = ''
                 iNatAutocompleteInputText.focus()            
                 inatOnlySections.forEach(section => section.classList.remove('hidden'))
-                globalRead.template = globalRead.templates.find(template => template.templateId === 'species-template')
-                // globalRead.templates = globalRead.templates.filter(template => !template.types.includes['fieldnotes'])
+                globalRead.templates = g.templates.filter(template => template.types.includes('inatSearch'))
+                globalRead.template = globalRead.templates.find(template => template.templateId === 'species-template')        
                 break
         }
     
