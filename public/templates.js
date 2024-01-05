@@ -19,6 +19,7 @@ export const templates = [
       , score: 0
       , scores: []
       , requiresSpecies: true
+      , types: ['inatSearch', 'fieldnotes']
   },
   {
         id: 'species-template'
@@ -29,6 +30,7 @@ export const templates = [
       , isTest: false
       , isTestable: true
       , requiresSpecies: true
+      , types: ['inatSearch', 'fieldnotes']
   },
   {
       id: 'species-list-template'
@@ -37,6 +39,17 @@ export const templates = [
     , parent: 'grid-template'
     , isTest: false
     , requiresSpecies: true
+    , types: ['inatSearch', 'fieldnotes']
+  },
+  {
+      id: 'fieldnotes-template'
+    , templateId: 'fieldnotes-template'
+    , name: 'Field notes'
+    , parent: 'grid-template'
+    , isTest: false
+    , requiresSpecies: true
+    , isTestable: false
+    , types: ['fieldnotes']
   },
 ]
 

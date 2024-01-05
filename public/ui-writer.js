@@ -581,7 +581,7 @@ const init = () => {
           || hasOriginalTypeValues({globalWrite, section: sectionToUpdate})
     
     const writeTemplate = writeTemplates.find(template => template.templateId === writeTemplateId)
-    const previewTemplate = previewTemplates.find(template => template.id === writeTemplate.previewTemplateId)
+    const previewTemplate = previewTemplates.find(template => template.templateId === writeTemplate.previewTemplateId)
 
     switch(writeTemplateId) {
       case 'h3-write-template':        
@@ -916,7 +916,7 @@ const init = () => {
         const add = sectionContainer.querySelector('.add')
         if(sectionContainer.querySelector('.add:not(.edit)')) sectionContainer.querySelector('.add:not(.edit)').classList.add('hidden')
 
-        const previewTemplate = previewTemplates.find(template => template.id === section.templateId)
+        const previewTemplate = previewTemplates.find(template => template.templateId === section.templateId)
 
         let speciesCheckboxes = null
 

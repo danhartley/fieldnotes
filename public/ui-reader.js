@@ -21,7 +21,7 @@ import {
     , ButtonHideShowComponent
     , RadioButtonComponent
 } from './ui-components.js'
-  
+
 const init = () => {    
     Object.assign(g, {
           iconicTaxa: g.ICONIC_TAXA
@@ -136,11 +136,14 @@ const init = () => {
                 iNatAutocompleteInputText.value = ''
                 handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: g, fieldnotesStubsCallback: getFieldnotesStubs, importFieldnotesBtn})
                 ltpAutocompleteTitleInputText.focus()
+                // g.templates = g.templates.filter(template => !template.types.includes['fieldnotes'])
                 break
             case 'iNaturalist':
                 ltpAutocompleteTitleInputText.value = ''
                 iNatAutocompleteInputText.focus()            
-                inatOnlySections.forEach(section => section.classList.remove('hidden'))                
+                inatOnlySections.forEach(section => section.classList.remove('hidden'))
+                g.template = g.templates.find(template => template.templateId === 'species-template')
+                // g.templates = g.templates.filter(template => !template.types.includes['fieldnotes'])
                 break
         }
     
@@ -361,7 +364,7 @@ const init = () => {
             label.textContent = t.name
             label.htmlFor = input.id
     
-            if(g.template && g.template.id === t.id) {
+            if(g.template && g.template.templateId === t.templateId) {
                 input.setAttribute('checked', true)
             }
         
@@ -398,10 +401,9 @@ const init = () => {
     
     const renderDisplayTemplate = () => {
         try {
-            // if(!g.template) g.template = g.templates.find(template => template.templateId === 'species-template')
             let parentTemplate = d.getElementById(g.template.parent)
             let parentClone = parentTemplate.content.cloneNode(true)
-            let templateToClone = d.getElementById(g.template.id) 
+            let templateToClone = d.getElementById(g.template.templateId) 
             let parent = null
 
             sectionsWithHeader.forEach(sh => sh.classList.remove('hidden'))
@@ -499,7 +501,7 @@ const init = () => {
                     article.appendChild(metaClone)
                     // Then iterate through the sections
                     g.template.sections.forEach(section => {            
-                        template = d.getElementById(section.parent)
+                        const template = d.getElementById(section.parent)
                         parentClone = template.content.cloneNode(true)
                         templateToClone = d.getElementById(section.templateId)
         
@@ -782,22 +784,15 @@ const init = () => {
         if(!response.success) return 
 
         const fieldnotes = { 
-            ...response.data
-            , name: 'Field notes'
-            , templateId: 'fieldnotes-template'
-            , isTestable: false
+              ...response.data
             , sections: response.data.sectionOrder.map(sectionIndex => {
                 return response.data.sections.find(section => section.sectionIndex === sectionIndex)
             })  
         }
 
         g.fieldnotes = fieldnotes
-        g.templates = g.templates.filter(template => template.type !== 'fieldnotes')
-        g.templates = [ ...g.templates, { 
-              ...fieldnotes
-            , parent: 'non-grid-template' 
-            , type: 'fieldnotes'
-        }]
+        g.template = g.templates.find(template => template.templateId === 'fieldnotes-template')
+        Object.assign(g.template, fieldnotes)
 
         const taxaIds = g.fieldnotes.taxa
             .map(t => t.id)
@@ -828,8 +823,6 @@ const init = () => {
         createRadioBtnTemplateGroup()
         
         article.innerHTML = ''
-        // We've set the display option as checked by default, so we need to enable it (we don't want to, or cannot, programatically force a click event)
-        g.template = g.templates.find(t => t.templateId === 'fieldnotes-template')        
         renderDisplayTemplate()
         speciesDisplayContainer.classList.remove('disabled')
     }
