@@ -273,7 +273,10 @@ const init = () => {
       case 'h4-write-template':
       case 'xenocanto-write-template':
         input = typeClone.querySelector('input')
+        input.id = `input-${sectionIndex}`
         input.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
+        label = typeClone.querySelector('label')
+        label.htmlFor = input.id
         addOrUpdateSectionBtn.addClickHandler({
           clickHandler: e => addOrUpdateSection({
               parent: e.target.parentElement
@@ -287,7 +290,10 @@ const init = () => {
         break
       case 'textarea-write-template':    
         textarea = typeClone.querySelector('textarea')
+        textarea.id = `textarea-${sectionIndex}`
         textarea.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
+        label = typeClone.querySelector('label')
+        label.htmlFor = textarea.id
         addOrUpdateSectionBtn.addClickHandler({
           clickHandler: e => addOrUpdateSection({
               parent: e.target.parentElement
