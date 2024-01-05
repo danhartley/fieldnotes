@@ -233,8 +233,12 @@ const init = () => {
     const contentContainer = sectionClone.querySelector('.content-container')
     const fieldset = sectionClone.querySelector('fieldset')
     const legend = sectionClone.querySelector('legend')
-    const showAllOrIncludedBtn = sectionClone.querySelector('.show-all-or-include-only-btn')
     const parentContainer = sectionClone.querySelector('div')
+    
+    const showAllOrIncludedBtn = new ButtonComponent({
+        parent: sectionClone
+      , elementId: 'show-all-or-include-only-btn'
+    })
     const addOrUpdateSectionBtn = new ButtonComponent({
         parent: sectionClone
       , elementId: 'add-or-update-section-btn'
@@ -251,6 +255,7 @@ const init = () => {
         parent: sectionClone
       , elementId: 'cancel-action-btn'
     })
+    
     const typeTemplate = d.getElementById(writeTemplateId)
     const typeClone = typeTemplate.content.cloneNode(true)
 
@@ -430,11 +435,13 @@ const init = () => {
         Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
         break
       case 'species-write-template':
-      case 'observations-write-template':      
-          showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({
-              btn:showAllOrIncludedBtn
-            , fieldset
-          }))          
+      case 'observations-write-template':
+          showAllOrIncludedBtn.addClickHandler({
+            clickHandler: () => toggleAllOrIncludedInSpeciesList({
+                btn:showAllOrIncludedBtn
+              , fieldset
+            })
+          }) 
          break
       case 'textarea-write-template':
         fieldset.querySelector('textarea:not(.hidden)')?.focus()
@@ -544,23 +551,28 @@ const init = () => {
         Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
         break
       case 'inat-lookup-write-template':
-          showAllOrIncludedBtn.addEventListener('click', e => toggleAllOrIncludedInSpeciesList({btn:showAllOrIncludedBtn, fieldset}))
-          Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
-
-          globalWrite.inatAutocomplete = globalWrite.inatAutocompleteOptions.find(option => option.id === 'taxa')
-          const { id, prop } = globalWrite.inatAutocomplete
-
-          handleInatAutocomplete({ 
-              inputText: input
-            , dataList: datalist
-            , globalWrite
-            , id
-            , prop
-            , callback: createInatLookups
-            , cbParent
-            , writeTemplateId
-            , sectionIndex
+        showAllOrIncludedBtn.addClickHandler({
+          clickHandler: () => toggleAllOrIncludedInSpeciesList({
+              btn:showAllOrIncludedBtn
+            , fieldset
           })
+        })
+        Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
+
+        globalWrite.inatAutocomplete = globalWrite.inatAutocompleteOptions.find(option => option.id === 'taxa')
+        const { id, prop } = globalWrite.inatAutocomplete
+
+        handleInatAutocomplete({ 
+            inputText: input
+          , dataList: datalist
+          , globalWrite
+          , id
+          , prop
+          , callback: createInatLookups
+          , cbParent
+          , writeTemplateId
+          , sectionIndex
+        })
       break
     }
     return draggableSection
