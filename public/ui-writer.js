@@ -229,7 +229,8 @@ const init = () => {
 
   const createSection = ({writeTemplateId, typeText, sectionTemplate, sectionIndex}) => {
     const sectionClone = sectionTemplate.content.cloneNode(true)
-    const sectionContainer = sectionClone.querySelector('section')
+    const draggableSection = sectionClone.querySelector('section.draggable')
+    const contentContainer = sectionClone.querySelector('.content-container')
     const fieldset = sectionClone.querySelector('fieldset')
     const legend = sectionClone.querySelector('legend')
     const showAllOrIncludedBtn = sectionClone.querySelector('.show-all-or-include-only-btn')
@@ -253,8 +254,8 @@ const init = () => {
     const typeTemplate = d.getElementById(writeTemplateId)
     const typeClone = typeTemplate.content.cloneNode(true)
 
-    sectionContainer.setAttribute('id', sectionIndex)
-    sectionContainer.addEventListener('dragstart', dragstartHandler)
+    draggableSection.setAttribute('id', sectionIndex)
+    draggableSection.addEventListener('dragstart', dragstartHandler)    
     
     let input, label, textarea, datalist, previewContainer, images, cbParent = null
 
@@ -385,6 +386,7 @@ const init = () => {
         , addOrUpdateSectionBtn
         , editSectionBtn
         , cancelActionBtn
+        , contentContainer
       })
     })
 
@@ -412,11 +414,13 @@ const init = () => {
         addOrUpdateSectionBtn.hide()
         editSectionBtn.show()
         deleteSectionBtn.show()
-        const parent = e.target.parentElement
-        const container = parent.querySelector('.section-container')
-        container.classList.toggle('disabled')
+        contentContainer.classList.toggle('disabled')
       }
     })
+
+    const section = globalWrite.fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
+
+    if(!section) contentContainer.classList.toggle('disabled')
 
     // Add additional functionality once the DOM has been updated
     switch(writeTemplateId) {
@@ -516,7 +520,7 @@ const init = () => {
         const url3 = fieldset.querySelector('#image-url-input-2')
         const title3 = fieldset.querySelector('#image-title-input-2')      
         
-        images = globalWrite.fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)?.images || []
+        images = section?.images || []
         
         if(images.length === 0) {
           for (let i = 0; i < 3; i++) {
@@ -559,14 +563,18 @@ const init = () => {
           })
       break
     }
-    return sectionContainer
+    return draggableSection
   }
 
   selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { 
+    const writeTemplateId = e.target.value
+    const parentTemplateId = 
+         globalWrite.fieldnotes.sections.find(section => section.writeTemplateId === writeTemplateId)?.writeParentTemplateId 
+      || writeTemplates.find(template => template.templateId === writeTemplateId).writeParentTemplateId
     createSection({
-        writeTemplateId: e.target.value
+        writeTemplateId
       , typeText: e.target.innerText
-      , sectionTemplate: d.getElementById(globalWrite.fieldnotes.sections.find(section => section.writeTemplateId === e.target.value).writeParentTemplateId)
+      , sectionTemplate: d.getElementById(parentTemplateId)
       , sectionIndex: globalWrite.nextSectionIndex
     })}, true))
 
@@ -645,10 +653,11 @@ const init = () => {
     addOrUpdateSectionArray({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isEdit})
   }
 
-  const editSection = ({e, addOrUpdateSectionBtn, editSectionBtn, cancelActionBtn}) => {
+  const editSection = ({e, addOrUpdateSectionBtn, editSectionBtn, cancelActionBtn, contentContainer}) => {
     const parent = e.target.parentElement
-    const container = parent.querySelector('.section-container')
-    container.classList.toggle('disabled')
+    // const container = parent.querySelector('.content-container')
+    // container.classList.toggle('disabled')
+    contentContainer.classList.toggle('disabled')
 
     addOrUpdateSectionBtn.setText({
       text: 'Save changes' 
@@ -892,7 +901,7 @@ const init = () => {
       draggableSections.replaceChildren()
 
       globalWrite.fieldnotes.sections.forEach(section => {
-        const sectionContainer = createSection({
+        const draggableSection = createSection({
             writeTemplateId: section.writeTemplateId
           , typeText: section.name
           , sectionTemplate: d.getElementById(section.writeParentTemplateId)
@@ -900,21 +909,21 @@ const init = () => {
         })
 
         const addOrUpdateSectionBtn = new ButtonComponent({
-          parent: sectionContainer
+          parent: draggableSection
         , elementId: 'add-or-update-section-btn'
       })
         const editSectionBtn = new ButtonComponent({
-          parent: sectionContainer
+          parent: draggableSection
         , elementId: 'edit-section-btn'
       })
 
         if(addOrUpdateSectionBtn) addOrUpdateSectionBtn.hide() // messy hide and disable… perhaps simply a separate button
         if(editSectionBtn) editSectionBtn.show()
 
-        const previewContainer = sectionContainer.querySelector('.edit')
+        const previewContainer = draggableSection.querySelector('.edit')
         previewContainer.classList.remove('hidden')
-        const add = sectionContainer.querySelector('.add')
-        if(sectionContainer.querySelector('.add:not(.edit)')) sectionContainer.querySelector('.add:not(.edit)').classList.add('hidden')
+        const add = draggableSection.querySelector('.add')
+        if(draggableSection.querySelector('.add:not(.edit)')) draggableSection.querySelector('.add:not(.edit)').classList.add('hidden')
 
         const previewTemplate = previewTemplates.find(template => template.templateId === section.templateId)
 
@@ -951,7 +960,7 @@ const init = () => {
               , section
               , type:section.type
             })
-            speciesCheckboxes = sectionContainer.querySelectorAll('input')
+            speciesCheckboxes = draggableSection.querySelectorAll('input')
             speciesCheckboxes.forEach(checkbox => {
               if(section.species.includes(checkbox.value) || section.species.map(sp => sp.name).includes(checkbox.value)) {
                 checkbox.setAttribute('checked', true)
@@ -965,7 +974,7 @@ const init = () => {
               , type:section.type})
             let parent = null
             section.species.forEach((sp, index) => {
-              parent = sectionContainer.querySelector(`#section-${section.sectionIndex}-lookup-parent`)
+              parent = draggableSection.querySelector(`#section-${section.sectionIndex}-lookup-parent`)
               const clone = cloneImageTemplate({
                   species: sp
                 , index
@@ -1002,7 +1011,7 @@ const init = () => {
               , section
               , type:'terms'
             })
-            const selectedItemsListElement = sectionContainer.querySelector('#selected-terms-list')
+            const selectedItemsListElement = draggableSection.querySelector('#selected-terms-list')
             const selectedTerms = []        
             section.terms.forEach((term) => {
               addTermToList({

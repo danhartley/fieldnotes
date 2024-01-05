@@ -50,7 +50,6 @@ const init = () => {
     const lessonFieldsetLegend = d.querySelector('#lesson-fieldset > legend')
     const article = d.getElementById('article')
     const rbTemplate = d.getElementById('radio-button-template')
-    const testSubmitBtn = d.getElementById('check-answers-btn')
     const languageGroupContainer = d.getElementById('language-group-container')
     const inatAutocompleteGroupContainer = d.getElementById('inat-autocomplete-group-container')
     const inatUseObservationSpeciesCountGroupContainer = d.getElementById('inat-use-observations-species-count-group-container')
@@ -59,7 +58,6 @@ const init = () => {
     const speciesDisplayContainer = d.getElementById('species-display-container')
     const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
     const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
-    const showTestBtn = d.getElementById('show-test-btn')
     const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
     const startDate = d.getElementById('observations-start-date')
     const endDate = d.getElementById('observations-end-date')
@@ -77,6 +75,12 @@ const init = () => {
     })    
     const preferencesToggleVisibilityBtn = new ButtonHideShowComponent({
         elementId: 'preferences-toggle-visibility-btn'
+    })
+    const showTestBtn = new ButtonComponent({
+          elementId: 'show-test-btn'        
+    })
+    const testSubmitBtn = new ButtonComponent({
+          elementId: 'test-submit-btn'        
     })
 
     const getInatSpecies = async ({user, place}) => {
@@ -265,13 +269,15 @@ const init = () => {
     const resetTestOptions = () => {
         const cssClass = 'hidden'
         
-        testSubmitBtn.classList.add(cssClass)
-    
+        testSubmitBtn.hide()
+        
         if(globalRead.template.isTestable) {
-            showTestBtn.classList.remove(cssClass)
-            showTestBtn.innerText = 'SHOW TESTS'
+            showTestBtn.show()
+            showTestBtn.setText({
+                text: 'SHOW TESTS'
+            })      
         } else {
-            showTestBtn.classList.add(cssClass)
+            showTestBtn.hide()
             targetsFieldset.classList.add(cssClass)
         }
     }
@@ -334,19 +340,25 @@ const init = () => {
                         }
     
                         if(globalRead.template.isTest) {
-                            showTestBtn.innerText = 'HIDE TESTS'                
-                            testSubmitBtn.classList.remove('hidden')                        
+                            showTestBtn.setText({
+                                text: 'HIDE TESTS'
+                            })
+                            testSubmitBtn.show()                 
                         } 
                         else {
-                            showTestBtn.innerText = 'SHOW TESTS'                  
-                            testSubmitBtn.classList.add('hidden')
+                            showTestBtn.setText({
+                                text: 'SHOW TESTS'
+                            })   
+                            testSubmitBtn.hide()
                         }
     
                         progressFieldset.classList.toggle('disabled')
     
                         renderDisplayTemplate()
                     }
-                    showTestBtn.addEventListener('click', toggleTestableTemplate, true)                                
+                    showTestBtn.addClickHandler({
+                        clickHandler: toggleTestableTemplate
+                    })                       
                     renderDisplayTemplate()                
                 })
             })            
@@ -656,7 +668,10 @@ const init = () => {
             updateScore()
         }
     
-        testSubmitBtn.addEventListener('click', scoreHandler, false)
+        testSubmitBtn.addClickHandler({
+            clickHandler: scoreHandler
+        })
+        // testSubmitBtn.addEventListener('click', scoreHandler, false)
     
         const fetchInatSpecies = async () => {
             const filters = Array.from(d.getElementById('iconic-taxa-container').querySelectorAll('input'))
