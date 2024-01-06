@@ -142,9 +142,9 @@ label {
   max-width: 500px;
 }
 
-/* label:has(+ input) {
-  min-width: calc(var(--d) * 6);
-} */
+.flex-row label {
+  width: 100%;
+}
 
 .grid > div > label {
   margin: 0 0 calc(var(--d) * .75);
