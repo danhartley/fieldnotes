@@ -237,7 +237,7 @@ const init = () => {
     
     const toggleSpeciesListBtn = new ButtonComponent({
         parent: sectionClone
-      , elementId: 'tpggle-species-include-all-btn'
+      , elementId: 'toggle-species-include-all-btn'
     })
     const addOrUpdateSectionBtn = new ButtonComponent({
         parent: sectionClone
@@ -1053,7 +1053,7 @@ const init = () => {
       selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
 
       // Hide all species that are not included
-      const btns = d.querySelectorAll('.tpggle-species-include-all-btn')
+      const btns = d.querySelectorAll('.toggle-species-include-all-btn')
       btns.forEach(btn => {
         btn.innerText = 'show only included'
         const fieldset = btn.parentElement

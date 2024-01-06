@@ -345,7 +345,7 @@ fieldset.fieldset-reset fieldset {
   border-top: none;
 }
 
-legend, .species-list #tpggle-species-include-all-btn {
+legend, .species-list #toggle-species-include-all-btn {
   position: absolute;
   top: calc(var(--d) *.5);
   left: var(--d);
@@ -357,7 +357,7 @@ legend, .species-list #tpggle-species-include-all-btn {
   color: var(--c8);
 }
 
-.species-list #tpggle-species-include-all-btn {
+.species-list #toggle-species-include-all-btn {
   left: initial;
   right: calc(var(--d) *.5);
   width: initial;
