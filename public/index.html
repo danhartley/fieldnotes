@@ -12,11 +12,17 @@
 
   <body>  
     <header>
-      <h1>Learn the planet</h1>
+      <!-- <h1>Learn the planet</h1> -->
+      <menu>
+        <ul>
+          <li><a name="fieldnotes-search-view" href="/fieldnotes">Read fieldnotes</a></li>
+          <li><a class="selected" href="/inat" name="inat-search-view">Search iNaturalist</a></li>
+        </ul>
+      </menu>
     </header>
 
     <main>
-      <fieldset class="fieldset-reset">
+      <!-- <fieldset class="fieldset-reset">
         <legend class="hidden">Choice between Fieldnotes or iNaturalist search</legend>
         <section>
           <div class="section-header section-group">
@@ -38,9 +44,9 @@
             </h2>
           </div>        
         </section>        
-      </fieldset>
+      </fieldset> -->
 
-      <section>
+      <section class="mt2">
         <fieldset id="fieldnotes-search-view" class="mt2 hidden">
           <legend>Fieldnotes search</legend>
           <p class="mt0 small">Search for fieldnotes.</p>
@@ -98,12 +104,11 @@
               <div class="box mb4">
                 <div class="centred-block mb2">
                   <label for="rbDateRange" class="invisible">Date range</label>
-                  <input id="rbDateRange" type="radio" name="rbDate" value="range" />               
+                  <input id="rbDateRange" type="radio" name="rbDate" value="range" />             
                   <label for="observations-start-date" class="block">From</label>
                   <input type="date" id="observations-start-date" name="observations-start-date" class="mr" />
-  
                   <label for="observations-end-date" class="mr initial-width">To</label>
-                  <input type="date" id="observations-end-date" name="observations-end-date" class="mr" />
+                  <input type="date" id="observations-end-date" name="observations-end-date" />
                 </div>
                 <div class="centred-block mb2">
                   <label for="rbSingleDate" class="invisible">Single date</label>

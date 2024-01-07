@@ -20,6 +20,7 @@ import {
       ButtonComponent
     , ButtonHideShowComponent
     , RadioButtonComponent
+    , MenuNavItemComponent
 } from './ui-components.js'
 
 const init = () => {    
@@ -136,7 +137,8 @@ const init = () => {
     }
     
     const toggleView = e => {
-        const view = e.target.value
+        const view = e.target.name
+        // const view = e.target.value
 
         inatSearchView.classList.toggle('hidden')
         fieldnotesSearchView.classList.toggle('hidden')
@@ -162,7 +164,11 @@ const init = () => {
         // Reset the page
         sectionsWithHeader.forEach(sh => sh.classList.add('hidden'))
         article.innerHTML = ''
-    } 
+    }
+
+    const menu = new MenuNavItemComponent({
+        callback: toggleView
+    })
     
     let rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup    
     

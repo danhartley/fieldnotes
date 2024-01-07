@@ -56,6 +56,28 @@ header {
   border-bottom: 1px dashed var(--c8);  
 }
 
+header menu {
+  width: 100%;
+}
+
+header menu ul {
+  display: flex;
+  justify-content: space-evenly;
+  font-size: var(--s3);
+}
+
+header menu ul li {
+  cursor: pointer;
+}
+
+header menu ul a {
+  border-width: 0;
+}
+
+header menu ul a.selected {
+  border-width: calc(var(--d) * .15);
+}
+
 h1 {
   font-size: var(--s3);
   font-weight: 400;
@@ -301,11 +323,12 @@ dt:has(+ dd:empty) {
 
 main { 
   position: relative;
+  margin: 0;
 }
 
 main > fieldset {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;  
 }
 
 dialog, dialog:focus-visible, dialog:focus {
@@ -330,7 +353,7 @@ fieldset {
   margin: 0 0 calc(var(--d) * 2) 0;
   border: 1px dashed var(--c2);
   padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 2) calc(var(--d) * 2);
-  background-color: var(--c0);  
+  background-color: var(--c0);
 }
 
 fieldset.fieldset-reset {
@@ -498,7 +521,7 @@ th, td {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(var(--grid-min-max), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(230px, auto));
   gap: var(--d);
   margin: 0 auto calc(var(--d)) auto;
   background-color: var(--c0);
@@ -696,6 +719,18 @@ th, td {
   width: initial;
 }
 
+#observation-dates input[type="date"], #observation-dates label {
+  font-size: var(--s1);
+}
+
+#observation-dates label:nth-child(3), #observation-dates label:nth-child(2) {
+  min-width: calc(var(--d) * 4);
+}
+
+#observation-dates input[type="date"] {
+  width: calc(var(--d) * 13);
+}
+
 #select-section-type-section {
   position: sticky;
   top: var(--d);
@@ -836,8 +871,7 @@ th, td {
   }
 
   header {
-    margin: 0 calc(var(--d) * 3) 0 calc(var(--d) * 3);
-    justify-content: flex-end;
+    margin: 0 10vw;
   }
 
   #header span {
@@ -848,6 +882,19 @@ th, td {
     margin: 0 auto calc(var(--d) * 4) auto;
     border: 1px solid var(--c3);
     padding: calc(var(--d) * 2) calc(var(--d) * 2) 0 calc(var(--d) * 2);
+  }
+
+  #observation-dates input[type="date"] {
+    width: initial;
+    font-size: var(--s3);
+  }
+
+  #observation-dates label {
+    font-size: var(--s3);    
+  }
+
+  #observation-dates label:nth-child(3), #observation-dates label:nth-child(2) {
+    min-width: calc(var(--d) * 6);
   }
 }
 
