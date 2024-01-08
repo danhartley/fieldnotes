@@ -8,4 +8,7 @@
 /fieldnotes/edit         /public/fieldnotes.html
 /fieldnotes/preferences  /public/fieldnotes.html
 
+/public/*                /public/index.html  200
 /*                       /public/index.html  200
+/fieldnotes/*            /public/fieldnotes.html  200
+/public/fieldnotes/*     /public/fieldnotes.html  200
