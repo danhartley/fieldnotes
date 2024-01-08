@@ -12,40 +12,16 @@
 
   <body>  
     <header>
-      <!-- <h1>Learn the planet</h1> -->
       <menu>
         <ul>
-          <li><a name="fieldnotes-search-view" href="/fieldnotes">Read fieldnotes</a></li>
-          <li><a class="selected" href="/inat" name="inat-search-view">Search iNaturalist</a></li>
+          <li><a data-view="fieldnotes-search-view" href="/fieldnotes" class="selected">Read fieldnotes</a></li>
+          <li><a data-view="inat-search-view" href="/inaturalist">Search iNaturalist</a></li>
+          <li><a data-view="preferences-view" href="/preferences">Preferences</a></li>
         </ul>
       </menu>
     </header>
 
     <main>
-      <!-- <fieldset class="fieldset-reset">
-        <legend class="hidden">Choice between Fieldnotes or iNaturalist search</legend>
-        <section>
-          <div class="section-header section-group">
-            <h2>              
-              <input id="fieldnotes-input-rb" type="radio" name="preview-mode" value="fieldnotes">
-              <label for="fieldnotes-input-rb">
-                Fieldnotes
-              </label>
-            </h2>
-          </div>      
-        </section>
-        <section class="mb2">
-          <div class="section-header section-group">
-            <h2>              
-              <input id="inat-search-input-rb" type="radio" name="preview-mode" value="iNaturalist" checked>
-              <label for="inat-search-input-rb">
-                iNaturalist search
-              </label>
-            </h2>
-          </div>        
-        </section>        
-      </fieldset> -->
-
       <section class="mt2">
         <fieldset id="fieldnotes-search-view" class="mt2 hidden">
           <legend>Fieldnotes search</legend>

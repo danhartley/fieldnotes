@@ -19,9 +19,12 @@ import {
 import {
       ButtonComponent
     , ButtonHideShowComponent
-    , RadioButtonComponent
-    , MenuNavItemComponent
+    , MenuNavComponent
 } from './ui-components.js'
+
+import { 
+    Router
+} from './router.js'
 
 const init = () => {    
     const initGlobalRead = () => {
@@ -136,15 +139,14 @@ const init = () => {
         globalRead.template.score = globalRead.template.scores.filter(score => score.isCorrect)?.length || 0
     }
     
-    const toggleView = e => {
-        const view = e.target.name
-        // const view = e.target.value
+    const toggleView = ({e, matchedView}) => {
+        const view = matchedView || e.target.dataset.view
 
         inatSearchView.classList.toggle('hidden')
         fieldnotesSearchView.classList.toggle('hidden')
-        
+
         switch(view) {                    
-            case 'fieldnotes':                
+            case 'fieldnotes-search-view':                
                 inatOnlySections.forEach(section => section.classList.add('hidden'))
                 iNatAutocompleteInputText.value = ''
                 handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: globalRead, fieldnotesStubsCallback: getFieldnotesStubs, importFieldnotesBtn})
@@ -152,12 +154,15 @@ const init = () => {
                 globalRead.templates = g.templates.filter(template => template.types.includes('fieldnotes'))
                 globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
                 break
-            case 'iNaturalist':
+            case 'inaturalist-search-view':
                 ltpAutocompleteTitleInputText.value = ''
                 iNatAutocompleteInputText.focus()            
                 inatOnlySections.forEach(section => section.classList.remove('hidden'))
                 globalRead.templates = g.templates.filter(template => template.types.includes('inatSearch'))
                 globalRead.template = globalRead.templates.find(template => template.templateId === 'species-template')        
+                break
+            case 'preferences-view':
+                console.log('preferences')
                 break
         }
     
@@ -165,10 +170,6 @@ const init = () => {
         sectionsWithHeader.forEach(sh => sh.classList.add('hidden'))
         article.innerHTML = ''
     }
-
-    const menu = new MenuNavItemComponent({
-        callback: toggleView
-    })
     
     let rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup    
     
@@ -741,15 +742,6 @@ const init = () => {
             rb.addEventListener('change', () => globalRead.useObservationsSpeciesCount = globalRead.useObservationsSpeciesCountOptions.find(o => o.id === rb.value))
         })
     
-        const fieldnotesInputRb = new RadioButtonComponent({
-              elementId: 'fieldnotes-input-rb'
-            , clickHandler: toggleView
-        })
-        const inatSearchInputRb = new RadioButtonComponent({
-              elementId: 'inat-search-input-rb'
-            , clickHandler: toggleView
-        })
-        
         addImgClickEventHandlers()
     
         const { id, prop } = globalRead.inatAutocomplete
@@ -863,6 +855,39 @@ const init = () => {
     createRadioBtnTemplateGroup()
 
     sectionsWithHeader.forEach(sh => sh.classList.toggle('hidden'))
+
+    const routes = [
+        {
+              view: 'fieldnotes-search-view'
+            , path: '/public/'
+        },
+        {
+              view: 'fieldnotes-search-view'
+            , path: '/fieldnotes'
+        },
+        {
+              view: 'inaturalist-search-view'
+            , path: '/inaturalist'
+        },
+        {
+              view: 'preferences-view'
+            , path: '/preferences'
+        },
+    ]
+    
+    const router = new Router({
+          routes
+        , callback: toggleView
+    })    
+
+    const links = d.querySelectorAll('menu > ul > li > a')
+    links.forEach(link => {
+        new MenuNavComponent({
+            links,
+            link,
+            router
+        })
+    })
 }
 
 init()

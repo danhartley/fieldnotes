@@ -111,43 +111,27 @@ export class ULComponent extends BaseComponent {
   }
 }
 
-export class MenuNavItemComponent extends BaseComponent {
-  constructor({parent = document, selector = 'menu > ul', callback}) {
-    super({
-        parent
-      , selector
-      , clickHandler: (e) => {
-          // Prevent redirecting to the href 
-          e.preventDefault()
-          
-          // Remove styling for all menu links
-          const links = parent.querySelectorAll('menu ul li a')
-          links.forEach(link => {
-            link.classList.remove(...link.classList)
-          })
+export class MenuNavComponent {
+  constructor({links, link, router}) {
+    this.links = links
+    this.link = link
+    this.router = router
 
-          // Add styling for active link
-          const activeLink = e.target
-          activeLink.classList.add('selected')
+  const eventHandler = (e) => {
+      e.preventDefault()
 
-          this.activeLink = activeLink
+      const pathnameSplit = this.link.href.split('/')
+      const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''    
+      this.router.loadRoute(pathSegments[2])
+      
+      this.links.forEach(link => {
+        link.classList.remove('selected')
+      })
 
-          callback(e)
-      }
-    })
+      this.link.classList.add('selected')      
+    }
+
+    this.link.addEventListener('click', e => eventHandler(e))
+    this.link.addEventListener('onkeydown', e => eventHandler(e))
   }
-
-  // getActivelink() {
-  //   return this.activeLink || Array.from(this.parent.querySelectorAll('menu ul li a')).find(link => {        
-  //         return Array.from(link.classList).includes('selected')        
-  //     })    
-  // }
-
-  // getActiveHref() {
-  //   return this.getActivelink().href
-  // }
-
-  // getActiveValue() {
-  //   return this.getActivelink().value
-  // }
 }

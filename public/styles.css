@@ -58,9 +58,11 @@ header {
 
 header menu {
   width: 100%;
+  padding-inline-start: 0;
 }
 
 header menu ul {
+  width: 100%;
   display: flex;
   justify-content: space-evenly;
   font-size: var(--s3);
@@ -321,9 +323,9 @@ dt:has(+ dd:empty) {
   display: none;
 }
 
-main { 
-  position: relative;
-  margin: 0;
+main {
+  margin: auto;
+  max-width: 80ch; 
 }
 
 main > fieldset {
@@ -521,7 +523,7 @@ th, td {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, auto));
+  grid-template-columns: repeat(auto-fit, minmax(200px, auto));
   gap: var(--d);
   margin: 0 auto calc(var(--d)) auto;
   background-color: var(--c0);
@@ -865,11 +867,6 @@ th, td {
 } 
 
 @media (orientation: landscape) {
-  main {
-    margin: auto;
-    max-width: 80ch; 
-  }
-
   header {
     margin: 0 10vw;
   }
@@ -883,7 +880,9 @@ th, td {
     border: 1px solid var(--c3);
     padding: calc(var(--d) * 2) calc(var(--d) * 2) 0 calc(var(--d) * 2);
   }
+}
 
+@media only screen and (min-width: 32em) {
   #observation-dates input[type="date"] {
     width: initial;
     font-size: var(--s3);
