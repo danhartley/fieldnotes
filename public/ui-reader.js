@@ -852,7 +852,7 @@ const init = () => {
     const routes = [
         {
               view: 'fieldnotes-search-view'
-            , path: '/public/'
+            , path: '/'
         },
         {
               view: 'fieldnotes-search-view'

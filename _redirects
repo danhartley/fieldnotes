@@ -12,3 +12,6 @@
 /*                       /public/index.html  200
 /fieldnotes/*            /public/fieldnotes.html  200
 /public/fieldnotes/*     /public/fieldnotes.html  200
+
+# /best-pets/dogs  /best-pets/cats.html 200!
+# /fieldnotes      /fieldnotes.html 200!
