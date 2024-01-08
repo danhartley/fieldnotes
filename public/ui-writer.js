@@ -47,8 +47,13 @@ import {
 } from './ui-actions.js'
 
 import {
-  ButtonComponent
+    ButtonComponent
+  , MenuNavComponent
 } from './ui-components.js'
+
+import { 
+  Router
+} from './router.js'
 
 const init = () => {
 
@@ -96,8 +101,8 @@ const init = () => {
   let globalWrite = initGlobalWrite()
 
   const d = document
-  const createFieldnotesInputRadio = d.getElementById('create-fieldnotes-input-radio')
-  const editFieldnotesInputRadio = d.getElementById('edit-fieldnotes-input-radio')
+  // const createFieldnotesInputRadio = d.getElementById('create-fieldnotes-input-radio')
+  // const editFieldnotesInputRadio = d.getElementById('edit-fieldnotes-input-radio')
   const editView = d.querySelectorAll('.edit-view')
   const createView = d.querySelectorAll('.create-view')
   const draggableSections = d.getElementById('draggable-sections')
@@ -119,8 +124,8 @@ const init = () => {
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
 
-  const toggleView = e => {
-    const view = e.target.value
+  const toggleView = ({e, matchedView}) => {
+    const view = matchedView || e.target.dataset.view
 
     Array.from(editView).forEach(view => view.classList.toggle('hidden'))
     Array.from(createView).forEach(view => view.classList.toggle('hidden'))
@@ -128,17 +133,20 @@ const init = () => {
     globalWrite.view = view
 
     switch(view) {
-      case 'create':
+      case 'create-fieldnotes-view':
         iNatAutocompleteInputText.focus()
         break
-      case 'edit':
+      case 'edit-fieldnotes-view':
         ltpAutocompleteTitleInputText.focus()
+        break
+      case 'preferences-view':
+        console.log('preferences-view')
         break
     }    
   }
 
-  createFieldnotesInputRadio.addEventListener('click', toggleView, true)
-  editFieldnotesInputRadio.addEventListener('click', toggleView, true)
+  // createFieldnotesInputRadio.addEventListener('click', toggleView, true)
+  // editFieldnotesInputRadio.addEventListener('click', toggleView, true)
 
   const searchInatObservations = async ({userId}) => {
   try {
@@ -1093,6 +1101,39 @@ const init = () => {
     , global: globalWrite
     , fieldnotesStubsCallback: getFieldnotesStubs
     , importFieldnotesBtn
+  })
+
+  const routes = [
+    {
+          view: 'create-fieldnotes-view'
+        , path: '/public/fieldnotes.html'
+    },
+    {
+          view: 'create-fieldnotes-view'
+        , path: '/create'
+    },
+    {
+          view: 'edit-fieldnotes-view'
+        , path: '/edit'
+    },
+    {
+          view: 'preferences-view'
+        , path: '/preferences'
+    },
+  ]
+
+  const router = new Router({
+        routes
+      , callback: toggleView
+  })    
+
+  const links = d.querySelectorAll('menu > ul > li > a')
+  links.forEach(link => {
+      new MenuNavComponent({
+          links,
+          link,
+          router
+      })
   })
 }
 
