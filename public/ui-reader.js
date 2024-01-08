@@ -43,14 +43,10 @@ const init = () => {
 
     const d = document   
         
-    const fieldnotesSearchView = d.getElementById('fieldnotes-search-view')
-    const inatSearchView = d.getElementById('inat-search-view')
-    const inatOnlySections = d.querySelectorAll('.inat-only-sections')
     const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
     const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
     const sectionsWithHeader = d.querySelectorAll('.section-with-header')
     const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
-    const progressFieldset = d.getElementById('progress-fieldset')
     const lessonFieldsetLegend = d.querySelector('#lesson-fieldset > legend')
     const article = d.getElementById('article')
     const rbTemplate = d.getElementById('radio-button-template')
@@ -142,12 +138,14 @@ const init = () => {
     const toggleView = ({e, matchedView}) => {
         const view = matchedView || e.target.dataset.view
 
-        inatSearchView.classList.toggle('hidden')
-        fieldnotesSearchView.classList.toggle('hidden')
-
+        const sectionViews = d.querySelectorAll('section')
+        sectionViews.forEach(v => v.classList.add('hidden'))
+        
+        const views = d.querySelectorAll(`.${view}`)
+        views.forEach(v => v.classList.remove('hidden'))
+        
         switch(view) {                    
             case 'fieldnotes-search-view':                
-                inatOnlySections.forEach(section => section.classList.add('hidden'))
                 iNatAutocompleteInputText.value = ''
                 handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: globalRead, fieldnotesStubsCallback: getFieldnotesStubs, importFieldnotesBtn})
                 ltpAutocompleteTitleInputText.focus()
@@ -157,12 +155,14 @@ const init = () => {
             case 'inaturalist-search-view':
                 ltpAutocompleteTitleInputText.value = ''
                 iNatAutocompleteInputText.focus()            
-                inatOnlySections.forEach(section => section.classList.remove('hidden'))
                 globalRead.templates = g.templates.filter(template => template.types.includes('inatSearch'))
                 globalRead.template = globalRead.templates.find(template => template.templateId === 'species-template')        
                 break
             case 'preferences-view':
-                console.log('preferences')
+                const rbLanguageGroup = createRadioBtnGroup({collection: globalRead.LANGUAGES, checked:globalRead.language, rbGroup:'language', parent:languageGroupContainer})
+                rbLanguageGroup.forEach(rb => {
+                    rb.addEventListener('change', () => globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value))
+                })        
                 break
         }
     
@@ -171,9 +171,11 @@ const init = () => {
         article.innerHTML = ''
     }
     
-    let rbTestForGroup, rbInatAutocompleteGroup, rbLanguageGroup, rbInatUseObservationSpeciesCountGroup    
+    let rbTestForGroup, rbInatAutocompleteGroup, rbInatUseObservationSpeciesCountGroup    
     
     const createRadioBtnGroup = ({collection, checked, rbGroup, parent}) => {
+        parent.innerHTML = ''
+
         collection.forEach(item => {
             const clone = rbTemplate.content.cloneNode(true)
     
@@ -187,7 +189,7 @@ const init = () => {
             label.htmlFor = input.id
             label.setAttribute('position', 'absolute')
             
-            if(!!checked && checked.id === item.fnId) {
+            if(!!checked && (checked.id === item.id || checked.id === item.fnId)) {
                 input.setAttribute('checked', true)
             }
     
@@ -358,9 +360,6 @@ const init = () => {
                             })   
                             testSubmitBtn.hide()
                         }
-    
-                        progressFieldset.classList.toggle('disabled')
-    
                         renderDisplayTemplate()
                     }
                     showTestBtn.addClickHandler({
@@ -678,7 +677,6 @@ const init = () => {
         testSubmitBtn.addClickHandler({
             clickHandler: scoreHandler
         })
-        // testSubmitBtn.addEventListener('click', scoreHandler, false)
     
         const fetchInatSpecies = async () => {
             const filters = Array.from(d.getElementById('iconic-taxa-container').querySelectorAll('input'))
@@ -733,11 +731,7 @@ const init = () => {
         speciesCountInputNumber.addEventListener('change', () => {
             globalRead.count = Number(speciesCountInputNumber.value)
         })
-    
-        rbLanguageGroup.forEach(rb => {
-            rb.addEventListener('change', () => globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value))
-        })
-    
+        
         rbInatUseObservationSpeciesCountGroup.forEach(rb => {
             rb.addEventListener('change', () => globalRead.useObservationsSpeciesCount = globalRead.useObservationsSpeciesCountOptions.find(o => o.id === rb.value))
         })
@@ -756,8 +750,7 @@ const init = () => {
         })
     })
 
-    rbInatAutocompleteGroup = createRadioBtnGroup({collection: globalRead.inatAutocompleteOptions, checked:globalRead.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroupContainer})    
-    rbLanguageGroup = createRadioBtnGroup({collection: globalRead.LANGUAGES, checked:globalRead.language, rbGroup:'language', parent:languageGroupContainer})
+    rbInatAutocompleteGroup = createRadioBtnGroup({collection: globalRead.inatAutocompleteOptions, checked:globalRead.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroupContainer})        
     rbInatUseObservationSpeciesCountGroup = createRadioBtnGroup({collection: globalRead.useObservationsSpeciesCountOptions, checked:globalRead.useObservationsSpeciesCount, rbGroup:'inat-use-observations-species-count', parent:inatUseObservationSpeciesCountGroupContainer})
 
     createTaxaCheckboxGroup()

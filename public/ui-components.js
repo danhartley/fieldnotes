@@ -3,7 +3,7 @@ export class ButtonComponent {
     this.buttonElement = parent.querySelector(`#${elementId}`)
 
     if (!this.buttonElement) {
-      console.error(`Element with Id ${elementId} not found.`)
+      // console.error(`Element with Id ${elementId} not found.`)
       return
     }
 

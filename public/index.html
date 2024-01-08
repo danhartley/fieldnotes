@@ -15,15 +15,15 @@
       <menu>
         <ul>
           <li><a data-view="fieldnotes-search-view" href="/fieldnotes" class="selected">Read fieldnotes</a></li>
-          <li><a data-view="inat-search-view" href="/inaturalist">Search iNaturalist</a></li>
+          <li><a data-view="inaturalist-search-view" href="/inaturalist">Search iNaturalist</a></li>
           <li><a data-view="preferences-view" href="/preferences">Preferences</a></li>
         </ul>
       </menu>
     </header>
 
     <main>
-      <section class="mt2">
-        <fieldset id="fieldnotes-search-view" class="mt2 hidden">
+      <section class="mt2 fieldnotes-search-view">
+        <fieldset class="mt2">
           <legend>Fieldnotes search</legend>
           <p class="mt0 small">Search for fieldnotes.</p>
           <div class="centred-block">
@@ -39,8 +39,8 @@
         </fieldset>
       </section>
 
-      <section>
-        <div id="inat-search-view">
+      <section class="mt2 inaturalist-search-view">
+        <div>
           <fieldset>
             <legend>iNaturalist search</legend>
             <fieldset class="fieldset-reset">
@@ -107,7 +107,7 @@
         </div>
       </section>
       
-      <section class="section-with-header">
+      <section class="section-with-header fieldnotes-search-view inaturalist-search-view">
         <div class="section-header">
           <h2>Display options</h2>
           <button id="display-options-toggle-visibility-btn" value="display-fieldset" class="show-hide">HIDE</button>
@@ -126,7 +126,7 @@
         </div>
       </section>
 
-      <section class="section-with-header">
+      <section class="section-with-header fieldnotes-search-view inaturalist-search-view">
         <fieldset id="lesson-fieldset">
           <legend>Fieldnotes</legend>
           <button id="show-test-btn" class="btn-reset t0 r1 tiny hidden">Show test</button>
@@ -144,14 +144,14 @@
         </fieldset>
       </section>
 
-      <section class="section-with-header">
-        <div class="inat-only-sections">
+      <section class="inaturalist-search-view">
+        <div>
           <section>
             <h2>Progress</h2>
             <button id="progress-toggle-visibility-btn" value="progress-fieldset" class="show-hide">HIDE</button>
           </div>
 
-          <fieldset id="progress-fieldset" class="disabled inat-only-sections">
+          <fieldset id="progress-fieldset" class="disabled">
             <legend>Score</legend>
             <table>
               <thead>
@@ -179,18 +179,16 @@
         </div>
       </section>
 
-      <section>
-        <div class="inat-only-sections">
-          <div class="section-header">
-            <h2>Preferences</h2>
-            <button id="preferences-toggle-visibility-btn" value="preferences" class="show-hide">HIDE</button>
-          </div>
-          <fieldset id="preferences">
-            <legend>Language</legend>
-            <div id="language-group-container" class="grid"></div>
-            <p class="small">Language determines the locale preference for taxon common names.</p>
-          </fieldset>
+      <section class="preferences-view">
+        <div class="section-header">
+          <h2>Preferences</h2>
+          <!-- <button id="preferences-toggle-visibility-btn" value="preferences" class="show-hide">HIDE</button> -->
         </div>
+        <fieldset id="preferences">
+          <legend>Language</legend>
+          <div id="language-group-container" class="grid"></div>
+          <p class="small">Language determines the locale preference for taxon common names.</p>
+        </fieldset>
       </section>
 
       <dialog id="state-notifications">
