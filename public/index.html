@@ -5,9 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Paths through the forest are without number</title>
-    <link rel="stylesheet" href="./public/styles.css">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="/favicon.ico" />
+    <script src="/ui-reader.js" type="module"></script>
+    <!-- <link rel="stylesheet" href="./public/styles.css">
     <link rel="icon" href="./public/favicon.ico" />
-    <script src="./public/ui-reader.js" type="module"></script>
+    <script src="./public/ui-reader.js" type="module"></script> -->
   </head>
 
   <body>  
@@ -39,7 +42,7 @@
         </fieldset>
       </section>
 
-      <section class="mt2 inaturalist-search-view">
+      <section class="mt2 inaturalist-search-view hidden">
         <div>
           <fieldset>
             <legend>iNaturalist search</legend>
@@ -107,7 +110,7 @@
         </div>
       </section>
       
-      <section class="section-with-header fieldnotes-search-view inaturalist-search-view">
+      <section class="section-with-header fieldnotes-search-view inaturalist-search-view hidden">
         <div class="section-header">
           <h2>Display options</h2>
           <button id="display-options-toggle-visibility-btn" value="display-fieldset" class="show-hide">HIDE</button>
@@ -126,14 +129,11 @@
         </div>
       </section>
 
-      <section class="section-with-header fieldnotes-search-view inaturalist-search-view">
+      <section class="section-with-header fieldnotes-search-view inaturalist-search-view hidden">
         <fieldset id="lesson-fieldset">
           <legend>Fieldnotes</legend>
           <button id="show-test-btn" class="btn-reset t0 r1 tiny hidden">Show test</button>
           <article id="article">
-            <div class="non-grid">
-              <p class="m0">Select fieldnotes, or run a search for species from iNaturalist.</p>
-            </div>
           </article>
           <button
             id="test-submit-btn"
@@ -144,14 +144,14 @@
         </fieldset>
       </section>
 
-      <section class="inaturalist-search-view">
+      <section class="progress-view hidden">
         <div>
           <section>
             <h2>Progress</h2>
             <button id="progress-toggle-visibility-btn" value="progress-fieldset" class="show-hide">HIDE</button>
           </div>
 
-          <fieldset id="progress-fieldset" class="disabled">
+          <fieldset id="progress-fieldset">
             <legend>Score</legend>
             <table>
               <thead>
@@ -179,10 +179,9 @@
         </div>
       </section>
 
-      <section class="preferences-view">
+      <section class="preferences-view hidden">
         <div class="section-header">
           <h2>Preferences</h2>
-          <!-- <button id="preferences-toggle-visibility-btn" value="preferences" class="show-hide">HIDE</button> -->
         </div>
         <fieldset id="preferences">
           <legend>Language</legend>

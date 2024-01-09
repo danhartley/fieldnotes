@@ -67,7 +67,7 @@ export class ButtonHideShowComponent extends ButtonComponent {
   }
 
   scrollIntoView({ behavior = 'smooth', block = 'start', inline = 'nearest' }) {
-    this.buttonElement.scrollIntoView({ behavior, block, inline })
+    if(this.buttonElement) this.buttonElement.scrollIntoView({ behavior, block, inline })
   }
 }
 

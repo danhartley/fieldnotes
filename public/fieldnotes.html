@@ -8,22 +8,25 @@
     <link rel="stylesheet" href="/styles.css">
     <link rel="icon" href="/favicon.ico" />
     <script type="module" src="/ui-writer.js" type="module"></script>
+    <!-- <link rel="stylesheet" href="./public/styles.css">
+    <link rel="icon" href="./public/favicon.ico" />
+    <script type="module" src="./public/ui-writer.js" type="module"></script> -->
   </head>
 
   <body>  
     <header>
       <menu>
         <ul>
-          <li><a data-view="create-fieldnotes-view" href="/fieldnotes/create" class="selected">Create fieldnotes</a></li>
-          <li><a data-view="edit-fieldnotes-view" href="/fieldnotes/edit">Edit fieldnotes</a></li>
-          <li><a data-view="preferences-view" href="/fieldnotes/preferences">Preferences</a></li>
+          <li><a data-view="create-fieldnotes-view" href="/fieldnotes-create" class="selected">Create fieldnotes</a></li>
+          <li><a data-view="edit-fieldnotes-view" href="/fieldnotes-edit">Edit fieldnotes</a></li>
+          <li><a data-view="preferences-view" href="/fieldnotes-preferences">Preferences</a></li>
         </ul>
       </menu>
     </header>
 
     <main class="mt2">
       <article>
-        <section class="create-view">
+        <section class="create-fieldnotes-view">
           <fieldset class="mt2">
             <legend>iNaturalist search</legend>
             <p class="mt0 small">Filter iNaturalist observations by user and date.</p>
@@ -43,7 +46,7 @@
           </fieldset>
         </section>
   
-        <section class="edit-view hidden">
+        <section class="edit-fieldnotes-view">
           <fieldset id="edit-field-notes" class="mt2">
             <legend>Fieldnotes search</legend>
             <p class="mt0 small">Find and edit previous fieldnotes.</p>
@@ -83,7 +86,7 @@
           </fieldset>
         </section>
 
-        <section id="export-fieldnotes-container" class="create-view disabled">
+        <section id="export-fieldnotes-container" class="create-fieldnotes-view disabled">
           <fieldset>
             <legend>Save fieldnotes</legend>
             <button id="export-fieldnotes-btn" class="p">Save fieldnotes</button>
@@ -91,7 +94,7 @@
           </fieldset>
         </section>
 
-        <section id="select-section-type-section">
+        <section id="select-section-type-section" class="create-fieldnotes-view edit-fieldnotes-view">
           <fieldset>
             <legend>Field journal sections</legend>
             <button id="h3-write" type="button" value="h3-write-template">Header</button>

@@ -101,10 +101,6 @@ const init = () => {
   let globalWrite = initGlobalWrite()
 
   const d = document
-  // const createFieldnotesInputRadio = d.getElementById('create-fieldnotes-input-radio')
-  // const editFieldnotesInputRadio = d.getElementById('edit-fieldnotes-input-radio')
-  const editView = d.querySelectorAll('.edit-view')
-  const createView = d.querySelectorAll('.create-view')
   const draggableSections = d.getElementById('draggable-sections')
   const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
   const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
@@ -127,8 +123,11 @@ const init = () => {
   const toggleView = ({e, matchedView}) => {
     const view = matchedView || e.target.dataset.view
 
-    Array.from(editView).forEach(view => view.classList.toggle('hidden'))
-    Array.from(createView).forEach(view => view.classList.toggle('hidden'))
+    const sectionViews = d.querySelectorAll('section')
+    sectionViews.forEach(v => v.classList.add('hidden'))
+    
+    const views = d.querySelectorAll(`.${view}`)
+    views.forEach(v => v.classList.remove('hidden'))
     
     globalWrite.view = view
 
@@ -144,9 +143,6 @@ const init = () => {
         break
     }    
   }
-
-  // createFieldnotesInputRadio.addEventListener('click', toggleView, true)
-  // editFieldnotesInputRadio.addEventListener('click', toggleView, true)
 
   const searchInatObservations = async ({userId}) => {
   try {
@@ -1110,15 +1106,15 @@ const init = () => {
     },
     {
           view: 'create-fieldnotes-view'
-        , path: '/create'
+        , path: '/fieldnotes-create'
     },
     {
           view: 'edit-fieldnotes-view'
-        , path: '/edit'
+        , path: '/fieldnotes-edit'
     },
     {
           view: 'preferences-view'
-        , path: '/preferences'
+        , path: '/fieldnotes-preferences'
     },
   ]
 

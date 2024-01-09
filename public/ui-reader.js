@@ -263,7 +263,7 @@ const init = () => {
     
             endOfRowContainer.after(panel)       
             
-            panel.scrollIntoView({ 
+            if(panel) panel.scrollIntoView({ 
                   behavior: 'smooth'
                 , block: 'end'
                 , inline: 'nearest' 
@@ -360,6 +360,10 @@ const init = () => {
                             })   
                             testSubmitBtn.hide()
                         }
+
+                        const progressView = d.querySelector('.progress-view')
+                        progressView.classList.toggle('hidden')
+
                         renderDisplayTemplate()
                     }
                     showTestBtn.addClickHandler({
