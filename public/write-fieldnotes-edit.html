@@ -20,26 +20,6 @@
 
     <main class="mt2">
       <article>
-        <section class="create-fieldnotes-view">
-          <fieldset class="mt2">
-            <legend>iNaturalist search</legend>
-            <p class="mt0 small">Filter iNaturalist observations by user and date.</p>
-            <div class="centred-block">
-                <label for="inat-autocomplete-input-text">User</label>
-                <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing a username or user ID…">
-                <datalist id="inat-autocomplete-data-list"></datalist>
-            </div>
-            <div class="centred-block mt2">
-              <label for="single-observations-input-date">Date</label>
-              <input type="date" id="single-observations-input-date" name="single-observations-input-date" class="mr" />
-            </div>
-            <div class="centred-block mt2">
-              <button id="search-inat-observations-btn" class="mr submit disabled">Search iNaturalist for observations </button>
-              <div id="search-inat-observations-notification-text" class="small hidden">Connecting…</div>
-            </div>
-          </fieldset>
-        </section>
-  
         <section class="edit-fieldnotes-view">
           <fieldset id="edit-field-notes" class="mt2">
             <legend>Fieldnotes search</legend>
@@ -77,14 +57,6 @@
               <label for="place-input-text">Place</label>      
               <input id="place-input-text" type="text" class="p" autocomplete="off" minlength="3" placeholder="Minimum length 3 characters">
             </div>
-          </fieldset>
-        </section>
-
-        <section id="export-fieldnotes-container" class="create-fieldnotes-view disabled">
-          <fieldset>
-            <legend>Save fieldnotes</legend>
-            <button id="export-fieldnotes-btn" class="p">Save fieldnotes</button>
-            <p class="mt2 small"><em>Fieldnotes are updated when you add, edit or delete sections.</em></p>
           </fieldset>
         </section>
 

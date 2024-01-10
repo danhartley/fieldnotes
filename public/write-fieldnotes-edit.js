@@ -48,12 +48,7 @@ import {
 
 import {
     ButtonComponent
-  , MenuNavComponent
 } from './ui-components.js'
-
-import { 
-  Router
-} from './router.js'
 
 const init = () => {
 
@@ -66,7 +61,7 @@ const init = () => {
       , nextSectionIndex: 0
       , inatAutocompleteOptions: g.inatAutocompleteOptions
       , inatAutocomplete: g.inatAutocomplete
-      , view: 'create'
+      , view: 'edit'
       , fieldnotesStubs: []
       , fieldnotes: {
         author: ''
@@ -102,11 +97,8 @@ const init = () => {
 
   const d = document
   const draggableSections = d.getElementById('draggable-sections')
-  const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
-  const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
   const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
   const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
-  const singleObservationsInputDate = d.getElementById('single-observations-input-date')
   const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
   const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
   const titleInputText = d.getElementById('title-input-text')
@@ -119,117 +111,6 @@ const init = () => {
 
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
-
-  const toggleView = ({e, matchedView}) => {
-    const view = matchedView || e.target.dataset.view
-
-    const sectionViews = d.querySelectorAll('section')
-    sectionViews.forEach(v => v.classList.add('hidden'))
-    
-    const views = d.querySelectorAll(`.${view}`)
-    views.forEach(v => v.classList.remove('hidden'))
-    
-    globalWrite.view = view
-
-    switch(view) {
-      case 'create-fieldnotes-view':
-        iNatAutocompleteInputText.focus()
-        break
-      case 'edit-fieldnotes-view':
-        ltpAutocompleteTitleInputText.focus()
-        break
-      case 'preferences-view':
-        console.log('preferences-view')
-        break
-    }    
-  }
-
-  const searchInatObservations = async ({userId}) => {
-  try {
-      searchInatObservationsNotificationText.classList.toggle('hidden')
-      searchInatObservationsBtn.toggleActiveState()
-
-      // Clear import search text to avoid confusion
-      ltpAutocompleteTitleInputText.value = ''
-
-      globalWrite.fieldnotes.user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')?.user
-
-      globalWrite.species = await getInatObservations({ 
-            user_id: globalWrite.fieldnotes.user.id
-          , place_id: null
-          , iconic_taxa: globalWrite.iconicTaxa
-          , per_page: 200
-          ,locale: globalWrite.fieldnotes.language.id
-          , species_count: false
-          , d1: singleObservationsInputDate.value
-          , d2: singleObservationsInputDate.value
-      })    
-      
-      searchInatObservationsBtn.toggleActiveState()
-
-      searchInatObservationsNotificationText.innerText = 'Search complete'
-
-      setTimeout(() => {
-        searchInatObservationsNotificationText.classList.toggle('hidden')
-        searchInatObservationsNotificationText.innerText = 'Waiting for response from iNaturalist…'
-      }, 1500)
-
-      if(globalWrite.species.length === 0) return
-
-      const { author, date, location } = {
-          author: globalWrite.species[0].user.name
-        , date: globalWrite.species[0].observed_on
-        , location: {
-            location: globalWrite.species[0].location
-          , place_guess: globalWrite.species[0].place_guess
-        }
-      }
-      const title = `${location.place_guess}, ${(new Date(date)).toDateString()}`
-
-      titleInputText.value = title
-      authorInputText.value = author
-      dateInputText.value = date
-      placeInputText.value = location.place_guess
-
-      globalWrite.fieldnotes.title = title
-      globalWrite.fieldnotes.author = author
-      globalWrite.fieldnotes.d1 = date
-      globalWrite.fieldnotes.d2 = date
-      globalWrite.fieldnotes.location = location
-
-      // Enable the create observation and species section buttons
-      selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
-      selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
-
-      // Enable saving fieldnotes
-      exportFieldNotesContainer.classList.remove('disabled')
-
-      // Notify user that observations are available
-      showNotificationsDialog({
-          message: 'iNaturalist observations now available'
-        , type: 'success'
-      })
-    } catch (e) {
-        showNotificationsDialog({
-            message: e.message
-          , type: 'error'
-        })
-    }
-  }
-
-  const searchInatObservationsBtn = new ButtonComponent({
-      elementId: 'search-inat-observations-btn'
-    , clickHandler: searchInatObservations
-  })
-
-  handleInatAutocomplete({ 
-      inputText: iNatAutocompleteInputText
-    , dataList: iNatAutocompleteDatalist
-    , globalWrite
-    , id: globalWrite.inatAutocomplete.id
-    , prop: globalWrite.inatAutocomplete.prop
-    , cbParent: d.getElementById('inat-params-input-check-box-group')
-  })
 
   const createSection = ({writeTemplateId, typeText, sectionTemplate, sectionIndex}) => {
     const sectionClone = sectionTemplate.content.cloneNode(true)
@@ -392,7 +273,6 @@ const init = () => {
             , cancelActionBtn
           })
         })
-        // addOrUpdateSectionBtn.enable()
         break
     }
     editSectionBtn.addClickHandler({
@@ -798,19 +678,6 @@ const init = () => {
     })
   })
   
-  const enableSearchBtn = () => {
-    const hasUser = globalWrite.login && globalWrite.login.length > 0
-    const date = new Date(singleObservationsInputDate.value)
-    const hasDate = singleObservationsInputDate.value.length > 0 && Object.prototype.toString.call(date) === '[object Date]'
-
-    hasUser && hasDate
-      ? searchInatObservationsBtn.enable()
-      : searchInatObservationsBtn.disable()
-  }
-  
-  singleObservationsInputDate.addEventListener('blur', enableSearchBtn, true)
-  iNatAutocompleteInputText.addEventListener('blur', enableSearchBtn, true)
-
   const exportFieldnotes = async() => {
     try {
       const notes = {}
@@ -1068,7 +935,7 @@ const init = () => {
       })
 
       // Enable saving fieldnotes
-      exportFieldNotesContainer.classList.remove('disabled')
+      // exportFieldNotesContainer.classList.remove('disabled')
 
       // Show notification that Fieldnotes have been imported
       showNotificationsDialog({
@@ -1099,48 +966,7 @@ const init = () => {
     , importFieldnotesBtn
   })
 
-  const routes = [
-    {
-          view: 'create-fieldnotes-view'
-        , path: '/public/ui-write.html'
-    },
-    {
-          view: 'create-fieldnotes-view'
-        , path: '/fieldnotes/create'
-    },
-    {
-          view: 'edit-fieldnotes-view'
-        , path: '/fieldnotes/edit'
-    },
-    {
-          view: 'preferences-view'
-        , path: '/fieldnotes/preferences'
-    },
-  ]
-
-  // const router = new Router({
-  //       routes
-  //     , callback: toggleView
-  // })    
-
-  // const links = d.querySelectorAll('menu > ul > li > a')
-  // links.forEach(link => {
-  //     new MenuNavComponent({
-  //         links,
-  //         link,
-  //         router
-  //     })
-  // })
-
-  // const links = d.querySelectorAll('menu > ul > li > a')
-  // links.forEach(link => {
-  //     link.addEventListener('click', e => {
-  //         e.preventDefault()
-  //         toggleView({
-  //             e
-  //         })
-  //     })
-  // })
+  ltpAutocompleteTitleInputText.focus()
 }
 
 init()

@@ -19,7 +19,6 @@ import {
     handleInatAutocomplete
   , createInatLookups
   , handleTermAutocomplete
-  , handleFieldsnotesAutocomplete
   , cloneImages
   , cloneImageTemplate
   , dragstartHandler
@@ -48,12 +47,7 @@ import {
 
 import {
     ButtonComponent
-  , MenuNavComponent
 } from './ui-components.js'
-
-import { 
-  Router
-} from './router.js'
 
 const init = () => {
 
@@ -119,30 +113,6 @@ const init = () => {
 
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
-
-  const toggleView = ({e, matchedView}) => {
-    const view = matchedView || e.target.dataset.view
-
-    const sectionViews = d.querySelectorAll('section')
-    sectionViews.forEach(v => v.classList.add('hidden'))
-    
-    const views = d.querySelectorAll(`.${view}`)
-    views.forEach(v => v.classList.remove('hidden'))
-    
-    globalWrite.view = view
-
-    switch(view) {
-      case 'create-fieldnotes-view':
-        iNatAutocompleteInputText.focus()
-        break
-      case 'edit-fieldnotes-view':
-        ltpAutocompleteTitleInputText.focus()
-        break
-      case 'preferences-view':
-        console.log('preferences-view')
-        break
-    }    
-  }
 
   const searchInatObservations = async ({userId}) => {
   try {
@@ -1086,61 +1056,7 @@ const init = () => {
     }
   }
 
-  const importFieldnotesBtn = new ButtonComponent({
-      elementId: 'import-fieldnotes-btn'
-    , clickHandler: importFieldnotes
-  })
-
-  handleFieldsnotesAutocomplete({ 
-      inputText: ltpAutocompleteTitleInputText
-    , dataList: ltpAutocompleteTitleDatalist
-    , global: globalWrite
-    , fieldnotesStubsCallback: getFieldnotesStubs
-    , importFieldnotesBtn
-  })
-
-  const routes = [
-    {
-          view: 'create-fieldnotes-view'
-        , path: '/public/ui-write.html'
-    },
-    {
-          view: 'create-fieldnotes-view'
-        , path: '/fieldnotes/create'
-    },
-    {
-          view: 'edit-fieldnotes-view'
-        , path: '/fieldnotes/edit'
-    },
-    {
-          view: 'preferences-view'
-        , path: '/fieldnotes/preferences'
-    },
-  ]
-
-  // const router = new Router({
-  //       routes
-  //     , callback: toggleView
-  // })    
-
-  // const links = d.querySelectorAll('menu > ul > li > a')
-  // links.forEach(link => {
-  //     new MenuNavComponent({
-  //         links,
-  //         link,
-  //         router
-  //     })
-  // })
-
-  // const links = d.querySelectorAll('menu > ul > li > a')
-  // links.forEach(link => {
-  //     link.addEventListener('click', e => {
-  //         e.preventDefault()
-  //         toggleView({
-  //             e
-  //         })
-  //     })
-  // })
+  iNatAutocompleteInputText.focus()
 }
 
 init()

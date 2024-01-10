@@ -40,23 +40,6 @@
           </fieldset>
         </section>
   
-        <section class="edit-fieldnotes-view">
-          <fieldset id="edit-field-notes" class="mt2">
-            <legend>Fieldnotes search</legend>
-            <p class="mt0 small">Find and edit previous fieldnotes.</p>
-            <div class="centred-block">
-                <label for="ltp-autocomplete-title-input-text">Title</label>
-                <input id="ltp-autocomplete-title-input-text" list="ltp-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing to find existing fieldnotes by their title…">
-                <datalist id="ltp-autocomplete-title-data-list"></datalist>
-            </div>
-            <div id="field-notes-lookup-callback-parent" class="mt2"></div>
-            <div class="centred-block mt2">
-              <button id="import-fieldnotes-btn" class="mr disabled">Fetch fieldnotes to edit</button>
-              <div id="import-fieldnotes-notification-text" class="small hidden">Fetching fieldnotes…</div>
-            </div>
-          </fieldset>
-        </section>
-  
         <section id="meta-data-section">
           <fieldset id="field-trip">
             <legend>Field trip</legend>
@@ -88,7 +71,7 @@
           </fieldset>
         </section>
 
-        <section id="select-section-type-section" class="create-fieldnotes-view edit-fieldnotes-view">
+        <section id="select-section-type-section" class="create-fieldnotes-view edit-fieldnotes-view hidden">
           <fieldset>
             <legend>Field journal sections</legend>
             <button id="h3-write" type="button" value="h3-write-template">Header</button>
