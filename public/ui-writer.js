@@ -1118,19 +1118,19 @@ const init = () => {
     },
   ]
 
-  const router = new Router({
-        routes
-      , callback: toggleView
-  })    
+  // const router = new Router({
+  //       routes
+  //     , callback: toggleView
+  // })    
 
-  const links = d.querySelectorAll('menu > ul > li > a')
-  links.forEach(link => {
-      new MenuNavComponent({
-          links,
-          link,
-          router
-      })
-  })
+  // const links = d.querySelectorAll('menu > ul > li > a')
+  // links.forEach(link => {
+  //     new MenuNavComponent({
+  //         links,
+  //         link,
+  //         router
+  //     })
+  // })
 }
 
 init()

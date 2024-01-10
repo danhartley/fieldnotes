@@ -19,8 +19,6 @@ export class Router {
     history.pushState({}, '', url)
 
     // Match the route view to the view to render
-    // const routerOutletElement = document.querySelectorAll('[data-router-outlet]')[0]    
-    // routerOutletElement.innerHTML = matchedRoute.template
     this.callback({
       matchedView: matchedRoute.view
     })
