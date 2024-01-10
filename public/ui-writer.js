@@ -1116,22 +1116,6 @@ const init = () => {
           view: 'preferences-view'
         , path: '/fieldnotes/preferences'
     },
-    {
-      view: 'fieldnotes-search-view'
-    , path: '/'
-},
-{
-      view: 'fieldnotes-search-view'
-    , path: '/fieldnotes'
-},
-{
-      view: 'inaturalist-search-view'
-    , path: '/inaturalist'
-},
-{
-      view: 'preferences-view'
-    , path: '/preferences'
-},
   ]
 
   const router = new Router({
