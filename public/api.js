@@ -1,8 +1,9 @@
 // FIREBASE
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"
-import { getFirestore, collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-lite.js"
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"
+// import firebase from 'firebase/compat/app'
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
+import { initializeApp } from 'firebase/app'
+import { getFirestore, collection, query, where,  doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from 'firebase/firestore'
 
 import { templates } from './templates.js'
 
@@ -63,6 +64,353 @@ export const getInatTaxa = async({
     const response = await fetch(url)
     const json = await response.json()
     return json
+}
+
+const getApp = () => {
+  // Filestore's firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCqPaYK-BH0dD8i87VHrNN9L39-37N1ah0",
+    authDomain: "fieldnotes-13578.firebaseapp.com",
+    projectId: "fieldnotes-13578",
+    storageBucket: "fieldnotes-13578.appspot.com",
+    messagingSenderId: "46506549310",
+    appId: "1:46506549310:web:38fca524001c2e849fb16f"
+  }
+
+  // Initialise Firebase
+  const app = initializeApp(firebaseConfig)
+
+  // Store user state
+  onStateChange({
+    auth: getAuth(app)
+  })
+
+  return app
+}
+
+// FIREBASE UI
+
+export const firebaseAuthentication = () => {
+  return getAuth(getApp())
+}
+
+export const firebaseLogin = ({email = 'test@test.com', password = 'test.com'}) => {
+  const auth = getAuth(getApp())
+  signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    const user = userCredential.user
+    console.log(user)
+  })
+  .catch((error) => {
+    console.log(error.message)
+  })
+}
+
+export const firebaseCreateAccount = ({email, password}) => {
+  const auth = getAuth(getApp())
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed up 
+      const user = userCredential.user    
+    })
+    .catch((error) => {
+      console.log(error.message)
+    })
+}
+
+export const onStateChange = ({auth}) => {
+  onAuthStateChanged(auth, user => {
+      if(user !== null) {
+        console.log('logged in')
+        // save to session
+      } else {
+        console.log('Not logged in')    
+        // save to session
+      }
+    }
+  )
+}
+
+const getDb = () => {
+// Get an instance of the Firestore
+  return getFirestore(getApp())
+}
+
+const getFieldnotesCollectionRef = ({db}) => {
+  return collection(db, 'fieldnotes')
+}
+  
+const getFieldnotesStubsCollectionRef = ({db}) => {
+  return collection(db, 'fieldnotes-stubs')
+}
+
+export const getFieldnotes = async () => {   
+  const db = getDb()
+  const fieldnotesCollectionRef = getFieldnotesCollectionRef({db})
+  const notesDocsRef = await getDocs((fieldnotesCollectionRef))
+  const notesList = notesDocsRef.docs.map(doc => {
+    return doc.data()
+  })
+  return notesList
+}
+
+export const getFieldnotesById = async ({id}) => {
+  let docRef = null
+
+  try {
+    docRef = doc(getDb(), "fieldnotes", id)
+    const docSnap = await getDoc(docRef)
+    return {
+      data: docSnap.data(),
+      success: true,
+      message: 'Fieldnotes returned'
+    }
+  } catch (e) {
+    console.log('API docRef: ', docRef)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
+  }
+}
+
+export const getFieldnotesStubs = async () => {   
+  const db = getDb()
+  const fieldnotesStubCollectionRef = getFieldnotesStubsCollectionRef({db})
+  const notesDocsRef = await getDocs((fieldnotesStubCollectionRef))
+  const stubsList = notesDocsRef.docs.map(doc => {
+    return doc.data()
+  })
+
+  return stubsList
+}
+
+export const addFieldnotes = async ({fieldnotes}) => {
+  const db = getDb()
+  let id, data = null
+
+  try {    
+      // Add new fieldnotes to collection
+      const fieldnotesCollectionRef = getFieldnotesCollectionRef({db})
+      const fieldNotesRef = await doc(fieldnotesCollectionRef)
+      id = fieldNotesRef.id
+      data = { ...fieldnotes, id }
+      await setDoc(fieldNotesRef, data)
+
+      // Add new fieldnotes stub to collection
+      const fieldnotesStubCollectionRef = getFieldnotesStubsCollectionRef({db})
+      const fieldNotesStubRef = await doc(fieldnotesStubCollectionRef)
+      const stubId = fieldNotesStubRef.id
+      data = { id: stubId, fieldnotesId: id, title: fieldnotes.title, author: fieldnotes.author }
+      await setDoc(fieldNotesStubRef, data)
+
+      return {
+        success: true,
+        message: 'Fieldnotes added',
+        id,
+        type: 'success'
+      }
+    } catch (e) {
+      console.log('API fieldnotes id: ', id)
+      console.log('API data: ', data)
+      console.warn('API error: ', e)
+    }
+}
+
+export const updateFieldNotes = async ({fieldnotes, data}) => {
+  let docRef  = null
+
+  try {
+    const db = getDb()
+    docRef = doc(db, 'fieldnotes', fieldnotes.id)  
+    await updateDoc(docRef, data)
+
+    return {
+      success: true,
+      message: 'Fieldnotes updated'
+    }
+  } catch (e) {
+    console.log('API docRef: ', docRef)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
+  }
+}
+
+export const updateFieldNotesStubs = async ({fieldnotesStubs, data}) => {
+  let docRef  = null
+
+  try {
+    const db = getDb()
+    docRef = doc(db, 'fieldnotes-stubs', fieldnotesStubs.id)  
+    updateDoc(docRef, data)
+
+    return {
+      success: true,
+      message: 'Fieldnotes stubs updated'
+    }
+  } catch (e) {
+    console.log('API docRef: ', docRef)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
+  }
+}
+
+export const deleteFieldnoteProperty = async ({fieldnotes, prop}) => {
+  const db = getDb()
+  const docRef = doc(db, 'fieldnotes', fieldnotes.id)
+  const data = {
+    [prop]: deleteField()
+  }
+  await updateDoc(docRef, data)
+}
+
+export const updateFieldnoteProperty = async ({fieldnotes, prop, value}) => {
+  let docRef, data  = null
+
+  try {
+    const db = getDb()
+    docRef = doc(db, 'fieldnotes', fieldnotes.id)
+    data = {
+      [prop]: value
+    }
+    await updateDoc(docRef, data)
+
+    return {
+      success: true,
+      message: `${prop.charAt(0).toUpperCase() + prop.slice(1)} updated`
+    }
+  } catch (e) {
+    console.log('API element to update: ', prop, value)
+    console.log('API docRef: ', docRef)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
+  }
+}
+
+export const updateFieldnoteStubProperty = async ({fieldnotesStubs, prop, value}) => {
+  let docRef, data  = null
+
+  try {
+    const db = getDb()
+    docRef = doc(db, 'fieldnotes-stubs', fieldnotesStubs.id)
+    data = {
+      [prop]: value
+    }
+    await updateDoc(docRef, data)
+
+    return {
+      success: true,
+      message: `${prop.charAt(0).toUpperCase() + prop.slice(1)} updated`
+    }
+  } catch (e) {
+    console.log('API element to update: ', prop, value)
+    console.log('API docRef: ', docRef)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
+  }
+}
+
+export const updateFieldnotesTitle = async ({fieldnotes, prop, value, fieldnotesStubs}) => {
+  let response
+
+  try {
+    response = await updateFieldnoteProperty({fieldnotes, prop, value})
+    if(response.success) {
+      response = await updateFieldnoteStubProperty({fieldnotesStubs, prop, value})
+      return {
+        success: true,
+        message: 'Title updated'
+      }
+    }
+  } catch (e) {
+    console.warn('API error: ', e)
+  }
+}
+
+export const addElementToArray = async ({fieldnotes, array, element, isEdit = false}) => {
+  let docRef, data  = null
+
+  try {
+    const db = getDb()
+    docRef = doc(db, 'fieldnotes', fieldnotes.id)
+    
+    data = {
+      [array]: arrayUnion(element)
+    }
+    await updateDoc(docRef, data)
+
+    if(array === 'sections' && !isEdit) {
+      data = {
+        sectionOrder: arrayUnion(element.sectionIndex)
+      }
+      await updateDoc(docRef, data)
+
+      return {
+        success: true,
+        message: 'Section added'
+      }
+    } else {
+      return {
+        success: true,
+        message: 'Section added'
+      }
+    }
+  } catch (e) {
+    console.log('API element to remove: ', element)
+    console.log('API docRef: ', docRef)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
+  }
+}
+
+export const removeElementFromArray = async ({fieldnotes, array, element, isEdit = false}) => {
+  let docRef, data  = null
+
+  try {
+    const db = getDb()
+    docRef = doc(db, 'fieldnotes', fieldnotes.id)
+
+    data = {
+      [array]: arrayRemove(element)
+    }
+    
+    await updateDoc(docRef, data)
+    
+    if(array === 'sections' && !isEdit) {
+      data = {
+        sectionOrder: arrayRemove(element.sectionIndex)
+      }
+      await updateDoc(docRef, data)            
+
+      return {
+        success: true,
+        message: 'Section removed'
+      }
+    } else {
+      return {
+        success: true,
+        message: 'Section removed'
+      }
+    }
+  } catch (e) {
+    console.log('API element to remove: ', element)
+    console.log('API docRef: ', docRef)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
+  }
+}
+
+export const updateElementFromArray = async ({fieldnotes, array, elementToUpdate, elementAddedOrUpdated, isEdit}) => {
+  // There is no native operation to update the element of an array
+  // Instead, we remove the element, then add (the now updated) element
+  const response = await removeElementFromArray({fieldnotes, array, element: elementToUpdate, isEdit})
+  if(response.success) {
+    await addElementToArray({fieldnotes, array, element: elementAddedOrUpdated, isEdit})
+    
+    return {
+      success: true,
+      message: 'Section updated'
+    }
+  }
+
 }
 
 // LTP API
@@ -1086,312 +1434,3 @@ export const inatControls = [
     "label": "Evidence of Presence"
   }
 ]
-
-const getApp = () => {
-  // Filestore's firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyCqPaYK-BH0dD8i87VHrNN9L39-37N1ah0",
-    authDomain: "fieldnotes-13578.firebaseapp.com",
-    projectId: "fieldnotes-13578",
-    storageBucket: "fieldnotes-13578.appspot.com",
-    messagingSenderId: "46506549310",
-    appId: "1:46506549310:web:38fca524001c2e849fb16f"
-  }
-
-  // Initialise Firebase
-  const app = initializeApp(firebaseConfig)
-
-  return app
-
-  // const auth = getAuth(app)
-
-  // onAuthStateChanged(auth, user => {
-  //   if(user !== null) {
-  //     console.log('logged in')
-  //   } else {
-  //     console.log('Not logged in')
-  //   }
-  // })
-}
-
-const getDb = () => {
-// Get an instance of the Firestore
-  return getFirestore(getApp())
-}
-
-const getFieldnotesCollectionRef = ({db}) => {
-  return collection(db, 'fieldnotes')
-}
-  
-const getFieldnotesStubsCollectionRef = ({db}) => {
-  return collection(db, 'fieldnotes-stubs')
-}
-
-export const getFieldnotes = async () => {   
-  const db = getDb()
-  const fieldnotesCollectionRef = getFieldnotesCollectionRef({db})
-  const notesDocsRef = await getDocs((fieldnotesCollectionRef))
-  const notesList = notesDocsRef.docs.map(doc => {
-    return doc.data()
-  })
-  return notesList
-}
-
-export const getFieldnotesById = async ({id}) => {
-  let docRef = null
-
-  try {
-    docRef = doc(getDb(), "fieldnotes", id)
-    const docSnap = await getDoc(docRef)
-    return {
-      data: docSnap.data(),
-      success: true,
-      message: 'Fieldnotes returned'
-    }
-  } catch (e) {
-    console.log('API docRef: ', docRef)
-    console.log('API data: ', data)
-    console.warn('API error: ', e)
-  }
-}
-
-export const getFieldnotesStubs = async () => {   
-  const db = getDb()
-  const fieldnotesStubCollectionRef = getFieldnotesStubsCollectionRef({db})
-  const notesDocsRef = await getDocs((fieldnotesStubCollectionRef))
-  const stubsList = notesDocsRef.docs.map(doc => {
-    return doc.data()
-  })
-
-  return stubsList
-}
-
-export const addFieldnotes = async ({fieldnotes}) => {
-  const db = getDb()
-  let id, data = null
-
-  try {    
-      // Add new fieldnotes to collection
-      const fieldnotesCollectionRef = getFieldnotesCollectionRef({db})
-      const fieldNotesRef = await doc(fieldnotesCollectionRef)
-      id = fieldNotesRef.id
-      data = { ...fieldnotes, id }
-      await setDoc(fieldNotesRef, data)
-
-      // Add new fieldnotes stub to collection
-      const fieldnotesStubCollectionRef = getFieldnotesStubsCollectionRef({db})
-      const fieldNotesStubRef = await doc(fieldnotesStubCollectionRef)
-      const stubId = fieldNotesStubRef.id
-      data = { id: stubId, fieldnotesId: id, title: fieldnotes.title, author: fieldnotes.author }
-      await setDoc(fieldNotesStubRef, data)
-
-      return {
-        success: true,
-        message: 'Fieldnotes added',
-        id,
-        type: 'success'
-      }
-    } catch (e) {
-      console.log('API fieldnotes id: ', id)
-      console.log('API data: ', data)
-      console.warn('API error: ', e)
-    }
-}
-
-export const updateFieldNotes = async ({fieldnotes, data}) => {
-  let docRef  = null
-
-  try {
-    const db = getDb()
-    docRef = doc(db, 'fieldnotes', fieldnotes.id)  
-    await updateDoc(docRef, data)
-
-    return {
-      success: true,
-      message: 'Fieldnotes updated'
-    }
-  } catch (e) {
-    console.log('API docRef: ', docRef)
-    console.log('API data: ', data)
-    console.warn('API error: ', e)
-  }
-}
-
-export const updateFieldNotesStubs = async ({fieldnotesStubs, data}) => {
-  let docRef  = null
-
-  try {
-    const db = getDb()
-    docRef = doc(db, 'fieldnotes-stubs', fieldnotesStubs.id)  
-    updateDoc(docRef, data)
-
-    return {
-      success: true,
-      message: 'Fieldnotes stubs updated'
-    }
-  } catch (e) {
-    console.log('API docRef: ', docRef)
-    console.log('API data: ', data)
-    console.warn('API error: ', e)
-  }
-}
-
-export const deleteFieldnoteProperty = async ({fieldnotes, prop}) => {
-  const db = getDb()
-  const docRef = doc(db, 'fieldnotes', fieldnotes.id)
-  const data = {
-    [prop]: deleteField()
-  }
-  await updateDoc(docRef, data)
-}
-
-export const updateFieldnoteProperty = async ({fieldnotes, prop, value}) => {
-  let docRef, data  = null
-
-  try {
-    const db = getDb()
-    docRef = doc(db, 'fieldnotes', fieldnotes.id)
-    data = {
-      [prop]: value
-    }
-    await updateDoc(docRef, data)
-
-    return {
-      success: true,
-      message: `${prop.charAt(0).toUpperCase() + prop.slice(1)} updated`
-    }
-  } catch (e) {
-    console.log('API element to update: ', prop, value)
-    console.log('API docRef: ', docRef)
-    console.log('API data: ', data)
-    console.warn('API error: ', e)
-  }
-}
-
-export const updateFieldnoteStubProperty = async ({fieldnotesStubs, prop, value}) => {
-  let docRef, data  = null
-
-  try {
-    const db = getDb()
-    docRef = doc(db, 'fieldnotes-stubs', fieldnotesStubs.id)
-    data = {
-      [prop]: value
-    }
-    await updateDoc(docRef, data)
-
-    return {
-      success: true,
-      message: `${prop.charAt(0).toUpperCase() + prop.slice(1)} updated`
-    }
-  } catch (e) {
-    console.log('API element to update: ', prop, value)
-    console.log('API docRef: ', docRef)
-    console.log('API data: ', data)
-    console.warn('API error: ', e)
-  }
-}
-
-export const updateFieldnotesTitle = async ({fieldnotes, prop, value, fieldnotesStubs}) => {
-  let response
-
-  try {
-    response = await updateFieldnoteProperty({fieldnotes, prop, value})
-    if(response.success) {
-      response = await updateFieldnoteStubProperty({fieldnotesStubs, prop, value})
-      return {
-        success: true,
-        message: 'Title updated'
-      }
-    }
-  } catch (e) {
-    console.warn('API error: ', e)
-  }
-}
-
-export const addElementToArray = async ({fieldnotes, array, element, isEdit = false}) => {
-  let docRef, data  = null
-
-  try {
-    const db = getDb()
-    docRef = doc(db, 'fieldnotes', fieldnotes.id)
-    
-    data = {
-      [array]: arrayUnion(element)
-    }
-    await updateDoc(docRef, data)
-
-    if(array === 'sections' && !isEdit) {
-      data = {
-        sectionOrder: arrayUnion(element.sectionIndex)
-      }
-      await updateDoc(docRef, data)
-
-      return {
-        success: true,
-        message: 'Section added'
-      }
-    } else {
-      return {
-        success: true,
-        message: 'Section added'
-      }
-    }
-  } catch (e) {
-    console.log('API element to remove: ', element)
-    console.log('API docRef: ', docRef)
-    console.log('API data: ', data)
-    console.warn('API error: ', e)
-  }
-}
-
-export const removeElementFromArray = async ({fieldnotes, array, element, isEdit = false}) => {
-  let docRef, data  = null
-
-  try {
-    const db = getDb()
-    docRef = doc(db, 'fieldnotes', fieldnotes.id)
-
-    data = {
-      [array]: arrayRemove(element)
-    }
-    
-    await updateDoc(docRef, data)
-    
-    if(array === 'sections' && !isEdit) {
-      data = {
-        sectionOrder: arrayRemove(element.sectionIndex)
-      }
-      await updateDoc(docRef, data)            
-
-      return {
-        success: true,
-        message: 'Section removed'
-      }
-    } else {
-      return {
-        success: true,
-        message: 'Section removed'
-      }
-    }
-  } catch (e) {
-    console.log('API element to remove: ', element)
-    console.log('API docRef: ', docRef)
-    console.log('API data: ', data)
-    console.warn('API error: ', e)
-  }
-}
-
-export const updateElementFromArray = async ({fieldnotes, array, elementToUpdate, elementAddedOrUpdated, isEdit}) => {
-  // There is no native operation to update the element of an array
-  // Instead, we remove the element, then add (the now updated) element
-  const response = await removeElementFromArray({fieldnotes, array, element: elementToUpdate, isEdit})
-  if(response.success) {
-    await addElementToArray({fieldnotes, array, element: elementAddedOrUpdated, isEdit})
-    
-    return {
-      success: true,
-      message: 'Section updated'
-    }
-  }
-
-}

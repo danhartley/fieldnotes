@@ -5,6 +5,8 @@ import {
     , g
     , getFieldnotesStubs
     , getFieldnotesById
+    , firebaseLogin
+    , firebaseAuthentication
 } from './api.js'
 
 import { 
@@ -26,7 +28,7 @@ import {
     Router
 } from './router.js'
 
-const init = () => {    
+const init = async () => {    
     const initGlobalRead = () => {
         const globalRead = {}
         Object.assign(globalRead, {
@@ -884,6 +886,12 @@ const init = () => {
             link,
             router
         })
+    })
+
+    console.log(firebaseAuthentication())
+
+    firebaseLogin({
+
     })
 }
 

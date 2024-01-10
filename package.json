@@ -10,6 +10,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "parcel": "^2.11.0",
+    "process": "^0.11.10"
+  },
+  "dependencies": {
+    "firebase": "^10.7.1",
+    "firebaseui": "^6.1.0"
+  },
+  "@parcel/resolver-default": {
+    "packageExports": true
   }
 }
