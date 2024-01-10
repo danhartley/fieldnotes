@@ -2,14 +2,21 @@
 
 # /                        /public/index.html
 
-/fieldnotes              /public/index.html
-/inaturalist             /public/index.html
-/preferences             /public/index.html
-/fieldnotes-create       /public/fieldnotes.html
-/fieldnotes-edit         /public/fieldnotes.html
-/fieldnotes-preferences  /public/fieldnotes.html
+# /fieldnotes              /public/index.html
+# /inaturalist             /public/index.html
+# /preferences             /public/index.html
+# /fieldnotes-create       /public/fieldnotes.html
+# /fieldnotes-edit         /public/fieldnotes.html
+# /fieldnotes-preferences  /public/fieldnotes.html
 
-/*                         /public/index.html  200
+/fieldnotes              /index.html
+/inaturalist             /index.html
+/preferences             /index.html
+/fieldnotes-create       /fieldnotes.html
+/fieldnotes-edit         /fieldnotes.html
+/fieldnotes-preferences  /fieldnotes.html
+
+/*                       /public/index.html  200
 
 # /public/*                /public/index.html  200
 # /fieldnotes/*            /public/fieldnotes.html  200
