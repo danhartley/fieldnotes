@@ -1,9 +1,9 @@
 # Redirects from what the browser requests to what we serve
 
 # write
-/fieldnotes/create                  /fieldnotes.html 200
-/fieldnotes/edit                    /fieldnotes.html 200
-/fieldnotes/preferences             /fieldnotes.html 200
+/fieldnotes-create                  /fieldnotes.html 200
+/fieldnotes-edit                    /fieldnotes.html 200
+/fieldnotes-preferences             /fieldnotes.html 200
 
 # read
 /fieldnotes                         /index.html 200

@@ -1106,15 +1106,15 @@ const init = () => {
     },
     {
           view: 'create-fieldnotes-view'
-        , path: '/fieldnotes/create'
+        , path: '/fieldnotes-create'
     },
     {
           view: 'edit-fieldnotes-view'
-        , path: '/fieldnotes/edit'
+        , path: '/fieldnotes-edit'
     },
     {
           view: 'preferences-view'
-        , path: '/fieldnotes/preferences'
+        , path: '/fieldnotes-preferences'
     },
     {
       view: 'fieldnotes-search-view'
