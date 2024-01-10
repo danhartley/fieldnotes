@@ -1132,15 +1132,15 @@ const init = () => {
   //     })
   // })
 
-  // const links = d.querySelectorAll('menu > ul > li > a')
-  // links.forEach(link => {
-  //     link.addEventListener('click', e => {
-  //         e.preventDefault()
-  //         toggleView({
-  //             e
-  //         })
-  //     })
-  // })
+  const links = d.querySelectorAll('menu > ul > li > a')
+  links.forEach(link => {
+      link.addEventListener('click', e => {
+          // e.preventDefault()
+          toggleView({
+              e
+          })
+      })
+  })
 }
 
 init()
