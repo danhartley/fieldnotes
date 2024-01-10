@@ -1,8 +1,11 @@
 {
   "name": "fieldnotes",
   "version": "1.0.0",
-  "description": "",  
-  "source": ["public/index.html", "public/fieldnotes.html"],
+  "description": "",
+  "source": [
+    "public/index.html",
+    "public/fieldnotes.html"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "parcel",
@@ -14,6 +17,7 @@
   "devDependencies": {
     "express": "^4.18.2",
     "parcel": "^2.11.0",
+    "parcel-reporter-static-files-copy": "^1.5.3",
     "process": "^0.11.10"
   },
   "dependencies": {
