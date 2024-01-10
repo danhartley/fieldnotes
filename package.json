@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "source": [
-    "public/index.html",
-    "public/fieldnotes.html"
+    "public/ui-read.html",
+    "public/ui-write.html"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

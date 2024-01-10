@@ -1102,7 +1102,7 @@ const init = () => {
   const routes = [
     {
           view: 'create-fieldnotes-view'
-        , path: '/public/fieldnotes.html'
+        , path: '/public/ui-write.html'
     },
     {
           view: 'create-fieldnotes-view'
