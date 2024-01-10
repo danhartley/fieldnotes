@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Paths through the forest are without number</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="icon" href="./favicon.ico" />
+    <script src="./read-fieldnotes.js" type="module"></script>
+  </head>
+
+  <body>  
+    <header>
+      <menu>
+        <li><a data-view="fieldnotes-search-view" href="http://localhost:1234/read-fieldnotes.html" class="selected">Read fieldnotes</a></li>
+        <li><a data-view="inaturalist-search-view" href="http://localhost:1234/read-inaturalist.html">Search iNaturalist</a></li>
+      </menu>
+    </header>
+
+    <aside>
+      <menu>
+        <li><button id="inat-preferences-btn" data-action="inat-preferences" class="smallish">Show iNaturalist preferences</button></li>
+      </menu>
+
+      <section class="inat-preferences-section hidden">
+        <div class="section-header">
+          <h2>iNaturalist preferences</h2>
+        </div>
+        <fieldset id="languages">
+          <legend>Language</legend>
+          <div id="language-group-container" class="grid"></div>
+          <p class="small">Language determines the locale preference for taxon common names.</p>
+        </fieldset>
+      </section>
+    </aside>
+
+    <main>
+      <section class="fieldnotes-search-view">
+        <fieldset>
+          <legend>Fieldnotes search</legend>
+          <p class="mt0 small">Search for fieldnotes.</p>
+          <div class="centred-block">
+              <label for="ltp-autocomplete-title-input-text">Title</label>
+              <input id="ltp-autocomplete-title-input-text" list="ltp-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing to find existing fieldnotes by their title…">
+              <datalist id="ltp-autocomplete-title-data-list"></datalist>
+          </div>
+          <div id="field-notes-lookup-callback-parent" class="mt2"></div>
+          <div class="centred-block mt2">
+            <button id="import-fieldnotes-btn" class="mr disabled">Fetch selected fieldnotes</button>
+            <div id="import-fieldnotes-notification-text" class="small hidden">Fetching fieldnotes…</div>
+          </div>
+        </fieldset>
+      </section>
+
+      <section class="mt2 inaturalist-search-view hidden">
+        <div>
+          <fieldset>
+            <legend>iNaturalist search</legend>
+            <fieldset class="fieldset-reset">
+              <legend class="as-p mt0">You can filter your iNaturalist search by taxa.</legend>
+              <div id="iconic-taxa-container" class="grid"></div>
+            </fieldset>
+
+            <fieldset class="fieldset-reset">
+              <legend class="as-p pt pb0">You can also limit your search by iNaturalist user, place or project.</legend>
+              <div id="inat-autocomplete-group-container" class="grid mb2"></div>
+
+              <div class="grid">
+                <div class="pr2">
+                    <label for="inat-autocomplete-input-text">User, place or project.</label>
+                    <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing a username or user ID…">
+                    <datalist id="inat-autocomplete-data-list"></datalist>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="fieldset-reset">
+              <legend class="mt0 as-p pb0">Choose how many species you want to review.</legend>
+              <div class="centred-block box mb2">
+                <label for="species-count-input-number" class="mb0 mr">Number of species</label>
+                <input id="species-count-input-number" type="number" value="0" min="1" max="200" class="mr p">
+                <div class="small">(up to 200)</div>
+              </div>              
+            </fieldset>
+
+            <fieldset class="fieldset-reset">
+              <legend class="mt0 as-p pb0">User species or observations (may include the same species more than once).</legend>
+              <div id="inat-use-observations-species-count-group-container" class="grid mb2"></div>
+            </fieldset>
+
+            <fieldset id="observation-dates" class="fieldset-reset">
+              <legend class="as-p mt0">When the observations were made.</legend>
+              <div class="box mb4">
+                <div class="centred-block mb2">
+                  <label for="rbDateRange" class="invisible">Date range</label>
+                  <input id="rbDateRange" type="radio" name="rbDate" value="range" />             
+                  <label for="observations-start-date" class="block">From</label>
+                  <input type="date" id="observations-start-date" name="observations-start-date" class="mr" />
+                  <label for="observations-end-date" class="mr initial-width">To</label>
+                  <input type="date" id="observations-end-date" name="observations-end-date" />
+                </div>
+                <div class="centred-block mb2">
+                  <label for="rbSingleDate" class="invisible">Single date</label>
+                  <input id="rbSingleDate" type="radio" name="rbDate" value="single" />               
+                  <label for="single-observations-input-date" class="block">Date</label>
+                  <input type="date" id="single-observations-input-date" name="single-observations-input-date" class="mr" />
+                </div>
+                <div class="centred-block mb">
+                  <input id="rbnoDate" type="radio" name="rbDate" value="none" checked />
+                  <label for="rbnoDate">Any time.</label>
+                </div>
+              </div>
+            </fieldset>
+
+            <div class="centred-block">
+              <button id="search-inat-observations-btn" class="submit mr">Search iNaturalist for species</button>
+              <div id="search-inat-observations-notification-text" class="small hidden">Waiting for response from iNaturalist…</div>
+            </div>
+          </fieldset>
+        </div>
+      </section>
+      
+      <section class="section-with-header fieldnotes-search-view inaturalist-search-view hidden">
+        <div class="section-header">
+          <h2>Display options</h2>
+          <button id="display-options-toggle-visibility-btn" value="display-fieldset" class="show-hide">HIDE</button>
+        </div>
+
+        <div id="display-fieldset" class="fieldset-reset">        
+          <fieldset class="flex-row">
+            <legend>Select view</legend>
+            <div id="species-display-container" class="grid"></div>
+          </fieldset>
+  
+          <fieldset id="targets-fieldset" class="hidden flex-row">
+            <legend>Test for</legend>
+            <div id="target-group-container" class="grid"></div>
+          </fieldset>
+        </div>
+      </section>
+
+      <section class="section-with-header fieldnotes-search-view inaturalist-search-view hidden">
+        <fieldset id="lesson-fieldset">
+          <legend>Fieldnotes</legend>
+          <button id="show-test-btn" class="btn-reset t0 r1 tiny hidden">Show test</button>
+          <article id="article">
+          </article>
+          <button
+            id="test-submit-btn"
+            class="mt2 mb hidden"
+          >
+            Check answers
+          </button>
+        </fieldset>
+      </section>
+
+      <section class="progress-view hidden">
+        <div>
+          <section>
+            <h2>Progress</h2>
+            <button id="progress-toggle-visibility-btn" value="progress-fieldset" class="show-hide">HIDE</button>
+          </div>
+
+          <fieldset id="progress-fieldset">
+            <legend>Score</legend>
+            <table>
+              <thead>
+                <tr>
+                  <td></td>
+                  <th>Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Correct</td>
+                  <td id="score-correct-td">-</td>
+                </tr>
+                <tr>
+                  <td>Incorrect</td>
+                  <td id="score-incorrect-td">-</td>
+                </tr>
+                <tr>
+                  <td>Total</td>
+                  <td id="score-count-td">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+        </div>
+      </section>
+
+      <!-- <section class="preferences-view hidden">
+        <div class="section-header">
+          <h2>Preferences</h2>
+        </div>
+        <fieldset id="preferences">
+          <legend>Language</legend>
+          <div id="language-group-container" class="grid"></div>
+          <p class="small">Language determines the locale preference for taxon common names.</p>
+        </fieldset>
+      </section> -->
+
+      <dialog id="state-notifications">
+        <div class="flex-columns small">
+          <div class="success-icon">Success</div>
+          <div></div>
+        </div>
+      </dialog>
+    </main>    
+
+    <template id="grid-template">
+      <div class="grid"></div>
+    </template>
+    
+    <template id="non-grid-template">
+      <div class="non-grid"></div>
+    </template>
+
+    <template id="checkbox-template">
+      <div class="flex-row">                  
+        <input type="checkbox" id="" name="" />
+        <label for=""></label>
+      </div>
+    </template>
+
+    <template id="radio-button-template">
+      <div class="flex-row">
+        <input type="radio" />
+        <label></label>
+      </div>
+    </template>
+
+    <template id="species-list-template">
+      <li></li>
+    </template>
+
+    <template id="species-test-template">
+      <figure>
+        <img src="http://www.placeholder.com" alt="">
+        <figcaption>
+          <span></span>
+        </figcaption>
+        <label class="pt pb"></label>
+        <input type="text" class="m p" autocomplete="off" />
+      </figure>
+    </template>
+
+    <template id="species-template">      
+      <figure>
+        <img src="http://www.placeholder.com" alt="">
+        <figcaption>
+          <span></span>
+          <span></span>
+        </figcaption>
+    </figure>
+    </template>
+
+    <template id="species-detail-template">
+      <div class="species-panel">
+        <hgroup>
+          <h3></h3>
+        </hgroup>
+        <p></p>
+      </div>
+    </template>
+
+    <template id="mediterranean-wild-edible-plants-template"></template>
+
+    <!-- Section templates -->
+
+    <template id="meta-preview-template">
+      <ul class="non-grid serif">
+        <li class="capitalise"><strong>Author</strong></li>
+        <li><strong>Date</strong></li>
+        <li><strong><a href="" target="_blank"></a></strong></li>
+      </ul>
+    </template>
+
+    <template id="h3-preview-template">
+      <h3></h3>
+    </template>
+
+    <template id="h4-preview-template">
+      <h4></h4>
+    </template>
+
+    <template id="textarea-preview-template">      
+      <p></p>
+    </template>
+
+    <template id="images-preview-template">
+      <figure>
+        <img src="http://www.placeholder.com" alt="" >
+        <figcaption>
+          <span></span>
+          <span></span>
+        </figcaption>
+      </figure>
+    </template>
+
+    <template id="species-preview-template">
+      <figure>
+        <img src="http://www.placeholder.com" alt="" >
+        <figcaption>
+          <span></span>
+          <span></span>
+        </figcaption>
+      </figure>
+    </template>
+
+    <template id="observations-preview-template">
+      <figure>
+        <img src="http://www.placeholder.com" alt="" >
+        <figcaption>
+          <span></span>
+          <span></span>
+        </figcaption>
+      </figure>
+    </template>
+
+    <template id="inat-lookup-preview-template">
+      <figure>
+        <img src="http://www.placeholder.com" alt="" >
+        <figcaption>
+          <span></span>
+          <span></span>
+        </figcaption>
+      </figure>
+    </template>
+
+    <template id="dl-template">
+      <div class="double-centred-block">
+        <dl></dl>
+      </div>
+    </template>
+
+    <template id="terms-template">
+        <dt></dt>
+        <dd></dd>
+        <div class="mb">
+          <span></span><em></em>
+        </div>
+        <div class="mb2">
+          <a href="" class="info">
+            <span></span><span>Opens in a new tab</span>
+          </a>
+        </div>
+    </template>    
+
+    <template id="annotation-template">
+      <dt></dt>
+      <dd></dd>
+    </template>
+
+    <template id="xenocanto-preview-template">
+      <div class="double-centred-block">
+        <iframe src='https://xeno-canto.org/121910/embed?simple=1' scrolling='no' frameborder='0' width='340' height='115'></iframe>
+      </div>
+    </template>
+  </body>
+</html>

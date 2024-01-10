@@ -56,19 +56,16 @@ header {
   border-bottom: 1px dashed var(--c8);  
 }
 
-header menu {
+menu {
   width: 100%;
+  margin: 0;
   padding-inline-start: 0;
-}
-
-header menu {
-  width: 100%;
   display: flex;
   justify-content: space-evenly;
   font-size: var(--s3);
 }
 
-header menu li {
+menu li {
   cursor: pointer;
 }
 
@@ -78,6 +75,15 @@ header menu a {
 
 header menu a.selected {
   border-width: calc(var(--d) * .15);
+}
+
+aside menu li {
+  margin: calc(1 * var(--d)) 0;
+}
+
+aside menu li button {
+  padding: calc(var(--d) * 1) var(--d);
+  background-color: var(--inactive-bg-light);
 }
 
 h1 {
@@ -838,6 +844,10 @@ th, td {
 
 .small {
   font-size: var(--s3);
+}
+
+.smallish {
+  font-size: var(--s2);
 }
 
 .tiny {

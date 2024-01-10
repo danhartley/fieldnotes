@@ -140,9 +140,6 @@ const init = async () => {
     const toggleView = ({e, matchedView}) => {
         const view = matchedView || e.target.dataset.view
 
-        const sectionViews = d.querySelectorAll('section')
-        sectionViews.forEach(v => v.classList.add('hidden'))
-        
         const views = d.querySelectorAll(`.${view}`)
         views.forEach(v => v.classList.remove('hidden'))
         
@@ -160,13 +157,7 @@ const init = async () => {
                 globalRead.templates = g.templates.filter(template => template.types.includes('inatSearch'))
                 globalRead.template = globalRead.templates.find(template => template.templateId === 'species-template')        
                 break
-            case 'preferences-view':
-                const rbLanguageGroup = createRadioBtnGroup({collection: globalRead.LANGUAGES, checked:globalRead.language, rbGroup:'language', parent:languageGroupContainer})
-                rbLanguageGroup.forEach(rb => {
-                    rb.addEventListener('change', () => globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value))
-                })        
-                break
-        }
+        }   
     
         // Reset the page
         sectionsWithHeader.forEach(sh => sh.classList.add('hidden'))
@@ -899,11 +890,37 @@ const init = async () => {
     //     })
     // })    
 
+    toggleView({
+        matchedView: 'fieldnotes-search-view'
+    })
+
     console.log(firebaseAuthentication())
 
     firebaseLogin({
 
     })
+
+
+    const toggleInaturalistPreferences = e => {
+        const btn = d.getElementById(e.target.id)
+        const rbLanguageGroup = createRadioBtnGroup({collection: globalRead.LANGUAGES, checked:globalRead.language, rbGroup:'language', parent:languageGroupContainer})
+        rbLanguageGroup.forEach(rb => {
+            rb.addEventListener('change', () => globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value))
+        })
+
+        const section = d.querySelector('.inat-preferences-section')
+        section.classList.toggle('hidden')
+
+        btn.innerText = btn.innerText === 'Show iNaturalist preferences' 
+            ? 'Hide preferences'
+            : 'Show iNaturalist preferences'
+    }
+
+    const iNaturalistPreferencesButton = new ButtonComponent({
+          elementId: 'inat-preferences-btn'
+        , clickHandler: toggleInaturalistPreferences
+    })
+
 }
 
 init()

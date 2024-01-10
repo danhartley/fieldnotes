@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "source": [
-    "public/ui-read.html",
+    "public/read-fieldnotes.html",
+    "public/read-inaturalist.html",
     "public/ui-write.html"
   ],
   "scripts": {

@@ -3,10 +3,8 @@
 # write
 /fieldnotes/create                  /ui-write.html 200
 /fieldnotes/edit                    /ui-write.html 200
-/fieldnotes/preferences             /ui-write.html 200
 
 # read
-/                                   /ui-read.html 200
-/fieldnotes                         /ui-read.html 200
-/inaturalist                        /ui-read.html 200
-/preferences                        /ui-read.html 200
+/                                   /read-fieldnotes.html 200
+/fieldnotes                         /read-fieldnotes.html 200
+/inaturalist                        /read-inaturalist.html 200

@@ -12,15 +12,15 @@ app.get('/', function (req, res) {
 app.use(express.static(__dirname + '/public'))
 
 router.get('/fieldnotes', function (req, res) {
-  res.sendFile(path.join(__dirname+'/public/ui-read.html'))
+  res.sendFile(path.join(__dirname+'/public/read-fieldnotes.html'))
 })
 
 router.get('/inaturalist', function (req, res) {
-  res.sendFile(path.join(__dirname+'/public/ui-read.html'))
+  res.sendFile(path.join(__dirname+'/public/read-fieldnotes.html'))
 })
 
 router.get('/preferences', function (req, res) {
-  res.sendFile(path.join(__dirname+'/public/ui-read.html'))
+  res.sendFile(path.join(__dirname+'/public/read-fieldnotes.html'))
 })
 
 router.get('/fieldnotes/create', function (req, res) {
