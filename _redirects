@@ -1,26 +1,11 @@
 # Redirects from what the browser requests to what we serve
 
-# /                        /public/index.html
+/fieldnotes                         /index.html 200
+/inaturalist                        /index.html 200
+/preferences                        /index.html 200
+/fieldnotes/create                  /fieldnotes.html 200
+/fieldnotes/fieldnotes/edit         /fieldnotes.html 200
+/fieldnotes/fieldnotes/preferences  /fieldnotes.html 200
 
-# /fieldnotes              /public/index.html
-# /inaturalist             /public/index.html
-# /preferences             /public/index.html
-# /fieldnotes-create       /public/fieldnotes.html
-# /fieldnotes-edit         /public/fieldnotes.html
-# /fieldnotes-preferences  /public/fieldnotes.html
+# /*                                /public/index.html  200
 
-/fieldnotes              /index.html
-/inaturalist             /index.html
-/preferences             /index.html
-/fieldnotes-create       /fieldnotes.html
-/fieldnotes-edit         /fieldnotes.html
-/fieldnotes-preferences  /fieldnotes.html
-
-/*                       /public/index.html  200
-
-# /public/*                /public/index.html  200
-# /fieldnotes/*            /public/fieldnotes.html  200
-# /public/fieldnotes/*     /public/fieldnotes.html  200
-
-# /best-pets/dogs  /best-pets/cats.html 200!
-# /fieldnotes      /fieldnotes.html 200!

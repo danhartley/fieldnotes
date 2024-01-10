@@ -1106,16 +1106,32 @@ const init = () => {
     },
     {
           view: 'create-fieldnotes-view'
-        , path: '/fieldnotes-create'
+        , path: '/fieldnotes/create'
     },
     {
           view: 'edit-fieldnotes-view'
-        , path: '/fieldnotes-edit'
+        , path: '/fieldnotes/edit'
     },
     {
           view: 'preferences-view'
-        , path: '/fieldnotes-preferences'
+        , path: '/fieldnotes/preferences'
     },
+    {
+      view: 'fieldnotes-search-view'
+    , path: '/'
+},
+{
+      view: 'fieldnotes-search-view'
+    , path: '/fieldnotes'
+},
+{
+      view: 'inaturalist-search-view'
+    , path: '/inaturalist'
+},
+{
+      view: 'preferences-view'
+    , path: '/preferences'
+},
   ]
 
   const router = new Router({
