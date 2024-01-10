@@ -61,22 +61,22 @@ header menu {
   padding-inline-start: 0;
 }
 
-header menu ul {
+header menu {
   width: 100%;
   display: flex;
   justify-content: space-evenly;
   font-size: var(--s3);
 }
 
-header menu ul li {
+header menu li {
   cursor: pointer;
 }
 
-header menu ul a {
+header menu a {
   border-width: 0;
 }
 
-header menu ul a.selected {
+header menu a.selected {
   border-width: calc(var(--d) * .15);
 }
 
@@ -869,6 +869,11 @@ th, td {
 @media (orientation: landscape) {
   header {
     margin: 0 10vw;
+  }
+
+  aside {
+    margin: 0 30vw;
+    font-size: var(--s2);
   }
 
   #header span {
