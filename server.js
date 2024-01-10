@@ -23,15 +23,15 @@ router.get('/preferences', function (req, res) {
   res.sendFile(path.join(__dirname+'/public/ui-read.html'))
 })
 
-router.get('/fieldnotes-create', function (req, res) {
+router.get('/fieldnotes/create', function (req, res) {
   res.sendFile(path.join(__dirname+'/public/ui-write.html'))
 })
 
-router.get('/fieldnotes-edit', function (req, res) {
+router.get('/fieldnotes/edit', function (req, res) {
   res.sendFile(path.join(__dirname+'/public/ui-write.html'))
 })
 
-router.get('/fieldnotes-preferences', function (req, res) {
+router.get('/fieldnotes/preferences', function (req, res) {
   res.sendFile(path.join(__dirname+'/public/ui-write.html'))
 })
 

@@ -1,9 +1,9 @@
 # Redirects from what the browser requests to what we serve
 
 # write
-/fieldnotes-create                  /ui-write.html 200
-/fieldnotes-edit                    /ui-write.html 200
-/fieldnotes-preferences             /ui-write.html 200
+/fieldnotes/create                  /ui-write.html 200
+/fieldnotes/edit                    /ui-write.html 200
+/fieldnotes/preferences             /ui-write.html 200
 
 # read
 /                                   /ui-read.html 200
