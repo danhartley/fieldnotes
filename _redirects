@@ -1,11 +1,14 @@
 # Redirects from what the browser requests to what we serve
 
-/fieldnotes                         /index.html 200
-/inaturalist                        /index.html 200
-/preferences                        /index.html 200
+# write
 /fieldnotes/create                  /fieldnotes.html 200
 /fieldnotes/fieldnotes/edit         /fieldnotes.html 200
 /fieldnotes/fieldnotes/preferences  /fieldnotes.html 200
+
+# read
+/fieldnotes                         /index.html 200
+/inaturalist                        /index.html 200
+/preferences                        /index.html 200
 
 # /*                                /public/index.html  200
 
