@@ -1,9 +1,9 @@
 export class ButtonComponent {
-  constructor({parent = document, elementId, clickHandler}) {
-    this.buttonElement = parent.querySelector(`#${elementId}`)
+  constructor({parent = document, elementSelector, clickHandler}) {
+    this.buttonElement = parent.querySelector(`#${elementSelector}`)
 
     if (!this.buttonElement) {
-      // console.error(`Element with Id ${elementId} not found.`)
+      // console.error(`Element with Id ${elementSelector} not found.`)
       return
     }
 
@@ -53,10 +53,10 @@ export class ButtonComponent {
 
 export class ButtonHideShowComponent extends ButtonComponent {
   constructor({
-    elementId
+    elementSelector
   }) {
     super({
-        elementId
+        elementSelector
       , clickHandler: (e) => {
           const ctrl = e.target
           ctrl.innerText = ctrl.innerText === 'HIDE' ? 'SHOW' : 'HIDE'
@@ -72,11 +72,11 @@ export class ButtonHideShowComponent extends ButtonComponent {
 }
 
 export class RadioButtonComponent {
-  constructor({elementId, clickHandler}) {
-    this.radioButtonElement = document.getElementById(elementId)
+  constructor({elementSelector, clickHandler}) {
+    this.radioButtonElement = document.getElementById(elementSelector)
 
     if (!this.radioButtonElement) {
-      console.error(`Element with Id ${elementId} not found.`)
+      console.error(`Element with Id ${elementSelector} not found.`)
       return
     }
 

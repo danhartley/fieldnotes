@@ -67,22 +67,22 @@ const init = async () => {
     const rbDateGroup = d.querySelectorAll('input[name="rbDate"]')
 
     const displayOptionsToggleVisibilityBtn = new ButtonHideShowComponent({
-        elementId: 'display-options-toggle-visibility-btn'
+        elementSelector: 'display-options-toggle-visibility-btn'
     })    
     const contentToggleVisibilityBtn = new ButtonHideShowComponent({
-        elementId: 'content-toggle-visibility-btn'
+        elementSelector: 'content-toggle-visibility-btn'
     })    
     const progressToggleVisibilityBtn = new ButtonHideShowComponent({
-        elementId: 'progress-toggle-visibility-btn'
+        elementSelector: 'progress-toggle-visibility-btn'
     })    
     const preferencesToggleVisibilityBtn = new ButtonHideShowComponent({
-        elementId: 'preferences-toggle-visibility-btn'
+        elementSelector: 'preferences-toggle-visibility-btn'
     })
     const showTestBtn = new ButtonComponent({
-          elementId: 'show-test-btn'        
+          elementSelector: 'show-test-btn'        
     })
     const testSubmitBtn = new ButtonComponent({
-          elementId: 'test-submit-btn'        
+          elementSelector: 'test-submit-btn'        
     })
 
     const getInatSpecies = async ({user, place}) => {
@@ -708,7 +708,7 @@ const init = async () => {
         }
     
         const searchInatObservationsBtn = new ButtonComponent({
-            elementId: 'search-inat-observations-btn'
+            elementSelector: 'search-inat-observations-btn'
           , clickHandler: fetchInatSpecies
         })
     
@@ -838,7 +838,7 @@ const init = async () => {
     }
 
     const importFieldnotesBtn = new ButtonComponent({
-        elementId: 'import-fieldnotes-btn'
+        elementSelector: 'import-fieldnotes-btn'
       , clickHandler: importFieldnotes
     })
 
@@ -917,7 +917,7 @@ const init = async () => {
     }
 
     const iNaturalistPreferencesButton = new ButtonComponent({
-          elementId: 'inat-preferences-btn'
+          elementSelector: 'inat-preferences-btn'
         , clickHandler: toggleInaturalistPreferences
     })
 

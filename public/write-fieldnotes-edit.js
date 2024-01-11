@@ -8,6 +8,11 @@ import {
 , updateFieldNotes
 , updateFieldnoteProperty
 , updateFieldnotesTitle
+, firebaseLogin
+, firebaseSignOut
+, firebaseAuthentication
+, getFirebaseAuth
+, onFirebaseAuthStateChange
 } from './api.js'
 
 import { 
@@ -88,6 +93,7 @@ const init = () => {
         }
       }
       , originalTypeValues: []
+      , authentication: {}
     })
 
     return globalWrite
@@ -122,23 +128,23 @@ const init = () => {
     
     const toggleSpeciesListBtn = new ButtonComponent({
         parent: sectionClone
-      , elementId: 'toggle-species-include-all-btn'
+      , elementSelector: 'toggle-species-include-all-btn'
     })
     const addOrUpdateSectionBtn = new ButtonComponent({
         parent: sectionClone
-      , elementId: 'add-or-update-section-btn'
+      , elementSelector: 'add-or-update-section-btn'
     })
     const editSectionBtn = new ButtonComponent({
         parent: sectionClone
-      , elementId: 'edit-section-btn'
+      , elementSelector: 'edit-section-btn'
     })
     const deleteSectionBtn = new ButtonComponent({
         parent: sectionClone
-      , elementId: 'delete-section-btn'
+      , elementSelector: 'delete-section-btn'
     })
     const cancelActionBtn = new ButtonComponent({
         parent: sectionClone
-      , elementId: 'cancel-action-btn'
+      , elementSelector: 'cancel-action-btn'
     })
     
     const typeTemplate = d.getElementById(writeTemplateId)
@@ -353,7 +359,8 @@ const init = () => {
               selectedTerms
             , selectedTerm
             , selectedItemsListElement
-            , globalWrite, sectionIndex
+            , globalWrite
+            , sectionIndex
           })
           addSelectedTermBtn.classList.add('disabled')
           addOrUpdateSectionBtn.enable()
@@ -728,7 +735,7 @@ const init = () => {
   }
 
   const exportFieldNotesBtn = new ButtonComponent({
-      elementId: 'export-fieldnotes-btn'
+      elementSelector: 'export-fieldnotes-btn'
     , clickHandler: exportFieldnotes
   })
 
@@ -803,11 +810,11 @@ const init = () => {
 
         const addOrUpdateSectionBtn = new ButtonComponent({
           parent: draggableSection
-        , elementId: 'add-or-update-section-btn'
+        , elementSelector: 'add-or-update-section-btn'
       })
         const editSectionBtn = new ButtonComponent({
           parent: draggableSection
-        , elementId: 'edit-section-btn'
+        , elementSelector: 'edit-section-btn'
       })
 
         if(addOrUpdateSectionBtn) addOrUpdateSectionBtn.hide() // messy hide and disable… perhaps simply a separate button
@@ -954,7 +961,7 @@ const init = () => {
   }
 
   const importFieldnotesBtn = new ButtonComponent({
-      elementId: 'import-fieldnotes-btn'
+      elementSelector: 'import-fieldnotes-btn'
     , clickHandler: importFieldnotes
   })
 
@@ -967,6 +974,58 @@ const init = () => {
   })
 
   ltpAutocompleteTitleInputText.focus()
+
+  console.log(firebaseAuthentication())
+
+  const authenticate = ({btn}) => {
+    const txt = btn.parentElement.querySelector('span')
+    btn.classList.toggle('disabled')
+    if(globalWrite.user) {
+      firebaseSignOut({
+        auth: getFirebaseAuth()
+      })
+      txt.innerText = 'You are not signed in.'
+    } else {
+      firebaseLogin({}) // nb require proper creds to be passed in…
+      txt.innerText = 'You are signed in.'
+    }    
+  }
+
+  const authenticateBtn = new ButtonComponent({
+      elementSelector: 'authenticate-btn'
+    , clickHandler: e => authenticate({
+        btn: e.target
+    })
+  })
+
+  authenticate({
+    btn: authenticateBtn.buttonElement
+  })
+
+  // Options for the observer (which mutations to observe)
+  // const config = { attributes: true, childList: true, subtree: true }
+  
+  // // Callback function to execute when mutations are observed
+  // globalWrite.authentication.callback = (mutationList, observer) => {
+  //   for (const mutation of mutationList) {
+  //     if (mutation.type === "childList") {
+  //       console.log(mutation.addedNodes[0])
+  //       console.log(mutation.removedNodes[0])
+  //     }
+  //   }
+  // };
+  
+  // // Create an observer instance linked to the callback function
+  // globalWrite.authentication.observer = new MutationObserver(globalWrite.authentication.callback)
+  
+  // // Start observing the target node for configured mutations
+  // globalWrite.authentication.observer.observe(authenticateBtn.buttonElement, config)
+
+  globalWrite.user = onFirebaseAuthStateChange({
+      auth: getFirebaseAuth()
+    , globalWrite
+    , authenticateBtn
+  })
 }
 
 init()

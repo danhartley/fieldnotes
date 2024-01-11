@@ -1,7 +1,6 @@
 // FIREBASE
 
-// import firebase from 'firebase/compat/app'
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth'
 import { initializeApp } from 'firebase/app'
 import { getFirestore, collection, query, where,  doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from 'firebase/firestore'
 
@@ -66,6 +65,10 @@ export const getInatTaxa = async({
     return json
 }
 
+export const getFirebaseAuth = () => {
+  return getAuth()
+}
+
 const getApp = () => {
   // Filestore's firebase configuration
   const firebaseConfig = {
@@ -81,9 +84,10 @@ const getApp = () => {
   const app = initializeApp(firebaseConfig)
 
   // Store user state
-  onStateChange({
-    auth: getAuth(app)
-  })
+  // onStateChange({
+  //     auth: getAuth(app)
+  //   , globalWrite
+  // })
 
   return app
 }
@@ -94,7 +98,7 @@ export const firebaseAuthentication = () => {
   return getAuth(getApp())
 }
 
-export const firebaseLogin = ({email = 'test@test.com', password = 'test.com'}) => {
+export const firebaseLogin = ({email = 'readonly@learn-the-planet.com', password = 'readonly'}) => {
   const auth = getAuth(getApp())
   signInWithEmailAndPassword(auth, email, password)
   .then((userCredential) => {
@@ -104,6 +108,14 @@ export const firebaseLogin = ({email = 'test@test.com', password = 'test.com'}) 
   .catch((error) => {
     console.log(error.message)
   })
+}
+
+export const firebaseSignOut = ({auth}) => {
+  signOut(auth).then(() => {
+    console.log('Sign-out successful')
+  }).catch((error) => {
+    console.log('An error happened.')
+  });
 }
 
 export const firebaseCreateAccount = ({email, password}) => {
@@ -118,17 +130,18 @@ export const firebaseCreateAccount = ({email, password}) => {
     })
 }
 
-export const onStateChange = ({auth}) => {
-  onAuthStateChanged(auth, user => {
-      if(user !== null) {
-        console.log('logged in')
-        // save to session
-      } else {
-        console.log('Not logged in')    
-        // save to session
-      }
-    }
-  )
+export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticateBtn}) => {
+  return await onAuthStateChanged(auth, (user) => {
+    authenticateBtn.buttonElement.classList.toggle('disabled')
+    globalWrite.user = user
+    !!user 
+      ? authenticateBtn.setText({
+        text: 'Log out'
+      })
+      : authenticateBtn.setText({
+        text: 'Log in'
+      })      
+  })
 }
 
 const getDb = () => {

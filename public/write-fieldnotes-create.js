@@ -188,7 +188,7 @@ const init = () => {
   }
 
   const searchInatObservationsBtn = new ButtonComponent({
-      elementId: 'search-inat-observations-btn'
+      elementSelector: 'search-inat-observations-btn'
     , clickHandler: searchInatObservations
   })
 
@@ -211,23 +211,23 @@ const init = () => {
     
     const toggleSpeciesListBtn = new ButtonComponent({
         parent: sectionClone
-      , elementId: 'toggle-species-include-all-btn'
+      , elementSelector: 'toggle-species-include-all-btn'
     })
     const addOrUpdateSectionBtn = new ButtonComponent({
         parent: sectionClone
-      , elementId: 'add-or-update-section-btn'
+      , elementSelector: 'add-or-update-section-btn'
     })
     const editSectionBtn = new ButtonComponent({
         parent: sectionClone
-      , elementId: 'edit-section-btn'
+      , elementSelector: 'edit-section-btn'
     })
     const deleteSectionBtn = new ButtonComponent({
         parent: sectionClone
-      , elementId: 'delete-section-btn'
+      , elementSelector: 'delete-section-btn'
     })
     const cancelActionBtn = new ButtonComponent({
         parent: sectionClone
-      , elementId: 'cancel-action-btn'
+      , elementSelector: 'cancel-action-btn'
     })
     
     const typeTemplate = d.getElementById(writeTemplateId)
@@ -831,7 +831,7 @@ const init = () => {
   }
 
   const exportFieldNotesBtn = new ButtonComponent({
-      elementId: 'export-fieldnotes-btn'
+      elementSelector: 'export-fieldnotes-btn'
     , clickHandler: exportFieldnotes
   })
 
@@ -906,11 +906,11 @@ const init = () => {
 
         const addOrUpdateSectionBtn = new ButtonComponent({
           parent: draggableSection
-        , elementId: 'add-or-update-section-btn'
+        , elementSelector: 'add-or-update-section-btn'
       })
         const editSectionBtn = new ButtonComponent({
           parent: draggableSection
-        , elementId: 'edit-section-btn'
+        , elementSelector: 'edit-section-btn'
       })
 
         if(addOrUpdateSectionBtn) addOrUpdateSectionBtn.hide() // messy hide and disable… perhaps simply a separate button
