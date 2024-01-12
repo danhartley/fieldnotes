@@ -19,18 +19,30 @@
     </header>
 
     <aside>
-      <section class="inat-preferences-section">
-        <p>
-          <span class="mr">You are currently logged in.</span>
-          <button id="authenticate-btn">Log state?</button>
-        </p>
+      <section class="inat-preferences-section m0">
+        <div class="logged-out hidden">
+          <div class="centred-block">
+            <label for="email" class="mw8">Email</label>
+            <input id="email" type="email" required pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" class="p">
+          </div>
+          <div class="centred-block">
+            <label for="password" class="mw8">Password</label>
+            <input id="password" type="password" class="p" required>
+          </div>
+        </div>
+        <div class="double-centred-block mt mb">
+          <div>
+            <span id="authenticate-state-text" class="mr">Logged in state unknown.</span>
+          </div>
+          <button id="authenticate-btn">Checking…</button>
+        </div>
       </section>
     </aside>
 
-    <main class="mt2">
+    <main>
       <article>
         <section class="edit-fieldnotes-view">
-          <fieldset id="edit-field-notes" class="mt2">
+          <fieldset id="edit-field-notes">
             <legend>Fieldnotes search</legend>
             <p class="mt0 small">Find and edit previous fieldnotes.</p>
             <div class="centred-block">

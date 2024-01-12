@@ -14,7 +14,7 @@ import {
     , mapInatSpeciesToLTP
     , mapTaxon
     , getTaxonGroupColour
-    , handleFieldsnotesAutocomplete
+    , fieldsnotesAutocomplete
     , showNotificationsDialog
 } from './ui-actions.js'
 
@@ -146,7 +146,7 @@ const init = async () => {
         switch(view) {                    
             case 'fieldnotes-search-view':                
                 iNatAutocompleteInputText.value = ''
-                handleFieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: globalRead, fieldnotesStubsCallback: getFieldnotesStubs, importFieldnotesBtn})
+                fieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: globalRead, fieldnotesStubsCallback: getFieldnotesStubs, importFieldnotesBtn})
                 ltpAutocompleteTitleInputText.focus()
                 globalRead.templates = g.templates.filter(template => template.types.includes('fieldnotes'))
                 globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')

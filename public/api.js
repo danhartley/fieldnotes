@@ -2,7 +2,7 @@
 
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth'
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, query, where,  doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from 'firebase/firestore'
+import { getFirestore, collection, query, where, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from 'firebase/firestore'
 
 import { templates } from './templates.js'
 
@@ -66,7 +66,7 @@ export const getInatTaxa = async({
 }
 
 export const getFirebaseAuth = () => {
-  return getAuth()
+  return getAuth(getApp())
 }
 
 const getApp = () => {
@@ -83,12 +83,6 @@ const getApp = () => {
   // Initialise Firebase
   const app = initializeApp(firebaseConfig)
 
-  // Store user state
-  // onStateChange({
-  //     auth: getAuth(app)
-  //   , globalWrite
-  // })
-
   return app
 }
 
@@ -98,16 +92,16 @@ export const firebaseAuthentication = () => {
   return getAuth(getApp())
 }
 
-export const firebaseLogin = ({email = 'readonly@learn-the-planet.com', password = 'readonly'}) => {
+export const firebaseLogin = ({email = 'readandwrite@learn-the-planet.com', password = 'readandwrite'}) => {
   const auth = getAuth(getApp())
   signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    const user = userCredential.user
-    console.log(user)
-  })
-  .catch((error) => {
-    console.log(error.message)
-  })
+    .then((userCredential) => {
+      const user = userCredential.user
+      console.log('user: ', user)
+    })
+    .catch((error) => {
+      console.log(error.message)
+    })
 }
 
 export const firebaseSignOut = ({auth}) => {
@@ -130,17 +124,30 @@ export const firebaseCreateAccount = ({email, password}) => {
     })
 }
 
-export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticateBtn}) => {
+export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticateBtn, fetchStubs}) => {
+  const container = authenticateBtn.buttonElement .parentElement.closest('.inat-preferences-section')
+  const text = container.querySelector('#authenticate-state-text')
+  const loggedOut = container.querySelectorAll('.logged-out')  
+
   return await onAuthStateChanged(auth, (user) => {
-    authenticateBtn.buttonElement.classList.toggle('disabled')
     globalWrite.user = user
-    !!user 
-      ? authenticateBtn.setText({
-        text: 'Log out'
+    if(user) {
+      authenticateBtn.setText({
+        text: 'Log out'        
       })
-      : authenticateBtn.setText({
+      console.log('logged in')
+      fetchStubs({user})
+      text.innerText = 'You are logged in.'
+      loggedOut.forEach(out => out.classList.add('hidden'))
+    } else {
+      authenticateBtn.setText({
         text: 'Log in'
-      })      
+      })
+      console.log('logged out')
+      fetchStubs({user: null})
+      text.innerText = 'You are logged out.'
+      loggedOut.forEach(out => out.classList.remove('hidden'))
+    }
   })
 }
 
@@ -154,7 +161,12 @@ const getFieldnotesCollectionRef = ({db}) => {
 }
   
 const getFieldnotesStubsCollectionRef = ({db}) => {
-  return collection(db, 'fieldnotes-stubs')
+  try {    
+    return collection(db, 'fieldnotes-stubs')
+  } catch (e) {
+    console.log(e.message)
+    console.log('user: ', user)
+  }
 }
 
 export const getFieldnotes = async () => {   
@@ -185,15 +197,26 @@ export const getFieldnotesById = async ({id}) => {
   }
 }
 
-export const getFieldnotesStubs = async () => {   
-  const db = getDb()
-  const fieldnotesStubCollectionRef = getFieldnotesStubsCollectionRef({db})
-  const notesDocsRef = await getDocs((fieldnotesStubCollectionRef))
-  const stubsList = notesDocsRef.docs.map(doc => {
-    return doc.data()
-  })
+export const getFieldnotesStubs = async ({user}) => {   
+  try {
+    const db = getDb()
+    const collectionRef = getFieldnotesStubsCollectionRef({
+        db
+    })
 
-  return stubsList
+    const q = query(collectionRef, where('uid', '==', user.uid))
+
+    const notesDocsRef = await getDocs(q)
+
+    // const notesDocsRef = await getDocs((fieldnotesStubCollectionRef))
+    const stubsList = notesDocsRef.docs.map(doc => {
+      return doc.data()
+    })
+
+    return stubsList
+  } catch (e) {
+    
+  }
 }
 
 export const addFieldnotes = async ({fieldnotes}) => {

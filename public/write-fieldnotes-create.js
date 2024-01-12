@@ -2,7 +2,6 @@ import {
   getInatObservations
 , g
 , getTerms
-, getFieldnotesStubs
 , getFieldnotesById
 , addFieldnotes
 , updateFieldNotes

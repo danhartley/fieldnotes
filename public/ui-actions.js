@@ -14,6 +14,10 @@ import {
     , images
 } from './templates.js'
 
+import {
+    showNotificationsDialog
+} from './ui-actions.js'
+
 const d = document
 
 const debounce = (func, wait) => {
@@ -120,34 +124,55 @@ export const handleTermAutocomplete = ({selectedTerms, inputText, dataList, glob
     })
 }
 
-const addTitlesToList = async ({dataList, strToComplete, fieldnotesStubsCallback}) => {
-    let stubs
+const addTitlesToList = async ({dataList, strToComplete, fieldnotesStubs}) => {
+    try {
+        const stubs = await fieldnotesStubs
 
-    while (dataList.firstChild) {
-        dataList.removeChild(dataList.firstChild)
+        while (dataList.firstChild) {
+            dataList.removeChild(dataList.firstChild)
+        }
+
+        // stubs = await fieldnotesStubsCallback({
+        //     user
+        // })
+
+        const matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
+
+        dataList.replaceChildren()
+
+        matches.forEach(match => {
+            const option = d.createElement('option')
+            option.value = match['title']
+            dataList.appendChild(option)
+        })
+
+        return stubs
+    } catch (e) {
+        showNotificationsDialog({
+              message: 'You are not logged in.'
+            , type: 'error'
+        })
     }
-
-    stubs = await fieldnotesStubsCallback()
-
-    const matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
-
-    dataList.replaceChildren()
-
-    matches.forEach(match => {
-        const option = d.createElement('option')
-        option.value = match['title']
-        dataList.appendChild(option)
-    })
-
-    return stubs
 }
 
-export const handleFieldsnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubsCallback, importFieldnotesBtn}) => {
+export const fieldsnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubs, importFieldnotesBtn}) => {
     // The list of titles will initially be short, so we load it at once, in its entirety
-    let stubs = await addTitlesToList({dataList, strToComplete: '', fieldnotesStubsCallback})
+    let stubs = await addTitlesToList({
+          dataList
+        , strToComplete: ''
+        , fieldnotesStubs
+        // , fieldnotesStubsCallback
+        // , user: global.user
+    })
 
     inputText.addEventListener('input', debounce(async (e) => {
-        stubs = await addTitlesToList({dataList, strToComplete: e.target.value, fieldnotesStubsCallback})
+        stubs = await addTitlesToList({
+            dataList
+            , strToComplete: e.target.value
+            , fieldnotesStubs
+            // , fieldnotesStubsCallback
+            // , user: global.user
+        })
     }, 0))
 
     inputText.addEventListener('change', e => {

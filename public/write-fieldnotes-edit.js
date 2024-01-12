@@ -10,7 +10,6 @@ import {
 , updateFieldnotesTitle
 , firebaseLogin
 , firebaseSignOut
-, firebaseAuthentication
 , getFirebaseAuth
 , onFirebaseAuthStateChange
 } from './api.js'
@@ -24,7 +23,7 @@ import {
     handleInatAutocomplete
   , createInatLookups
   , handleTermAutocomplete
-  , handleFieldsnotesAutocomplete
+  , fieldsnotesAutocomplete
   , cloneImages
   , cloneImageTemplate
   , dragstartHandler
@@ -105,7 +104,6 @@ const init = () => {
   const draggableSections = d.getElementById('draggable-sections')
   const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
   const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
-  const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
   const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
   const titleInputText = d.getElementById('title-input-text')
   const authorInputText = d.getElementById('author-input-text')
@@ -965,66 +963,52 @@ const init = () => {
     , clickHandler: importFieldnotes
   })
 
-  handleFieldsnotesAutocomplete({ 
-      inputText: ltpAutocompleteTitleInputText
-    , dataList: ltpAutocompleteTitleDatalist
-    , global: globalWrite
-    , fieldnotesStubsCallback: getFieldnotesStubs
-    , importFieldnotesBtn
-  })
+  const fetchStubs = async ({user}) => {
+
+    const fieldnotesStubs = user 
+      ? await getFieldnotesStubs({user})
+      : []
+
+    fieldsnotesAutocomplete({ 
+        inputText: ltpAutocompleteTitleInputText
+      , dataList: ltpAutocompleteTitleDatalist
+      , global: globalWrite
+      , fieldnotesStubs
+      , importFieldnotesBtn
+    })
+  }
 
   ltpAutocompleteTitleInputText.focus()
 
-  console.log(firebaseAuthentication())
-
-  const authenticate = ({btn}) => {
-    const txt = btn.parentElement.querySelector('span')
-    btn.classList.toggle('disabled')
+  const authenticate = () => {
     if(globalWrite.user) {
       firebaseSignOut({
         auth: getFirebaseAuth()
-      })
-      txt.innerText = 'You are not signed in.'
+      })      
     } else {
-      firebaseLogin({}) // nb require proper creds to be passed in…
-      txt.innerText = 'You are signed in.'
+      const email = d.getElementById('email')
+      const password = d.getElementById('password')
+      if(email.validity.valid) {
+        firebaseLogin({
+            email: email.value
+          , password: password.value
+        })
+      }      
     }    
   }
 
   const authenticateBtn = new ButtonComponent({
       elementSelector: 'authenticate-btn'
-    , clickHandler: e => authenticate({
-        btn: e.target
-    })
+    , clickHandler: e => authenticate()
   })
 
-  authenticate({
-    btn: authenticateBtn.buttonElement
-  })
-
-  // Options for the observer (which mutations to observe)
-  // const config = { attributes: true, childList: true, subtree: true }
+  authenticate()
   
-  // // Callback function to execute when mutations are observed
-  // globalWrite.authentication.callback = (mutationList, observer) => {
-  //   for (const mutation of mutationList) {
-  //     if (mutation.type === "childList") {
-  //       console.log(mutation.addedNodes[0])
-  //       console.log(mutation.removedNodes[0])
-  //     }
-  //   }
-  // };
-  
-  // // Create an observer instance linked to the callback function
-  // globalWrite.authentication.observer = new MutationObserver(globalWrite.authentication.callback)
-  
-  // // Start observing the target node for configured mutations
-  // globalWrite.authentication.observer.observe(authenticateBtn.buttonElement, config)
-
   globalWrite.user = onFirebaseAuthStateChange({
       auth: getFirebaseAuth()
     , globalWrite
     , authenticateBtn
+    , fetchStubs
   })
 }
 

@@ -77,6 +77,16 @@ header menu a.selected {
   border-width: calc(var(--d) * .15);
 }
 
+aside {
+  margin: var(--d) auto;
+  padding: var(--d);
+  font-size: var(--s2);
+}
+
+aside * {
+  margin-top: .25rem;
+}
+
 aside menu li {
   margin: calc(1 * var(--d)) 0;
 }
@@ -252,7 +262,7 @@ input[type='checkbox'] + label {
   height: calc(var(--d) * 2 + 1px);
 }
 
-div > input[type='text'], textarea {
+div > input[type='text'], div > input[type='email'], div > input[type='password'], textarea {
   border: 1px solid var(--c3);
   width: 100%;
 }
@@ -866,6 +876,10 @@ th, td {
   right: var(--d);
 }
 
+.mw8 {
+  min-width: calc(var(--d) * 8);
+}
+
 /* MEDIA */
 
 @media screen {
@@ -882,7 +896,7 @@ th, td {
   }
 
   aside {
-    margin: 0 30vw;
+    margin: var(--d) 35vw;
     font-size: var(--s2);
   }
 
