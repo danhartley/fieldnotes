@@ -197,25 +197,29 @@ export const getFieldnotesById = async ({id}) => {
   }
 }
 
-export const getFieldnotesStubs = async ({user}) => {   
+export const getFieldnotesStubs = async ({user, readonly = false}) => {   
   try {
     const db = getDb()
     const collectionRef = getFieldnotesStubsCollectionRef({
         db
     })
 
-    const q = query(collectionRef, where('uid', '==', user.uid))
+    let notesDocsRef
 
-    const notesDocsRef = await getDocs(q)
+    if(readonly) {
+      notesDocsRef = await getDocs(collectionRef)
+    } else {
+      const q = query(collectionRef, where('uid', '==', user.uid))
+      notesDocsRef = await getDocs(q)
+    }
 
-    // const notesDocsRef = await getDocs((fieldnotesStubCollectionRef))
     const stubsList = notesDocsRef.docs.map(doc => {
       return doc.data()
     })
 
     return stubsList
   } catch (e) {
-    
+    console.log(e.message)
   }
 }
 

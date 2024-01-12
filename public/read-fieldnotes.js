@@ -146,7 +146,16 @@ const init = async () => {
         switch(view) {                    
             case 'fieldnotes-search-view':                
                 iNatAutocompleteInputText.value = ''
-                fieldsnotesAutocomplete({ inputText: ltpAutocompleteTitleInputText, dataList: ltpAutocompleteTitleDatalist, global: globalRead, fieldnotesStubsCallback: getFieldnotesStubs, importFieldnotesBtn})
+                fieldsnotesAutocomplete({ 
+                      inputText: ltpAutocompleteTitleInputText
+                    , dataList: ltpAutocompleteTitleDatalist
+                    , global: globalRead
+                    , fieldnotesStubs: getFieldnotesStubs({
+                          user: null
+                        , readonly: true
+                    })
+                    , importFieldnotesBtn
+                })
                 ltpAutocompleteTitleInputText.focus()
                 globalRead.templates = g.templates.filter(template => template.types.includes('fieldnotes'))
                 globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')

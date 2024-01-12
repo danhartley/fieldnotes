@@ -132,10 +132,6 @@ const addTitlesToList = async ({dataList, strToComplete, fieldnotesStubs}) => {
             dataList.removeChild(dataList.firstChild)
         }
 
-        // stubs = await fieldnotesStubsCallback({
-        //     user
-        // })
-
         const matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
 
         dataList.replaceChildren()
@@ -161,8 +157,6 @@ export const fieldsnotesAutocomplete = async ({inputText, dataList, global, fiel
           dataList
         , strToComplete: ''
         , fieldnotesStubs
-        // , fieldnotesStubsCallback
-        // , user: global.user
     })
 
     inputText.addEventListener('input', debounce(async (e) => {
@@ -170,8 +164,6 @@ export const fieldsnotesAutocomplete = async ({inputText, dataList, global, fiel
             dataList
             , strToComplete: e.target.value
             , fieldnotesStubs
-            // , fieldnotesStubsCallback
-            // , user: global.user
         })
     }, 0))
 
