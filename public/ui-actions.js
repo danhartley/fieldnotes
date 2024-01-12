@@ -14,10 +14,6 @@ import {
     , images
 } from './templates.js'
 
-import {
-    showNotificationsDialog
-} from './ui-actions.js'
-
 const d = document
 
 const debounce = (func, wait) => {
