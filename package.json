@@ -11,9 +11,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "copy-redirects": "cp -vR ./_redirects ./dist",
-    "copy-credentials": "cp -vR ./firebase-config.js ./dist",
     "start": "parcel",
-    "build": "parcel build && npm run copy-redirects && npm run copy-credentials"
+    "build": "parcel build && npm run copy-redirects"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +20,7 @@
   "devDependencies": {
     "express": "^4.18.2",
     "parcel": "^2.11.0",
+    "path-browserify": "^1.0.1",
     "process": "^0.11.10"
   },
   "dependencies": {

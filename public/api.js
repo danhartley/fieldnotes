@@ -6,8 +6,6 @@ import { getFirestore, collection, query, where, doc, getDocs, getDoc, setDoc, a
 
 import { templates } from './templates.js'
 
-import { firebaseConfig } from './firebase-config.js'
-
 // INAT API
 
 export const getInatObservations = async ({
@@ -72,10 +70,15 @@ export const getFirebaseAuth = () => {
 }
 
 const getApp = () => {
-  // Filestore's firebase configuration
-
   // Initialise Firebase
-  const app = initializeApp(firebaseConfig)
+  const app = initializeApp({ 
+      apiKey: process.env.API_KEY
+    , authDomain: process.env.AUTH_DOMAIN
+    , projectId: process.env.PROJECT_ID
+    , storageBucket: process.env.STORAGE_BUCKET
+    , messagingSenderId: process.env.MESSAGING_SENDER_ID
+    , appId: process.env.APP_ID
+  })
 
   return app
 }
