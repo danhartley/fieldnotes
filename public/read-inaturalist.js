@@ -571,8 +571,18 @@ const init = async () => {
         })
     })
 
-    rbInatAutocompleteGroup = createRadioBtnGroup({collection: globalRead.inatAutocompleteOptions, checked:globalRead.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroupContainer})        
-    rbInatUseObservationSpeciesCountGroup = createRadioBtnGroup({collection: globalRead.useObservationsSpeciesCountOptions, checked:globalRead.useObservationsSpeciesCount, rbGroup:'inat-use-observations-species-count', parent:inatUseObservationSpeciesCountGroupContainer})
+    rbInatAutocompleteGroup = createRadioBtnGroup({
+          collection: globalRead.inatAutocompleteOptions.filter(option => option.id !== 'taxa')
+        , checked:globalRead.inatAutocomplete
+        , rbGroup:'inat-autocomplete'
+        , parent:inatAutocompleteGroupContainer
+    })  
+    rbInatUseObservationSpeciesCountGroup = createRadioBtnGroup({
+          collection: globalRead.useObservationsSpeciesCountOptions
+        , checked:globalRead.useObservationsSpeciesCount
+        , rbGroup:'inat-use-observations-species-count'
+        , parent:inatUseObservationSpeciesCountGroupContainer
+    })
 
     createTaxaCheckboxGroup()
 
