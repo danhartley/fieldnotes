@@ -1,47 +1,5 @@
 export const templates = [
   {
-        id: 'species-test-template'
-      , templateId: 'species-test-template'
-      , name: 'Species catalogue tests'
-      , parent: 'grid-template'
-      , pairedTemplateId: 'species-template'
-      , isTest: true
-      , targets: [
-        {
-              id: 'common'
-            , name: 'common name'
-        },
-        {
-              id: 'latin'
-            , name: 'latin name'
-        },
-      ]
-      , score: 0
-      , scores: []
-      , requiresSpecies: true
-      , types: ['inatSearch', 'fieldnotes']
-  },
-  {
-        id: 'species-template'
-      , templateId: 'species-template'
-      , name: 'Species catalogue'
-      , parent: 'grid-template'
-      , pairedTemplateId: 'species-test-template'
-      , isTest: false
-      , isTestable: true
-      , requiresSpecies: true
-      , types: ['inatSearch', 'fieldnotes']
-  },
-  {
-      id: 'species-list-template'
-    , templateId: 'species-list-template'
-    , name: 'Species list'
-    , parent: 'grid-template'
-    , isTest: false
-    , requiresSpecies: true
-    , types: ['inatSearch', 'fieldnotes']
-  },
-  {
       id: 'fieldnotes-template'
     , templateId: 'fieldnotes-template'
     , name: 'Field notes'
@@ -51,6 +9,48 @@ export const templates = [
     , isTestable: false
     , types: ['fieldnotes']
   },
+  {
+      id: 'species-test-template'
+    , templateId: 'species-test-template'
+    , name: 'Species catalogue tests'
+    , parent: 'grid-template'
+    , pairedTemplateId: 'species-template'
+    , isTest: true
+    , targets: [
+      {
+            id: 'common'
+          , name: 'common name'
+      },
+      {
+            id: 'latin'
+          , name: 'latin name'
+      },
+    ]
+    , score: 0
+    , scores: []
+    , requiresSpecies: true
+    , types: ['inatSearch', 'fieldnotes']
+},
+{
+      id: 'species-template'
+    , templateId: 'species-template'
+    , name: 'Species catalogue'
+    , parent: 'grid-template'
+    , pairedTemplateId: 'species-test-template'
+    , isTest: false
+    , isTestable: true
+    , requiresSpecies: true
+    , types: ['inatSearch', 'fieldnotes']
+},
+{
+    id: 'species-list-template'
+  , templateId: 'species-list-template'
+  , name: 'Species list'
+  , parent: 'grid-template'
+  , isTest: false
+  , requiresSpecies: true
+  , types: ['inatSearch', 'fieldnotes']
+},
 ]
 
 // TEMPLATES
