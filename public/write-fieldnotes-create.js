@@ -97,8 +97,6 @@ const init = () => {
   const draggableSections = d.getElementById('draggable-sections')
   const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
   const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
-  const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
-  const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
   const singleObservationsInputDate = d.getElementById('single-observations-input-date')
   const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
   const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
@@ -117,9 +115,6 @@ const init = () => {
   try {
       searchInatObservationsNotificationText.classList.toggle('hidden')
       searchInatObservationsBtn.toggleActiveState()
-
-      // Clear import search text to avoid confusion
-      ltpAutocompleteTitleInputText.value = ''
 
       globalWrite.fieldnotes.user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')?.user
 

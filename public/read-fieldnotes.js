@@ -21,12 +21,7 @@ import {
 import {
       ButtonComponent
     , ButtonHideShowComponent
-    , MenuNavComponent
 } from './ui-components.js'
-
-import { 
-    Router
-} from './router.js'
 
 const init = async () => {    
     const initGlobalRead = () => {
@@ -135,42 +130,6 @@ const init = async () => {
         })
     
         globalRead.template.score = globalRead.template.scores.filter(score => score.isCorrect)?.length || 0
-    }
-    
-    const toggleView = ({e, matchedView}) => {
-        const view = matchedView || e.target.dataset.view
-
-        const views = d.querySelectorAll(`.${view}`)
-        views.forEach(v => v.classList.remove('hidden'))
-        
-        switch(view) {                    
-            case 'fieldnotes-search-view':                
-                iNatAutocompleteInputText.value = ''
-                fieldsnotesAutocomplete({ 
-                      inputText: ltpAutocompleteTitleInputText
-                    , dataList: ltpAutocompleteTitleDatalist
-                    , global: globalRead
-                    , fieldnotesStubs: getFieldnotesStubs({
-                          user: null
-                        , readonly: true
-                    })
-                    , importFieldnotesBtn
-                })
-                ltpAutocompleteTitleInputText.focus()
-                globalRead.templates = g.templates.filter(template => template.types.includes('fieldnotes'))
-                globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
-                break
-            case 'inaturalist-search-view':
-                ltpAutocompleteTitleInputText.value = ''
-                iNatAutocompleteInputText.focus()            
-                globalRead.templates = g.templates.filter(template => template.types.includes('inatSearch'))
-                globalRead.template = globalRead.templates.find(template => template.templateId === 'species-template')        
-                break
-        }   
-    
-        // Reset the page
-        sectionsWithHeader.forEach(sh => sh.classList.add('hidden'))
-        article.innerHTML = ''
     }
     
     let rbTestForGroup, rbInatAutocompleteGroup, rbInatUseObservationSpeciesCountGroup    
@@ -853,62 +812,20 @@ const init = async () => {
 
     createRadioBtnTemplateGroup()
 
-    sectionsWithHeader.forEach(sh => sh.classList.toggle('hidden'))
-
-    const routes = [
-        {
-              view: 'fieldnotes-search-view'
-            , path: '/'
-        },
-        {
-              view: 'fieldnotes-search-view'
-            , path: '/fieldnotes'
-        },
-        {
-              view: 'inaturalist-search-view'
-            , path: '/inaturalist'
-        },
-        {
-              view: 'preferences-view'
-            , path: '/preferences'
-        },
-    ]
-    
-    // const router = new Router({
-    //       routes
-    //     , callback: toggleView
-    // })    
-
-    // const links = d.querySelectorAll('menu > ul > li > a')
-    // links.forEach(link => {
-    //     new MenuNavComponent({
-    //         links,
-    //         link,
-    //         router
-    //     })
-    // })
-
-
-    // const links = d.querySelectorAll('menu > ul > li > a')
-    // links.forEach(link => {
-    //     link.addEventListener('click', e => {
-    //         // e.preventDefault()
-    //         toggleView({
-    //             e
-    //         })
-    //     })
-    // })    
-
-    toggleView({
-        matchedView: 'fieldnotes-search-view'
+    fieldsnotesAutocomplete({ 
+            inputText: ltpAutocompleteTitleInputText
+        , dataList: ltpAutocompleteTitleDatalist
+        , global: globalRead
+        , fieldnotesStubs: getFieldnotesStubs({
+                user: null
+            , readonly: true
+        })
+        , importFieldnotesBtn
     })
 
-    console.log(firebaseAuthentication())
-
-    firebaseLogin({
-
-    })
-
+    ltpAutocompleteTitleInputText.focus()
+    globalRead.templates = g.templates.filter(template => template.types.includes('fieldnotes'))
+    globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
 
     const toggleInaturalistPreferences = e => {
         const btn = d.getElementById(e.target.id)
