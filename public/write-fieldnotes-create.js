@@ -2,7 +2,6 @@ import {
   getInatObservations
 , g
 , getTerms
-, getFieldnotesById
 , addFieldnotes
 , updateFieldNotes
 , updateFieldnoteProperty
@@ -19,7 +18,6 @@ import {
   , createInatLookups
   , handleTermAutocomplete
   , cloneImages
-  , cloneImageTemplate
   , dragstartHandler
   , dragoverHandler
   , dragenterHandler
@@ -29,13 +27,10 @@ import {
   , addOrUpdateSectionArray
   , showNotificationsDialog
   , addContentToPreviewContainer
-  , setOriginalTypeValues
   , getOriginalTypeValues
   , hasOriginalTypeValues
   , addTermToList
   , isValidDate
-  , mapTaxon
-  , mapUser
   , handleImageTextChange
   , calcImageIndex
   , toggleBtnEnabledState
@@ -99,7 +94,6 @@ const init = () => {
   const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
   const singleObservationsInputDate = d.getElementById('single-observations-input-date')
   const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
-  const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
   const titleInputText = d.getElementById('title-input-text')
   const authorInputText = d.getElementById('author-input-text')
   const dateInputText = d.getElementById('date-input-text')
@@ -775,7 +769,7 @@ const init = () => {
   singleObservationsInputDate.addEventListener('blur', enableSearchBtn, true)
   iNatAutocompleteInputText.addEventListener('blur', enableSearchBtn, true)
 
-  const exportFieldnotes = async() => {
+  const saveFieldnotes = async() => {
     try {
       const notes = {}
 
@@ -824,231 +818,10 @@ const init = () => {
     }
   }
 
-  const exportFieldNotesBtn = new ButtonComponent({
+  const saveFieldNotesBtn = new ButtonComponent({
       elementSelector: 'save-fieldnotes-btn'
-    , clickHandler: exportFieldnotes
+    , clickHandler: saveFieldnotes
   })
-
-  const importFieldnotes = async () => {
-    try {
-      importFieldNotesNotificationText.classList.remove('hidden')
-
-      const response = await getFieldnotesById({
-        id: globalWrite.fieldnotesStubs.fieldnotesId
-      })
-
-      if(!response.success) return 
-
-      const fieldnotes = response.data
-
-      Object.assign(globalWrite, {
-        fieldnotes: {
-            ...fieldnotes
-          , sections: fieldnotes.sectionOrder.map(sectionIndex => {
-            return fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
-          })
-        }
-      })
-
-      const { title, author, d1, d2, location } = globalWrite.fieldnotes
-
-      titleInputText.value = title
-      authorInputText.value = author
-      dateInputText.value = d1
-      placeInputText.value = location.place_guess
-
-      const species = await getInatObservations({ 
-          user_id: globalWrite.fieldnotes.user.id
-        , place_id: null
-        , iconic_taxa: globalWrite.iconicTaxa
-        , per_page: 200
-        , locale: globalWrite.fieldnotes.language.id
-        , species_count: false
-        , d1
-        , d2
-      })
-
-      globalWrite.species = species.map(sp => {
-        return {
-            id: sp.id
-          , observation_photos: sp.observation_photos
-          , photos: sp.photos
-          , place_guess: sp.place_guess
-          , species_guess: sp.species_guess
-          , taxon: mapTaxon({taxon: sp.taxon})
-          , user: mapUser({user: sp.user})
-        }
-      })
-
-      importFieldNotesNotificationText.classList.add('hidden')
-
-      // Set the index for the next section
-      globalWrite.nextSectionIndex = globalWrite.fieldnotes.sections.length > 0
-        ? globalWrite.fieldnotes.sections.map(s => s.sectionIndex).sort(function (a, b) { return a - b })[globalWrite.fieldnotes.sections.length -1 ] + 1
-        : 0
-
-      // Remove existing sections
-      draggableSections.replaceChildren()
-
-      globalWrite.fieldnotes.sections.forEach(section => {
-        const draggableSection = createSection({
-            writeTemplateId: section.writeTemplateId
-          , typeText: section.name
-          , sectionTemplate: d.getElementById(section.writeParentTemplateId)
-          , sectionIndex: section.sectionIndex     
-        })
-
-        const addOrUpdateSectionBtn = new ButtonComponent({
-          parent: draggableSection
-        , elementSelector: 'add-or-update-section-btn'
-      })
-        const editSectionBtn = new ButtonComponent({
-          parent: draggableSection
-        , elementSelector: 'edit-section-btn'
-      })
-
-        if(addOrUpdateSectionBtn) addOrUpdateSectionBtn.hide() // messy hide and disable… perhaps simply a separate button
-        if(editSectionBtn) editSectionBtn.show()
-
-        const previewContainer = draggableSection.querySelector('.edit')
-        previewContainer.classList.remove('hidden')
-        const add = draggableSection.querySelector('.add')
-        if(draggableSection.querySelector('.add:not(.edit)')) draggableSection.querySelector('.add:not(.edit)').classList.add('hidden')
-
-        const previewTemplate = previewTemplates.find(template => template.templateId === section.templateId)
-
-        let speciesCheckboxes = null
-
-        switch(section.templateId) {
-          case 'h3-preview-template':
-          case 'h4-preview-template':
-          case 'xenocanto-preview-template':
-            addContentToPreviewContainer({
-                previewTemplate
-              , textContent: section[section.element]
-              , previewContainer
-            })
-            add.value = section[section.element]
-            break
-          case 'textarea-preview-template':          
-            section.paras.forEach((text, i) => {
-              addContentToPreviewContainer({
-                  previewTemplate
-                , textContent: text.p
-                , previewContainer
-              })
-              add.value += text.p
-              if(i < section.paras.length - 1) {
-                add.value += '\r\n\n'
-              }
-            })     
-            break
-          case 'species-preview-template':
-          case 'observations-preview-template':
-            setOriginalTypeValues({
-                globalWrite
-              , section
-              , type:section.type
-            })
-            speciesCheckboxes = draggableSection.querySelectorAll('input')
-            speciesCheckboxes.forEach(checkbox => {
-              if(section.species.includes(checkbox.value) || section.species.map(sp => sp.name).includes(checkbox.value)) {
-                checkbox.setAttribute('checked', true)
-              }
-            })            
-            break
-          case 'inat-lookup-preview-template':
-            setOriginalTypeValues({
-                globalWrite
-              , section
-              , type:section.type})
-            let parent = null
-            section.species.forEach((sp, index) => {
-              parent = draggableSection.querySelector(`#inat-looup-parent-${section.sectionIndex}`)
-              const clone = cloneImageTemplate({
-                  species: sp
-                , index
-                , sectionIndex: section.sectionIndex
-                , imgUrl: sp.taxon.default_photo.square_url
-                , globalWrite
-                , writeTemplateId: section.writeTemplateId
-              })
-              parent.appendChild(clone)
-              const figure = parent.querySelector('figure')
-              figure.classList.remove('hidden')
-            })
-            speciesCheckboxes = parent.querySelectorAll('input')
-            speciesCheckboxes.forEach(checkbox => {
-              checkbox.setAttribute('checked', true)
-            }) 
-            break
-          case 'images-preview-template':
-            setOriginalTypeValues({
-                globalWrite
-              , section
-              , type:section.type
-            })       
-            section.images.forEach((img, i) => {
-              if(img.src.length > 0) {
-                d.querySelector(`#image-url-input-${i}`).value = img.src
-                d.querySelector(`#image-title-input-${i}`).value = img.alt
-              }
-            })
-            break
-          case 'terms-preview-template':
-            setOriginalTypeValues({
-                globalWrite
-              , section
-              , type:'terms'
-            })
-            const selectedItemsListElement = draggableSection.querySelector('#selected-terms-list')
-            const selectedTerms = []        
-            section.terms.forEach((term) => {
-              addTermToList({
-                  selectedTerms
-                , selectedTerm: term
-                , selectedItemsListElement
-                , globalWrite
-                , sectionIndex: section.sectionIndex
-              })
-              selectedTerms.push(term)
-            })
-        }
-      })
-
-      // Enable the create observation and species section buttons
-      selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
-      selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
-
-      // Hide all species that are not included
-      const btns = d.querySelectorAll('.toggle-species-include-all-btn')
-      btns.forEach(btn => {
-        btn.innerText = 'show only included'
-        const fieldset = btn.parentElement
-        toggleSpeciesList({
-            btn
-          , fieldset
-        })
-      })
-
-      // Enable saving fieldnotes
-      exportFieldNotesContainer.classList.remove('disabled')
-
-      // Show notification that Fieldnotes have been imported
-      showNotificationsDialog({
-          message: 'Fieldnotes imported'
-        , type: 'success'
-        , displayDuration: 2000
-      })
-    } catch (e) {
-      console.log('Error importing fieldnotes')
-      console.log(e.stack)
-      showNotificationsDialog({
-          message: e.message
-        , type: 'error'
-      })
-    }
-  }
 
   iNatAutocompleteInputText.focus()
 }
