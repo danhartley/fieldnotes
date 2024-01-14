@@ -3,7 +3,6 @@ import {
 , g
 , getTerms
 , getFieldnotesById
-, addFieldnotes
 , updateFieldNotes
 , updateFieldnoteProperty
 , updateFieldnotesTitle
@@ -848,10 +847,6 @@ const init = () => {
         })
       })
 
-      // Enable saving fieldnotes
-      // exportFieldNotesContainer.classList.remove('disabled')
-
-      // Show notification that Fieldnotes have been imported
       showNotificationsDialog({
           message: 'Fieldnotes imported'
         , type: 'success'
@@ -899,6 +894,7 @@ const init = () => {
       , global: globalWrite
       , importFieldnotesBtn
       })
+    , isAuthenticatedSections: d.querySelectorAll('.is-authenticated')
   })
 }
 

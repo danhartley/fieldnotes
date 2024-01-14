@@ -42,7 +42,7 @@
 
     <main class="mt2">
       <article>
-        <section>
+        <section class="is-authenticated disabled">
           <fieldset class="mt2">
             <legend>iNaturalist search</legend>
             <p class="mt0 small">Filter iNaturalist observations by user and date.</p>
@@ -62,7 +62,7 @@
           </fieldset>
         </section>
   
-        <section id="meta-data-section">
+        <section id="meta-data-section" class="is-authenticated disabled">
           <fieldset id="field-trip">
             <legend>Field trip</legend>
             <p class="mt0 small">If your field trip is supported by iNaturalist observations, an iNaturalist search will populate these fields for you.</p>            
@@ -85,7 +85,7 @@
           </fieldset>
         </section>
 
-        <section id="export-fieldnotes-container" class="disabled">
+        <section id="export-fieldnotes-container" class="is-authenticated disabled">
           <fieldset>
             <legend>Save fieldnotes</legend>
             <button id="save-fieldnotes-btn" class="p">Save fieldnotes</button>
@@ -93,7 +93,7 @@
           </fieldset>
         </section>
 
-        <section id="select-section-type-section">
+        <section id="select-section-type-section" class="is-authenticated disabled">
           <fieldset>
             <legend>Field journal sections</legend>
             <button id="h3-write" type="button" value="h3-write-template">Header</button>

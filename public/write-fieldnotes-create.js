@@ -6,6 +6,8 @@ import {
 , updateFieldNotes
 , updateFieldnoteProperty
 , updateFieldnotesTitle
+, getFirebaseAuth
+, onFirebaseAuthStateChange
 } from './api.js'
 
 import { 
@@ -37,6 +39,8 @@ import {
   , handleInputChangeEvent
   , handleImageInputChangeEvent
   , toggleSpeciesList
+  , fetchFieldnotesStubs
+  , authenticateUserEmailAndPassword
 } from './ui-actions.js'
 
 import {
@@ -54,7 +58,6 @@ const init = () => {
       , nextSectionIndex: 0
       , inatAutocompleteOptions: g.inatAutocompleteOptions
       , inatAutocomplete: g.inatAutocomplete
-      , view: 'create'
       , fieldnotesStubs: []
       , fieldnotes: {
         author: ''
@@ -81,6 +84,7 @@ const init = () => {
         }
       }
       , originalTypeValues: []
+      , authentication: {}
     })
 
     return globalWrite
@@ -802,13 +806,17 @@ const init = () => {
       
       const response = await addFieldnotes({fieldnotes: notes})
 
-      globalWrite.fieldnotes.id = response.id
+      if(response.success) {
+        globalWrite.fieldnotes.id = response.id
+        setTimeout(() => {
+          window.location.reload()
+        }, 4000)
+      }
 
-      // Show notification that Fieldnotes have been exported
       showNotificationsDialog({
           message: response.message
         , type: response.type
-        , displayDuration: 2000
+        , displayDuration: 3000
       })
     } catch (e) {
       showNotificationsDialog({
@@ -824,6 +832,28 @@ const init = () => {
   })
 
   iNatAutocompleteInputText.focus()
+
+  const authenticateBtn = new ButtonComponent({
+    elementSelector: 'authenticate-btn'
+  , clickHandler: e => authenticateUserEmailAndPassword({
+        user: globalWrite.user
+      , email: d.getElementById('firebase-email')
+      , password: d.getElementById('firebase-password')      
+    })
+  })
+
+  authenticateUserEmailAndPassword({
+      user: globalWrite.user
+    , email: d.getElementById('firebase-email')
+    , password: d.getElementById('firebase-password')
+  })
+
+  globalWrite.user = onFirebaseAuthStateChange({
+      auth: getFirebaseAuth()
+    , globalWrite
+    , authenticateBtn
+    , isAuthenticatedSections: d.querySelectorAll('.is-authenticated')
+  })
 }
 
 init()
