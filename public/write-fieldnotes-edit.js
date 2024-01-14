@@ -723,7 +723,7 @@ const init = () => {
         , elementSelector: 'edit-section-btn'
       })
 
-        if(addOrUpdateSectionBtn) addOrUpdateSectionBtn.hide() // messy hide and disable… perhaps simply a separate button
+        if(addOrUpdateSectionBtn) addOrUpdateSectionBtn.hide()
         if(editSectionBtn) editSectionBtn.show()
 
         const previewContainer = draggableSection.querySelector('.edit')
@@ -770,8 +770,11 @@ const init = () => {
             speciesCheckboxes.forEach(checkbox => {
               if(section.species.includes(checkbox.value) || section.species.map(sp => sp.name).includes(checkbox.value)) {
                 checkbox.setAttribute('checked', true)
+              } else {
+                checkbox.closest('figure').classList.add('hidden')                
               }
             })            
+            draggableSection.querySelector('#toggle-species-include-all-btn').innerText = 'show all'
             break
           case 'inat-lookup-preview-template':
             setOriginalTypeValues({
