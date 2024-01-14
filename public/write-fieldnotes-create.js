@@ -825,7 +825,7 @@ const init = () => {
   }
 
   const exportFieldNotesBtn = new ButtonComponent({
-      elementSelector: 'export-fieldnotes-btn'
+      elementSelector: 'save-fieldnotes-btn'
     , clickHandler: exportFieldnotes
   })
 

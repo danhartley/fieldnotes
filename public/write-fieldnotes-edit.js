@@ -63,7 +63,6 @@ const init = () => {
       , nextSectionIndex: 0
       , inatAutocompleteOptions: g.inatAutocompleteOptions
       , inatAutocomplete: g.inatAutocomplete
-      , view: 'edit'
       , fieldnotesStubs: []
       , fieldnotes: {
         author: ''
@@ -579,78 +578,48 @@ const init = () => {
     Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
   }
 
-  const enableExportFieldNotesContainer = () => {
-    if(globalWrite.view === 'create') {
-      // Check fields added by the user
-      let areFieldsValid = true
-      
-      // Title
-      areFieldsValid = areFieldsValid && globalWrite.fieldnotes.title.length > 2
-
-      // Author
-      areFieldsValid = areFieldsValid && globalWrite.fieldnotes.author.length > 2
-
-      // Date
-      areFieldsValid = areFieldsValid && isValidDate({date: globalWrite.fieldnotes.d1})
-      areFieldsValid = areFieldsValid && isValidDate({date:globalWrite.fieldnotes.d2})
-
-      // Location
-      areFieldsValid = areFieldsValid && globalWrite.fieldnotes.location.place_guess.length > 2
-
-      areFieldsValid
-        ? exportFieldNotesContainer.classList.remove('disabled')
-        : exportFieldNotesContainer.classList.add('disabled')      
-    }
-  }
-
   const updateSingleFields = async ({prop, value}) => {
-    if(globalWrite.view === 'edit') {
-      let response
-      try {
-        response = prop === 'title'
-          ? await updateFieldnotesTitle({
-              fieldnotes: globalWrite.fieldnotes
-            , prop
-            , value
-            , fieldnotesStubs: globalWrite.fieldnotesStubs
-          })
-          : await updateFieldnoteProperty({
-              fieldnotes: globalWrite.fieldnotes
-            , prop
-            , value
-          })
-        
-        showNotificationsDialog({
-            message: response.message
-          , type: response.type
-          , displayDuration: 2000
+    let response
+    try {
+      response = prop === 'title'
+        ? await updateFieldnotesTitle({
+            fieldnotes: globalWrite.fieldnotes
+          , prop
+          , value
+          , fieldnotesStubs: globalWrite.fieldnotesStubs
         })
-      } catch (e) {
-        showNotificationsDialog({
-            message: `${e.message} for ${prop}`
-          , type: 'error'
+        : await updateFieldnoteProperty({
+            fieldnotes: globalWrite.fieldnotes
+          , prop
+          , value
         })
-      }
+      
+      showNotificationsDialog({
+          message: response.message
+        , type: response.type
+        , displayDuration: 2000
+      })
+    } catch (e) {
+      showNotificationsDialog({
+          message: `${e.message} for ${prop}`
+        , type: 'error'
+      })
     }
   }
 
   titleInputText.addEventListener('change', e => { 
     globalWrite.fieldnotes.title = e.target.value
-    globalWrite.view === 'create'
-      ? enableExportFieldNotesContainer()
-      : updateSingleFields({
-          prop: 'title'
-        , value: globalWrite.fieldnotes.title
-      })
+    updateSingleFields({
+        prop: 'title'
+      , value: globalWrite.fieldnotes.title
+    })
   })
   authorInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.author = e.target.value
-    globalWrite.view === 'create'
-      ? enableExportFieldNotesContainer()
-      : updateSingleFields({
-          prop: 'author'
-        , value: globalWrite.fieldnotes.author
-      })
+    updateSingleFields({
+        prop: 'author'
+      , value: globalWrite.fieldnotes.author
+    })
   })
   dateInputText.addEventListener('change', e => {
     const date = e.target.value    
@@ -666,13 +635,10 @@ const init = () => {
         , value: globalWrite.fieldnotes.d2
       })
     }
-    enableExportFieldNotesContainer()
   })
   placeInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.location.place_guess = e.target.value
-    globalWrite.view === 'create'
-      ? enableExportFieldNotesContainer()
-      : updateSingleFields({
+    updateSingleFields({
           prop: 'location'
         , value: { 
             place_guess: globalWrite.fieldnotes.location.place_guess
@@ -681,60 +647,6 @@ const init = () => {
     })
   })
   
-  const exportFieldnotes = async() => {
-    try {
-      const notes = {}
-
-      Object.assign(notes, {
-          id: globalWrite.fieldnotes.id || ''
-        , fnId: globalWrite.fieldnotes.title
-        , title: globalWrite.fieldnotes.title
-        , author: globalWrite.fieldnotes.author
-        , user: {
-            id: globalWrite.fieldnotes.user.id
-          , icon: globalWrite.fieldnotes.user.icon
-          , identifications_count: globalWrite.fieldnotes.user.identifications_count
-          , login: globalWrite.fieldnotes.user.login
-          , observations_count: globalWrite.fieldnotes.user.observations_count
-          , species_count: globalWrite.fieldnotes.user.species_count
-        }
-        , d1: globalWrite.fieldnotes.d1
-        , d2: globalWrite.fieldnotes.d2
-        , location: globalWrite.fieldnotes.location
-        , language: globalWrite.fieldnotes.language
-        , taxa: globalWrite.fieldnotes.taxa
-        , sections: globalWrite.fieldnotes.sections.map(t => {
-          const {templateId, ...validProps} = t
-          return {
-            ...validProps,
-          }
-        })
-        , sectionOrder: globalWrite.fieldnotes.sections.map(section => section.sectionIndex)
-      })
-      
-      const response = await addFieldnotes({fieldnotes: notes})
-
-      globalWrite.fieldnotes.id = response.id
-
-      // Show notification that Fieldnotes have been exported
-      showNotificationsDialog({
-          message: response.message
-        , type: response.type
-        , displayDuration: 2000
-      })
-    } catch (e) {
-      showNotificationsDialog({
-          message: e.message
-        , type: 'error'
-      })
-    }
-  }
-
-  const exportFieldNotesBtn = new ButtonComponent({
-      elementSelector: 'export-fieldnotes-btn'
-    , clickHandler: exportFieldnotes
-  })
-
   const importFieldnotes = async () => {
     try {
       importFieldNotesNotificationText.classList.remove('hidden')
