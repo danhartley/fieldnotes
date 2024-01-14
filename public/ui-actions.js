@@ -4,6 +4,10 @@ import {
     , addElementToArray
     , updateElementFromArray
     , updateFieldnoteProperty
+    , getFieldnotesStubs
+    , getFirebaseAuth
+    , firebaseLogin
+    , firebaseSignOut
 } from './api.js'
 
 import { 
@@ -774,4 +778,35 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
             text: 'show only included'
         })
     }
+  }
+
+  export const fetchFieldnotesStubs = ({inputText, dataList, global, importFieldnotesBtn}) => {
+    return async ({user}) => {
+      const fieldnotesStubs = user 
+        ? await getFieldnotesStubs({user})
+        : []
+
+      fieldsnotesAutocomplete({ 
+          inputText
+        , dataList
+        , global
+        , importFieldnotesBtn
+        , fieldnotesStubs
+      })
+    }
+  }
+
+  export const authenticateUserEmailAndPassword = ({user, email, password}) => {
+    if(user) {
+      firebaseSignOut({
+        auth: getFirebaseAuth()
+      })      
+    } else {
+      if(email.validity.valid) {
+        firebaseLogin({
+            email: email.value
+          , password: password.value
+        })
+      }      
+    }    
   }

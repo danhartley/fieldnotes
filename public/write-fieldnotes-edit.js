@@ -2,14 +2,11 @@ import {
   getInatObservations
 , g
 , getTerms
-, getFieldnotesStubs
 , getFieldnotesById
 , addFieldnotes
 , updateFieldNotes
 , updateFieldnoteProperty
 , updateFieldnotesTitle
-, firebaseLogin
-, firebaseSignOut
 , getFirebaseAuth
 , onFirebaseAuthStateChange
 } from './api.js'
@@ -23,7 +20,6 @@ import {
     handleInatAutocomplete
   , createInatLookups
   , handleTermAutocomplete
-  , fieldsnotesAutocomplete
   , cloneImages
   , cloneImageTemplate
   , dragstartHandler
@@ -48,6 +44,8 @@ import {
   , handleInputChangeEvent
   , handleImageInputChangeEvent
   , toggleSpeciesList
+  , fetchFieldnotesStubs
+  , authenticateUserEmailAndPassword
 } from './ui-actions.js'
 
 import {
@@ -963,53 +961,28 @@ const init = () => {
     , clickHandler: importFieldnotes
   })
 
-  const fetchStubs = ({inputText, dataList, global, importFieldnotesBtn}) => {
-    return async ({user}) => {
-      const fieldnotesStubs = user 
-        ? await getFieldnotesStubs({user})
-        : []
-
-      fieldsnotesAutocomplete({ 
-          inputText
-        , dataList
-        , global
-        , importFieldnotesBtn
-        , fieldnotesStubs
-      })
-    }
-  }
-
   ltpAutocompleteTitleInputText.focus()
-
-  const authenticate = () => {
-    if(globalWrite.user) {
-      firebaseSignOut({
-        auth: getFirebaseAuth()
-      })      
-    } else {
-      const email = d.getElementById('email')
-      const password = d.getElementById('password')
-      if(email.validity.valid) {
-        firebaseLogin({
-            email: email.value
-          , password: password.value
-        })
-      }      
-    }    
-  }
 
   const authenticateBtn = new ButtonComponent({
       elementSelector: 'authenticate-btn'
-    , clickHandler: e => authenticate()
+    , clickHandler: e => authenticateUserEmailAndPassword({
+        user: globalWrite.user
+      , email: d.getElementById('email')
+      , password: d.getElementById('password')      
+    })
   })
 
-  authenticate()
+  authenticateUserEmailAndPassword({
+      user: globalWrite.user
+    , email: d.getElementById('email')
+    , password: d.getElementById('password')
+  })
   
   globalWrite.user = onFirebaseAuthStateChange({
       auth: getFirebaseAuth()
     , globalWrite
     , authenticateBtn
-    , fetchStubs: fetchStubs({
+    , fetchFieldnotesStubs: fetchFieldnotesStubs({
         inputText: ltpAutocompleteTitleInputText
       , dataList: ltpAutocompleteTitleDatalist
       , global: globalWrite
