@@ -545,6 +545,10 @@ th, td {
   background-color: var(--c0);
 }
 
+.inat-preferences-section .grid {
+  grid-template-columns: repeat(auto-fit, minmax(100px, auto));
+}
+
 .grid:has(figure, img) {
   margin: 0 auto calc(var(--d) * 4) auto;
 }
