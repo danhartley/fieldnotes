@@ -963,19 +963,20 @@ const init = () => {
     , clickHandler: importFieldnotes
   })
 
-  const fetchStubs = async ({user}) => {
+  const fetchStubs = ({inputText, dataList, global, importFieldnotesBtn}) => {
+    return async ({user}) => {
+      const fieldnotesStubs = user 
+        ? await getFieldnotesStubs({user})
+        : []
 
-    const fieldnotesStubs = user 
-      ? await getFieldnotesStubs({user})
-      : []
-
-    fieldsnotesAutocomplete({ 
-        inputText: ltpAutocompleteTitleInputText
-      , dataList: ltpAutocompleteTitleDatalist
-      , global: globalWrite
-      , fieldnotesStubs
-      , importFieldnotesBtn
-    })
+      fieldsnotesAutocomplete({ 
+          inputText
+        , dataList
+        , global
+        , importFieldnotesBtn
+        , fieldnotesStubs
+      })
+    }
   }
 
   ltpAutocompleteTitleInputText.focus()
@@ -1008,7 +1009,12 @@ const init = () => {
       auth: getFirebaseAuth()
     , globalWrite
     , authenticateBtn
-    , fetchStubs
+    , fetchStubs: fetchStubs({
+        inputText: ltpAutocompleteTitleInputText
+      , dataList: ltpAutocompleteTitleDatalist
+      , global: globalWrite
+      , importFieldnotesBtn
+      })
   })
 }
 

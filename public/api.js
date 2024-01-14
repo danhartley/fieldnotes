@@ -141,7 +141,7 @@ export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticate
         text: 'Log in'
       })
       console.log('logged out')
-      fetchStubs({user: null})
+      fetchStubs({user:null})
       text.innerText = 'You are logged out.'
       loggedOut.forEach(out => out.classList.remove('hidden'))
     }
