@@ -21,16 +21,16 @@
 
     <aside>
       <section class="inat-preferences-section m0">
-        <div class="logged-out hidden">
+        <form class="logged-out hidden">
           <div class="centred-block">
-            <label for="email" class="mw8">Email</label>
-            <input id="email" type="email" required pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" class="p">
+            <label for="firebase-email" class="mw8">Email</label>
+            <input id="firebase-email" type="email" required pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" placeholder="A valid email is required" class="p">
           </div>
           <div class="centred-block">
-            <label for="password" class="mw8">Password</label>
-            <input id="password" type="password" class="p" required>
+            <label for="firebase-password" class="mw8">Password</label>
+            <input id="firebase-password" type="password" required minlength="6" placeholder="Password must be at least 6 characters" autocomplete="true" current-password="true" class="p">
           </div>
-        </div>
+        </form>
         <div class="double-centred-block mt mb">
           <div>
             <span id="authenticate-state-text" class="mr">Logged in state unknown.</span>

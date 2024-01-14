@@ -967,15 +967,15 @@ const init = () => {
       elementSelector: 'authenticate-btn'
     , clickHandler: e => authenticateUserEmailAndPassword({
         user: globalWrite.user
-      , email: d.getElementById('email')
-      , password: d.getElementById('password')      
+      , email: d.getElementById('firebase-email')
+      , password: d.getElementById('firebase-password')      
     })
   })
 
   authenticateUserEmailAndPassword({
       user: globalWrite.user
-    , email: d.getElementById('email')
-    , password: d.getElementById('password')
+    , email: d.getElementById('firebase-email')
+    , password: d.getElementById('firebase-password')
   })
   
   globalWrite.user = onFirebaseAuthStateChange({
