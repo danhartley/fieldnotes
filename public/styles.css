@@ -826,6 +826,10 @@ th, td {
   margin-bottom: calc(var(--d) * 4);
 }
 
+.ml {
+  margin-left: var(--d);
+}
+
 .p {
   padding: var(--d);
 }

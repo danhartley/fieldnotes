@@ -753,7 +753,7 @@ const init = () => {
   singleObservationsInputDate.addEventListener('blur', enableSearchBtn, true)
   iNatAutocompleteInputText.addEventListener('blur', enableSearchBtn, true)
 
-  const saveFieldnotes = async() => {
+  const saveFieldnotes = async({publish}) => {
     try {
       const notes = {}
 
@@ -784,7 +784,10 @@ const init = () => {
         , sectionOrder: globalWrite.fieldnotes.sections.map(section => section.sectionIndex)
       })
       
-      const response = await addFieldnotes({fieldnotes: notes})
+      const response = await addFieldnotes({
+          fieldnotes: notes
+        , publish
+      })
 
       if(response.success) {
         globalWrite.fieldnotes.id = response.id
@@ -808,7 +811,16 @@ const init = () => {
 
   const saveFieldNotesBtn = new ButtonComponent({
       elementSelector: 'save-fieldnotes-btn'
-    , clickHandler: saveFieldnotes
+      , clickHandler: () => saveFieldnotes({
+        publish: false
+      })
+  })
+
+  const saveAndPublishFieldNotesBtn = new ButtonComponent({
+      elementSelector: 'save-and-publish-fieldnotes-btn'
+    , clickHandler: () => saveFieldnotes({
+      publish: true
+    })
   })
 
   iNatAutocompleteInputText.focus()

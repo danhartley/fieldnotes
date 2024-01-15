@@ -45,7 +45,7 @@
         <section class="is-authenticated disabled">
           <fieldset class="mt2">
             <legend>iNaturalist observations</legend>
-            <p class="mt0 small">Filter iNaturalist observations by user and date.</p>
+            <p class="mt0 small">Filter iNaturalist to search for observations by user and date.</p>
             <div class="centred-block">
                 <label for="inat-autocomplete-input-text">User</label>
                 <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing a username or user ID…">
@@ -88,9 +88,12 @@
         <section id="save-fieldnotes-section" class="is-valid disabled">
           <fieldset>
             <legend>Save fieldnotes</legend>
-            <button id="save-fieldnotes-btn" class="p">Save draft fieldnotes</button>
-            <button id="save-and-publish-fieldnotes-btn" class="ml p">Save and publish fieldnotes</button>
-            <p class="mt2 small"><em>After you've saved your fieldnotes you can continue to add, edit, delete and move sections.</em></p>            
+            <p class="mt0 small">If you choose to publish your fieldnotes, you will be able to revert to a private draft.</p>
+            <div>
+              <button id="save-fieldnotes-btn" class="p">Save private draft of your fieldnotes</button>
+              <button id="save-and-publish-fieldnotes-btn" class="mt p">Save and publish fieldnotes</button>
+            </div>
+            <p class="mt2 small"><em>You will be able to edit your fieldnotes whether you choose to save them as a private draft or to publish them.</em></p>            
           </fieldset>
         </section>
 
