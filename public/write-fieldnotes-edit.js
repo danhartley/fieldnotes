@@ -698,6 +698,9 @@ const init = () => {
 
       importFieldNotesNotificationText.classList.add('hidden')
 
+      // Enable other sections
+      d.querySelectorAll('.has-fieldnotes').forEach(section => section.classList.add('disabled')) 
+
       // Set the index for the next section
       globalWrite.nextSectionIndex = globalWrite.fieldnotes.sections.length > 0
         ? globalWrite.fieldnotes.sections.map(s => s.sectionIndex).sort(function (a, b) { return a - b })[globalWrite.fieldnotes.sections.length -1 ] + 1
@@ -896,7 +899,7 @@ const init = () => {
       , dataList: ltpAutocompleteTitleDatalist
       , global: globalWrite
       , importFieldnotesBtn
-      })
+      })    
     , isAuthenticatedSections: d.querySelectorAll('.is-authenticated')
   })
 }

@@ -136,7 +136,7 @@ export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticate
       if(fetchFieldnotesStubs) fetchFieldnotesStubs({user})
       text.innerText = 'You are logged in.'
       loggedOut.forEach(out => out.classList.add('hidden'))
-      isAuthenticatedSections.forEach(section => section.classList.remove('disabled')) 
+      if(isAuthenticatedSections) isAuthenticatedSections.forEach(section => section.classList.remove('disabled')) 
     } else {
       authenticateBtn.setText({
         text: 'Log in'
@@ -145,7 +145,7 @@ export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticate
       if(fetchFieldnotesStubs) fetchFieldnotesStubs({user:null})
       text.innerText = 'You are logged out.'
       loggedOut.forEach(out => out.classList.remove('hidden'))
-      isAuthenticatedSections.forEach(section => section.classList.add('disabled')) 
+      if(isAuthenticatedSections) isAuthenticatedSections.forEach(section => section.classList.add('disabled')) 
     }
   })
 }
