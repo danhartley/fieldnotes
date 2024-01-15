@@ -207,7 +207,7 @@ export const getFieldnotesStubs = async ({user, readonly = false}) => {
 
     if(readonly) {
       // Readonly
-      q = query(collectionRef, where('isPublished', '==', true))
+      q = query(collectionRef, where('status', '==', 'public'))
     } else {
       // Create and edit
       q = query(collectionRef, where('uid', '==', user.uid))
@@ -224,7 +224,7 @@ export const getFieldnotesStubs = async ({user, readonly = false}) => {
   }
 }
 
-export const addFieldnotes = async ({fieldnotes, publish = false}) => {
+export const addFieldnotes = async ({fieldnotes, status = 'public'}) => {
   const db = getDb()
   let id, data = null
 
@@ -245,7 +245,7 @@ export const addFieldnotes = async ({fieldnotes, publish = false}) => {
         , fieldnotesId: id
         , title: fieldnotes.title
         , author: fieldnotes.author 
-        , isPublished: publish
+        , status
       }
       await setDoc(fieldNotesStubRef, data)
 

@@ -53,7 +53,7 @@
             </div>
             <div id="field-notes-lookup-callback-parent" class="mt2"></div>
             <div class="centred-block mt2">
-              <button id="import-fieldnotes-btn" class="mr disabled">Fetch fieldnotes to edit</button>
+              <button id="fetch-fieldnotes-btn" class="mr disabled">Fetch fieldnotes to edit</button>
               <div id="import-fieldnotes-notification-text" class="small hidden">Fetching fieldnotes…</div>
             </div>
             <p class="mt2 small"><em>These fieldnotes will be updated each time you add, edit, delete or move a section.</em></p>
@@ -99,6 +99,17 @@
             <button id="observations" type="button" value="observations-write-template" class="disabled">Observations</button>
             <button id="species" type="button" value="species-write-template" class="mt disabled">Species</button>
             <div class="mt2 small"><em>You can create multiple sections of each type, and change their order.</em></div>
+          </fieldset>
+        </section>
+
+        <section id="fieldnotes-state-section" class="has-fieldnotes disabled">
+          <fieldset>
+            <legend>Fieldnotes status (public/private)</legend>
+            <p class="mt0 small">Your fieldnotes are currently: <strong><em id="update-fieldnotes-current-status-text"></em></strong></p>
+            <p id="update-fieldnotes-status-text" class="mt0 small">If you set your fieldnotes to private, they will no longer viewable by others.</p>
+            <div>
+              <button id="update-fieldnotes-status-btn" class="p">Set your fieldnotes to private</button>
+            </div>
           </fieldset>
         </section>
 

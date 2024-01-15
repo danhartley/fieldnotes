@@ -151,7 +151,7 @@ const addTitlesToList = async ({dataList, strToComplete, fieldnotesStubs}) => {
     }
 }
 
-export const fieldsnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubs, importFieldnotesBtn}) => {
+export const fieldsnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubs, fetchFieldnotesBtn}) => {
     // The list of titles will initially be short, so we load it at once, in its entirety
     let stubs = await addTitlesToList({
           dataList
@@ -172,7 +172,7 @@ export const fieldsnotesAutocomplete = async ({inputText, dataList, global, fiel
 
         if(match) {
             global.fieldnotesStubs = stubs.find(option => option.title === match)
-            importFieldnotesBtn.enable() 
+            fetchFieldnotesBtn.enable() 
         }
     })
 }
@@ -780,7 +780,7 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
     }
   }
 
-  export const fetchFieldnotesStubs = ({inputText, dataList, global, importFieldnotesBtn}) => {
+  export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnotesBtn}) => {
     return async ({user}) => {
       const fieldnotesStubs = user 
         ? await getFieldnotesStubs({user})
@@ -790,7 +790,7 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
           inputText
         , dataList
         , global
-        , importFieldnotesBtn
+        , fetchFieldnotesBtn
         , fieldnotesStubs
       })
     }

@@ -8,6 +8,7 @@ import {
 , updateFieldnotesTitle
 , getFirebaseAuth
 , onFirebaseAuthStateChange
+, updateFieldnoteStubProperty
 } from './api.js'
 
 import { 
@@ -107,9 +108,15 @@ const init = () => {
   const placeInputText = d.getElementById('place-input-text')
   const selectSectionTypeSection = d.getElementById('select-section-type-section')
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
+  const updateFieldnotesStatusText = d.getElementById('update-fieldnotes-status-text')
+  const updateFieldnotesCurrentStatusText = d.getElementById('update-fieldnotes-current-status-text')
   
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
+
+  const updateFieldnotesStatusBtn = new ButtonComponent({
+    elementSelector: 'update-fieldnotes-status-btn'
+})
 
   const createSection = ({writeTemplateId, typeText, sectionTemplate, sectionIndex}) => {
     const sectionClone = sectionTemplate.content.cloneNode(true)
@@ -645,7 +652,7 @@ const init = () => {
     })
   })
   
-  const importFieldnotes = async () => {
+  const fetchFieldnotes = async () => {
     try {
       importFieldNotesNotificationText.classList.remove('hidden')
 
@@ -853,6 +860,20 @@ const init = () => {
         })
       })
 
+      // Set values for fieldnotes status text and update button
+      if(globalWrite.fieldnotesStubs.status === 'public') {
+        updateFieldnotesStatusBtn.setText({
+          text: 'Set your fieldnotes to private'
+        })
+        updateFieldnotesStatusText.innerText = 'If you set your fieldnotes to private, they will no longer viewable by others.'
+      } else {
+        updateFieldnotesStatusBtn.setText({
+          text: 'Publish your fieldnotes'
+        })
+        updateFieldnotesStatusText.innerText = 'Publishing your fieldnotes will make them available to others.'
+      }
+      updateFieldnotesCurrentStatusText.innerText = globalWrite.fieldnotesStubs.status
+
       showNotificationsDialog({
           message: 'Fieldnotes imported'
         , type: 'success'
@@ -868,9 +889,9 @@ const init = () => {
     }
   }
 
-  const importFieldnotesBtn = new ButtonComponent({
-      elementSelector: 'import-fieldnotes-btn'
-    , clickHandler: importFieldnotes
+  const fetchFieldnotesBtn = new ButtonComponent({
+      elementSelector: 'fetch-fieldnotes-btn'
+    , clickHandler: fetchFieldnotes
   })
 
   ltpAutocompleteTitleInputText.focus()
@@ -898,9 +919,45 @@ const init = () => {
         inputText: ltpAutocompleteTitleInputText
       , dataList: ltpAutocompleteTitleDatalist
       , global: globalWrite
-      , importFieldnotesBtn
+      , fetchFieldnotesBtn
       })    
     , isAuthenticatedSections: d.querySelectorAll('.is-authenticated')
+  })
+
+  updateFieldnotesStatusBtn.addClickHandler({
+    clickHandler: async () => {
+      const btn = updateFieldnotesStatusBtn
+      const status = globalWrite.fieldnotesStubs.status
+      const newStatus = status === 'public' 
+        ? 'private'
+        : 'public'
+      const response = await updateFieldnoteStubProperty({
+          fieldnotesStubs: globalWrite.fieldnotesStubs
+        , prop: 'status'
+        , value: newStatus
+      })
+      if(response.success) {
+        updateFieldnotesCurrentStatusText.innerText = newStatus
+        btn.setText({
+          text: newStatus === 'public'
+            ? 'Set your fieldnotes to private'
+            : 'Publish your fieldnotes'
+        })
+        updateFieldnotesStatusText.innerText = newStatus === 'public'
+          ? 'If you set your fieldnotes to private, they will no longer viewable by others.'
+          : 'Publishing your fieldnotes will make them available to others.'
+
+        globalWrite.fieldnotesStubs.status = newStatus
+
+        showNotificationsDialog({
+            message: newStatus === 'public'
+              ? 'Your fieldnotes have been published.'
+              : 'Your fieldnotes have been set to private.'
+          , type: response.type
+          , displayDuration: 3000
+        })
+      }
+    }
   })
 }
 

@@ -743,7 +743,7 @@ const init = async () => {
         setDateOption(d.getElementById('rbSingleDate'))
     }, true)
 
-    const importFieldnotes = async () => {
+    const fetchFieldnotes = async () => {
         importFieldNotesNotificationText.classList.remove('hidden')
 
         const response = false 
@@ -803,9 +803,9 @@ const init = async () => {
         speciesDisplayContainer.classList.remove('disabled')
     }
 
-    const importFieldnotesBtn = new ButtonComponent({
-        elementSelector: 'import-fieldnotes-btn'
-      , clickHandler: importFieldnotes
+    const fethFieldnotesBtn = new ButtonComponent({
+        elementSelector: 'fetch-fieldnotes-btn'
+      , clickHandler: fetchFieldnotes
     })
 
     createRadioBtnTemplateGroup()
@@ -818,7 +818,7 @@ const init = async () => {
                 user: null
             , readonly: true
         })
-        , importFieldnotesBtn
+        , fethFieldnotesBtn
     })
 
     ltpAutocompleteTitleInputText.focus()
