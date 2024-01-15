@@ -2,7 +2,7 @@
 
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth'
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, query, where, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from 'firebase/firestore'
+import { getFirestore, collection, query, and, where, or, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from 'firebase/firestore'
 
 import { templates } from './templates.js'
 
@@ -209,8 +209,16 @@ export const getFieldnotesStubs = async ({user, readonly = false}) => {
       // Readonly
       q = query(collectionRef, where('status', '==', 'public'))
     } else {
-      // Create and edit
-      q = query(collectionRef, where('uid', '==', user.uid))
+      // Create and edit (allow only private an public states, not deleted)
+      q = query(collectionRef, 
+          and(
+            where('uid', '==', user.uid),
+            or(
+              where('status', '==', 'private'),
+              where('status', '==', 'public')
+            )
+          )
+        )
     }
     notesDocsRef = await getDocs(q)
 

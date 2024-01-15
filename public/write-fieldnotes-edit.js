@@ -875,7 +875,7 @@ const init = () => {
       updateFieldnotesCurrentStatusText.innerText = globalWrite.fieldnotesStubs.status
 
       showNotificationsDialog({
-          message: 'Fieldnotes imported'
+          message: 'Your fieldnotes are available to edit'
         , type: 'success'
         , displayDuration: 2000
       })
@@ -956,6 +956,28 @@ const init = () => {
           , type: response.type
           , displayDuration: 3000
         })
+      }
+    }
+  })
+
+  const deleteFieldnotesBtn = new ButtonComponent({
+      elementSelector: 'delete-fieldnotes-btn'
+    , clickHandler: async () => {
+      // This is a soft delete, and simply updates the stauts to deleted
+      const response = await updateFieldnoteStubProperty({
+          fieldnotesStubs: globalWrite.fieldnotesStubs
+        , prop: 'status'
+        , value: 'deleted'
+      })
+      if(response.success) {
+        showNotificationsDialog({
+            message: 'Your fielnotes have been deleted.'
+          , type: response.type
+          , displayDuration: 3000
+        })
+        setTimeout(() => {
+          window.location.reload()
+        }, 4000)
       }
     }
   })

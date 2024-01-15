@@ -37,6 +37,7 @@
   --active-fg: #74ac02;
   --grid-min-max: 180px;
   --img-min-width: 220px;
+  --alert: #ff0000;
 }
 
 /* ELEMENTS */
@@ -277,9 +278,6 @@ h2 input[type='radio'] + label {
 }
 
 @-moz-document url-prefix() {
-  /* label {
-    width: initial;
-  } */
   input[type='checkbox'] + label {
     top: 2px;
   }
@@ -533,6 +531,10 @@ th, td {
 
 .serif {
   font-family: Elena, "PT Serif", serif;
+}
+
+.alert {
+  border-color: var(--alert);
 }
 
 /* SELECTOR RULES */

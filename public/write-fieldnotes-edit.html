@@ -102,6 +102,8 @@
           </fieldset>
         </section>
 
+        <div id="draggable-sections"></div>
+
         <section id="fieldnotes-state-section" class="has-fieldnotes disabled">
           <fieldset>
             <legend>Fieldnotes status (public/private)</legend>
@@ -110,10 +112,18 @@
             <div>
               <button id="update-fieldnotes-status-btn" class="p">Set your fieldnotes to private</button>
             </div>
+            <p class="small">You can continue to edit your fieldnotes whether they are set to public or private.</p>
           </fieldset>
         </section>
-
-        <div id="draggable-sections"></div>
+        
+        <section id="delete-fieldnotes-section" class="has-fieldnotes disabled">
+          <fieldset class="alert">
+            <legend>Delete fieldnotes</legend>
+            <p class="mt0 small">When you delete fieldnotes, you will no longer have access to them.</p>
+            <button id="delete-fieldnotes-btn">Delete fieldnotes</button>
+            <p class="small">If you wish to recover them, please contact the site owner at <a href="mailto:dbmhartley@protonmail.com?subject=Recover%20deleted%20fieldnotes">Recover deleted fieldnotes</a>.</p>
+          </fieldset>
+        </section>
       </article>
 
       <dialog id="state-notifications">
