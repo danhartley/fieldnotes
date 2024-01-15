@@ -5,8 +5,6 @@ import {
     , g
     , getFieldnotesStubs
     , getFieldnotesById
-    , firebaseLogin
-    , firebaseAuthentication
 } from './api.js'
 
 import { 
@@ -813,7 +811,7 @@ const init = async () => {
     createRadioBtnTemplateGroup()
 
     fieldsnotesAutocomplete({ 
-            inputText: ltpAutocompleteTitleInputText
+          inputText: ltpAutocompleteTitleInputText
         , dataList: ltpAutocompleteTitleDatalist
         , global: globalRead
         , fieldnotesStubs: getFieldnotesStubs({

@@ -699,7 +699,7 @@ const init = () => {
       importFieldNotesNotificationText.classList.add('hidden')
 
       // Enable other sections
-      d.querySelectorAll('.has-fieldnotes').forEach(section => section.classList.add('disabled')) 
+      d.querySelectorAll('.has-fieldnotes').forEach(section => section.classList.remove('disabled')) 
 
       // Set the index for the next section
       globalWrite.nextSectionIndex = globalWrite.fieldnotes.sections.length > 0

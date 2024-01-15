@@ -104,7 +104,7 @@ const init = () => {
   const placeInputText = d.getElementById('place-input-text')
   const selectSectionTypeSection = d.getElementById('select-section-type-section')
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
-  const exportFieldNotesContainer = d.getElementById('export-fieldnotes-container')
+  const saveFieldNotesSection = d.getElementById('save-fieldnotes-section')
 
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
@@ -164,7 +164,7 @@ const init = () => {
       selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
 
       // Enable saving fieldnotes
-      exportFieldNotesContainer.classList.remove('disabled')
+      saveFieldNotesSection.classList.remove('disabled')
 
       // Notify user that observations are available
       showNotificationsDialog({
@@ -658,28 +658,26 @@ const init = () => {
     Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
   }
 
-  const enableExportFieldNotesContainer = () => {
-    if(globalWrite.view === 'create') {
-      // Check fields added by the user
-      let areFieldsValid = true
-      
-      // Title
-      areFieldsValid = areFieldsValid && globalWrite.fieldnotes.title.length > 2
+  const enableSaveFieldNotesSection = () => {
+    // Check fields added by the user
+    let areFieldsValid = true
+    
+    // Title
+    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.title.length > 2
 
-      // Author
-      areFieldsValid = areFieldsValid && globalWrite.fieldnotes.author.length > 2
+    // Author
+    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.author.length > 2
 
-      // Date
-      areFieldsValid = areFieldsValid && isValidDate({date: globalWrite.fieldnotes.d1})
-      areFieldsValid = areFieldsValid && isValidDate({date:globalWrite.fieldnotes.d2})
+    // Date
+    areFieldsValid = areFieldsValid && isValidDate({date: globalWrite.fieldnotes.d1})
+    areFieldsValid = areFieldsValid && isValidDate({date:globalWrite.fieldnotes.d2})
 
-      // Location
-      areFieldsValid = areFieldsValid && globalWrite.fieldnotes.location.place_guess.length > 2
+    // Location
+    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.location.place_guess.length > 2
 
-      areFieldsValid
-        ? exportFieldNotesContainer.classList.remove('disabled')
-        : exportFieldNotesContainer.classList.add('disabled')      
-    }
+    areFieldsValid
+      ? saveFieldNotesSection.classList.remove('disabled')
+      : saveFieldNotesSection.classList.add('disabled')    
   }
 
   const updateSingleFields = async ({prop, value}) => {
@@ -715,21 +713,11 @@ const init = () => {
 
   titleInputText.addEventListener('change', e => { 
     globalWrite.fieldnotes.title = e.target.value
-    globalWrite.view === 'create'
-      ? enableExportFieldNotesContainer()
-      : updateSingleFields({
-          prop: 'title'
-        , value: globalWrite.fieldnotes.title
-      })
+    enableSaveFieldNotesSection()
   })
   authorInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.author = e.target.value
-    globalWrite.view === 'create'
-      ? enableExportFieldNotesContainer()
-      : updateSingleFields({
-          prop: 'author'
-        , value: globalWrite.fieldnotes.author
-      })
+    enableSaveFieldNotesSection()
   })
   dateInputText.addEventListener('change', e => {
     const date = e.target.value    
@@ -745,19 +733,11 @@ const init = () => {
         , value: globalWrite.fieldnotes.d2
       })
     }
-    enableExportFieldNotesContainer()
+    enableSaveFieldNotesSection()
   })
   placeInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.location.place_guess = e.target.value
-    globalWrite.view === 'create'
-      ? enableExportFieldNotesContainer()
-      : updateSingleFields({
-          prop: 'location'
-        , value: { 
-            place_guess: globalWrite.fieldnotes.location.place_guess
-          , location: globalWrite.fieldnotes.location.location
-      }
-    })
+    enableSaveFieldNotesSection()
   })
   
   const enableSearchBtn = () => {

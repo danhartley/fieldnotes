@@ -203,14 +203,14 @@ export const getFieldnotesStubs = async ({user, readonly = false}) => {
         db
     })
 
-    let notesDocsRef
+    let notesDocsRef, q
 
     if(readonly) {
-      notesDocsRef = await getDocs(collectionRef)
+      q = query(collectionRef, where('isPublished', '==', true))
     } else {
-      const q = query(collectionRef, where('uid', '==', user.uid))
-      notesDocsRef = await getDocs(q)
+      q = query(collectionRef, where('uid', '==', user.uid))
     }
+    notesDocsRef = await getDocs(q)
 
     const stubsList = notesDocsRef.docs.map(doc => {
       return doc.data()
