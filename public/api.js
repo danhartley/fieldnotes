@@ -408,12 +408,12 @@ export const addElementToArray = async ({fieldnotes, array, element, isEdit = fa
 
       return {
         success: true,
-        message: 'Section added'
+        message: `${element.name} added`
       }
     } else {
       return {
         success: true,
-        message: 'Section added'
+        message: `${element.name} added`
       }
     }
   } catch (e) {
@@ -445,12 +445,12 @@ export const removeElementFromArray = async ({fieldnotes, array, element, isEdit
 
       return {
         success: true,
-        message: 'Section removed'
+        message: `${element.name} deleted`
       }
     } else {
       return {
         success: true,
-        message: 'Section removed'
+        message: `${element.name} deleted`
       }
     }
   } catch (e) {
@@ -470,7 +470,7 @@ export const updateElementFromArray = async ({fieldnotes, array, elementToUpdate
     
     return {
       success: true,
-      message: 'Section updated'
+      message: `${elementToUpdate.name} updated`
     }
   }
 

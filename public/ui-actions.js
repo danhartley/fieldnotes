@@ -537,6 +537,9 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
     // Get the section to move
     const sectionTemplateToMoveId = globalWrite.fieldnotes.sectionOrder.find(sectionIndex => sectionIndex === sectionToDropId)
 
+    // Get the section type
+    const elementToMove = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionTemplateToMoveId)
+
     // Remove the section to move
     globalWrite.fieldnotes.sectionOrder = globalWrite.fieldnotes.sectionOrder.filter(sectionIndex => sectionIndex !== sectionToDropId)
 
@@ -577,7 +580,10 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
             sectionToMove.classList.add('pointer')
 
             // Notify user
-            showNotificationsDialog({message: 'Section moved'})
+            showNotificationsDialog({
+                 success: true
+                , message: `${elementToMove.name} moved`
+            })
         }
     } catch (e) {
         showNotificationsDialog({message: e.message, type: 'error'})
@@ -613,7 +619,7 @@ export const deleteSection = async ({sectionIndex, globalWrite}) => {
             ? await removeElementFromArray({fieldnotes: globalWrite.fieldnotes, array: 'sections',  element: elementToRemove})
             : {
                 success: true,
-                message: 'Section removed'
+                message: `${elementToMove.name} deleted`
             }
 
         if(response.success) {

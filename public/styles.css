@@ -517,7 +517,7 @@ th, td {
 
 .success-icon::before {
   content: '\2713';
-  margin-right: calc(var(--d) * .25);
+  margin-right: calc(var(--d) * .5);
 }
 
 .error-icon::before {
