@@ -803,7 +803,7 @@ const init = async () => {
         speciesDisplayContainer.classList.remove('disabled')
     }
 
-    const fethFieldnotesBtn = new ButtonComponent({
+    const fetchFieldnotesBtn = new ButtonComponent({
         elementSelector: 'fetch-fieldnotes-btn'
       , clickHandler: fetchFieldnotes
     })
@@ -818,7 +818,7 @@ const init = async () => {
                 user: null
             , readonly: true
         })
-        , fethFieldnotesBtn
+        , fetchFieldnotesBtn
     })
 
     ltpAutocompleteTitleInputText.focus()
