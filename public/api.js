@@ -232,7 +232,7 @@ export const getFieldnotesStubs = async ({user, readonly = false}) => {
   }
 }
 
-export const addFieldnotes = async ({fieldnotes, status = 'public'}) => {
+export const addFieldnotes = async ({fieldnotes, status = 'private'}) => {
   const db = getDb()
   let id, data = null
 
@@ -241,7 +241,10 @@ export const addFieldnotes = async ({fieldnotes, status = 'public'}) => {
       const fieldnotesCollectionRef = getFieldnotesCollectionRef({db})
       const fieldNotesRef = await doc(fieldnotesCollectionRef)
       id = fieldNotesRef.id
-      data = { ...fieldnotes, id }
+      data = { 
+          ...fieldnotes
+        , id
+      }
       await setDoc(fieldNotesRef, data)
 
       // Add new fieldnotes stub to collection
@@ -254,14 +257,19 @@ export const addFieldnotes = async ({fieldnotes, status = 'public'}) => {
         , title: fieldnotes.title
         , author: fieldnotes.author 
         , status
+        , created: Date.now()
       }
       await setDoc(fieldNotesStubRef, data)
 
+      const message = status === 'public'
+        ? 'Your fieldnotes have been saved, and are available to others.'
+        : 'Your fieldnotes have been saved, but can be viewed only be you.'
+
       return {
-        success: true,
-        message: 'Fieldnotes added',
-        id,
-        type: 'success'
+          success: true
+        , message
+        , id
+        , type: 'success'
       }
     } catch (e) {
       console.log('API fieldnotes id: ', id)

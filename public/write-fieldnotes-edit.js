@@ -963,7 +963,7 @@ const init = () => {
   const deleteFieldnotesBtn = new ButtonComponent({
       elementSelector: 'delete-fieldnotes-btn'
     , clickHandler: async () => {
-      // This is a soft delete, and simply updates the stauts to deleted
+      // This is a soft delete, and simply updates the status to deleted
       const response = await updateFieldnoteStubProperty({
           fieldnotesStubs: globalWrite.fieldnotesStubs
         , prop: 'status'

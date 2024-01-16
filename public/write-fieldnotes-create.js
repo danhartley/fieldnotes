@@ -753,7 +753,7 @@ const init = () => {
   singleObservationsInputDate.addEventListener('blur', enableSearchBtn, true)
   iNatAutocompleteInputText.addEventListener('blur', enableSearchBtn, true)
 
-  const saveFieldnotes = async({publish}) => {
+  const saveFieldnotes = async({status}) => {
     try {
       const notes = {}
 
@@ -786,7 +786,7 @@ const init = () => {
       
       const response = await addFieldnotes({
           fieldnotes: notes
-        , publish
+        , status
       })
 
       if(response.success) {
@@ -812,14 +812,14 @@ const init = () => {
   const saveFieldNotesBtn = new ButtonComponent({
       elementSelector: 'save-fieldnotes-btn'
       , clickHandler: () => saveFieldnotes({
-        publish: false
+        status: 'private'
       })
   })
 
   const saveAndPublishFieldNotesBtn = new ButtonComponent({
       elementSelector: 'save-and-publish-fieldnotes-btn'
     , clickHandler: () => saveFieldnotes({
-      publish: true
+      status: 'public'
     })
   })
 
