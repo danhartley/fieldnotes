@@ -280,9 +280,12 @@ export const addTermToList = ({selectedTerms, selectedTerm, selectedItemsListEle
 }
 
 const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  writeTemplateId}) => {
-    const name = e.target.value
-    const id = e.target.id
+    const checkbox = e.target
+    const name = checkbox.value
+    const id = checkbox.id
     const taxonId = Number(id.substring(id.indexOf('-') + 1)) // remove section identifier used to keep Ids unique in the DOM
+    const label = checkbox.nextElementSibling
+    const observation = globalWrite.species.find(sp => sp.id === taxonId)
 
     let section = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)    
     let index = globalWrite.fieldnotes.sections.findIndex(t => t.sectionIndex === sectionIndex)
@@ -304,39 +307,60 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
     if(section) {        
         switch(writeTemplateId) {
             case 'species-write-template':
-                section.species.find(sp => sp === name)
-                    ? section.species = section.species.filter(sp => sp !== name)
-                    : section.species.push(name)
+                if(section.species.find(sp => sp === name)) {
+                    section.species = section.species.filter(sp => sp !== name)
+                    label.innerText = 'Not included'
+                } else {
+                    section.species.push(name)
+                    label.innerText = 'Included'
+                }
                 globalWrite.fieldnotes.sections[index] = section
                 break
-            case 'observations-write-template':
-                const observation = globalWrite.species.find(sp => sp.id === taxonId)
-                section.species.find(sp => sp.observation_id === taxonId)
-                    ? section.species = section.species.filter(sp => sp.observation_id !== observation.id)
-                    : section.species.push({
-                          name
-                        , observation_id: observation.id
-                        , src: observation.photos[0].url
+            case 'observations-write-template':                
+                if(section.species.find(sp => sp.observation_id === taxonId)) {
+                    section.species = section.species.filter(sp => sp.observation_id !== observation.id)
+                    label.innerText = 'Not included'
+                } else {
+                    section.species.push({
+                        name
+                      , observation_id: observation.id
+                      , src: observation.photos[0].url
                     })
+                    label.innerText = 'Included'
+                }
                 globalWrite.fieldnotes.sections[index] = section
                 break
             case 'inat-lookup-write-template':
-                    section.species.find(sp => sp.taxon.name === name)
-                        ? section.species = section.species.filter(sp => sp.taxon.name !== name)
-                        : section.species.push(getSpeciesForInatLookup({
+                    if(section.species.find(sp => sp.taxon.name === name)) {
+                        section.species = section.species.filter(sp => sp.taxon.name !== name)
+                        label.innerText = 'Not included'
+                    } else {
+                        section.species.push(getSpeciesForInatLookup({
                             taxon
-                          })) 
+                        })) 
+                        label.innerText = 'Included'
+                    }
                     globalWrite.fieldnotes.sections[index] = section
                 break
         }
     } else {
         const sp = [name]
+        label.innerText = 'Included'
         switch(writeTemplateId) {
             case 'species-write-template':
                 section = {...species, species: sp, templateId: species.templateId, sectionIndex }
                 break
             case 'observations-write-template':
-                section = {...observations, species: sp, templateId: observations.templateId, sectionIndex }
+                section = {
+                      ...observations
+                    , species: [{
+                          name
+                        , observation_id: observation.id
+                        , src: observation.photos[0].url
+                    }]
+                    , templateId: observations.templateId
+                    , sectionIndex
+                }
                 break
             case 'inat-lookup-write-template':
                 section = {

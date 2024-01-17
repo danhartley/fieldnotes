@@ -160,6 +160,7 @@ const init = () => {
 
     previewContainer = typeClone.querySelector('.edit')
 
+    // Create the section
     switch(writeTemplateId) {
       case 'h3-write-template':
       case 'h4-write-template':
@@ -201,7 +202,7 @@ const init = () => {
       case 'species-write-template':       
         cloneImages({
             globalWrite
-          , parent:typeClone.querySelector('div')
+          , parent: typeClone.querySelector('div')
           , writeTemplateId
           , sectionIndex
         })
@@ -215,7 +216,19 @@ const init = () => {
             , cancelActionBtn
           })
         })
-        addOrUpdateSectionBtn.enable()
+        // Observe changes to the species list
+        const observer = new MutationObserver(() => {
+          const section = globalWrite.fieldnotes.sections.find(s => s.sectionIndex === sectionIndex)
+          const speciesCount = section?.species?.length || 0
+          console.log('species count: ', speciesCount)
+          speciesCount > 0
+            ? addOrUpdateSectionBtn.enable()
+            : addOrUpdateSectionBtn.disable()
+        })
+        observer.observe(draggableSection.querySelector('.content-container'), {
+              subtree: true
+            , childList: true
+        })
         break
       case 'terms-write-template':
         datalist = typeClone.querySelector('datalist')
@@ -717,6 +730,7 @@ const init = () => {
       // Remove existing sections
       draggableSections.replaceChildren()
 
+      // Recreate the sections
       globalWrite.fieldnotes.sections.forEach(section => {
         const draggableSection = createSection({
             writeTemplateId: section.writeTemplateId
@@ -779,8 +793,13 @@ const init = () => {
             })
             speciesCheckboxes = draggableSection.querySelectorAll('input')
             speciesCheckboxes.forEach(checkbox => {
-              if(section.species.includes(checkbox.value) || section.species.map(sp => sp.name).includes(checkbox.value)) {
+            const hasSpeciesMatch = (section.templateId === 'species-preview-template' && section.species.includes(checkbox.value))
+            const checkboxId = Number(checkbox.id.substring(checkbox.id.indexOf('-') + 1)) // remove section identifier used to keep Ids unique in the DOM
+            const hasObservationMatch = (section.templateId === 'observations-preview-template' && section.species.map(sp => sp.observation_id).includes(checkboxId))
+            const hasMatch = hasSpeciesMatch || hasObservationMatch
+              if(hasMatch) {
                 checkbox.setAttribute('checked', true)
+                checkbox.nextElementSibling.innerText = 'Included'
               } else {
                 checkbox.closest('figure').classList.add('hidden')                
               }
@@ -811,6 +830,7 @@ const init = () => {
             speciesCheckboxes = parent.querySelectorAll('input')
             speciesCheckboxes.forEach(checkbox => {
               checkbox.setAttribute('checked', true)
+              checkbox.nextElementSibling.innerText = 'Included'
             }) 
             break
           case 'images-preview-template':
