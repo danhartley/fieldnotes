@@ -280,7 +280,9 @@ export const addTermToList = ({selectedTerms, selectedTerm, selectedItemsListEle
 }
 
 const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  writeTemplateId}) => {
-    const name = e.target.value    
+    const name = e.target.value
+    const id = e.target.id
+    const taxonId = Number(id.substring(id.indexOf('-') + 1)) // remove section identifier used to keep Ids unique in the DOM
 
     let section = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)    
     let index = globalWrite.fieldnotes.sections.findIndex(t => t.sectionIndex === sectionIndex)
@@ -299,23 +301,23 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
         }
     }
 
-    if(section) {
+    if(section) {        
         switch(writeTemplateId) {
             case 'species-write-template':
-                const observation = globalWrite.species.find(sp => sp.name === name)
                 section.species.find(sp => sp === name)
                     ? section.species = section.species.filter(sp => sp !== name)
+                    : section.species.push(name)
+                globalWrite.fieldnotes.sections[index] = section
+                break
+            case 'observations-write-template':
+                const observation = globalWrite.species.find(sp => sp.id === taxonId)
+                section.species.find(sp => sp.observation_id === taxonId)
+                    ? section.species = section.species.filter(sp => sp.observation_id !== observation.id)
                     : section.species.push({
                           name
                         , observation_id: observation.id
                         , src: observation.photos[0].url
                     })
-                globalWrite.fieldnotes.sections[index] = section
-                break
-            case 'observations-write-template':
-                section.species.find(sp => sp === name)
-                    ? section.species = section.species.filter(sp => sp !== sp.name)
-                    : section.species.push({name})            
                 globalWrite.fieldnotes.sections[index] = section
                 break
             case 'inat-lookup-write-template':
@@ -816,3 +818,29 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
       }      
     }    
   }
+
+const encode = s => {
+    var out = []
+    for ( var i = 0; i < s.length; i++ ) {
+        out[i] = s.charCodeAt(i)
+    }
+    return new Uint8Array(out)
+}
+
+// With thanks: https://gist.github.com/yiwenl/8f2b735a2263bc93ee33
+export const saveJson = ({obj, title = 'fieldnotes'}) => {
+    var str = JSON.stringify(obj)
+    var data = encode(str)
+
+    var blob = new Blob([data], {
+        type: 'application/octet-stream'
+    })
+
+    var url = URL.createObjectURL(blob)
+    var link = document.createElement('a')
+    link.setAttribute('href', url)
+    link.setAttribute('download', `${title}.json`)
+    var event = document.createEvent('MouseEvents')
+    event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null)
+    link.dispatchEvent(event)
+}

@@ -46,6 +46,7 @@ import {
   , toggleSpeciesList
   , fetchFieldnotesStubs
   , authenticateUserEmailAndPassword
+  , saveJson
 } from './ui-actions.js'
 
 import {
@@ -109,7 +110,7 @@ const init = () => {
   const selectSectionTypeSection = d.getElementById('select-section-type-section')
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
   const updateFieldnotesStatusText = d.getElementById('update-fieldnotes-status-text')
-  const updateFieldnotesCurrentStatusText = d.getElementById('update-fieldnotes-current-status-text')
+  const updateFieldnotesCurrentStatusText = d.getElementById('update-fieldnotes-current-status-text')  
   
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
@@ -790,7 +791,8 @@ const init = () => {
             setOriginalTypeValues({
                 globalWrite
               , section
-              , type:section.type})
+              , type:section.type
+            })
             let parent = null
             section.species.forEach((sp, index) => {
               parent = draggableSection.querySelector(`#inat-looup-parent-${section.sectionIndex}`)
@@ -979,6 +981,16 @@ const init = () => {
           window.location.reload()
         }, 4000)
       }
+    }
+  })
+
+  const saveFieldnotesToFileBtn = new ButtonComponent({
+      elementSelector: 'save-fieldnotes-to-file-btn'
+    , clickHandler: () => {
+      saveJson({
+          obj: globalWrite.fieldnotes
+        , title: globalWrite.fieldnotes.title
+      })
     }
   })
 }

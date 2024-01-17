@@ -11,7 +11,7 @@
   </head>
 
   <body>  
-    <header>
+    <header class="print-ignore">
       <menu>
         <li><a data-view="fieldnotes-search-view" href="/fieldnotes" class="selected">Read fieldnotes</a></li>
         <li><a data-view="create-fieldnotes-view" href="/fieldnotes/create">Create fieldnotes</a></li>
@@ -19,7 +19,7 @@
       </menu>
     </header>
 
-    <aside>
+    <aside class="print-ignore">
       <menu>
         <li><button id="inat-preferences-btn" data-action="inat-preferences" class="smallish">Show iNaturalist preferences</button></li>
       </menu>
@@ -34,7 +34,7 @@
     </aside>
 
     <main>
-      <section class="fieldnotes-search-view">
+      <section class="print-ignore">
         <fieldset>
           <legend>Fieldnotes search</legend>
           <p class="mt0 small">Search for fieldnotes.</p>
@@ -51,7 +51,7 @@
         </fieldset>
       </section>
 
-      <section class="mt2 inaturalist-search-view hidden">
+      <section class="mt2 print-ignore hidden">
         <div>
           <fieldset>
             <legend>iNaturalist search</legend>
@@ -119,7 +119,7 @@
         </div>
       </section>
       
-      <section class="section-with-header fieldnotes-search-view inaturalist-search-view hidden">
+      <section class="section-with-header print-ignore hidden">
         <div id="display-fieldset" class="fieldset-reset">        
           <fieldset class="flex-row">
             <legend>Select view</legend>
@@ -133,7 +133,7 @@
         </div>
       </section>
 
-      <section class="section-with-header fieldnotes-search-view inaturalist-search-view hidden">
+      <section class="section-with-header hidden">
         <fieldset id="lesson-fieldset">
           <legend>Fieldnotes</legend>
           <button id="show-test-btn" class="btn-reset t0 r1 tiny hidden">Show test</button>
@@ -183,7 +183,16 @@
         </div>
       </section>
 
-      <dialog id="state-notifications">
+      <section id="fieldnotes-export-options" class="section-with-header print-ignore hidden">
+        <fieldset>
+          <legend>Keep a record of fieldnotes that interest you</legend>
+          <p class="mt0 small">Print these fieldnotes as a PDF.</p>
+          <button id="print-fieldnotes-btn">Print fieldnotes</button>
+        </fieldset>
+      </section>
+    </article>
+
+      <dialog id="state-notifications print-ignore">
         <div class="flex-columns small">
           <div class="success-icon">Success</div>
           <div></div>

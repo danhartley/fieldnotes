@@ -845,6 +845,12 @@ const init = async () => {
         , clickHandler: toggleInaturalistPreferences
     })
 
+    const printFieldnotesBtn = new ButtonComponent({
+        elementSelector: 'print-fieldnotes-btn'
+      , clickHandler: () => {
+        print()
+      }
+    })
 }
 
 init()

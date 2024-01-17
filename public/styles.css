@@ -941,3 +941,9 @@ th, td {
     max-width: 60ch;
   }
 }
+
+@media print {
+  .print-ignore {
+    display: none;
+  }
+}
