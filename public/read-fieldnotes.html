@@ -135,7 +135,7 @@
 
       <section class="section-with-header hidden">
         <fieldset id="lesson-fieldset">
-          <legend>Fieldnotes</legend>
+          <legend class="print-ignore">Fieldnotes</legend>
           <button id="show-test-btn" class="btn-reset t0 r1 tiny hidden">Show test</button>
           <article id="article">
           </article>
@@ -188,6 +188,8 @@
           <legend>Keep a record of fieldnotes that interest you</legend>
           <p class="mt0 small">Print these fieldnotes as a PDF.</p>
           <button id="print-fieldnotes-btn">Print fieldnotes</button>
+          <p class="small">Print with page breaks before photos.</p>
+          <button id="print-fieldnotes-with-page-breaks-btn">Print fieldnotes with page breaks</button>
         </fieldset>
       </section>
     </article>
@@ -344,7 +346,7 @@
       <dd></dd>
     </template>
 
-    <template id="xenocanto-preview-template">
+    <template id="xenocanto-preview-template" class="print-ignore">
       <div class="double-centred-block">
         <iframe src='https://xeno-canto.org/121910/embed?simple=1' scrolling='no' frameborder='0' width='340' height='115'></iframe>
       </div>

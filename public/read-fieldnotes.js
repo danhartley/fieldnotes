@@ -851,6 +851,14 @@ const init = async () => {
         print()
       }
     })
+
+    const printFieldnotesWithPageBreaksBtn = new ButtonComponent({
+        elementSelector: 'print-fieldnotes-with-page-breaks-btn'
+      , clickHandler: () => {
+        Array.from(d.querySelectorAll('.grid')).forEach(grid => grid.classList.add('page-breaks'))
+        print()
+      }
+    })
 }
 
 init()

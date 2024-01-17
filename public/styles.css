@@ -388,7 +388,7 @@ legend, .species-list #toggle-species-include-all-btn {
   position: absolute;
   top: calc(var(--d) *.5);
   left: var(--d);
-  width: 50%;
+  /* width: 50%; */
   padding: calc(var(--d) * 1.5) var(--d);
   font-size: var(--s3);
   font-weight: bold;
@@ -944,6 +944,37 @@ th, td {
 
 @media print {
   .print-ignore {
+    display: none;
+  }
+
+  main {
+    max-width: 140ch;
+  }
+
+  img {
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    max-height: var(--img-min-width);
+  }
+
+  a {
+    border-bottom: none;
+  }
+
+  iframe {
+    display: none;
+  }
+
+  .page-breaks {
+    padding-top: calc(var(--d) * 5);
+    break-before: page;
+  }
+
+  .non-grid {
+    max-width: 140ch;
+  }
+
+  .non-grid:has(iframe) {
     display: none;
   }
 }
