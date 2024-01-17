@@ -234,6 +234,7 @@ const init = () => {
 
     previewContainer = typeClone.querySelector('.edit')
 
+    // Create the section
     switch(writeTemplateId) {
       case 'h3-write-template':
       case 'h4-write-template':
@@ -289,7 +290,19 @@ const init = () => {
             , cancelActionBtn
           })
         })
-        addOrUpdateSectionBtn.enable()
+        // Observe changes to the species list
+        const observer = new MutationObserver(() => {
+          const section = globalWrite.fieldnotes.sections.find(s => s.sectionIndex === sectionIndex)
+          const speciesCount = section?.species?.length || 0
+          console.log('species count: ', speciesCount)
+          speciesCount > 0
+            ? addOrUpdateSectionBtn.enable()
+            : addOrUpdateSectionBtn.disable()
+        })
+        observer.observe(draggableSection.querySelector('.content-container'), {
+              subtree: true
+            , childList: true
+        })
         break
       case 'terms-write-template':
         datalist = typeClone.querySelector('datalist')
