@@ -78,6 +78,10 @@ header menu a.selected {
   border-width: calc(var(--d) * .15);
 }
 
+article {
+  font-family: Elena, "PT Serif", serif;
+}
+
 aside {
   margin: var(--d) auto;
   padding: var(--d);

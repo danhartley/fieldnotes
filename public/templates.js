@@ -2,7 +2,7 @@ export const templates = [
   {
       id: 'fieldnotes-template'
     , templateId: 'fieldnotes-template'
-    , name: 'Field notes'
+    , name: 'Fieldnotes'
     , parent: 'grid-template'
     , isTest: false
     , requiresSpecies: true

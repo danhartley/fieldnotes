@@ -232,6 +232,44 @@ export const getFieldnotesStubs = async ({user, readonly = false}) => {
   }
 }
 
+export const addTerm = async({term}) => {
+  const db = getDb()
+  let id, data = null
+
+  try {
+    const collectionRef = collection(db, 'fieldnotes-terms')
+    const termRef = await doc(collectionRef)
+    id = termRef.id
+    data = {
+        ...term
+      , id
+    }
+    await setDoc(termRef, data)
+
+    return {
+      success: true
+    , message: 'Term added'
+    , id
+    , type: 'success'
+  }
+
+  } catch (e) {
+    console.log('API term id: ', id)
+    console.log('API data: ', data)
+    console.warn('API error: ', e)
+  }
+}
+
+export const getTerms = async () => {   
+  const db = getDb()
+  const collectionRef = collection(db, 'fieldnotes-terms')
+  const termsDocsRef = await getDocs((collectionRef))
+  const terms = termsDocsRef.docs.map(doc => {
+    return doc.data()
+  })
+  return terms
+}
+
 export const addFieldnotes = async ({fieldnotes, status = 'private'}) => {
   const db = getDb()
   let id, data = null
@@ -479,254 +517,6 @@ export const updateElementFromArray = async ({fieldnotes, array, elementToUpdate
 // LTP API
 
 // HARD-CODED DATA
-
-const terms = [
-  {
-    dt: 'Serotiny',
-    dd: 'Remaining on a tree after maturity and opening to release seeds only after exposure to certain conditions, especially heat from a fire. Used of the cones of gymnosperms.',
-    ds: 'https://en.wikipedia.org/wiki/Serotiny',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Secondary succession',
-    dd: 'A process started by an event (e.g. forest fire, harvesting, hurricane, etc.) that reduces an already established ecosystem (e.g. a forest or a wheat field) to a smaller population of species.',
-    ds: 'https://en.wikipedia.org/wiki/Secondary_succession',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Ecological succession',
-    dd: 'The process of change in the species that make up an ecological community over time. Primary succession is the initial state of a new habitat.',
-    ds: 'https://en.wikipedia.org/wiki/Ecological_succession',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Maquis',
-    dd: 'A shrubland biome in the Mediterranean region, typically consisting of densely growing evergreen shrubs.',
-    ds: 'https://en.wikipedia.org/wiki/Maquis_shrubland',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Garrigue',
-    dd: 'A type of low scrubland ecoregion and plant community in the Mediterranean forests, woodlands, and scrub biome.',
-    ds: 'https://en.wikipedia.org/wiki/Garrigue',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Sclerophyll',
-    dd: 'A type of vegetation that is adapted to long periods of dryness and heat. The plants feature hard leaves, short internodes (the distance between leaves along the stem) and leaf orientation which is parallel or oblique to direct sunlight.',
-    ds: 'https://en.wikipedia.org/wiki/Sclerophyll',
-    da: 'Wikipedia',
-    dx: ['Quercus ilex', 'Myrtus communis', 'Arbutus unedo', 'Olea europaea', 'Laurus nobilis', 'Phillyrea latifolia', 'Rhamnus alaternus']
-  },
-  {
-    dt: 'Marcescence',
-    dd: 'The withering and persistence of plant organs that normally are shed, and is a term most commonly applied to plant leaves.',
-    ds: 'https://en.wikipedia.org/wiki/Marcescence',
-    da: 'Wikipedia',
-    dx: ['Quercus', 'Fagus']
-  },
-  {
-    dt: 'Therophytes',
-    dd: 'These are annual plants that complete their lives rapidly in favorable conditions and survive the unfavorable cold or dry season in the form of seeds.',
-    da: 'Wikipedia',
-    ds: 'https://en.wikipedia.org//wiki/Raunki%C3%A6r_plant_life-form#Therophytes',
-  },
-  {
-    dt: 'Xerothermic',
-    dd: 'Adapted to or flourishing in an environment that is both dry and hot.',
-  },
-  {
-    dt: 'Ruderal species',
-    dd: 'A plant species that is first to colonize disturbed lands. The disturbance may be natural – for example, wildfires or avalanches – or the consequences of human activities.',
-    ds: 'https://en.wikipedia.org/wiki/Ruderal_species',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Synanthrope',
-    dd: 'An organism that lives near and benefits from humans and their environmental modifications.',
-    ds: 'https://en.wikipedia.org/wiki/Synanthrope',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Phytophagous Insects',
-    dd: 'Species that attack roots, stems, leaves, flowers, and fruits, either as larvae or as adults or in both stages. Phytophagous insects are highly diverse and the total species number is at least 500,000.',
-    ds: 'https://www.sciencedirect.com/topics/agricultural-and-biological-sciences/phytophagous-insects',
-    da: 'ScienceDirect'
-  },
-  {
-    dt: 'Limestone',
-    dd: 'Calcium carbonate CaCO3 is a type of carbonate sedimentary rock. Limestone forms when these minerals precipitate out of water containing dissolved calcium, principally through the accumulation of corals and shells in the sea over the past 540 million years.',
-    ds: 'https://en.wikipedia.org/wiki/Limestone',
-    da: 'Wikipedia'
-  },
-  {
-    dt: 'Convergent evolution',
-    dd: 'The independent evolution of similar features in species of different periods or epochs in time.',
-    ds: 'https://en.wikipedia.org//wiki/Convergent_evolution',
-    da: 'Wikipedia'
-  },
-  {
-    dt: 'Orthent',
-    dd: 'Soils that lack horizon development due to either steep slopes or parent materials that contain no permanent weatherable minerals (such as ironstone). Typically, orthents are exceedingly shallow soils. They are often referred to as skeletal soils (USDA - entisols, UN FAO soil classification - lithosols).',
-    ds: 'https://en.wikipedia.org/wiki/Orthent',
-    da: 'Wikipedia'
-  },
-  {
-    dt: 'Conifer',
-    dd: 'A group of cone-bearing seed plants.',
-    ds: 'https://en.wikipedia.org/wiki/Conifer',
-    da: 'Wikipedia',
-    dx: ['cedars', 'cypresses', 'firs', 'junipers', 'kauri', 'larches', 'pines', 'hemlocks', 'redwoods', 'spruces', 'yews'],
-  },
-  {
-    dt: 'Mesozoic',
-    dd: 'The second-to-last era of Earth\'s geological history, lasting from about 252 to 66 million years ago, comprising the Triassic, Jurassic and Cretaceous Periods.',
-    ds: 'https://en.wikipedia.org/wiki/Mesozoic',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Solstice',
-    dd: 'A solstice is an event that occurs when the Sun appears to reach its most northerly or southerly excursion relative to the celestial equator on the celestial sphere.',
-    ds: 'https://en.wikipedia.org/wiki/Solstice',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Subsolar point',
-    dd: 'The subsolar point on a planet is the point at which its Sun is perceived to be directly overhead (at the zenith); that is, where the Su\'s rays strike the planet exactly perpendicular to its surface.',
-    ds: 'https://en.wikipedia.org/wiki/Subsolar_point',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Tropic of Cancer (Northern Tropic)',
-    dd: 'The most northerly circle of latitude on Earth at which the Sun can be directly overhead. This occurs on the June solstice, when the Northern Hemisphere is tilted toward the Sun to its maximum extent.',
-    ds: 'https://en.wikipedia.org/wiki/Tropic_of_Cancer',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Tropic of Capricorn (Southern Tropic)',
-    dd: 'The circle of latitude that contains the subsolar point at the December (or southern) solstice. It is thus the southernmost latitude where the Sun can be seen directly overhead. It also reaches 90 degrees below the horizon at solar midnight on the June Solstice.',
-    ds: 'https://en.wikipedia.org/wiki/Tropic_of_Capricorn',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Köppen climate classification',
-    dd: 'Divides climates into five main climate groups, with each group being divided based on patterns of seasonal precipitation and temperature. The five main groups are A (tropical), B (arid), C (temperate), D (continental), and E (polar). These are in turn divided into subgroups. Climates are assigned a group and typically a subgroup e.g. Mediterranean climate has a Köppen climate classification of Csa/Csb.',
-    ds: 'https://en.wikipedia.org/wiki/K%C3%B6ppen_climate_classification',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Siliceous rock',
-    dd: 'Sedimentary rocks that have silica (SiO2) as the principal constituent. The most common siliceous rock is chert.',
-    ds: 'https://en.wikipedia.org/wiki/Siliceous_rock',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Lignotuber',
-    dd: 'A woody swelling of the root crown (that part of a root system from which a stem arise) possessed by some plants as a protection against destruction of the plant stem, such as by fire.',
-    ds: 'https://en.wikipedia.org/wiki/lignotuber',
-    da: 'Wikipedia',
-    dx: ['Quercus suber', 'Erica arborea', 'Olea europaea']
-  },
-  {
-    dt: 'Phytology',
-    dd: 'The study of plants; botany.',
-    ds: 'https://en.wikipedia.org/wiki/Lignotuberphytology',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Obligate seeders',
-    dd: 'Plants with large, fire-activated seed banks that germinate, grow, and mature rapidly following a fire, in order to reproduce and renew the seed bank before the next fire.',
-    ds: 'https://en.wikipedia.org/wiki/Fire_ecology#Fire_intolerance',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Resprouters',
-    dd: 'Plant species that are able to survive fire by the activation of dormant vegetative buds to produce regrowth.',
-    ds: 'https://en.wikipedia.org/wiki/Fire_ecology#Fire_tolerance',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Iteroparity',
-    dd: 'Characterized by multiple reproductive cycles over the course of its lifetime. Compare polycarpy.',
-    ds: 'https://en.wikipedia.org/wiki/Semelparity_and_iteroparity',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Semelparity',
-    dd: 'Characterized by a single reproductive episode before death. Compare monocarpy.',
-    ds: 'https://en.wikipedia.org/wiki/Semelparity_and_iteroparity',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Monocarpic',
-    dd: 'Plants are those that flower and set seeds only once, and then die.',
-    ds: 'https://en.wikipedia.org/wiki/Monocarpic',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Polycarpic',
-    dd: 'Plants are those that flower and set seeds many times before dying.',
-    ds: 'https://en.wikipedia.org/wiki/Polycarpic',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Monopyric',
-    dd: 'Species that perform all their life cycle within a fire cycle. In plants, examples are annual and biennial species, postfire obligate seeders and some bamboos.',
-    ds: 'https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.12921',
-    da: 'New Phytologist',
-  },
-  {
-    dt: 'Polypyric',
-    dd: 'Species that perform all their life cycle through multiple fire cycles. In plants, examples are those with postfire resprouting capacity as well as trees with other survival strategies such as very thick bark.',
-    ds: 'https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.12921',
-    da: 'New Phytologist',
-  },
-  {
-    dt: 'Subtropics',
-    dd: 'Geographical and climate zones to the north of the tropic of Cancer and south of the tropic of Capricorn. The tropics lie at a latitude of ~23.44° north and south, which corresponds to the Earth\'s axial tilt.',
-    ds: 'https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.12921',
-    da: 'New Phytologist',
-  },
-  {
-    dt: 'Climax community',
-    dd: 'A historic term for a community of plants, animals, and fungi which, through the process of ecological succession in the development of vegetation in an area over time, have reached a steady state.',
-    ds: 'https://en.wikipedia.org/wiki/Climax_community',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Edaphology',
-    dd: 'Concerned with the influence of soils on living beings, particularly plants.',
-    ds: 'https://en.wikipedia.org/wiki/Edaphology',
-    da: 'Wikipedia',
-  },
-  {
-    dt: 'Epicormic shoot',
-    dd: 'A shoot growing from an epicormic bud, which lies underneath the bark of a trunk, stem, or branch of a plant. Epicormic resprouting is typical of some tree species from fire-prone ecosystems.',
-    ds: 'https://en.wikipedia.org/wiki/Epicormic_shoot',
-    da: 'Wikipedia',
-    dx: ['Eucalyptus', 'Quercus suber']
-  },
-  {
-    dt: 'Epicuticular wax',
-    dd: 'A waxy coating which covers the outer surface of the plant cuticle in land plants. It may form a whitish film or bloom on leaves, fruits and other plant organs.',
-    ds: 'https://en.wikipedia.org/wiki/Epicuticular_wax',
-    da: 'Wikipedia',
-    dx: ['Cercis siliquastrum', 'Ceratonia siliqua']
-  },
-  {
-    dt: 'Geophyte',
-    dd: 'Plants with underground storage organs (bulbs, rhizomes, tuber) lying beneath the surface of the ground.',
-    ds: 'https://www.sciencedirect.com/topics/earth-and-planetary-sciences/geophyte',
-    da: 'ScienceDirect',
-  },
-  {
-    dt: 'Karst',
-    dd: 'A topography formed from the dissolution of soluble carbonate rocks such as limestone, dolomite, and gypsum.',
-    ds: 'https://en.wikipedia.org/wiki/Karst',
-    da: 'Wikipedia',
-    dx: ['Cercis siliquastrum', 'Ceratonia siliqua']
-  },
-]
 
 export const snapSpeciesTraits = [
   {
@@ -1254,8 +1044,6 @@ export const snapSpeciesTraits = [
       }
   }
 ]
-
-export const getTerms = () => terms // bump to API when able
 
 const keys = [
   {

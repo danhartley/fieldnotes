@@ -8,6 +8,7 @@ import {
     , getFirebaseAuth
     , firebaseLogin
     , firebaseSignOut
+    , addTerm
 } from './api.js'
 
 import { 
@@ -84,8 +85,10 @@ export const handleInatAutocomplete = ({globalWrite, inputText, dataList, id, pr
     })
 }
 
-export const handleTermAutocomplete = ({selectedTerms, inputText, dataList, globalWrite, data, parent, addSelectedTermBtn, handleOnClickAddSelectedTermBtn}) => {
-  inputText.addEventListener('input', debounce(async (e) => {
+export const handleTermAutocomplete = async ({selectedTerms, inputText, dataList, globalWrite, data, parent, addSelectedTermBtn, handleOnClickAddSelectedTermBtn}) => {
+    let termData
+
+    inputText.addEventListener('input', debounce(async (e) => {
         while (dataList.firstChild) {
             dataList.removeChild(dataList.firstChild)
         }
@@ -94,7 +97,9 @@ export const handleTermAutocomplete = ({selectedTerms, inputText, dataList, glob
 
         if(strToComplete.length < 3) return
 
-        globalWrite.matches = data.filter(item => item.dt.toLowerCase().startsWith(strToComplete.toLowerCase()))
+        termData = await data
+
+        globalWrite.matches = termData.filter(td => td.dt.toLowerCase().startsWith(strToComplete.toLowerCase()))
                 
         globalWrite.matches.forEach(match => {
             const option = d.createElement('option')
@@ -103,11 +108,11 @@ export const handleTermAutocomplete = ({selectedTerms, inputText, dataList, glob
         })
     }, 0))
 
-    inputText.addEventListener('change', e => {
+    inputText.addEventListener('change', async (e) => {
         const match = e.target.value
 
         if(match) {
-            const term = data.find(option => option.dt === match)            
+            const term = termData.find(td => td.dt === match)            
             const spans = parent.querySelectorAll('.centred-block > span:nth-child(2)')
 
             spans[0].innerText = term.dt
@@ -119,7 +124,10 @@ export const handleTermAutocomplete = ({selectedTerms, inputText, dataList, glob
             if(selectedTerms.find(t => t.dt.toLowerCase() === match.toLowerCase())) return 
 
             addSelectedTermBtn.classList.remove('disabled')
-            addSelectedTermBtn.addEventListener('click', e => handleOnClickAddSelectedTermBtn({selectedTerm: term}), true)
+            addSelectedTermBtn.addEventListener('click', e => handleOnClickAddSelectedTermBtn({
+                  terms: termData
+                , selectedTerm: term
+            }), true)            
         }
     })
 }
@@ -277,6 +285,31 @@ export const addTermToList = ({selectedTerms, selectedTerm, selectedItemsListEle
         li.appendChild(label)
         selectedItemsListElement.appendChild(li)
       })
+}
+
+export const saveNewTerm = async ({terms, term}) => {
+    // Save new term to db
+    if(terms.filter(td => td.dt === term.dt).length === 0) {
+        try {
+            const response = await addTerm({
+                term
+            })
+            if(response.success) {
+                showNotificationsDialog({
+                    message: response.message
+                })
+            }
+        } catch (e) {
+            showNotificationsDialog({
+                  message: e.message
+                , type: 'error'
+            })
+        }
+    } else {
+        showNotificationsDialog({
+            message: 'There is already a definition for this term.'
+        })
+    }
 }
 
 const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  writeTemplateId}) => {

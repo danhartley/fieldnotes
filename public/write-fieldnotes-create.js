@@ -39,8 +39,8 @@ import {
   , handleInputChangeEvent
   , handleImageInputChangeEvent
   , toggleSpeciesList
-  , fetchFieldnotesStubs
   , authenticateUserEmailAndPassword
+  , saveNewTerm
 } from './ui-actions.js'
 
 import {
@@ -439,10 +439,12 @@ const init = () => {
       case 'terms-write-template':
         const parent = fieldset.querySelector('#selected-term')
         const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
-        const addNewTermBtn = fieldset.querySelector('#add-new-term-btn')
+        const addNewTermBtn = new ButtonComponent({
+          elementSelector: 'add-new-term-btn'
+        })
 
         const selectedTerms = []
-        const handleOnClickAddSelectedTermBtn = ({selectedTerm}) => {
+        const handleOnClickAddSelectedTermBtn = ({terms, selectedTerm}) => {
           const selectedItemsListElement = fieldset.querySelector('#selected-terms-list')
           addTermToList({
               selectedTerms
@@ -490,23 +492,31 @@ const init = () => {
 
           toggleBtnEnabledState({
               str: e.target.value
-            , btn: addNewTermBtn 
+            , btn: addNewTermBtn.buttonElement
           })  
         })
         
-        addNewTermBtn.addEventListener('click', e => {
-          const newTerm = Object.assign({}, {
+        addNewTermBtn.addClickHandler({
+          clickHandler: async () => {
+            const newTerm = Object.assign({}, {
               dt: dt.value
             , dd: dd.value
             , ds: ds.value
             , da: da.value
             , dx: dx.value
           })
-          
+
+          const terms = await getTerms()
+
+          saveNewTerm({
+              terms
+            , term: newTerm
+          })
+                    
           handleOnClickAddSelectedTermBtn({
               selectedTerms
             , selectedTerm: newTerm
-          })
+          })}
         })
         break
       case 'images-write-template':
