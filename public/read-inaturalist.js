@@ -312,8 +312,6 @@ const init = async () => {
             const input = clone.querySelector('input')
             const label = clone.querySelector('label')
     
-            // speciesDisplayContainer.classList.add('disabled')
-        
             input.setAttribute('name', 'display-option-template')
             input.id = t.name
             input.value = t.templateId
@@ -506,7 +504,6 @@ const init = async () => {
     
             searchInatObservationsNotificationText.classList.toggle('hidden')
             searchInatObservationsBtn.toggleActiveState()
-            speciesDisplayContainer.classList.toggle('disabled')
             const input = speciesDisplayContainer.querySelector('input')
             if(input) input.click()
         }

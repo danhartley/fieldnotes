@@ -646,8 +646,7 @@ const init = async () => {
             renderDisplayTemplate()
     
             searchInatObservationsNotificationText.classList.toggle('hidden')
-            searchInatObservationsBtn.toggleActiveState()
-            speciesDisplayContainer.classList.toggle('disabled')
+            searchInatObservationsBtn.toggleActiveState()            
             const input = speciesDisplayContainer.querySelector('input')
             if(input) input.click()
         }

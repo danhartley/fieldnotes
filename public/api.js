@@ -1093,7 +1093,6 @@ export const g = {
     templates: templates,
     count: 12,
     species: null,
-    terms: terms,
     inatSpecies: [],
     inatAutocompleteOptions: [
         {
@@ -1138,8 +1137,7 @@ export const g = {
         user: null,
         project: null,
         place: null,
-    },
-    // inatTaxaAutocomplete: {
+    },    
     //     id: 'taxa',
     //     name: 'name',
     // },
