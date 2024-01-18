@@ -868,3 +868,35 @@ export const saveJson = ({obj, title = 'fieldnotes'}) => {
     event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null)
     link.dispatchEvent(event)
 }
+
+export const scoreLesson = ({answers, global}) => {
+    answers.forEach(answer => {
+        const sp = global.species.find(s => s.taxon.id === Number(answer.id))
+
+        if(!sp) return
+
+        let isCorrect = false
+
+        if(answer.value.length) {
+            isCorrect = global.target.name === 'common name' 
+              ? sp.taxon.preferred_common_name.toLowerCase() === answer.value.toLowerCase()
+              : sp.taxon.name.toLowerCase() === answer.value.toLowerCase()            
+        }
+
+        const score = {
+            id: sp.taxon.id
+          , isCorrect
+        }
+
+        const isRetry = global.template.scores.find(s => s.id === score.id)
+
+        if(isRetry) {
+            const index = global.template.scores.findIndex(s => s.id === score.id)
+            global.template.scores[index] = score
+        } else {
+            global.template.scores.push(score)
+        }        
+    })
+
+    global.template.score = global.template.scores.filter(score => score.isCorrect)?.length || 0
+}

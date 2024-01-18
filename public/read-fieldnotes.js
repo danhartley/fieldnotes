@@ -14,6 +14,7 @@ import {
     , getTaxonGroupColour
     , fieldsnotesAutocomplete
     , showNotificationsDialog
+    , scoreLesson
 } from './ui-actions.js'
 
 import {
@@ -103,31 +104,6 @@ const init = async () => {
             , d1
             , d2
         })
-    }
-    
-    const scoreLesson = answers => {
-        answers.forEach(answer => {
-            const sp = globalRead.species.find(s => s.taxon.id === Number(answer.id))
-    
-            if(!sp) return
-    
-            let isCorrect = false
-    
-            if(answer.value.length) {
-                isCorrect = globalRead.target.name === 'common name' 
-                  ? sp.taxon.preferred_common_name.toLowerCase() === answer.value.toLowerCase()
-                  : sp.taxon.name.toLowerCase() === answer.value.toLowerCase()            
-            }
-    
-            const score = {
-                id: sp.taxon.id
-              , isCorrect
-            }
-    
-            globalRead.template.scores.push(score)  
-        })
-    
-        globalRead.template.score = globalRead.template.scores.filter(score => score.isCorrect)?.length || 0
     }
     
     let rbTestForGroup, rbInatAutocompleteGroup, rbInatUseObservationSpeciesCountGroup    
@@ -344,7 +320,7 @@ const init = async () => {
             const input = clone.querySelector('input')
             const label = clone.querySelector('label')
     
-            speciesDisplayContainer.classList.add('disabled')
+            // speciesDisplayContainer.classList.add('disabled')
         
             input.setAttribute('name', 'display-option-template')
             input.id = t.name
@@ -633,7 +609,10 @@ const init = async () => {
     
         const scoreHandler = () => {
             const answers = Array.from(article.getElementsByTagName('input'))          
-            scoreLesson(answers)
+            scoreLesson({
+                  answers
+                , global: globalRead
+            })
             updateScore()
         }
     
