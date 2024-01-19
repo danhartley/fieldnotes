@@ -1,16 +1,13 @@
 import { 
       snapSpeciesTraits
-    , getInatObservations
     , getInatTaxa
     , g
     , getFieldnotesStubs
     , getFieldnotesById
 } from './api.js'
 
-import { 
-      handleInatAutocomplete
-    , mapInatSpeciesToLTP
-    , mapTaxon
+import {
+      mapTaxon
     , getTaxonGroupColour
     , fieldsnotesAutocomplete
     , showNotificationsDialog
@@ -47,18 +44,9 @@ const init = async () => {
     const article = d.getElementById('article')
     const rbTemplate = d.getElementById('radio-button-template')
     const languageGroupContainer = d.getElementById('language-group-container')
-    const inatAutocompleteGroupContainer = d.getElementById('inat-autocomplete-group-container')
-    const inatUseObservationSpeciesCountGroupContainer = d.getElementById('inat-use-observations-species-count-group-container')
     const targetGroupContainer = d.getElementById('target-group-container')
     const targetsFieldset = d.getElementById('targets-fieldset')
     const speciesDisplayContainer = d.getElementById('species-display-container')
-    const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
-    const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
-    const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
-    const startDate = d.getElementById('observations-start-date')
-    const endDate = d.getElementById('observations-end-date')
-    const singleDate = d.getElementById('single-observations-input-date')
-    const rbDateGroup = d.querySelectorAll('input[name="rbDate"]')
 
     const displayOptionsToggleVisibilityBtn = new ButtonHideShowComponent({
         elementSelector: 'display-options-toggle-visibility-btn'
@@ -79,34 +67,7 @@ const init = async () => {
           elementSelector: 'test-submit-btn'        
     })
 
-    const getInatSpecies = async ({user, place}) => {
-    
-        let d1 = null
-        let d2 = null
-    
-        switch(globalRead.dateOption) {
-            case 'single':
-                d2 = d1 = singleDate.value
-            break
-            case 'range':
-                d1 = startDate.value
-                d2 = endDate.value
-            break
-        }
-    
-        return await getInatObservations({ 
-              user_id: user ? user.id : null
-            , place_id: place ? place.id : null
-            , iconic_taxa: globalRead.iconicTaxa
-            , per_page: globalRead.count + 10
-            , locale: globalRead.language.id
-            , species_count: (globalRead.useObservationsSpeciesCount.id === "true")
-            , d1
-            , d2
-        })
-    }
-    
-    let rbTestForGroup, rbInatAutocompleteGroup, rbInatUseObservationSpeciesCountGroup    
+    let rbTestForGroup
     
     const createRadioBtnGroup = ({collection, checked, rbGroup, parent}) => {
         parent.innerHTML = ''
@@ -224,33 +185,6 @@ const init = async () => {
             showTestBtn.hide()
             targetsFieldset.classList.add(cssClass)
         }
-    }
-    
-    const createTaxaCheckboxGroup = () => {
-        const parent = d.getElementById('iconic-taxa-container')
-        const t = d.getElementById('checkbox-template')
-        
-        globalRead.ICONIC_TAXA.forEach(taxon => {
-            const clone = t.content.cloneNode(true)
-        
-            const div = clone.querySelector('div')
-            const input = clone.querySelector('input')
-            const label = clone.querySelector('label')
-        
-            input.setAttribute('name', 'taxa')
-            input.id = taxon.name
-            input.value = taxon.name
-            label.textContent = taxon.name
-            label.htmlFor = input.id
-        
-            if(globalRead.iconicTaxa.map(t => t.name).includes(taxon.name)) {
-                input.setAttribute('checked', true)
-            }
-        
-            div.style.setProperty("background-color", getTaxonGroupColour({taxon:taxon.name.toLowerCase()}))
-        
-            parent.appendChild(clone)
-        })
     }
     
     const createRadioBtnTemplateGroup = () => {
@@ -588,13 +522,7 @@ const init = async () => {
         } catch (e) {
             showNotificationsDialog({message: e.message, type: 'error'})
         }
-    }     
-    
-    rbDateGroup.forEach(date => {
-        date.addEventListener('click', e => {
-            globalRead.dateOption = e.target.value
-        }, true)
-    })
+    }         
     
     d.addEventListener("DOMContentLoaded", (event) => {
     
@@ -620,106 +548,8 @@ const init = async () => {
             clickHandler: scoreHandler
         })
     
-        const fetchInatSpecies = async () => {
-            const filters = Array.from(d.getElementById('iconic-taxa-container').querySelectorAll('input'))
-            
-            globalRead.iconicTaxa = globalRead.ICONIC_TAXA.filter(taxon => filters.filter(t => t.checked).map(t => t.id.toLowerCase()).includes(taxon.name))
-            
-            const user = globalRead.inatAutocompleteOptions.find(o => o.id === 'users')
-            const place = globalRead.inatAutocompleteOptions.find(o => o.id === 'places')        
-    
-            searchInatObservationsNotificationText.classList.toggle('hidden')
-            searchInatObservationsBtn.toggleActiveState()
-    
-            globalRead.inatSpecies = await getInatSpecies({
-                  user: user.isActive ? user.user : null
-                , place: place.isActive ? place.place : null
-            })
-    
-            globalRead.species = mapInatSpeciesToLTP({
-                  species: globalRead.inatSpecies
-                , count: globalRead.count
-                , taxa: globalRead.iconicTaxa
-            })
-        
-            createRadioBtnTemplateGroup()
-            renderDisplayTemplate()
-    
-            searchInatObservationsNotificationText.classList.toggle('hidden')
-            searchInatObservationsBtn.toggleActiveState()            
-            const input = speciesDisplayContainer.querySelector('input')
-            if(input) input.click()
-        }
-    
-        const searchInatObservationsBtn = new ButtonComponent({
-            elementSelector: 'search-inat-observations-btn'
-          , clickHandler: fetchInatSpecies
-        })
-    
-        rbInatAutocompleteGroup.forEach(rb => {
-            rb.addEventListener('change', e => {
-                globalRead.inatAutocomplete = globalRead.inatAutocompleteOptions.find(o => o.id === e.target.value)
-    
-                iNatAutocompleteInputText.value = ''
-                iNatAutocompleteInputText.setAttribute('placeholder', globalRead.inatAutocomplete.placeholder)
-            })
-        })
-    
-        const speciesCountInputNumber = d.getElementById('species-count-input-number')
-    
-        speciesCountInputNumber.value = globalRead.count
-    
-        speciesCountInputNumber.addEventListener('change', () => {
-            globalRead.count = Number(speciesCountInputNumber.value)
-        })
-        
-        rbInatUseObservationSpeciesCountGroup.forEach(rb => {
-            rb.addEventListener('change', () => globalRead.useObservationsSpeciesCount = globalRead.useObservationsSpeciesCountOptions.find(o => o.id === rb.value))
-        })
-    
         addImgClickEventHandlers()
-    
-        const { id, prop } = globalRead.inatAutocomplete
-        handleInatAutocomplete({ 
-              globalWrite:globalRead
-            , inputText: iNatAutocompleteInputText
-            , dataList: iNatAutocompleteDatalist
-            // , g
-            , id
-            , prop
-            , cbParent: d.getElementById('inat-params-input-check-box-group')
-        })
     })
-
-    rbInatAutocompleteGroup = createRadioBtnGroup({collection: globalRead.inatAutocompleteOptions, checked:globalRead.inatAutocomplete, rbGroup:'inat-autocomplete', parent:inatAutocompleteGroupContainer})        
-    rbInatUseObservationSpeciesCountGroup = createRadioBtnGroup({collection: globalRead.useObservationsSpeciesCountOptions, checked:globalRead.useObservationsSpeciesCount, rbGroup:'inat-use-observations-species-count', parent:inatUseObservationSpeciesCountGroupContainer})
-
-    createTaxaCheckboxGroup()
-
-    const date = new Date()
-    const month = date.getMonth() + 1
-    const today = `${date.getFullYear()}-${month.length === 2 ? month : `0${month}`}-${("0" + date.getDate()).slice(-2)}`
-
-    singleDate.value = today
-    startDate.value = today
-    endDate.value = today
-
-    const setDateOption = date => {
-        date.checked = true
-        globalRead.dateOption = date.value
-    }
-
-    startDate.addEventListener('focus', () => {
-        setDateOption(d.getElementById('rbDateRange'))
-    }, true)
-
-    endDate.addEventListener('focus', () => {
-        setDateOption(d.getElementById('rbDateRange'))
-    }, true)
-
-    singleDate.addEventListener('focus', () => {
-        setDateOption(d.getElementById('rbSingleDate'))
-    }, true)
 
     const fetchFieldnotes = async () => {
         importFieldNotesNotificationText.classList.remove('hidden')

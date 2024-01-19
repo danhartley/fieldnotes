@@ -28,7 +28,8 @@
         <fieldset id="languages">
           <legend>Language</legend>
           <div id="language-group-container" class="grid"></div>
-          <p class="small">The language you choose will be used for the common names of species and other taxa.</p>
+          <p class="small">The language you choose will be used to determine the preferred common name for a species or taxa.</p>
+          <p class="small"><em>The chosen language applies only to species 'cards' which are created dynamically. It does not apply to the names given to species by the author.</em></p>
         </fieldset>
       </section>
     </aside>
@@ -49,74 +50,6 @@
             <div id="import-fieldnotes-notification-text" class="small hidden">Fetching fieldnotes…</div>
           </div>
         </fieldset>
-      </section>
-
-      <section class="mt2 print-ignore hidden">
-        <div>
-          <fieldset>
-            <legend>iNaturalist search</legend>
-            <fieldset class="fieldset-reset">
-              <legend class="as-p mt0">You can filter your iNaturalist search by taxa.</legend>
-              <div id="iconic-taxa-container" class="grid"></div>
-            </fieldset>
-
-            <fieldset class="fieldset-reset">
-              <legend class="as-p pt pb0">You can also limit your search by iNaturalist user, place or project.</legend>
-              <div id="inat-autocomplete-group-container" class="grid mb2"></div>
-
-              <div class="grid">
-                <div class="pr2">
-                    <label for="inat-autocomplete-input-text">User, place or project.</label>
-                    <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing a username or user ID…">
-                    <datalist id="inat-autocomplete-data-list"></datalist>
-                </div>
-              </div>
-            </fieldset>
-
-            <fieldset class="fieldset-reset">
-              <legend class="mt0 as-p pb0">Choose how many species you want to review.</legend>
-              <div class="centred-block box mb2">
-                <label for="species-count-input-number" class="mb0 mr">Number of species</label>
-                <input id="species-count-input-number" type="number" value="0" min="1" max="200" class="mr p">
-                <div class="small">(up to 200)</div>
-              </div>              
-            </fieldset>
-
-            <fieldset class="fieldset-reset">
-              <legend class="mt0 as-p pb0">User species or observations (may include the same species more than once).</legend>
-              <div id="inat-use-observations-species-count-group-container" class="grid mb2"></div>
-            </fieldset>
-
-            <fieldset id="observation-dates" class="fieldset-reset">
-              <legend class="as-p mt0">When the observations were made.</legend>
-              <div class="box mb4">
-                <div class="centred-block mb2">
-                  <label for="rbDateRange" class="invisible">Date range</label>
-                  <input id="rbDateRange" type="radio" name="rbDate" value="range" />             
-                  <label for="observations-start-date" class="block">From</label>
-                  <input type="date" id="observations-start-date" name="observations-start-date" class="mr" />
-                  <label for="observations-end-date" class="mr initial-width">To</label>
-                  <input type="date" id="observations-end-date" name="observations-end-date" />
-                </div>
-                <div class="centred-block mb2">
-                  <label for="rbSingleDate" class="invisible">Single date</label>
-                  <input id="rbSingleDate" type="radio" name="rbDate" value="single" />               
-                  <label for="single-observations-input-date" class="block">Date</label>
-                  <input type="date" id="single-observations-input-date" name="single-observations-input-date" class="mr" />
-                </div>
-                <div class="centred-block mb">
-                  <input id="rbnoDate" type="radio" name="rbDate" value="none" checked />
-                  <label for="rbnoDate">Any time.</label>
-                </div>
-              </div>
-            </fieldset>
-
-            <div class="centred-block">
-              <button id="search-inat-observations-btn" class="submit mr">Search iNaturalist for species</button>
-              <div id="search-inat-observations-notification-text" class="small hidden">Waiting for response from iNaturalist…</div>
-            </div>
-          </fieldset>
-        </div>
       </section>
       
       <section class="section-with-header print-ignore hidden">

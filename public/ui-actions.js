@@ -169,7 +169,7 @@ export const fieldsnotesAutocomplete = async ({inputText, dataList, global, fiel
 
     inputText.addEventListener('input', debounce(async (e) => {
         stubs = await addTitlesToList({
-            dataList
+              dataList
             , strToComplete: e.target.value
             , fieldnotesStubs
         })

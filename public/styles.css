@@ -205,19 +205,12 @@ input[type='radio'] + label::first-letter {
 
 input[type='checkbox'], input[type='radio'] {
   margin: 0 calc(var(--d) * .5) 0 0;
-  min-width: 16px;
-  min-height: 16px;
   accent-color: var(--c5);
   cursor: pointer;
 }
 
 input[type='checkbox']:checked::before {
   transform: scale(1);
-}
-
-input:focus-visible, input:focus, textarea:focus-visible, textarea:focus {
-  outline: 1px solid var(--c6);
-  border: 1px solid transparent !important;
 }
 
 input[type='checkbox']:focus-visible, input[type='checkbox']:focus {

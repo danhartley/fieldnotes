@@ -56,10 +56,8 @@ export const getIdByAutocomplete = async ({by, toComplete}) => {
 export const getInatTaxa = async({ 
     taxaIds 
   , locale = 'en'
-  , rank = 'species'
 }) => {
-    const url = 'https://api.inaturalist.org/v1/taxa/' + taxaIds.join('%2C')
-    // const url = `https://api.inaturalist.org/v1/taxa?order=desc&order_by=observations_count&rank=${rank}&locale=${locale}&taxon_id=` + taxaIds.join('%2C')
+    const url = `https://api.inaturalist.org/v1/taxa?locale=${locale}&taxon_id=` + taxaIds.join('%2C')
     const response = await fetch(url)
     const json = await response.json()
     return json
