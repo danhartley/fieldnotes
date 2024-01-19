@@ -240,6 +240,7 @@ const init = async () => {
             }
         
             div.style.setProperty("background-color", getTaxonGroupColour({taxon:taxon.name.toLowerCase()}))
+            input.style.setProperty("accent-color", getTaxonGroupColour({taxon:taxon.name.toLowerCase()}))
         
             parent.appendChild(clone)
         })
@@ -605,9 +606,9 @@ const init = async () => {
         const section = d.querySelector('.inat-preferences-section')
         section.classList.toggle('hidden')
 
-        btn.innerText = btn.innerText === 'Show iNaturalist preferences' 
-            ? 'Hide preferences'
-            : 'Show iNaturalist preferences'
+        btn.innerText = btn.innerText === 'Show user preferences' 
+            ? 'Hide user preferences'
+            : 'Show user preferences'
     }
 
     const iNaturalistPreferencesButton = new ButtonComponent({

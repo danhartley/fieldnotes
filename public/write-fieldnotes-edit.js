@@ -101,8 +101,8 @@ const init = () => {
 
   const d = document
   const draggableSections = d.getElementById('draggable-sections')
-  const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
-  const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
+  const fnAutocompleteTitleInputText = d.getElementById('fn-autocomplete-title-input-text')
+  const fnAutocompleteTitleDatalist = d.getElementById('fn-autocomplete-title-data-list')
   const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
   const titleInputText = d.getElementById('title-input-text')
   const authorInputText = d.getElementById('author-input-text')
@@ -927,7 +927,7 @@ const init = () => {
     , clickHandler: fetchFieldnotes
   })
 
-  ltpAutocompleteTitleInputText.focus()
+  fnAutocompleteTitleInputText.focus()
 
   const authenticateBtn = new ButtonComponent({
       elementSelector: 'authenticate-btn'
@@ -949,8 +949,8 @@ const init = () => {
     , globalWrite
     , authenticateBtn
     , fetchFieldnotesStubs: fetchFieldnotesStubs({
-        inputText: ltpAutocompleteTitleInputText
-      , dataList: ltpAutocompleteTitleDatalist
+        inputText: fnAutocompleteTitleInputText
+      , dataList: fnAutocompleteTitleDatalist
       , global: globalWrite
       , fetchFieldnotesBtn
       })    

@@ -21,14 +21,14 @@
 
     <aside class="print-ignore">
       <menu>
-        <li><button id="inat-preferences-btn" data-action="inat-preferences" class="smallish">Show iNaturalist preferences</button></li>
+        <li><button id="inat-preferences-btn" data-action="inat-preferences" class="smallish">Show user preferences</button></li>
       </menu>
 
       <section class="inat-preferences-section hidden">
         <fieldset id="languages">
           <legend>Language</legend>
           <div id="language-group-container" class="grid"></div>
-          <p class="small">Language determines the locale preference for taxon common names.</p>
+          <p class="small">The language you choose will be used for the common names of species and other taxa.</p>
         </fieldset>
       </section>
     </aside>
@@ -37,15 +37,15 @@
       <section class="print-ignore">
         <fieldset>
           <legend>Fieldnotes search</legend>
-          <p class="mt0 small">Search for fieldnotes.</p>
+          <p class="mt0 small">Search for fieldnotes by title.</p>
           <div class="centred-block">
-              <label for="ltp-autocomplete-title-input-text">Title</label>
-              <input id="ltp-autocomplete-title-input-text" list="ltp-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing to find existing fieldnotes by their title…">
-              <datalist id="ltp-autocomplete-title-data-list"></datalist>
+              <label for="fn-autocomplete-title-input-text">Title</label>
+              <input id="fn-autocomplete-title-input-text" list="fn-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing…">
+              <datalist id="fn-autocomplete-title-data-list"></datalist>
           </div>
           <div id="field-notes-lookup-callback-parent" class="mt2"></div>
           <div class="centred-block mt2">
-            <button id="fetch-fieldnotes-btn" class="mr disabled">Fetch selected fieldnotes</button>
+            <button id="fetch-fieldnotes-btn" class="ml6 mr disabled">Fetch selected fieldnotes</button>
             <div id="import-fieldnotes-notification-text" class="small hidden">Fetching fieldnotes…</div>
           </div>
         </fieldset>

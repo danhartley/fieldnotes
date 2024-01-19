@@ -39,8 +39,8 @@ const init = async () => {
 
     const d = document   
         
-    const ltpAutocompleteTitleInputText = d.getElementById('ltp-autocomplete-title-input-text')
-    const ltpAutocompleteTitleDatalist = d.getElementById('ltp-autocomplete-title-data-list')
+    const fnAutocompleteTitleInputText = d.getElementById('fn-autocomplete-title-input-text')
+    const fnAutocompleteTitleDatalist = d.getElementById('fn-autocomplete-title-data-list')
     const sectionsWithHeader = d.querySelectorAll('.section-with-header')
     const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
     const lessonFieldsetLegend = d.querySelector('#lesson-fieldset > legend')
@@ -789,8 +789,8 @@ const init = async () => {
     createRadioBtnTemplateGroup()
 
     fieldsnotesAutocomplete({ 
-          inputText: ltpAutocompleteTitleInputText
-        , dataList: ltpAutocompleteTitleDatalist
+          inputText: fnAutocompleteTitleInputText
+        , dataList: fnAutocompleteTitleDatalist
         , global: globalRead
         , fieldnotesStubs: getFieldnotesStubs({
                 user: null
@@ -799,23 +799,30 @@ const init = async () => {
         , fetchFieldnotesBtn
     })
 
-    ltpAutocompleteTitleInputText.focus()
+    fnAutocompleteTitleInputText.focus()
     globalRead.templates = g.templates.filter(template => template.types.includes('fieldnotes'))
     globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
 
     const toggleInaturalistPreferences = e => {
         const btn = d.getElementById(e.target.id)
-        const rbLanguageGroup = createRadioBtnGroup({collection: globalRead.LANGUAGES, checked:globalRead.language, rbGroup:'language', parent:languageGroupContainer})
+        const rbLanguageGroup = createRadioBtnGroup({
+              collection: globalRead.LANGUAGES
+            , checked: globalRead.language
+            , rbGroup: 'language'
+            , parent: languageGroupContainer
+        })
         rbLanguageGroup.forEach(rb => {
-            rb.addEventListener('change', () => globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value))
+            rb.addEventListener('change', () => {
+                globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value)
+            })
         })
 
         const section = d.querySelector('.inat-preferences-section')
         section.classList.toggle('hidden')
 
-        btn.innerText = btn.innerText === 'Show iNaturalist preferences' 
-            ? 'Hide preferences'
-            : 'Show iNaturalist preferences'
+        btn.innerText = btn.innerText === 'Show user preferences' 
+            ? 'Hide user preferences'
+            : 'Show user preferences'
     }
 
     const iNaturalistPreferencesButton = new ButtonComponent({

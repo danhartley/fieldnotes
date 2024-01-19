@@ -47,13 +47,13 @@
             <legend>Fieldnotes search</legend>
             <p class="mt0 small">Find and edit previous fieldnotes.</p>
             <div class="centred-block">
-                <label for="ltp-autocomplete-title-input-text">Title</label>
-                <input id="ltp-autocomplete-title-input-text" list="ltp-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing to find existing fieldnotes by their title…">
-                <datalist id="ltp-autocomplete-title-data-list"></datalist>
+                <label for="fn-autocomplete-title-input-text">Title</label>
+                <input id="fn-autocomplete-title-input-text" list="fn-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing to find existing fieldnotes by their title…">
+                <datalist id="fn-autocomplete-title-data-list"></datalist>
             </div>
             <div id="field-notes-lookup-callback-parent" class="mt2"></div>
             <div class="centred-block mt2">
-              <button id="fetch-fieldnotes-btn" class="mr disabled">Fetch fieldnotes to edit</button>
+              <button id="fetch-fieldnotes-btn" class="ml6 mr disabled">Fetch fieldnotes to edit</button>
               <div id="import-fieldnotes-notification-text" class="small hidden">Fetching fieldnotes…</div>
             </div>
             <p class="mt2 small"><em>These fieldnotes will be updated each time you add, edit, delete or move a section.</em></p>
@@ -116,20 +116,20 @@
           </fieldset>
         </section>
         
+        <section id="fieldnotes-export-options" class="has-fieldnotes disabled">
+          <fieldset>
+            <legend>Save fieldnotes</legend>
+            <p class="mt0 small">Save your fieldnotes to file in the JSON format.</p>
+            <button id="save-fieldnotes-to-file-btn">Save your fieldnotes</button>
+          </fieldset>
+        </section>
+
         <section id="delete-fieldnotes-section" class="has-fieldnotes disabled">
           <fieldset class="alert">
             <legend>Delete fieldnotes</legend>
             <p class="mt0 small">When you delete fieldnotes, you will no longer have access to them.</p>
             <button id="delete-fieldnotes-btn">Delete fieldnotes</button>
             <p class="small">If you wish to recover them, please contact the site owner at <a href="mailto:dbmhartley@protonmail.com?subject=Recover%20deleted%20fieldnotes">Recover deleted fieldnotes</a>.</p>
-          </fieldset>
-        </section>
-
-        <section id="fieldnotes-export-options" class="has-fieldnotes disabled">
-          <fieldset>
-            <legend>Save fieldnotes</legend>
-            <p class="mt0 small">Save your fieldnotes to file in the JSON format.</p>
-            <button id="save-fieldnotes-to-file-btn">Save your fieldnotes</button>
           </fieldset>
         </section>
       </article>
