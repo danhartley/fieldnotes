@@ -213,10 +213,6 @@ input[type='checkbox']:checked::before {
   transform: scale(1);
 }
 
-input[type='checkbox']:focus-visible, input[type='checkbox']:focus {
-  outline: none;
-}
-
 input[type='checkbox'] + label, input[type='radio'] + label {
   margin-bottom: 0;
   letter-spacing: calc(var(--d) * .025);
@@ -231,16 +227,21 @@ input[type='checkbox'] {
   flex: none;
 }
 
-  input[type='checkbox'] + label {
+input[type='checkbox'] + label {
   text-transform: capitalize;
   display: flex; 
   align-items: center; 
 }
 
-div > input[type='text'], div > input[type='email'], div > input[type='password'], textarea {
+input[type='text'], input[type='email'], input[type='password'], textarea {
   border: 1px solid var(--c3);
   width: 100%;
   border-radius: calc(var(--d) * .5);
+}
+
+input[type='text']:focus-visible, input[type='email']:focus-visible, input[type='password']:focus-visible, textarea:focus-visible {
+  border: 1px solid transparent;
+  outline: 1px solid var(--c8);
 }
 
 textarea {
@@ -278,7 +279,7 @@ select {
 }
 
 select:focus-visible, select:focus {
-  border: none;
+  border: 1px solid transparent;
   outline: 1px solid var(--c8);
 }
 

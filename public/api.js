@@ -57,7 +57,7 @@ export const getInatTaxa = async({
     taxaIds 
   , locale = 'en'
 }) => {
-    const url = `https://api.inaturalist.org/v1/taxa?locale=${locale}&taxon_id=` + taxaIds.join('%2C')
+    const url = `https://api.inaturalist.org/v1/taxa?locale=${locale}&per_page=200&taxon_id=` + taxaIds.join('%2C')
     const response = await fetch(url)
     const json = await response.json()
     return json
