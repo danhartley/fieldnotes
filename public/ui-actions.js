@@ -340,11 +340,21 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
     if(section) {        
         switch(writeTemplateId) {
             case 'species-write-template':
-                if(section.species.find(sp => sp === name)) {
-                    section.species = section.species.filter(sp => sp !== name)
+                if(section.species.find(sp => sp.taxon.name === name)) {
+                    section.species = section.species.filter(sp => sp.taxon.name !== name)
                     label.innerText = 'Not included'
                 } else {
-                    section.species.push(name)
+                    section.species.push({
+                          taxon : {
+                              id: observation.taxon.id
+                            , name: observation.taxon.name
+                            , preferred_common_name: observation.taxon.preferred_common_name
+                            , iconic_taxon_name: observation.taxon.iconic_taxon_name
+                            , default_photo: {
+                                square_url: observation.taxon.default_photo.square_url
+                            }
+                          }
+                    })
                     label.innerText = 'Included'
                 }
                 globalWrite.fieldnotes.sections[index] = section

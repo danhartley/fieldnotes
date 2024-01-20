@@ -4,6 +4,7 @@ import {
     , g
     , getFieldnotesStubs
     , getFieldnotesById
+    , getTerms
 } from './api.js'
 
 import {
@@ -453,24 +454,6 @@ const init = async () => {
                                 article.appendChild(parent)
                                 break
                             case 'species-preview-template':
-                                section.species.forEach((sp, i) => {
-                                    try {                            
-                                        const clone = cloneSpeciesCardFromTemplate({
-                                            templateToClone
-                                            , species: findLocalisedSpecies({
-                                                      s: globalRead.species.find(s => s.taxon.name === sp)
-                                                    , sp
-                                                })
-                                            , index: i
-                                        })
-                                        parent = parentClone.querySelector('div')
-                                        parent.appendChild(clone)
-                                    } catch (e) {
-                                        console.log(e.message)
-                                    }
-                                })
-                                article.appendChild(parent)
-                                break
                             case 'inat-lookup-preview-template':                            
                                 section.species.forEach((sp, i) => {
                                     try {
@@ -509,42 +492,46 @@ const init = async () => {
                                 })
                                 article.appendChild(parent)
                                 break
-                            case 'terms-preview-template':
-                                section.terms.forEach(term => {
-                                    const clone = templateToClone.content.cloneNode(true)                      
-                                    const dt = clone.querySelector('dt')
-                                    const dd = clone.querySelector('dd')                        
-                                    const div1 = clone.querySelectorAll('div')[0]
-                                    const div2 = clone.querySelectorAll('div')[1]
-                                    const eg = div1.querySelector('span')
-                                    const dx = div1.querySelector('em')
-                                    const ds = div2.querySelector('a')
-        
-                                    const def = globalRead.terms.find(t => t.dt === term || term.dt)
-                                    
-                                    dt.textContent = def.dt
-                                    dd.textContent = def.dd
-        
-                                    if(def.dx) {                                
-                                        eg.textContent = 'e.globalRead.'                                
-                                        dx.append(def.dx.join(', '))
-                                    } else {
-                                        clone.removeChild(div1)
-                                    }
-                                    if(def.ds) {
-                                        const spans = ds.querySelectorAll('span')                                 
-                                        spans[0].textContent = def.da || 'Source'
-                                        ds.setAttribute('href', def.ds)
-                                        ds.setAttribute('target', '_blank')
-                                    } else {
-                                        clone.removeChild(div2)
-                                    }
-        
-                                    parent = parentClone.querySelector('dl')
-                                    parent.appendChild(clone)                    
+                            case 'terms-preview-template':                                
+                                section.terms.forEach(async(term) => {
+                                    try {
+                                        const clone = templateToClone.content.cloneNode(true)                      
+                                        const dt = clone.querySelector('dt')
+                                        const dd = clone.querySelector('dd')                        
+                                        const div1 = clone.querySelectorAll('div')[0]
+                                        const div2 = clone.querySelectorAll('div')[1]
+                                        const eg = div1.querySelector('span')
+                                        const dx = div1.querySelector('em')
+                                        const ds = div2.querySelector('a')
+                                                
+                                        const def = globalRead.terms.find(t => t.dt === term || term.dt)
+                                        
+                                        dt.textContent = def.dt
+                                        dd.textContent = def.dd
+            
+                                        if(def.dx) {                                
+                                            eg.textContent = 'e.globalRead.'                                
+                                            dx.append(def.dx.join(', '))
+                                        } else {
+                                            clone.removeChild(div1)
+                                        }
+                                        if(def.ds) {
+                                            const spans = ds.querySelectorAll('span')                                 
+                                            spans[0].textContent = def.da || 'Source'
+                                            ds.setAttribute('href', def.ds)
+                                            ds.setAttribute('target', '_blank')
+                                        } else {
+                                            clone.removeChild(div2)
+                                        }
+            
+                                        parent = parentClone.querySelector('dl')
+                                        parent.appendChild(clone)
+                                    } catch(e) {
+                                        console.log(e.message)
+                                    }              
                                 })
                                 article.appendChild(parent)
-                            break
+                                break
                         }
                     })
                     break
@@ -554,7 +541,11 @@ const init = async () => {
         
             contentToggleVisibilityBtn.scrollIntoView({})
         } catch (e) {
-            showNotificationsDialog({message: e.message, type: 'error'})
+            console.log(e.message)
+            showNotificationsDialog({
+                  message: e.message
+                , type: 'error'
+            })
         }
     }         
     
@@ -586,74 +577,81 @@ const init = async () => {
     })
 
     const fetchFieldnotes = async () => {
-        importFieldNotesNotificationText.classList.remove('hidden')
+        try {
+            importFieldNotesNotificationText.classList.remove('hidden')
 
-        const response = false 
-        ? await globalRead.fieldnotesStubs
-        : await getFieldnotesById({id: globalRead.fieldnotesStubs.fieldnotesId})
+            const response = false 
+            ? await globalRead.fieldnotesStubs
+            : await getFieldnotesById({id: globalRead.fieldnotesStubs.fieldnotesId})
 
-        importFieldNotesNotificationText.innerText = 'Fetching iNaturalist species…'
+            importFieldNotesNotificationText.innerText = 'Fetching iNaturalist species…'
 
-        setTimeout(() => {
-            importFieldNotesNotificationText.classList.add('hidden')
-            importFieldNotesNotificationText.innerText = 'Fetching fieldnotes…'
-        }, 2000)
+            setTimeout(() => {
+                importFieldNotesNotificationText.classList.add('hidden')
+                importFieldNotesNotificationText.innerText = 'Fetching fieldnotes…'
+            }, 2000)
 
-        if(!response.success) return 
+            if(!response.success) return 
 
-        const fieldnotes = { 
-              ...response.data
-            , sections: response.data.sectionOrder.map(sectionIndex => {
-                return response.data.sections.find(section => section.sectionIndex === sectionIndex)
-            })  
-        }
+            const fieldnotes = { 
+                ...response.data
+                , sections: response.data.sectionOrder.map(sectionIndex => {
+                    return response.data.sections.find(section => section.sectionIndex === sectionIndex)
+                })  
+            }
 
-        globalRead.fieldnotes = fieldnotes
-        globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
-        Object.assign(globalRead.template, fieldnotes)
+            globalRead.fieldnotes = fieldnotes
+            globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
+            Object.assign(globalRead.template, fieldnotes)
 
-        // Reorder the species list so that those with a binomial species name come first, 
-        // those with only a genus, or higher taxa, name come after. This reduces the number of records
-        // we need to request from iNaturalist to match every taxon.
-        const inatLookupSections = globalRead.fieldnotes.sections.filter(s => s.templateId === 'inat-lookup-preview-template') || []
-        const inatLookupSpecies = inatLookupSections?.map(s => s.species)?.flat() || []
-        const inatLookupSpeciesByRank = inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') > 0)
-            .concat(inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') === 0))
-        const inatLookupTaxaIds = inatLookupSpeciesByRank.map(s => s.taxon.id)
-        const inatLookupTaxaNames = inatLookupSpeciesByRank.map(s => s.taxon.name)
+            // Reorder the species list so that those with a binomial species name come first, 
+            // those with only a genus, or higher taxa, name come after. This reduces the number of records
+            // we need to request from iNaturalist to match every taxon.
+            const inatLookupSections = globalRead.fieldnotes.sections.filter(s => s.templateId === 'inat-lookup-preview-template') || []
+            const inatLookupSpecies = inatLookupSections?.map(s => s.species)?.flat() || []
+            const inatLookupSpeciesByRank = inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') > 0)
+                .concat(inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') === 0))
+            const inatLookupTaxaIds = inatLookupSpeciesByRank.map(s => s.taxon.id)
+            const inatLookupTaxaNames = inatLookupSpeciesByRank.map(s => s.taxon.name)
 
-        const taxaIds = [ ...new Set(globalRead.fieldnotes.taxa
-            .map(t => t.id)
-            .concat(inatLookupTaxaIds)) ]
-        const taxaNames = [ ...new Set(globalRead.fieldnotes.taxa
-            .map(t => t.name)
-            .concat(inatLookupTaxaNames)) ]
+            const taxaIds = [ ...new Set(globalRead.fieldnotes.taxa
+                .map(t => t.id)
+                .concat(inatLookupTaxaIds)) ]
+            const taxaNames = [ ...new Set(globalRead.fieldnotes.taxa
+                .map(t => t.name)
+                .concat(inatLookupTaxaNames)) ]
 
-        const inatTaxa = await getInatTaxa({ 
-              taxaIds
-            , locale: globalRead.language.id 
-            , per_page: taxaIds.length
-        })
-        
-        globalRead.species = inatTaxa.results
-            .filter(t => t.default_photo)
-            .map(t => { 
-                // Only allow one name for a taxon
-                if(taxaNames.includes(t.name)) {
-                    return {
-                        taxon: mapTaxon({
-                            taxon: t
-                        })
-                    }
-                }
+            const inatTaxa = await getInatTaxa({ 
+                taxaIds
+                , locale: globalRead.language.id 
+                , per_page: taxaIds.length
             })
-            .filter(t => t)
             
-        createRadioBtnTemplateGroup()
-        
-        article.innerHTML = ''
-        renderDisplayTemplate()
-        speciesDisplayContainer.classList.remove('disabled')
+            globalRead.species = inatTaxa.results
+                .filter(t => t.default_photo)
+                .map(t => { 
+                    // Only allow one name for a taxon
+                    if(taxaNames.includes(t.name)) {
+                        return {
+                            taxon: mapTaxon({
+                                taxon: t
+                            })
+                        }
+                    }
+                })
+                .filter(t => t)
+                
+            createRadioBtnTemplateGroup()
+            
+            article.innerHTML = ''
+            speciesDisplayContainer.classList.remove('disabled')
+            
+            globalRead.terms = await getTerms()
+
+            renderDisplayTemplate()
+        } catch (e) {
+            console.log(e.message)
+        }
     }
 
     const fetchFieldnotesBtn = new ButtonComponent({

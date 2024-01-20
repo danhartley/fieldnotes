@@ -804,7 +804,7 @@ const init = () => {
             })
             speciesCheckboxes = draggableSection.querySelectorAll('input')
             speciesCheckboxes.forEach(checkbox => {
-            const hasSpeciesMatch = (section.templateId === 'species-preview-template' && section.species.includes(checkbox.value))
+            const hasSpeciesMatch = (section.templateId === 'species-preview-template' && section.species.map(sp => sp.taxon.name).includes(checkbox.value))
             const checkboxId = Number(checkbox.id.substring(checkbox.id.indexOf('-') + 1)) // remove section identifier used to keep Ids unique in the DOM
             const hasObservationMatch = (section.templateId === 'observations-preview-template' && section.species.map(sp => sp.observation_id).includes(checkboxId))
             const hasMatch = hasSpeciesMatch || hasObservationMatch
