@@ -884,7 +884,6 @@ const encode = s => {
     return new Uint8Array(out)
 }
 
-// With thanks: https://gist.github.com/yiwenl/8f2b735a2263bc93ee33
 export const saveJson = ({obj, title = 'fieldnotes'}) => {
     var str = JSON.stringify(obj)
     var data = encode(str)
@@ -900,6 +899,8 @@ export const saveJson = ({obj, title = 'fieldnotes'}) => {
     var event = document.createEvent('MouseEvents')
     event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null)
     link.dispatchEvent(event)
+
+    // With thanks: https://gist.github.com/yiwenl/8f2b735a2263bc93ee33
 }
 
 export const scoreLesson = ({answers, global}) => {
@@ -932,4 +933,23 @@ export const scoreLesson = ({answers, global}) => {
     })
 
     global.template.score = global.template.scores.filter(score => score.isCorrect)?.length || 0
+}
+
+export const findLocalisedSpecies = ({s, sp}) => {
+    // Check that there is a valid name for a taxa e.g. not the empty string or a placeholder (-) 
+    const prohibitedNames = [' ', '-']
+    try {
+        if(s?.taxon?.preferred_common_name) {
+            if(prohibitedNames.includes(s.taxon.preferred_common_name)) {
+                s.taxon.preferred_common_name = sp?.taxon?.preferred_common_name || sp?.taxon?.name || sp?.name || sp
+            }
+            return s
+        } else {
+            return sp
+        }
+    } catch (e) {
+        console.log(e.message)
+        if(s) console.log('s :', s)
+        if(sp) console.log('sp :', sp)
+    }    
 }

@@ -12,6 +12,7 @@ import {
     , fieldsnotesAutocomplete
     , showNotificationsDialog
     , scoreLesson
+    , findLocalisedSpecies
 } from './ui-actions.js'
 
 import {
@@ -102,20 +103,12 @@ const init = async () => {
             const container = img.parentElement            
             const grid = container.parentElement
             const speciesPanel = grid.querySelector('.species-panel')
-            /*
-                If there is a species panel, remove it from the DOM
-            */
+            // If there is a species panel, remove it from the DOM
             if(speciesPanel) speciesPanel.remove()
-    
-            /*
-                Work out how many columns are in each row
-            */
+            // Work out how many columns are in each row
             const colSpan = Math.round((grid.clientWidth / img.clientWidth))
-            
-            /*
-                Work out how many columns we need to count along the row
-                e.globalRead. if there are 3 columns, and the user clicks the first, we have to off set 2 to get to the end
-            */
+            // Work out how many columns we need to count along the row
+            // e.globalRead. if there are 3 columns, and the user clicks the first, we have to off set 2 to get to the end
             const i = img.getAttribute('data-i')
             const remainder = (Number(i) % colSpan)
             const offSet = remainder === 0 ? 0 : colSpan - remainder
@@ -274,28 +267,33 @@ const init = async () => {
     }    
     
     const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) => {
-        const clone = templateToClone.content.cloneNode(true)
-    
-        const img = clone.querySelector('img')      
-        const figcaption = clone.querySelector('figcaption')
-        const spans = figcaption.querySelectorAll('span')
-     
-        figcaption.style.setProperty("background-color", getTaxonGroupColour({
-            taxon:species.taxon.iconic_taxon_name
-        }))
-    
-        spans[0].textContent = species.taxon.preferred_common_name
-        spans[1].textContent = species.taxon.name
-        spans[1].classList.add('latin')
+        try {            
+            const clone = templateToClone.content.cloneNode(true)
         
-        const url = species.observation_url || species.taxon.default_photo.square_url
-        img.src = url.replace('square', 'small')
-        img.alt = species.taxon.name
-        img.id = species.taxon.id
-        img.setAttribute('data-i', index + 1)
-        img.setAttribute('loading', 'lazy')
-    
-        return clone
+            const img = clone.querySelector('img')      
+            const figcaption = clone.querySelector('figcaption')
+            const spans = figcaption.querySelectorAll('span')
+        
+            figcaption.style.setProperty("background-color", getTaxonGroupColour({
+                taxon: species.taxon.iconic_taxon_name
+            }))
+        
+            spans[0].textContent = species.taxon.preferred_common_name
+            spans[1].textContent = species.taxon.name
+            spans[1].classList.add('latin')
+            
+            const url = species.observation_url || species.taxon.default_photo.square_url
+            img.src = url.replace('square', 'small')
+            img.alt = species.taxon.name
+            img.id = species.taxon.id
+            img.setAttribute('data-i', index + 1)
+            img.setAttribute('loading', 'lazy')
+        
+            return clone
+        } catch (e) {
+            if(species) console.log('species', species)
+            console.log(e.message)
+        }
     }
     
     const renderDisplayTemplate = () => {
@@ -455,26 +453,62 @@ const init = async () => {
                                 article.appendChild(parent)
                                 break
                             case 'species-preview-template':
-                            case 'observations-preview-template':
-                            case 'inat-lookup-preview-template':
                                 section.species.forEach((sp, i) => {
-                                    try {
-                                        let s = globalRead.species.find(s => s.taxon.name === sp) || globalRead.species.find(s => s.taxon.name === sp) || globalRead.species.find(s => s.taxon.name === sp.name)
-                                        if(sp.src) s.observation_url = sp.src
+                                    try {                            
                                         const clone = cloneSpeciesCardFromTemplate({
-                                              templateToClone
-                                            , species: s || sp
+                                            templateToClone
+                                            , species: findLocalisedSpecies({
+                                                      s: globalRead.species.find(s => s.taxon.name === sp)
+                                                    , sp
+                                                })
                                             , index: i
                                         })
                                         parent = parentClone.querySelector('div')
                                         parent.appendChild(clone)
                                     } catch (e) {
-                                        console.log('species', sp)
-                                        console.log(e)
+                                        console.log(e.message)
                                     }
                                 })
                                 article.appendChild(parent)
-                            break
+                                break
+                            case 'inat-lookup-preview-template':                            
+                                section.species.forEach((sp, i) => {
+                                    try {
+                                        const clone = cloneSpeciesCardFromTemplate({
+                                            templateToClone
+                                            , species: findLocalisedSpecies({
+                                                      s: globalRead.species.find(s => s.taxon.id === sp.taxon.id)
+                                                    , sp
+                                                })
+                                            , index: i
+                                        })                                  
+                                        parent = parentClone.querySelector('div')
+                                        parent.appendChild(clone)
+                                    } catch (e) {
+                                        console.log(e.message)
+                                    }
+                                })
+                                article.appendChild(parent)
+                                break
+                            case 'observations-preview-template':
+                                section.species.forEach((sp, i) => {
+                                    try {
+                                        const clone = cloneSpeciesCardFromTemplate({
+                                            templateToClone
+                                            , species: findLocalisedSpecies({
+                                                      s: globalRead.species.find(s => s.taxon.name === sp.name)
+                                                    , sp
+                                                })
+                                            , index: i
+                                        })
+                                        parent = parentClone.querySelector('div')
+                                        parent.appendChild(clone)
+                                    } catch (e) {
+                                        console.log(e.message)
+                                    }
+                                })
+                                article.appendChild(parent)
+                                break
                             case 'terms-preview-template':
                                 section.terms.forEach(term => {
                                     const clone = templateToClone.content.cloneNode(true)                      
@@ -578,22 +612,33 @@ const init = async () => {
         globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
         Object.assign(globalRead.template, fieldnotes)
 
-        const taxaIds = globalRead.fieldnotes.taxa
+        // Reorder the species list so that those with a binomial species name come first, 
+        // those with only a genus, or higher taxa, name come after. This reduces the number of records
+        // we need to request from iNaturalist to match every taxon.
+        const inatLookupSections = globalRead.fieldnotes.sections.filter(s => s.templateId === 'inat-lookup-preview-template') || []
+        const inatLookupSpecies = inatLookupSections?.map(s => s.species)?.flat() || []
+        const inatLookupSpeciesByRank = inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') > 0)
+            .concat(inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') === 0))
+        const inatLookupTaxaIds = inatLookupSpeciesByRank.map(s => s.taxon.id)
+        const inatLookupTaxaNames = inatLookupSpeciesByRank.map(s => s.taxon.name)
+
+        const taxaIds = [ ...new Set(globalRead.fieldnotes.taxa
             .map(t => t.id)
-        const taxaNames = globalRead.fieldnotes.taxa
+            .concat(inatLookupTaxaIds)) ]
+        const taxaNames = [ ...new Set(globalRead.fieldnotes.taxa
             .map(t => t.name)
+            .concat(inatLookupTaxaNames)) ]
 
         const inatTaxa = await getInatTaxa({ 
               taxaIds
             , locale: globalRead.language.id 
+            , per_page: taxaIds.length
         })
         
         globalRead.species = inatTaxa.results
             .filter(t => t.default_photo)
             .map(t => { 
-                /**
-                 * Only allow one name for a taxon
-                 */
+                // Only allow one name for a taxon
                 if(taxaNames.includes(t.name)) {
                     return {
                         taxon: mapTaxon({
@@ -677,3 +722,4 @@ const init = async () => {
 }
 
 init()
+

@@ -133,20 +133,12 @@ const init = async () => {
             const container = img.parentElement            
             const grid = container.parentElement
             const speciesPanel = grid.querySelector('.species-panel')
-            /*
-                If there is a species panel, remove it from the DOM
-            */
+            // If there is a species panel, remove it from the DOM
             if(speciesPanel) speciesPanel.remove()
-    
-            /*
-                Work out how many columns are in each row
-            */
+            // Work out how many columns are in each row
             const colSpan = Math.round((grid.clientWidth / img.clientWidth))
-            
-            /*
-                Work out how many columns we need to count along the row
-                e.globalRead. if there are 3 columns, and the user clicks the first, we have to off set 2 to get to the end
-            */
+            // Work out how many columns we need to count along the row
+            // e.globalRead. if there are 3 columns, and the user clicks the first, we have to off set 2 to get to the end
             const i = img.getAttribute('data-i')
             const remainder = (Number(i) % colSpan)
             const offSet = remainder === 0 ? 0 : colSpan - remainder

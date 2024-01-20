@@ -56,8 +56,10 @@ export const getIdByAutocomplete = async ({by, toComplete}) => {
 export const getInatTaxa = async({ 
     taxaIds 
   , locale = 'en'
+  , per_page
 }) => {
-    const url = `https://api.inaturalist.org/v1/taxa?locale=${locale}&per_page=200&taxon_id=` + taxaIds.join('%2C')
+    const buffer = 50 // request more records than species count to ensure we don't miss one…
+    const url = `https://api.inaturalist.org/v1/taxa?locale=${locale}&per_page=${per_page + buffer}&taxon_id=` + taxaIds.join('%2C')
     const response = await fetch(url)
     const json = await response.json()
     return json
@@ -189,7 +191,6 @@ export const getFieldnotesById = async ({id}) => {
     }
   } catch (e) {
     console.log('API docRef: ', docRef)
-    console.log('API data: ', data)
     console.warn('API error: ', e)
   }
 }
@@ -253,7 +254,6 @@ export const addTerm = async({term}) => {
 
   } catch (e) {
     console.log('API term id: ', id)
-    console.log('API data: ', data)
     console.warn('API error: ', e)
   }
 }
@@ -309,7 +309,7 @@ export const addFieldnotes = async ({fieldnotes, status = 'private'}) => {
       }
     } catch (e) {
       console.log('API fieldnotes id: ', id)
-      console.log('API data: ', data)
+
       console.warn('API error: ', e)
     }
 }
@@ -328,7 +328,6 @@ export const updateFieldNotes = async ({fieldnotes, data}) => {
     }
   } catch (e) {
     console.log('API docRef: ', docRef)
-    console.log('API data: ', data)
     console.warn('API error: ', e)
   }
 }
@@ -347,7 +346,6 @@ export const updateFieldNotesStubs = async ({fieldnotesStubs, data}) => {
     }
   } catch (e) {
     console.log('API docRef: ', docRef)
-    console.log('API data: ', data)
     console.warn('API error: ', e)
   }
 }
@@ -379,7 +377,6 @@ export const updateFieldnoteProperty = async ({fieldnotes, prop, value}) => {
   } catch (e) {
     console.log('API element to update: ', prop, value)
     console.log('API docRef: ', docRef)
-    console.log('API data: ', data)
     console.warn('API error: ', e)
   }
 }
@@ -402,7 +399,6 @@ export const updateFieldnoteStubProperty = async ({fieldnotesStubs, prop, value}
   } catch (e) {
     console.log('API element to update: ', prop, value)
     console.log('API docRef: ', docRef)
-    console.log('API data: ', data)
     console.warn('API error: ', e)
   }
 }
@@ -455,7 +451,6 @@ export const addElementToArray = async ({fieldnotes, array, element, isEdit = fa
   } catch (e) {
     console.log('API element to remove: ', element)
     console.log('API docRef: ', docRef)
-    console.log('API data: ', data)
     console.warn('API error: ', e)
   }
 }
@@ -492,7 +487,6 @@ export const removeElementFromArray = async ({fieldnotes, array, element, isEdit
   } catch (e) {
     console.log('API element to remove: ', element)
     console.log('API docRef: ', docRef)
-    console.log('API data: ', data)
     console.warn('API error: ', e)
   }
 }
