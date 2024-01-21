@@ -873,6 +873,7 @@ th, td {
 .col3 {
   grid-column: span 3;
   text-align: center;
+  display: none;
 }
 
 /* MEDIA */
