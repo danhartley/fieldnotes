@@ -110,28 +110,3 @@ export class ULComponent extends BaseComponent {
     })
   }
 }
-
-export class MenuNavComponent {
-  constructor({links, link, router}) {
-    this.links = links
-    this.link = link
-    this.router = router
-
-  const eventHandler = (e) => {
-      e.preventDefault()
-
-      const pathnameSplit = this.link.href.split('/')
-      const pathSegments = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : ''    
-      this.router.loadRoute(pathSegments[2])
-      
-      this.links.forEach(link => {
-        link.classList.remove('selected')
-      })
-
-      this.link.classList.add('selected')      
-    }
-
-    this.link.addEventListener('click', e => eventHandler(e))
-    this.link.addEventListener('onkeydown', e => eventHandler(e))
-  }
-}
