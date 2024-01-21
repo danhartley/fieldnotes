@@ -410,10 +410,10 @@ const handleSpeciesCheckState = async({e, observation, sectionIndex, globalWrite
             case 'species-write-template':
                 section = { 
                     ...species
-                    , species: {
+                    , species: [{
                           name: sp.name
                         , taxon : getTaxon({ observation })
-                    }
+                    }]
                     , templateId: species.templateId
                     , sectionIndex
                 }
