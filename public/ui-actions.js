@@ -479,18 +479,18 @@ export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}
         case 'species-write-template':
             if(globalWrite.observations.length > 0) {
                 const uniqueSpecies = []
-                globalWrite.observations.forEach((sp, index) => {
+                globalWrite.observations.forEach((species, index) => {
                 if(uniqueSpecies.findIndex(us => us === sp.taxon.name) === -1) {
                         const clone = cloneImageTemplate({
-                              species: sp
+                              observation: species
                             , index
                             , sectionIndex
-                            , imgUrl: sp.taxon.default_photo.medium_url
+                            , imgUrl: species.taxon.default_photo.medium_url
                             , globalWrite
                             , writeTemplateId
                         })   
                         parent.appendChild(clone)
-                        uniqueSpecies.push(sp.taxon.name)                
+                        uniqueSpecies.push(species.taxon.name)                
                     }
                 })
             }
@@ -499,7 +499,7 @@ export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}
             if(globalWrite.observations.length > 0) {
                     globalWrite.observations.forEach((species, index) => {
                     const clone = cloneImageTemplate({
-                          species
+                          observation: species
                         , index
                         , sectionIndex
                         , imgUrl: species.photos[0].url
@@ -517,7 +517,7 @@ export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}
             const match = globalWrite.matches.find(match => match.name === term || match.matched_term === term)
             const imgUrl = match.default_photo.square_url
             const clone = cloneImageTemplate({
-                  species: {
+                  observation: {
                     taxon: match
                   }
                 , index: 0
@@ -539,7 +539,7 @@ export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}
     }
 }
 
-export const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, globalWrite, writeTemplateId}) => {
+export const cloneImageTemplate = ({observation, index, sectionIndex, imgUrl, globalWrite, writeTemplateId}) => {
     const templateToClone = d.getElementById('images-preview-template')
     const clone = templateToClone.content.cloneNode(true)
     const spans = clone.querySelectorAll('span')
@@ -549,25 +549,25 @@ export const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, global
     const label = clone.querySelector('label')
 
     figure.style.setProperty("background-color", getTaxonGroupColour({
-        taxon: species.taxon.iconic_taxon_name
+        taxon: observation.taxon.iconic_taxon_name
     }))
 
     img.src = imgUrl
-    img.alt = species.taxon.name
-    img.id = species.taxon.id
+    img.alt = observation.taxon.name
+    img.id = observation.taxon.id
     img.setAttribute('data-i', index + 1)
     img.setAttribute('loading', 'lazy')
 
-    spans[0].textContent = species.taxon.preferred_common_name
-    spans[1].textContent = species.taxon.name
+    spans[0].textContent = observation.taxon.preferred_common_name
+    spans[1].textContent = observation.taxon.name
     spans[1].classList.add('latin')
     
     // In order to ensure ids are unique, we prefix the id with the section index
-    checkbox.id = `${sectionIndex}-${species.id || species.taxon.id}`
-    checkbox.value = species.taxon.name
+    checkbox.id = `${sectionIndex}-${observation.id || observation.taxon.id}`
+    checkbox.value = observation.taxon.name
     checkbox.addEventListener('change', e => handleSpeciesCheckState({
           e 
-        , taxon: species.taxon
+        , taxon: observation.taxon
         , sectionIndex
         , globalWrite
         , writeTemplateId

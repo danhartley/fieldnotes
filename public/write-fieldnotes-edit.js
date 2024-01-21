@@ -825,13 +825,13 @@ const init = () => {
               , type:section.type
             })
             let parent = null
-            section.species.forEach((sp, index) => {
+            section.species.forEach((species, index) => {
               parent = draggableSection.querySelector(`#inat-looup-parent-${section.sectionIndex}`)
               const clone = cloneImageTemplate({
-                  species: sp
+                  observation: species
                 , index
                 , sectionIndex: section.sectionIndex
-                , imgUrl: sp.taxon.default_photo.square_url
+                , imgUrl: species.taxon.default_photo.square_url
                 , globalWrite
                 , writeTemplateId: section.writeTemplateId
               })
