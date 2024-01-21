@@ -1013,6 +1013,6 @@ export const findLocalisedSpecies = ({s, sp}) => {
 
 export const addImageBlockCaption = ({caption, text, parent}) => {
     caption.innerText = text
-    caption.classList.add('col3', 'small')
+    caption.classList.add('caption', 'small')
     parent.appendChild(caption)    
 }

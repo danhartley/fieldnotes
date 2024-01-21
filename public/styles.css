@@ -521,7 +521,7 @@ th, td {
 }
 
 .grid:has(figure, img) {
-  margin: 0 auto calc(var(--d) * 4) auto;
+  margin: 0 auto;
 }
 
 .grid > * {
@@ -870,10 +870,12 @@ th, td {
   min-width: calc(var(--d) * 8);
 }
 
-.col3 {
-  grid-column: span 3;
+.caption {
+  display: block;
+  width: 100%;
+  padding: 0 0 calc(var(--d) * 2) 0;
   text-align: center;
-  display: none;
+  font-weight: bold;
 }
 
 /* MEDIA */

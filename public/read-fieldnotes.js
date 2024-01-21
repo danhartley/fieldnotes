@@ -442,12 +442,12 @@ const init = async () => {
                                     parent = parentClone.querySelector('div')
                                     parent.appendChild(clone)
                                 })
+                                article.appendChild(parent)
                                 addImageBlockCaption({
                                       caption: parentClone.querySelector('span')
                                     , text: section.name
-                                    , parent
+                                    , parent: article
                                 })
-                                article.appendChild(parent)
                             break
                             case 'textarea-preview-template':
                                 section.paras.forEach(text => {
@@ -477,12 +477,12 @@ const init = async () => {
                                         console.log(e.message)
                                     }
                                 })
+                                article.appendChild(parent)
                                 addImageBlockCaption({
                                       caption: parentClone.querySelector('span')
                                     , text: section.name
-                                    , parent
+                                    , parent: article
                                 })
-                                article.appendChild(parent)
                                 break
                             case 'observations-preview-template':
                                 section.species.forEach((sp, i) => {
@@ -501,12 +501,12 @@ const init = async () => {
                                         console.log(e.message)
                                     }
                                 })
+                                article.appendChild(parent)
                                 addImageBlockCaption({
                                       caption: parentClone.querySelector('span')
                                     , text: section.name
-                                    , parent
+                                    , parent: article
                                 })
-                                article.appendChild(parent)
                                 break
                             case 'terms-preview-template':                                
                                 section.terms.forEach(async(term) => {
