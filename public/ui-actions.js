@@ -394,7 +394,7 @@ const handleSpeciesCheckState = async({e, observation, sectionIndex, globalWrite
                 break
             case 'inat-lookup-write-template':
                     if(section.species.find(sp => sp.taxon.name === name)) {
-                        section.species = section.species.filter(sp => sp.taxon.name !== name) // id, and as above?
+                        section.species = section.species.filter(sp => sp.taxon.name !== name)
                         label.innerText = 'Not included'
                     } else {
                         section.species.push(getSpeciesForInatLookup({ taxon: observation.taxon })) 
