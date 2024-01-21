@@ -381,7 +381,7 @@ const init = async () => {
                     article.appendChild(parent)
                     break
                 case 'fieldnotes-template':
-                    // Display metadata from the fieldtrip to the fieldnotes
+                    // Display metadata from the field trip to the fieldnotes
                     const metaTemplate = d.getElementById('meta-preview-template')
                     const metaClone = metaTemplate.content.cloneNode(true)
                     const metaList = metaClone.querySelector('ul')
@@ -397,13 +397,13 @@ const init = async () => {
                     a.textContent = globalRead.fieldnotes.location.place_guess
                     a.setAttribute('href', `https://www.google.com/maps/place/${globalRead.fieldnotes.location.location}`)
                     article.appendChild(metaClone)
-                    // Then iterate through the sections
+                    // Iterate over the sections
                     globalRead.template.sections.forEach(section => {            
                         const template = d.getElementById(section.parent)
                         parentClone = template.content.cloneNode(true)
                         templateToClone = d.getElementById(section.templateId)
         
-                        let clone, h3, h4, iframe, a
+                        let clone, h3, h4, iframe, caption
                         switch(section.templateId) {
                             case 'h3-preview-template':
                                 clone = templateToClone.content.cloneNode(true)
@@ -441,6 +441,10 @@ const init = async () => {
                                     parent = parentClone.querySelector('div')
                                     parent.appendChild(clone)
                                 })
+                                caption = parentClone.querySelector('span')
+                                caption.innerText = section.name
+                                caption.classList.add('col3', 'small')
+                                parent.appendChild(caption)
                                 article.appendChild(parent)
                             break
                             case 'textarea-preview-template':
@@ -471,6 +475,10 @@ const init = async () => {
                                         console.log(e.message)
                                     }
                                 })
+                                caption = parentClone.querySelector('span')
+                                caption.innerText = section.name
+                                caption.classList.add('col3', 'small')
+                                parent.appendChild(caption)
                                 article.appendChild(parent)
                                 break
                             case 'observations-preview-template':
@@ -490,6 +498,10 @@ const init = async () => {
                                         console.log(e.message)
                                     }
                                 })
+                                caption = parentClone.querySelector('span')
+                                caption.innerText = section.name
+                                caption.classList.add('col3', 'small')
+                                parent.appendChild(caption)
                                 article.appendChild(parent)
                                 break
                             case 'terms-preview-template':                                

@@ -870,6 +870,11 @@ th, td {
   min-width: calc(var(--d) * 8);
 }
 
+.col3 {
+  grid-column: span 3;
+  text-align: center;
+}
+
 /* MEDIA */
 
 @media screen {
