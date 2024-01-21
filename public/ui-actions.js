@@ -479,13 +479,14 @@ export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}
         case 'species-write-template':
             if(globalWrite.observations.length > 0) {
                 const uniqueSpecies = []
-                globalWrite.observations.forEach((species, index) => {
-                if(uniqueSpecies.findIndex(us => us === sp.taxon.name) === -1) {
+                globalWrite.observations.forEach((observation, index) => {
+                    // Check for duplicate species as there may be multiple observations of the same species
+                    if(uniqueSpecies.findIndex(us => us === sp.taxon.name) === -1) {
                         const clone = cloneImageTemplate({
-                              observation: species
+                              observation
                             , index
                             , sectionIndex
-                            , imgUrl: species.taxon.default_photo.medium_url
+                            , imgUrl: observation.taxon.default_photo.medium_url // use taxon image
                             , globalWrite
                             , writeTemplateId
                         })   
@@ -497,12 +498,12 @@ export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}
             break
         case 'observations-write-template':
             if(globalWrite.observations.length > 0) {
-                    globalWrite.observations.forEach((species, index) => {
+                    globalWrite.observations.forEach((observation, index) => {
                     const clone = cloneImageTemplate({
-                          observation: species
+                          observation
                         , index
                         , sectionIndex
-                        , imgUrl: species.photos[0].url
+                        , imgUrl: observation.photos[0].url // use observation image
                         , globalWrite
                         , writeTemplateId
                     })  
