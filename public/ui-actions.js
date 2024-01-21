@@ -948,18 +948,41 @@ export const scoreLesson = ({answers, global}) => {
 export const findLocalisedSpecies = ({s, sp}) => {
     // Check that there is a valid name for a taxa e.g. not the empty string or a placeholder (-) 
     const prohibitedNames = [' ', '-']
+
     try {
         if(s?.taxon?.preferred_common_name) {
-            if(prohibitedNames.includes(s.taxon.preferred_common_name)) {
-                s.taxon.preferred_common_name = sp?.taxon?.preferred_common_name || sp?.taxon?.name || sp?.name || sp
+            if(!prohibitedNames.includes(s.taxon.preferred_common_name)) {
+                if(sp.taxon) {
+                    sp.taxon.preferred_common_name = s.taxon.preferred_common_name
+                } else { // observations (for now)
+                    sp.taxon = {
+                          ...s.taxon
+                        , default_photo: {
+                              ...s.taxon.default_photo
+                            , src: sp.src
+                        }
+                     } 
+                }
+            } else {
+                sp.taxon = {
+                    ...s.taxon
+                  , default_photo: {
+                        ...s.taxon.default_photo
+                      , src: sp.src
+                  }
+               }
             }
-            return s
-        } else {
-            return sp
-        }
+        } 
+        return sp
     } catch (e) {
         console.log(e.message)
         if(s) console.log('s :', s)
         if(sp) console.log('sp :', sp)
     }    
+}
+
+export const addImageBlockCaption = ({caption, text, parent}) => {
+    caption.innerText = text
+    caption.classList.add('col3', 'small')
+    parent.appendChild(caption)    
 }

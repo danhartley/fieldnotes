@@ -14,6 +14,7 @@ import {
     , showNotificationsDialog
     , scoreLesson
     , findLocalisedSpecies
+    , addImageBlockCaption
 } from './ui-actions.js'
 
 import {
@@ -283,7 +284,7 @@ const init = async () => {
             spans[1].textContent = species.taxon.name
             spans[1].classList.add('latin')
             
-            const url = species.observation_url || species.taxon.default_photo.square_url
+            const url = species.src || species.observation_url || species.taxon.default_photo.square_url
             img.src = url.replace('square', 'small')
             img.alt = species.taxon.name
             img.id = species.taxon.id
@@ -441,10 +442,11 @@ const init = async () => {
                                     parent = parentClone.querySelector('div')
                                     parent.appendChild(clone)
                                 })
-                                caption = parentClone.querySelector('span')
-                                caption.innerText = section.name
-                                caption.classList.add('col3', 'small')
-                                parent.appendChild(caption)
+                                addImageBlockCaption({
+                                      caption: parentClone.querySelector('span')
+                                    , text: section.name
+                                    , parent
+                                })
                                 article.appendChild(parent)
                             break
                             case 'textarea-preview-template':
@@ -475,10 +477,11 @@ const init = async () => {
                                         console.log(e.message)
                                     }
                                 })
-                                caption = parentClone.querySelector('span')
-                                caption.innerText = section.name
-                                caption.classList.add('col3', 'small')
-                                parent.appendChild(caption)
+                                addImageBlockCaption({
+                                      caption: parentClone.querySelector('span')
+                                    , text: section.name
+                                    , parent
+                                })
                                 article.appendChild(parent)
                                 break
                             case 'observations-preview-template':
@@ -498,10 +501,11 @@ const init = async () => {
                                         console.log(e.message)
                                     }
                                 })
-                                caption = parentClone.querySelector('span')
-                                caption.innerText = section.name
-                                caption.classList.add('col3', 'small')
-                                parent.appendChild(caption)
+                                addImageBlockCaption({
+                                      caption: parentClone.querySelector('span')
+                                    , text: section.name
+                                    , parent
+                                })
                                 article.appendChild(parent)
                                 break
                             case 'terms-preview-template':                                
