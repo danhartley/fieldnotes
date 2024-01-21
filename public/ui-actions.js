@@ -318,7 +318,7 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
     const id = checkbox.id
     const taxonId = Number(id.substring(id.indexOf('-') + 1)) // remove section identifier used to keep Ids unique in the DOM
     const label = checkbox.nextElementSibling
-    const observation = globalWrite.species.find(sp => sp.id === taxonId)
+    const observation = globalWrite.observations.find(sp => sp.id === taxonId)
 
     let section = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)    
     let index = globalWrite.fieldnotes.sections.findIndex(t => t.sectionIndex === sectionIndex)
@@ -463,7 +463,7 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
 
     if(!globalWrite.fieldnotes.taxa.find(t => t.name === name)) {
         globalWrite.fieldnotes.taxa.push({
-              id: globalWrite.species.find(sp => sp.taxon.name === name)?.taxon?.id
+              id: globalWrite.observations.find(sp => sp.taxon.name === name)?.taxon?.id
             , name
         })
         updateFieldnoteProperty({
@@ -477,9 +477,9 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
 export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}) => {
     switch(writeTemplateId) {
         case 'species-write-template':
-            if(globalWrite.species.length > 0) {
+            if(globalWrite.observations.length > 0) {
                 const uniqueSpecies = []
-                globalWrite.species.forEach((sp, index) => {
+                globalWrite.observations.forEach((sp, index) => {
                 if(uniqueSpecies.findIndex(us => us === sp.taxon.name) === -1) {
                         const clone = cloneImageTemplate({
                               species: sp
@@ -496,8 +496,8 @@ export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}
             }
             break
         case 'observations-write-template':
-            if(globalWrite.species.length > 0) {
-                    globalWrite.species.forEach((species, index) => {
+            if(globalWrite.observations.length > 0) {
+                    globalWrite.observations.forEach((species, index) => {
                     const clone = cloneImageTemplate({
                           species
                         , index

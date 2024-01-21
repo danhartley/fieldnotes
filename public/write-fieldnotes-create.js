@@ -116,7 +116,7 @@ const init = () => {
 
       globalWrite.fieldnotes.user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')?.user
 
-      globalWrite.species = await getInatObservations({ 
+      globalWrite.observations = await getInatObservations({ 
             user_id: globalWrite.fieldnotes.user.id
           , place_id: null
           , iconic_taxa: globalWrite.iconicTaxa
@@ -136,14 +136,14 @@ const init = () => {
         searchInatObservationsNotificationText.innerText = 'Waiting for response from iNaturalist…'
       }, 1500)
 
-      if(globalWrite.species.length === 0) return
+      if(globalWrite.observations.length === 0) return
 
       const { author, date, location } = {
-          author: globalWrite.species[0].user.name
-        , date: globalWrite.species[0].observed_on
+          author: globalWrite.observations[0].user.name
+        , date: globalWrite.observations[0].observed_on
         , location: {
-            location: globalWrite.species[0].location
-          , place_guess: globalWrite.species[0].place_guess
+            location: globalWrite.observations[0].location
+          , place_guess: globalWrite.observations[0].place_guess
         }
       }
       const title = `${location.place_guess}, ${(new Date(date)).toDateString()}`

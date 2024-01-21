@@ -704,7 +704,7 @@ const init = () => {
       dateInputText.value = d1
       placeInputText.value = location.place_guess
 
-      const species = await getInatObservations({ 
+      const observations = await getInatObservations({ 
           user_id: globalWrite.fieldnotes.user.id
         , place_id: null
         , iconic_taxa: globalWrite.iconicTaxa
@@ -715,7 +715,7 @@ const init = () => {
         , d2
       })
 
-      globalWrite.species = species.map(sp => {
+      globalWrite.observations = observations.map(sp => {
         return {
             id: sp.id
           , observation_photos: sp.observation_photos
