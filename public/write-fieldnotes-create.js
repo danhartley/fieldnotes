@@ -809,6 +809,7 @@ const init = () => {
       const response = await addFieldnotes({
           fieldnotes: notes
         , status
+        , user: globalWrite.user
       })
 
       if(response.success) {

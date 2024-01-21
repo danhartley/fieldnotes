@@ -803,10 +803,12 @@ const init = () => {
             })
             speciesCheckboxes = draggableSection.querySelectorAll('input')
             speciesCheckboxes.forEach(checkbox => {
-            const hasSpeciesMatch = (section.templateId === 'species-preview-template' && section.species.map(sp => sp.taxon.name).includes(checkbox.value))
-            const checkboxId = Number(checkbox.id.substring(checkbox.id.indexOf('-') + 1)) // remove section identifier used to keep Ids unique in the DOM
-            const hasObservationMatch = (section.templateId === 'observations-preview-template' && section.species.map(sp => sp.observation_id).includes(checkboxId))
-            const hasMatch = hasSpeciesMatch || hasObservationMatch
+              let hasMatch
+              if(section.templateId === 'species-preview-template') hasMatch = section.species.map(sp => sp.taxon.name).includes(checkbox.value)
+              if(section.templateId === 'observations-preview-template') {
+                const checkboxId = Number(checkbox.id.substring(checkbox.id.indexOf('-') + 1))
+                hasMatch = (section.templateId === 'observations-preview-template' && section.species.map(sp => sp.observation.id).includes(checkboxId))
+              }
               if(hasMatch) {
                 checkbox.setAttribute('checked', true)
                 checkbox.nextElementSibling.innerText = 'Included'

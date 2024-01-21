@@ -337,6 +337,35 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
         }
     }
 
+    const getTaxon = ({observation}) => {
+       return {
+            id: observation.taxon.id,
+            name: observation.taxon.name,
+            preferred_common_name: observation.taxon.preferred_common_name,
+            iconic_taxon_name: observation.taxon.iconic_taxon_name,
+            default_photo: {
+                square_url: observation.taxon.default_photo.square_url
+            }
+       }
+    }
+
+    const getObservation = ({observation}) => {
+        return {
+            species_guess: observation.species_guess,
+            id: observation.id,
+            default_photo: {
+                url: observation.photos[0].url
+            },
+            photos: observation.photos.map(photo => {
+                return {
+                    id: photo.id,
+                    url: photo.url,
+                    attribution: photo.attribution
+                }
+            })
+        }
+    }
+
     if(section) {        
         switch(writeTemplateId) {
             case 'species-write-template':
@@ -345,52 +374,28 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
                     label.innerText = 'Not included'
                 } else {
                     section.species.push({
-                          taxon : {
-                              id: observation.taxon.id
-                            , name: observation.taxon.name
-                            , preferred_common_name: observation.taxon.preferred_common_name
-                            , iconic_taxon_name: observation.taxon.iconic_taxon_name
-                            , default_photo: {
-                                square_url: observation.taxon.default_photo.square_url
-                            }
-                          }
+                            name
+                          , taxon : getTaxon({
+                                observation
+                            })
                     })
                     label.innerText = 'Included'
                 }
                 globalWrite.fieldnotes.sections[index] = section
                 break
-            case 'observations-write-template':                
-                if(section.species.find(sp => sp.observation_id === taxonId)) {
-                    section.species = section.species.filter(sp => sp.observation_id !== observation.id)
+            case 'observations-write-template':
+                if(section.species.find(sp => sp.observation.id === taxonId)) {
+                    section.species = section.species.filter(sp => sp.observation.id !== observation.id)
                     label.innerText = 'Not included'
                 } else {
                     section.species.push({
-                        name
-                      , observation_id: observation.id
-                      , src: observation.photos[0].url
-                      , observation: {
-                              species_guess: observation.species_guess
-                            , id: observation.id
-                            , default_photo: {
-                                url: observation.photos[0].url
-                            }
-                            , photos: observation.photos.map(photo => {
-                                return {
-                                      id: photo.id
-                                    , url: photo.url
-                                    , attribution: photo.attribution
-                                }
-                            })
-                        }
-                      , taxon : {
-                          id: observation.taxon.id
-                        , name: observation.taxon.name
-                        , preferred_common_name: observation.taxon.preferred_common_name
-                        , iconic_taxon_name: observation.taxon.iconic_taxon_name
-                        , default_photo: {
-                            square_url: observation.taxon.default_photo.square_url
-                        }
-                    }
+                          name
+                        , taxon : getTaxon({
+                            observation
+                        })
+                        , observation: getObservation({
+                            observation
+                        })
                     })
                     label.innerText = 'Included'
                 }
@@ -398,7 +403,7 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
                 break
             case 'inat-lookup-write-template':
                     if(section.species.find(sp => sp.taxon.name === name)) {
-                        section.species = section.species.filter(sp => sp.taxon.name !== name)
+                        section.species = section.species.filter(sp => sp.taxon.name !== name) // id, and as above?
                         label.innerText = 'Not included'
                     } else {
                         section.species.push(getSpeciesForInatLookup({
@@ -414,15 +419,29 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
         label.innerText = 'Included'
         switch(writeTemplateId) {
             case 'species-write-template':
-                section = {...species, species: sp, templateId: species.templateId, sectionIndex }
+                section = { 
+                    ...species
+                    , species: {
+                          name: sp.name
+                        , taxon : getTaxon({
+                            observation
+                        })
+                    }
+                    , templateId: species.templateId
+                    , sectionIndex
+                }
                 break
             case 'observations-write-template':
                 section = {
                       ...observations
                     , species: [{
                           name
-                        , observation_id: observation.id
-                        , src: observation.photos[0].url
+                        , taxon : getTaxon({
+                            observation
+                        })
+                        , observation: getObservation({
+                            observation
+                        })                        
                     }]
                     , templateId: observations.templateId
                     , sectionIndex
@@ -529,7 +548,9 @@ export const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, global
     const checkbox = clone.querySelector('input')
     const label = clone.querySelector('label')
 
-    figure.style.setProperty("background-color", getTaxonGroupColour({taxon:species.taxon.iconic_taxon_name}))
+    figure.style.setProperty("background-color", getTaxonGroupColour({
+        taxon: species.taxon.iconic_taxon_name
+    }))
 
     img.src = imgUrl
     img.alt = species.taxon.name
@@ -541,6 +562,7 @@ export const cloneImageTemplate = ({species, index, sectionIndex, imgUrl, global
     spans[1].textContent = species.taxon.name
     spans[1].classList.add('latin')
     
+    // In order to ensure ids are unique, we prefix the id with the section index
     checkbox.id = `${sectionIndex}-${species.id || species.taxon.id}`
     checkbox.value = species.taxon.name
     checkbox.addEventListener('change', e => handleSpeciesCheckState({

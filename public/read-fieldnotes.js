@@ -682,7 +682,7 @@ const init = async () => {
         , dataList: fnAutocompleteTitleDatalist
         , global: globalRead
         , fieldnotesStubs: getFieldnotesStubs({
-                user: null
+              user: null
             , readonly: true
         })
         , fetchFieldnotesBtn

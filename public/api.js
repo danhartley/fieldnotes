@@ -268,7 +268,7 @@ export const getTerms = async () => {
   return terms
 }
 
-export const addFieldnotes = async ({fieldnotes, status = 'private'}) => {
+export const addFieldnotes = async ({fieldnotes, status = 'private', user}) => {
   const db = getDb()
   let id, data = null
 
@@ -294,6 +294,7 @@ export const addFieldnotes = async ({fieldnotes, status = 'private'}) => {
         , author: fieldnotes.author 
         , status
         , created: Date.now()
+        , uid: user.uid
       }
       await setDoc(fieldNotesStubRef, data)
 
