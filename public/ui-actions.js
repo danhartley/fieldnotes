@@ -312,13 +312,10 @@ export const saveNewTerm = async ({terms, term}) => {
     }
 }
 
-const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  writeTemplateId}) => {
+const handleSpeciesCheckState = async({e, observation, sectionIndex, globalWrite,  writeTemplateId}) => {
     const checkbox = e.target
     const name = checkbox.value
-    const id = checkbox.id
-    const taxonId = Number(id.substring(id.indexOf('-') + 1)) // remove section identifier used to keep Ids unique in the DOM
     const label = checkbox.nextElementSibling
-    const observation = globalWrite.observations.find(sp => sp.id === taxonId)
 
     let section = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)    
     let index = globalWrite.fieldnotes.sections.findIndex(t => t.sectionIndex === sectionIndex)
@@ -375,27 +372,21 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
                 } else {
                     section.species.push({
                             name
-                          , taxon : getTaxon({
-                                observation
-                            })
+                          , taxon : getTaxon({ observation })
                     })
                     label.innerText = 'Included'
                 }
                 globalWrite.fieldnotes.sections[index] = section
                 break
             case 'observations-write-template':
-                if(section.species.find(sp => sp.observation.id === taxonId)) {
+                if(section.species.find(sp => sp.observation.id === observation.id)) {
                     section.species = section.species.filter(sp => sp.observation.id !== observation.id)
                     label.innerText = 'Not included'
                 } else {
                     section.species.push({
                           name
-                        , taxon : getTaxon({
-                            observation
-                        })
-                        , observation: getObservation({
-                            observation
-                        })
+                        , taxon : getTaxon({ observation })
+                        , observation: getObservation({ observation })
                     })
                     label.innerText = 'Included'
                 }
@@ -406,9 +397,7 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
                         section.species = section.species.filter(sp => sp.taxon.name !== name) // id, and as above?
                         label.innerText = 'Not included'
                     } else {
-                        section.species.push(getSpeciesForInatLookup({
-                            taxon
-                        })) 
+                        section.species.push(getSpeciesForInatLookup({ taxon: observation.taxon })) 
                         label.innerText = 'Included'
                     }
                     globalWrite.fieldnotes.sections[index] = section
@@ -423,9 +412,7 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
                     ...species
                     , species: {
                           name: sp.name
-                        , taxon : getTaxon({
-                            observation
-                        })
+                        , taxon : getTaxon({ observation })
                     }
                     , templateId: species.templateId
                     , sectionIndex
@@ -436,12 +423,8 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
                       ...observations
                     , species: [{
                           name
-                        , taxon : getTaxon({
-                            observation
-                        })
-                        , observation: getObservation({
-                            observation
-                        })                        
+                        , taxon : getTaxon({ observation })
+                        , observation: getObservation({ observation })                        
                     }]
                     , templateId: observations.templateId
                     , sectionIndex
@@ -450,9 +433,7 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
             case 'inat-lookup-write-template':
                 section = {
                       ...inatlookup
-                    , species: [getSpeciesForInatLookup({
-                        taxon
-                      })]
+                    , species: [getSpeciesForInatLookup({ taxon: observation.taxon })]
                     , templateId: inatlookup.templateId
                     , sectionIndex 
                 }
@@ -481,9 +462,11 @@ export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}
                 const uniqueSpecies = []
                 globalWrite.observations.forEach((observation, index) => {
                     // Check for duplicate species as there may be multiple observations of the same species
-                    if(uniqueSpecies.findIndex(us => us === sp.taxon.name) === -1) {
+                    if(uniqueSpecies.findIndex(species => species === observation.taxon.name) === -1) {
                         const clone = cloneImageTemplate({
-                              observation
+                              observation: {
+                                taxon: observation.taxon
+                              }
                             , index
                             , sectionIndex
                             , imgUrl: observation.taxon.default_photo.medium_url // use taxon image
@@ -491,7 +474,7 @@ export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}
                             , writeTemplateId
                         })   
                         parent.appendChild(clone)
-                        uniqueSpecies.push(species.taxon.name)                
+                        uniqueSpecies.push(observation.taxon.name)                
                     }
                 })
             }
@@ -563,12 +546,13 @@ export const cloneImageTemplate = ({observation, index, sectionIndex, imgUrl, gl
     spans[1].textContent = observation.taxon.name
     spans[1].classList.add('latin')
     
-    // In order to ensure ids are unique, we prefix the id with the section index
+    // In order to ensure ids are unique in the DOM, prefix the id with the section index
     checkbox.id = `${sectionIndex}-${observation.id || observation.taxon.id}`
     checkbox.value = observation.taxon.name
     checkbox.addEventListener('change', e => handleSpeciesCheckState({
           e 
-        , taxon: observation.taxon
+        // , taxon: observation.taxon
+        , observation
         , sectionIndex
         , globalWrite
         , writeTemplateId
