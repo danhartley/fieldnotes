@@ -221,7 +221,6 @@ const init = () => {
         const observer = new MutationObserver(() => {
           const section = globalWrite.fieldnotes.sections.find(s => s.sectionIndex === sectionIndex)
           const speciesCount = section?.species?.length || 0
-          console.log('species count: ', speciesCount)
           speciesCount > 0
             ? addOrUpdateSectionBtn.enable()
             : addOrUpdateSectionBtn.disable()

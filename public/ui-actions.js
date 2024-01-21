@@ -368,6 +368,29 @@ const handleSpeciesCheckState = async({e, taxon, sectionIndex, globalWrite,  wri
                         name
                       , observation_id: observation.id
                       , src: observation.photos[0].url
+                      , observation: {
+                              species_guess: observation.species_guess
+                            , id: observation.id
+                            , default_photo: {
+                                url: observation.photos[0].url
+                            }
+                            , photos: observation.photos.map(photo => {
+                                return {
+                                      id: photo.id
+                                    , url: photo.url
+                                    , attribution: photo.attribution
+                                }
+                            })
+                        }
+                      , taxon : {
+                          id: observation.taxon.id
+                        , name: observation.taxon.name
+                        , preferred_common_name: observation.taxon.preferred_common_name
+                        , iconic_taxon_name: observation.taxon.iconic_taxon_name
+                        , default_photo: {
+                            square_url: observation.taxon.default_photo.square_url
+                        }
+                    }
                     })
                     label.innerText = 'Included'
                 }
