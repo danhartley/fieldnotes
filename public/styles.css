@@ -36,7 +36,8 @@
   --active-bg: #d5e1ba;
   --active-fg: #74ac02;
   --grid-min-max: 180px;
-  --img-min-width: 220px;
+  --img-min-width: 180px;
+  --img-min-height: 180px;
   --alert: #ff0000;
 }
 
@@ -413,7 +414,7 @@ a.info span:nth-child(2) {
 }
 
 figure {
-  margin: 0 0 var(--d) 0;
+  margin: 0 auto var(--d) auto;
   text-align: center;
   border: 1px solid var(--c2);
 }
@@ -533,7 +534,7 @@ th, td {
 
 .grid:not(:has(figure)) img {
   object-fit: cover;
-  cursor: pointer;
+  cursor: pointer;  
 }
 
 .grid .flex-row {
@@ -885,7 +886,8 @@ th, td {
   img {
     aspect-ratio: 1/1;
     object-fit: cover;
-    max-height: var(--img-min-width);
+    width: 100%;
+    max-height: var(--img-min-height);
   }
 } 
 
@@ -929,8 +931,13 @@ th, td {
   .non-grid {
     max-width: 60ch;
   }
+
+  figure {
+    margin: 0 0 var(--d) 0;
+  }
+
   img {
-    max-height: none;
+    max-height: var(--img-min-height);
   }
 }
 
