@@ -353,7 +353,7 @@ fieldset.fieldset-reset fieldset {
   border-top: none;
 }
 
-legend, #toggle-species-include-all-btn {
+legend  {
   position: absolute;
   top: calc(var(--d) *.5);
   left: var(--d);
@@ -364,7 +364,8 @@ legend, #toggle-species-include-all-btn {
   color: var(--c8);
 }
 
-#toggle-species-include-all-btn {
+.btn-secondary  {
+  position: absolute;
   top: var(--d);
   right: calc(var(--d) * 2);
   left: initial;
@@ -376,6 +377,15 @@ legend, #toggle-species-include-all-btn {
   text-transform: uppercase;
   color: var(--c5);
   background-color: var(--c0);
+}
+
+.btn-secondary:focus {
+  background-color: var(--c0);
+  outline: 1px solid var(--c4);
+}
+
+figure input[type='text'] {
+  width: initial;
 }
 
 a {
@@ -888,6 +898,10 @@ th, td {
     object-fit: cover;
     width: 100%;
     max-height: var(--img-min-height);
+  }
+
+  figure img {
+    width: initial;
   }
 } 
 

@@ -6,10 +6,11 @@ import {
 
 import { 
       handleInatAutocomplete
-    , mapInatSpeciesToLTP
+    , mapInatSpeciesToRequiredSpecies
     , getTaxonGroupColour
     , showNotificationsDialog
     , scoreLesson
+    , cloneSpeciesCardFromTemplate
 } from './ui-actions.js'
 
 import {
@@ -263,7 +264,7 @@ const init = async () => {
                                 test.addEventListener('change', e => {
                                     const testId = e.target.value
                                     globalRead.target = globalRead.template.targets.find(t => t.id === testId)
-                                    renderDisplayTemplate()
+                                    renderDisplayTemplate({ species: globalRead.species })
                                 })
                             })
                         }
@@ -284,12 +285,12 @@ const init = async () => {
                         const progressView = d.querySelector('.progress-view')
                         progressView.classList.toggle('hidden')
 
-                        renderDisplayTemplate()
+                        renderDisplayTemplate({ species: globalRead.species })
                     }
                     showTestBtn.addClickHandler({
                         clickHandler: toggleTestableTemplate
                     })                       
-                    renderDisplayTemplate()                
+                    renderDisplayTemplate({ species: globalRead.species })           
                 })
             })            
         }
@@ -321,33 +322,8 @@ const init = async () => {
     
         addHandlers()        
     }    
-    
-    const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) => {
-        const clone = templateToClone.content.cloneNode(true)
-    
-        const img = clone.querySelector('img')      
-        const figcaption = clone.querySelector('figcaption')
-        const spans = figcaption.querySelectorAll('span')
-     
-        figcaption.style.setProperty("background-color", getTaxonGroupColour({
-            taxon:species.taxon.iconic_taxon_name
-        }))
-    
-        spans[0].textContent = species.taxon.preferred_common_name
-        spans[1].textContent = species.taxon.name
-        spans[1].classList.add('latin')
-        
-        const url = species.observation_url || species.taxon.default_photo.square_url
-        img.src = url.replace('square', 'small')
-        img.alt = species.taxon.name
-        img.id = species.taxon.id
-        img.setAttribute('data-i', index + 1)
-        img.setAttribute('loading', 'lazy')
-    
-        return clone
-    }
-    
-    const renderDisplayTemplate = () => {
+
+    const renderDisplayTemplate = ({species}) => {
         try {
             let parentTemplate = d.getElementById(globalRead.template.parent)
             let parentClone = parentTemplate.content.cloneNode(true)
@@ -358,11 +334,11 @@ const init = async () => {
                 
             lessonFieldsetLegend.innerText = globalRead.template.name
 
-            if(globalRead.species) article.innerHTML = ''
+            if(species) article.innerHTML = ''
         
             switch(globalRead.template.templateId) {
                 case 'species-template':
-                    globalRead.species.forEach((sp, i) => {
+                    species.forEach((sp, i) => {
                         const clone = cloneSpeciesCardFromTemplate({
                               templateToClone
                             , species: sp
@@ -374,7 +350,7 @@ const init = async () => {
                     article.appendChild(parent)
                     break
                 case 'species-list-template':            
-                    globalRead.species.forEach(sp => {
+                    species.forEach(sp => {
                         const clone = templateToClone.content.cloneNode(true)
                         const li = clone.querySelector('li')
                         
@@ -386,7 +362,7 @@ const init = async () => {
                     article.appendChild(parent)
                     break
                 case 'species-test-template':
-                    globalRead.species.forEach((sp, i) => {
+                    species.forEach((sp, i) => {
                         const clone = templateToClone.content.cloneNode(true)
             
                         const span = clone.querySelector('span')
@@ -486,14 +462,14 @@ const init = async () => {
                 , place: place.isActive ? place.place : null
             })
     
-            globalRead.species = mapInatSpeciesToLTP({
+            globalRead.species = mapInatSpeciesToRequiredSpecies({
                   species: globalRead.inatSpecies
                 , count: globalRead.count
                 , taxa: globalRead.iconicTaxa
             })
         
             createRadioBtnTemplateGroup()
-            renderDisplayTemplate()
+            renderDisplayTemplate({ species: globalRead.species })
     
             searchInatObservationsNotificationText.classList.toggle('hidden')
             searchInatObservationsBtn.toggleActiveState()

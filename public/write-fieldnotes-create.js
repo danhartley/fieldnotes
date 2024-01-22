@@ -53,7 +53,7 @@ const init = () => {
     const globalWrite = {}
     Object.assign(globalWrite, {
         iconicTaxa: g.ICONIC_TAXA
-      , useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0]
+      // , useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0]
       , species: []
       , nextSectionIndex: 0
       , inatAutocompleteOptions: g.inatAutocompleteOptions

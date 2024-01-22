@@ -209,19 +209,19 @@ export const mapUser = ({user}) => {
     }
 }
 
-export const mapInatSpeciesToLTP = ({species, count, taxa}) => {
-    return species
-        .filter(sp => sp.taxon)
-        .filter(sp => sp.taxon.preferred_common_name || sp.taxon.name)
-        .filter(sp => sp.taxon.default_photo)
-        .filter(sp => taxa.map(t => t.name).includes(sp.taxon.iconic_taxon_name.toLowerCase()))
-        .slice(0,count)
+export const mapInatSpeciesToRequiredSpecies = ({species, count, taxa}) => {    
+    return species  
+        .filter(sp => taxa.map(t => t.name).includes(sp.taxon.iconic_taxon_name.toLowerCase()))      
         .map(sp => {
             return {
-                count: sp.count || 0,
-                taxon: mapTaxon({taxon: sp.taxon})
+                  species_guess: sp.species_guess
+                , observation_photos: sp.observation_photos
+                , taxon: {
+                    ...sp.taxon
+                    , count: sp.count || 0
+                }            
             }
-        })
+    })
 }
 
 export const getTaxonGroupColour = ({taxon}) => {
@@ -536,15 +536,15 @@ export const cloneImageTemplate = ({observation, index, sectionIndex, imgUrl, gl
         taxon: observation.taxon.iconic_taxon_name
     }))
 
+    spans[0].textContent = observation.taxon.preferred_common_name
+    spans[1].textContent = observation.taxon.name
+    spans[1].classList.add('latin')
+
     img.src = imgUrl
     img.alt = observation.taxon.name
     img.id = observation.taxon.id
     img.setAttribute('data-i', index + 1)
     img.setAttribute('loading', 'lazy')
-
-    spans[0].textContent = observation.taxon.preferred_common_name
-    spans[1].textContent = observation.taxon.name
-    spans[1].classList.add('latin')
     
     // In order to ensure ids are unique in the DOM, prefix the id with the section index
     checkbox.id = `${sectionIndex}-${observation.id || observation.taxon.id}`
@@ -1015,4 +1015,38 @@ export const addImageBlockCaption = ({caption, text, parent}) => {
     caption.innerText = text
     caption.classList.add('caption', 'smallish')
     parent.appendChild(caption)    
+}
+
+export const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) => {
+    try {            
+        const clone = templateToClone.content.cloneNode(true)
+    
+        const img = clone.querySelector('img')      
+        const figcaption = clone.querySelector('figcaption')
+        const spans = figcaption.querySelectorAll('span')
+
+        const commonName = species.species_guess || species.taxon.preferred_common_name
+        const taxonName = species.taxon.name
+        const url = species?.observation_photos?.[0]?.photo?.url || species.taxon.default_photo.square_url
+        const taxonId = species.taxon.id
+
+        figcaption.style.setProperty("background-color", getTaxonGroupColour({
+            taxon: species.taxon.iconic_taxon_name
+        }))
+    
+        spans[0].textContent = commonName
+        spans[1].textContent = taxonName
+        spans[1].classList.add('latin')
+        
+        img.src = url.replace('square', 'small')
+        img.alt = taxonName
+        img.id = taxonId
+        img.setAttribute('data-i', index + 1)
+        img.setAttribute('loading', 'lazy')
+    
+        return clone
+    } catch (e) {
+        if(species) console.log('species', species)
+        console.log(e.message)
+    }
 }

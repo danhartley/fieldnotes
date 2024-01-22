@@ -15,6 +15,7 @@ import {
     , scoreLesson
     , checkForLocalisedCommonSpeciesNames
     , addImageBlockCaption
+    , cloneSpeciesCardFromTemplate
 } from './ui-actions.js'
 
 import {
@@ -266,36 +267,6 @@ const init = async () => {
         })
     
         addHandlers()        
-    }    
-    
-    const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) => {
-        try {            
-            const clone = templateToClone.content.cloneNode(true)
-        
-            const img = clone.querySelector('img')      
-            const figcaption = clone.querySelector('figcaption')
-            const spans = figcaption.querySelectorAll('span')
-        
-            figcaption.style.setProperty("background-color", getTaxonGroupColour({
-                taxon: species.taxon.iconic_taxon_name
-            }))
-        
-            spans[0].textContent = species.taxon.preferred_common_name
-            spans[1].textContent = species.taxon.name
-            spans[1].classList.add('latin')
-            
-            const url = species.src || species.observation_url || species.taxon.default_photo.square_url
-            img.src = url.replace('square', 'small')
-            img.alt = species.taxon.name
-            img.id = species.taxon.id
-            img.setAttribute('data-i', index + 1)
-            img.setAttribute('loading', 'lazy')
-        
-            return clone
-        } catch (e) {
-            if(species) console.log('species', species)
-            console.log(e.message)
-        }
     }
     
     const renderDisplayTemplate = () => {
