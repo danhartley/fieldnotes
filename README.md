@@ -1,31 +1,24 @@
-# Your Web App Name
+# iFieldnotes
 
 ## Overview
-Briefly describe your web app, its purpose, and key features.
+Write, edit and view fieldnotes. 
 
-## Table of Contents
-- [Getting Started](#getting-started)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Folder Structure](#folder-structure)
-- [Contributing](#contributing)
-- [License](#license)
+This app is best used in conjunction with (iNaturalist)[https://www.inaturalist.org/].
 
-## Getting Started
+Visit the web site at: (iFieldnotes)[https://www.ifieldnotes.org/]
+
+## Running the project on your local machine
 Provide instructions on how to get a copy of the project and run it on the local machine.
-
-### Prerequisites
-List any software or tools that users need to have installed before running your app.
-
-## Installation
-Step-by-step guide on how to install the necessary dependencies and set up the project.
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/your-web-app.git
+git clone https://github.com/danhartley/fieldnotes.git
 
 # Change into the project directory
-cd your-web-app
+cd fieldnotes
 
-# Open index.html in your web browser
+# Install node packages
+npm run install
+
+# Run the project on your machine
+npm run start
