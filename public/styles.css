@@ -352,11 +352,10 @@ fieldset.fieldset-reset fieldset {
   border-top: none;
 }
 
-legend, .species-list #toggle-species-include-all-btn {
+legend, #toggle-species-include-all-btn {
   position: absolute;
   top: calc(var(--d) *.5);
   left: var(--d);
-  /* width: 50%; */
   padding: calc(var(--d) * 1.5) var(--d);
   font-size: var(--s3);
   font-weight: bold;
@@ -364,12 +363,14 @@ legend, .species-list #toggle-species-include-all-btn {
   color: var(--c8);
 }
 
-.species-list #toggle-species-include-all-btn {
+#toggle-species-include-all-btn {
+  top: var(--d);
+  right: calc(var(--d) * 2);
   left: initial;
-  right: calc(var(--d) *.5);
+  padding: var(--d);
   width: initial;
-  border: none;
-  font-size: var(--s2);
+  border: 1px solid transparent;
+  font-size: var(--s1);
   font-weight: initial;
   text-transform: uppercase;
   color: var(--c5);
