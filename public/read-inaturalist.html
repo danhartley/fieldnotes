@@ -28,6 +28,7 @@
           <legend>Language</legend>
           <div id="language-group-container" class="grid"></div>
           <p class="small">Language determines the locale preference for taxon common names.</p>
+          <p class="small"><em>It does not apply to observation names which reflect the language preference of the observer.</em></p>
         </fieldset>
       </section>
     </aside>
@@ -82,7 +83,7 @@
                 </div>
                 <div class="centred-block mb2">
                   <label for="rbSingleDate" class="invisible">Single date</label>
-                  <input id="rbSingleDate" type="radio" name="rbDate" value="single"  />  
+                  <input id="rbSingleDate" type="radio" name="rbDate" value="single" checked />  
                   <label for="single-observations-input-date" class="block">Date</label>
                   <input type="date" id="single-observations-input-date" name="single-observations-input-date" class="mr" />
                 </div>
@@ -134,7 +135,7 @@
         <div>
           <section>
             <h2>Progress</h2>
-            <button id="progress-toggle-visibility-btn" value="progress-fieldset" class="show-hide">HIDE</button>
+            <button id="progress-toggle-visibility-btn" value="progress-fieldset" class="btn-secondary show-hide">HIDE</button>
           </div>
 
           <fieldset id="progress-fieldset">
