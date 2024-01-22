@@ -400,7 +400,7 @@ const init = async () => {
                                 parent = parentClone.querySelector('div')
                                 parent.appendChild(clone)
                                 article.appendChild(parent)
-                            break
+                                break
                             case 'images-preview-template':
                                 section.images.forEach(img => {
                                     const clone = templateToClone.content.cloneNode(true)
@@ -491,7 +491,12 @@ const init = async () => {
                                         const dx = div1.querySelector('em')
                                         const ds = div2.querySelector('a')
                                                 
-                                        const def = globalRead.terms.find(t => t.dt === term || term.dt)
+                                        let def
+                                        if(term?.dd) {
+                                            def = term
+                                        } else {
+                                            def = globalRead.terms.find(t => t.dt === term.dt || t.dt === term)
+                                        }                                        
                                         
                                         dt.textContent = def.dt
                                         dd.textContent = def.dd
