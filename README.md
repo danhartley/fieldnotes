@@ -7,8 +7,7 @@ This app is best used in conjunction with (iNaturalist)[https://www.inaturalist.
 
 Visit the web site at: (iFieldnotes)[https://www.ifieldnotes.org/]
 
-## Running the project on your local machine
-Provide instructions on how to get a copy of the project and run it on the local machine.
+### Running the project on your local machine
 
 ```bash
 # Clone the repository
