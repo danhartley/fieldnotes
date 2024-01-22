@@ -1013,6 +1013,6 @@ export const checkForLocalisedCommonSpeciesNames = ({s, sp}) => {
 
 export const addImageBlockCaption = ({caption, text, parent}) => {
     caption.innerText = text
-    caption.classList.add('caption', 'small')
+    caption.classList.add('caption', 'smallish')
     parent.appendChild(caption)    
 }

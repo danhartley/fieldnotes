@@ -877,7 +877,7 @@ th, td {
   width: 100%;
   padding: 0 0 calc(var(--d) * 2) 0;
   text-align: center;
-  font-weight: bold;
+  font-family: sans-serif;
 }
 
 /* MEDIA */
