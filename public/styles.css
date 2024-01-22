@@ -929,6 +929,9 @@ th, td {
   .non-grid {
     max-width: 60ch;
   }
+  img {
+    max-height: none;
+  }
 }
 
 @media print {

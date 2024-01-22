@@ -13,7 +13,7 @@ import {
     , fieldsnotesAutocomplete
     , showNotificationsDialog
     , scoreLesson
-    , findLocalisedSpecies
+    , checkForLocalisedCommonSpeciesNames
     , addImageBlockCaption
 } from './ui-actions.js'
 
@@ -465,7 +465,7 @@ const init = async () => {
                                     try {
                                         const clone = cloneSpeciesCardFromTemplate({
                                             templateToClone
-                                            , species: findLocalisedSpecies({
+                                            , species: checkForLocalisedCommonSpeciesNames({
                                                       s: globalRead.species.find(s => s.taxon.id === sp.taxon.id)
                                                     , sp
                                                 })
@@ -489,7 +489,7 @@ const init = async () => {
                                     try {
                                         const clone = cloneSpeciesCardFromTemplate({
                                             templateToClone
-                                            , species: findLocalisedSpecies({
+                                            , species: checkForLocalisedCommonSpeciesNames({
                                                       s: globalRead.species.find(s => s.taxon.name === sp.name)
                                                     , sp
                                                 })

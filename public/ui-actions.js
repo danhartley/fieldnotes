@@ -975,7 +975,7 @@ export const scoreLesson = ({answers, global}) => {
     global.template.score = global.template.scores.filter(score => score.isCorrect)?.length || 0
 }
 
-export const findLocalisedSpecies = ({s, sp}) => {
+export const checkForLocalisedCommonSpeciesNames = ({s, sp}) => {
     // Check that there is a valid name for a taxa e.g. not the empty string or a placeholder (-) 
     const prohibitedNames = [' ', '-']
 
