@@ -582,6 +582,9 @@ const init = async () => {
                           key: 'language'
                         , value: globalRead.language
                     })
+                    showNotificationsDialog({
+                        message: 'Your preferred language has been saved.'
+                    })
                 }
             })
         })
