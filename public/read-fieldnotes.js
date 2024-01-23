@@ -695,7 +695,7 @@ const init = async () => {
         })
 
         const section = d.querySelector('.inat-preferences-section')
-        section.classList.toggle('hidden')
+        if(section) section.classList.toggle('hidden')
 
         btn.innerText = btn.innerText === 'Show user preferences' 
             ? 'Hide user preferences'
