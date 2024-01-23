@@ -54,6 +54,7 @@ const init = async () => {
     const endDate = d.getElementById('observations-end-date')
     const singleDate = d.getElementById('single-observations-input-date')
     const rbDateGroup = d.querySelectorAll('input[name="rbDate"]')
+    const rememberLanguageCheckbox = d.getElementById('remember-language-checkbox')
 
     const displayOptionsToggleVisibilityBtn = new ButtonHideShowComponent({
         elementSelector: 'display-options-toggle-visibility-btn'
@@ -574,7 +575,15 @@ const init = async () => {
         const btn = d.getElementById(e.target.id)
         const rbLanguageGroup = createRadioBtnGroup({collection: globalRead.LANGUAGES, checked:globalRead.language, rbGroup:'language', parent:languageGroupContainer})
         rbLanguageGroup.forEach(rb => {
-            rb.addEventListener('change', () => globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value))
+            rb.addEventListener('change', () => {
+                globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value)
+                if(rememberLanguageCheckbox.checked) {
+                    appLocalStorage.set({
+                          key: 'language'
+                        , value: globalRead.language
+                    })
+                }
+            })
         })
 
         const section = d.querySelector('.inat-preferences-section')
@@ -608,6 +617,15 @@ const init = async () => {
             , user
         }
         iNatAutocompleteInputText.value = user.name    
+    }
+
+    //Check for saved language
+    const language = appLocalStorage.get({
+        key: 'language'
+    })
+
+    if(language) {
+        globalRead.language = language
     }
 }
 

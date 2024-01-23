@@ -23,6 +23,8 @@ import {
     , ButtonHideShowComponent
 } from './ui-components.js'
 
+import { appLocalStorage } from './utils.js'
+
 const init = async () => {    
     const initGlobalRead = () => {
         const globalRead = {}
@@ -51,6 +53,7 @@ const init = async () => {
     const targetGroupContainer = d.getElementById('target-group-container')
     const targetsFieldset = d.getElementById('targets-fieldset')
     const speciesDisplayContainer = d.getElementById('species-display-container')
+    const rememberLanguageCheckbox = d.getElementById('remember-language-checkbox')
 
     const displayOptionsToggleVisibilityBtn = new ButtonHideShowComponent({
         elementSelector: 'display-options-toggle-visibility-btn'
@@ -679,6 +682,12 @@ const init = async () => {
         rbLanguageGroup.forEach(rb => {
             rb.addEventListener('change', () => {
                 globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value)
+                if(rememberLanguageCheckbox.checked) {
+                    appLocalStorage.set({
+                          key: 'language'
+                        , value: globalRead.language
+                    })
+                }
             })
         })
 
@@ -709,6 +718,15 @@ const init = async () => {
         print()
       }
     })
+
+    //Check for saved language
+    const language = appLocalStorage.get({
+        key: 'language'
+    })
+
+    if(language) {
+        globalRead.language = language
+    }
 }
 
 init()
