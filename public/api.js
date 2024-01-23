@@ -136,7 +136,9 @@ export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticate
       if(fetchFieldnotesStubs) fetchFieldnotesStubs({user})
       text.innerText = 'You are logged in.'
       loggedOut.forEach(out => out.classList.add('hidden'))
-      if(isAuthenticatedSections) isAuthenticatedSections.forEach(section => section.classList.remove('disabled')) 
+      
+      // Enable site
+      if(isAuthenticatedSections) isAuthenticatedSections.forEach(section => section.classList.remove('disabled'))
     } else {
       authenticateBtn.setText({
         text: 'Log in'

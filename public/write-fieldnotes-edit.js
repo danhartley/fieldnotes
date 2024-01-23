@@ -650,19 +650,17 @@ const init = () => {
     })
   })
   dateInputText.addEventListener('change', e => {
-    const date = e.target.value    
-    if(isValidDate({date})) {
-      globalWrite.fieldnotes.d1 = date
-      globalWrite.fieldnotes.d2 = date
-      updateSingleFields({
-         prop: 'd1'
-        , value: globalWrite.fieldnotes.d1
-      })
-      updateSingleFields({
-          prop: 'd2'
-        , value: globalWrite.fieldnotes.d2
-      })
-    }
+    const date = e.target.value        
+    globalWrite.fieldnotes.d1 = date
+    globalWrite.fieldnotes.d2 = date
+    updateSingleFields({
+        prop: 'd1'
+      , value: globalWrite.fieldnotes.d1
+    })
+    updateSingleFields({
+        prop: 'd2'
+      , value: globalWrite.fieldnotes.d2
+    })    
   })
   placeInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.location.place_guess = e.target.value

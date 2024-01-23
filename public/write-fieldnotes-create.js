@@ -26,7 +26,6 @@ import {
   , dragleaveHandler
   , dropHandler
   , deleteSection
-  , addOrUpdateSectionArray
   , showNotificationsDialog
   , addContentToPreviewContainer
   , getOriginalTypeValues
@@ -46,6 +45,8 @@ import {
 import {
     ButtonComponent
 } from './ui-components.js'
+
+import { appLocalStorage } from './utils.js'
 
 const init = () => {
 
@@ -104,6 +105,7 @@ const init = () => {
   const selectSectionTypeSection = d.getElementById('select-section-type-section')
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
   const saveFieldNotesSection = d.getElementById('save-fieldnotes-section')
+  const rememberInatUserCheckbox = d.getElementById('remember-inat-user-checkbox')
 
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
@@ -113,7 +115,9 @@ const init = () => {
       searchInatObservationsNotificationText.classList.toggle('hidden')
       searchInatObservationsBtn.toggleActiveState()
 
-      globalWrite.fieldnotes.user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')?.user
+      const defaultUser = globalWrite.fieldnotes.user
+      // If there is no user available via autocomplete, use the default (saved) user, if there is one
+      globalWrite.fieldnotes.user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')?.user || defaultUser
 
       globalWrite.observations = await getInatObservations({ 
             user_id: globalWrite.fieldnotes.user.id
@@ -164,6 +168,24 @@ const init = () => {
 
       // Enable saving fieldnotes
       saveFieldNotesSection.classList.remove('disabled')
+
+      // Save inat user
+      if(rememberInatUserCheckbox.checked) {
+        const { icon, id, login, name, name_autocomplete, observations_count, species_count } = globalWrite.observations[0].user
+
+        appLocalStorage.set({
+            key: 'inat-user'
+          , value: {
+              icon
+            , id
+            , login
+            , name
+            , name_autocomplete
+            , observations_count
+            , species_count
+          }
+        })
+      }
 
       // Notify user that observations are available
       showNotificationsDialog({
@@ -743,19 +765,17 @@ const init = () => {
     enableSaveFieldNotesSection()
   })
   dateInputText.addEventListener('change', e => {
-    const date = e.target.value    
-    if(isValidDate({date})) {
-      globalWrite.fieldnotes.d1 = date
-      globalWrite.fieldnotes.d2 = date
-      updateSingleFields({
-         prop: 'd1'
-        , value: globalWrite.fieldnotes.d1
-      })
-      updateSingleFields({
-          prop: 'd2'
-        , value: globalWrite.fieldnotes.d2
-      })
-    }
+    const date = e.target.value        
+    globalWrite.fieldnotes.d1 = date
+    globalWrite.fieldnotes.d2 = date
+    updateSingleFields({
+        prop: 'd1'
+      , value: globalWrite.fieldnotes.d1
+    })
+    updateSingleFields({
+        prop: 'd2'
+      , value: globalWrite.fieldnotes.d2
+    })
     enableSaveFieldNotesSection()
   })
   placeInputText.addEventListener('change', e => {
@@ -870,6 +890,17 @@ const init = () => {
     , authenticateBtn
     , isAuthenticatedSections: d.querySelectorAll('.is-authenticated')
   })
+
+  //Check for saved inat user
+  const user = appLocalStorage.get({
+    key: 'inat-user'
+  })
+
+  if(user) {
+    globalWrite.fieldnotes.user = user
+    globalWrite.login = user.login
+    iNatAutocompleteInputText.value = user.name    
+  }
 }
 
 init()

@@ -496,6 +496,10 @@ th, td {
   min-width: initial;
 }
 
+.initial-text {
+  text-transform: initial !important;
+}
+
 .error-bg {
   background-color: var(--error-bg-light);
 }

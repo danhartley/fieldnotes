@@ -18,6 +18,8 @@ import {
     , ButtonHideShowComponent
 } from './ui-components.js'
 
+import { appLocalStorage } from './utils.js'
+
 const init = async () => {    
     const initGlobalRead = () => {
         const globalRead = {}
@@ -451,7 +453,11 @@ const init = async () => {
             
             globalRead.iconicTaxa = globalRead.ICONIC_TAXA.filter(taxon => filters.filter(t => t.checked).map(t => t.id.toLowerCase()).includes(taxon.name))
             
-            const user = globalRead.inatAutocompleteOptions.find(o => o.id === 'users')
+            // If there is no user available via autocomplete, use the default (saved) user, if there is one
+            const authenticatedUser = globalRead.inatAutocompleteOptions.find(o => o.id === 'users')
+            const user = authenticatedUser.isActive 
+                ? authenticatedUser
+                : globalRead.user
             const place = globalRead.inatAutocompleteOptions.find(o => o.id === 'places')        
     
             searchInatObservationsNotificationText.classList.toggle('hidden')
@@ -574,9 +580,9 @@ const init = async () => {
         const section = d.querySelector('.inat-preferences-section')
         section.classList.toggle('hidden')
 
-        btn.innerText = btn.innerText === 'Show user preferences' 
-            ? 'Hide user preferences'
-            : 'Show user preferences'
+        btn.innerText = btn.innerText === 'Show your preferences' 
+            ? 'Hide your preferences'
+            : 'Show your preferences'
     }
 
     const iNaturalistPreferencesButton = new ButtonComponent({
@@ -585,7 +591,24 @@ const init = async () => {
     })
 
     const section = d.querySelector('.inat-preferences-section')
-    section.classList.toggle('hidden')
+    if(section) section.classList.toggle('hidden')
+
+    //Check for saved inat user
+    const user = appLocalStorage.get({
+        key: 'inat-user'
+    })
+
+    if(user) {
+        globalRead.user = {
+                id: 'users'
+            , name: 'user'
+            , prop: 'login'
+            , placeholder: 'Start typing a username or user ID…'
+            , isActive: true
+            , user
+        }
+        iNatAutocompleteInputText.value = user.name    
+    }
 }
 
 init()
