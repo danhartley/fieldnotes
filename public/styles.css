@@ -34,7 +34,8 @@
   --success-bg-light: #e6edf6;
   --error-bg-light: #feecea;
   --active-bg: #d5e1ba;
-  --active-fg: #74ac02;
+  --save-bg-light: #dff0fe;
+  --save-bg: #b8dffb;
   --grid-min-max: 180px;
   --img-min-width: 180px;
   --img-min-height: 180px;
@@ -92,7 +93,7 @@ aside * {
   font-size: var(--s2);
 }
 
-aside * {
+aside div {
   margin-top: .25rem;
 }
 
@@ -101,7 +102,6 @@ aside menu li {
 }
 
 aside menu li button {
-  padding: calc(var(--d) * 1) var(--d);
   background-color: var(--inactive-bg-light);
 }
 
@@ -382,6 +382,14 @@ legend  {
 .btn-secondary:focus {
   background-color: var(--c0);
   outline: 1px solid var(--c4);
+}
+
+.btn-save {
+  background-color: var(--save-bg-light);
+}
+
+.btn-save:focus {
+  background-color: var(--save-bg);
 }
 
 figure input[type='text'] {

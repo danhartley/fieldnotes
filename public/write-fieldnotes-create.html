@@ -40,10 +40,10 @@
       </section>
     </aside>
 
-    <main class="mt2">
+    <main>
       <article>
         <section class="is-authenticated disabled">
-          <fieldset class="mt2">
+          <fieldset>
             <legend>iNaturalist observations</legend>
             <p class="mt0 small">Filter iNaturalist to search for observations by user and date.</p>
             <div class="centred-block">
@@ -85,18 +85,6 @@
           </fieldset>
         </section>
 
-        <section id="save-fieldnotes-section" class="is-valid disabled">
-          <fieldset>
-            <legend>Save fieldnotes</legend>
-            <p class="mt0 small">If you choose to publish your fieldnotes, you will be able to revert to a private draft.</p>
-            <div>
-              <button id="save-fieldnotes-btn" class="p">Save private draft of your fieldnotes</button>
-              <button id="save-and-publish-fieldnotes-btn" class="mt p">Save and publish fieldnotes</button>
-            </div>
-            <p class="mt2 small"><em>You will be able to edit your fieldnotes whether you choose to save them as a private draft or to publish them.</em></p>            
-          </fieldset>
-        </section>
-
         <section id="select-section-type-section" class="is-authenticated disabled">
           <fieldset>
             <legend>Field journal sections</legend>
@@ -117,6 +105,19 @@
         </section>
 
         <div id="draggable-sections"></div>
+
+        <section id="save-fieldnotes-section" class="is-valid disabled">
+          <fieldset>
+            <legend>Save fieldnotes</legend>
+            <p class="mt0 small">If you choose to publish your fieldnotes, you will be able to revert to a private draft.</p>
+            <div>
+              <button id="save-fieldnotes-btn" class="p btn-save">Save private draft of your fieldnotes</button>
+              <button id="save-and-publish-fieldnotes-btn" class="mt p btn-save">Save and publish fieldnotes</button>
+            </div>
+            <p class="mt2 small"><em>You will be able to edit your fieldnotes whether you choose to save them as a private draft or to publish them.</em></p>            
+          </fieldset>
+        </section>
+
       </article>
 
       <dialog id="state-notifications">

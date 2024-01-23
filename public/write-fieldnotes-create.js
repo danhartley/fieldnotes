@@ -661,7 +661,9 @@ const init = () => {
     Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
     Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
 
-    addOrUpdateSectionArray({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isEdit})
+    globalWrite.fieldnotes.sections.push(sectionAddedOrUpdated)
+    globalWrite.fieldnotes.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)   
+    globalWrite.nextSectionIndex++
   }
 
   const editSection = ({e, addOrUpdateSectionBtn, editSectionBtn, cancelActionBtn, contentContainer}) => {
