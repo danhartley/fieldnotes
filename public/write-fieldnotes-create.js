@@ -892,14 +892,14 @@ const init = () => {
   })
 
   //Check for saved inat user
-  const user = appLocalStorage.get({
+  const inatUser = appLocalStorage.get({
     key: 'inat-user'
   })
 
-  if(user) {
-    globalWrite.fieldnotes.user = user
-    globalWrite.login = user.login
-    iNatAutocompleteInputText.value = user.name    
+  if(inatUser) {
+    globalWrite.fieldnotes.user = inatUser
+    globalWrite.login = inatUser.login
+    iNatAutocompleteInputText.value = inatUser.name    
   }
 }
 

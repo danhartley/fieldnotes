@@ -80,8 +80,7 @@ const init = async () => {
         parent.innerHTML = ''
 
         collection.forEach(item => {
-            const clone = rbTemplate.content.cloneNode(true)
-    
+            const clone = rbTemplate.content.cloneNode(true)    
             const input = clone.querySelector('input')
             const label = clone.querySelector('label')
     
@@ -94,8 +93,7 @@ const init = async () => {
             
             if(!!checked && (checked.id === item.id || checked.id === item.fnId)) {
                 input.setAttribute('checked', true)
-            }
-    
+            }    
             parent.appendChild(clone)
         })
     
@@ -192,8 +190,10 @@ const init = async () => {
     
             rbGroupTemplate.forEach(template => {
                 template.addEventListener('change', e => {
-                    globalRead.template = globalRead.templates.find(t => t.templateId === e.target.value) 
+                    globalRead.template = globalRead.templates.find(t => t.templateId === e.target.value)
+
                     resetTestOptions()
+                    
                     const toggleTestableTemplate = () => {      
                         globalRead.template = globalRead.templates.find(t => t.id === globalRead.template.pairedTemplateId)
     
@@ -248,13 +248,10 @@ const init = async () => {
 
             if(t.requiresSpecies && (!globalRead.species || globalRead.species.length === 0)) return
 
-            const clone = rbTemplate.content.cloneNode(true)
-        
+            const clone = rbTemplate.content.cloneNode(true)        
             const input = clone.querySelector('input')
             const label = clone.querySelector('label')
     
-            // speciesDisplayContainer.classList.add('disabled')
-        
             input.setAttribute('name', 'display-option-template')
             input.id = t.name
             input.value = t.templateId
@@ -301,10 +298,8 @@ const init = async () => {
                 case 'species-list-template':            
                     globalRead.species.forEach(sp => {
                         const clone = templateToClone.content.cloneNode(true)
-                        const li = clone.querySelector('li')
-                        
-                        li.textContent = sp.taxon.name
-                
+                        const li = clone.querySelector('li')                        
+                        li.textContent = sp.taxon.name                
                         parent = parentClone.querySelector('div')          
                         parent.appendChild(clone)
                     })
@@ -313,7 +308,6 @@ const init = async () => {
                 case 'species-test-template':
                     globalRead.species.forEach((sp, i) => {
                         const clone = templateToClone.content.cloneNode(true)
-            
                         const span = clone.querySelector('span')
                         const label = clone.querySelector('label')
                         const input = clone.querySelector('input')
@@ -372,6 +366,7 @@ const init = async () => {
                     a.textContent = globalRead.fieldnotes.location.place_guess
                     a.setAttribute('href', `https://www.google.com/maps/place/${globalRead.fieldnotes.location.location}`)
                     article.appendChild(metaClone)
+                    
                     // Iterate over the sections
                     globalRead.template.sections.forEach(section => {            
                         const template = d.getElementById(section.parent)
@@ -544,15 +539,15 @@ const init = async () => {
         }
     }         
     
-    d.addEventListener("DOMContentLoaded", (event) => {
+    d.addEventListener("DOMContentLoaded", () => {
     
         const updateScore = () => {
             const scoreCountTd = d.getElementById('score-count-td')
-            scoreCountTd.innerText = globalRead.species.length
+            if(scoreCountTd) scoreCountTd.innerText = globalRead.species.length
             const scoreCorrectTd = d.getElementById('score-correct-td')
-            scoreCorrectTd.innerText = globalRead.template.score
+            if(scoreCorrectTd) scoreCorrectTd.innerText = globalRead.template.score
             const scoreIncorrectTd = d.getElementById('score-incorrect-td')
-            scoreIncorrectTd.innerText = globalRead.species.length - globalRead.template.score
+            if(scoreIncorrectTd) scoreIncorrectTd.innerText = globalRead.species.length - globalRead.template.score
         }
     
         const scoreHandler = () => {
@@ -600,10 +595,10 @@ const init = async () => {
             Object.assign(globalRead.template, fieldnotes)
 
             // Reorder the species list so that those with a binomial species name come first, 
-            // those with only a genus, or higher taxa, name come after. This reduces the number of records
-            // we need to request from iNaturalist to match every taxon.
             const inatLookupSections = globalRead.fieldnotes.sections.filter(s => s.templateId === 'inat-lookup-preview-template') || []
             const inatLookupSpecies = inatLookupSections?.map(s => s.species)?.flat() || []
+            // Those with only a genus, or higher taxa, name come after. This reduces the number of records
+            // we need to request from iNaturalist to match every taxon.
             const inatLookupSpeciesByRank = inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') > 0)
                 .concat(inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') === 0))
             const inatLookupTaxaIds = inatLookupSpeciesByRank.map(s => s.taxon.id)
