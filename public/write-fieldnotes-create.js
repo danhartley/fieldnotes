@@ -116,7 +116,7 @@ const init = () => {
       searchInatObservationsBtn.toggleActiveState()
 
       const defaultUser = globalWrite.fieldnotes.user
-      // If there is no user available via autocomplete, use the default (saved) user, if there is one
+      // If there is no user available via autocomplete, use the default (saved) inat user, if there is one
       globalWrite.fieldnotes.user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')?.user || defaultUser
 
       globalWrite.observations = await getInatObservations({ 
