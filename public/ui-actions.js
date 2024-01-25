@@ -713,13 +713,15 @@ export const showNotificationsDialog = ({message, type = 'success', displayDurat
 export const deleteSection = async ({sectionIndex, globalWrite}) => {
     try {        
         const elementToRemove = globalWrite.fieldnotes.sections.find(t => t.sectionIndex == sectionIndex)
+
+        const elementHasBeenAdded = !!elementToRemove
         
-        // Remove section from fieldnotes in the db, or from memory if not previously saved
-        const response = !!elementToRemove 
+        // Remove section from fieldnotes in the db (or ready for deletion if not)
+        const response = elementHasBeenAdded 
             ? await removeElementFromArray({fieldnotes: globalWrite.fieldnotes, array: 'sections',  element: elementToRemove})
             : {
                 success: true,
-                message: `${elementToMove.name} deleted`
+                message: 'Section deleted'
             }
 
         if(response.success) {

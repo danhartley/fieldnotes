@@ -40,6 +40,8 @@
   --img-min-width: 180px;
   --img-min-height: 180px;
   --alert: #ff0000;
+  --alert-bg-light: #fff1f1;
+  --alert-border: #ff7970;
 }
 
 /* ELEMENTS */
@@ -528,6 +530,11 @@ th, td {
 
 .alert {
   border-color: var(--alert);
+}
+
+.btn-alert {
+  border-color: var(--alert-border);
+  background-color: var(--alert-bg-light);
 }
 
 /* SELECTOR RULES */

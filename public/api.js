@@ -133,8 +133,8 @@ export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticate
       authenticateBtn.setText({
         text: 'Log out'        
       })
-      signUpBtn.hide()
-      firebaseSignUpCheckbox.uncheck()
+      if(signUpBtn) signUpBtn.hide()
+      if(firebaseSignUpCheckbox) firebaseSignUpCheckbox.uncheck()
       if(fetchFieldnotesStubs) fetchFieldnotesStubs({user})
       text.innerText = 'You are logged in.'
       loggedOut.forEach(out => out.classList.add('hidden'))

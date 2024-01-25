@@ -109,6 +109,7 @@ const init = () => {
   const saveFieldNotesSection = d.getElementById('save-fieldnotes-section')
   const rememberInatUserCheckbox = d.getElementById('remember-inat-user-checkbox')
   const authenticateStateText = d.getElementById('authenticate-state-text')
+  const authenticationForm = d.getElementById('authentication-form')
 
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
@@ -925,8 +926,7 @@ const init = () => {
     iNatAutocompleteInputText.value = inatUser.name    
   }
 
-  // Prevent form submission disrupting log and sign up
-  const authenticationForm = d.getElementById('authentication-form')
+  // Prevent form submission disrupting log and sign up  
   authenticationForm.addEventListener('submit', e => {
     e.preventDefault()
   })
