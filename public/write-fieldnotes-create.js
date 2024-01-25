@@ -108,6 +108,7 @@ const init = () => {
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
   const saveFieldNotesSection = d.getElementById('save-fieldnotes-section')
   const rememberInatUserCheckbox = d.getElementById('remember-inat-user-checkbox')
+  const authenticateStateText = d.getElementById('authenticate-state-text')
 
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
@@ -880,10 +881,36 @@ const init = () => {
     })
   })
 
+  const signUpBtn = new ButtonComponent({
+    elementSelector: 'sign-up-btn'
+  , clickHandler: e => authenticateNewUserEmailAndPassword({
+        email: d.getElementById('firebase-email')
+      , password: d.getElementById('firebase-password')      
+    })
+  })
+
+  const firebaseSignUpCheckbox = new CheckBoxComponent({
+    selector: '#firebase-sign-up-checkbox'
+  , clickHandler: e => {
+    const checkbox = e.target
+    if(checkbox.checked) {
+      authenticateBtn.hide()
+      signUpBtn.show()
+      authenticateStateText.innerText = 'You can sign up with a valid email and password.'
+    } else {
+      authenticateStateText.innerText = 'You are logged out.'
+      authenticateBtn.show()
+      signUpBtn.hide()
+    }
+  }
+})
+
   globalWrite.user = onFirebaseAuthStateChange({
       auth: getFirebaseAuth()
     , globalWrite
     , authenticateBtn
+    , signUpBtn
+    , firebaseSignUpCheckbox
     , isAuthenticatedSections: d.querySelectorAll('.is-authenticated')
   })
 
@@ -898,8 +925,10 @@ const init = () => {
     iNatAutocompleteInputText.value = inatUser.name    
   }
 
-  const firebaseSignUpCheckbox = new CheckBoxComponent({
-    selector: '#firebase-sign-up-checkbox'
+  // Prevent form submission disrupting log and sign up
+  const authenticationForm = d.getElementById('authentication-form')
+  authenticationForm.addEventListener('submit', e => {
+    e.preventDefault()
   })
 }
 

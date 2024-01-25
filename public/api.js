@@ -121,7 +121,7 @@ export const firebaseCreateAccount = ({email, password}) => {
     })
 }
 
-export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticateBtn, fetchFieldnotesStubs, isAuthenticatedSections}) => {
+export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticateBtn, signUpBtn, firebaseSignUpCheckbox, fetchFieldnotesStubs, isAuthenticatedSections}) => {
   const container = authenticateBtn.buttonElement .parentElement.closest('.inat-preferences-section')
   const text = container.querySelector('#authenticate-state-text')
   const loggedOut = container.querySelectorAll('.logged-out')  
@@ -129,10 +129,12 @@ export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticate
   return await onAuthStateChanged(auth, (user) => {
     globalWrite.user = user
     if(user) {
+      authenticateBtn.show()
       authenticateBtn.setText({
         text: 'Log out'        
       })
-      console.log('logged in')
+      signUpBtn.hide()
+      firebaseSignUpCheckbox.uncheck()
       if(fetchFieldnotesStubs) fetchFieldnotesStubs({user})
       text.innerText = 'You are logged in.'
       loggedOut.forEach(out => out.classList.add('hidden'))
@@ -143,7 +145,7 @@ export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticate
       authenticateBtn.setText({
         text: 'Log in'
       })
-      console.log('logged out')
+
       if(fetchFieldnotesStubs) fetchFieldnotesStubs({user:null})
       text.innerText = 'You are logged out.'
       loggedOut.forEach(out => out.classList.remove('hidden'))

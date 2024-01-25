@@ -114,4 +114,8 @@ export class CheckBoxComponent extends BaseComponent {
       , changeHandler
     })
   }
+
+  uncheck() {
+    this.element.checked = false
+  }
 }

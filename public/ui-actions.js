@@ -917,13 +917,8 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
     }    
   }
 
-  export const authenticateNewUserEmailAndPassword = ({user, email, password}) => {
+  export const authenticateNewUserEmailAndPassword = ({email, password}) => {
     try {
-        if(user) {
-            firebaseSignOut({
-            auth: getFirebaseAuth()
-            })   
-        }
         if(email.validity.valid) {
             firebaseCreateAccount({
                   email: email.value
