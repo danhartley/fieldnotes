@@ -140,7 +140,7 @@ export const images = {
   , templateId: 'images-preview-template'
   , writeTemplateId: 'images-write-template'
   , writeParentTemplateId: 'section-parent-template'
-  , name: 'Context images'
+  , name: 'Context photos'
   , parent: 'grid-template'
   , type: 'images'
   , images: []

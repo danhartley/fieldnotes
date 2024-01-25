@@ -21,22 +21,22 @@
 
     <aside>
       <section class="inat-preferences-section m0">
-        <form class="logged-out hidden">
-          <div class="centred-block">
+        <form id="authentication-form">
+          <div class="centred-block logged-out hidden">
             <label for="firebase-email" class="mw8">Email</label>
             <input id="firebase-email" type="email" required pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" placeholder="A valid email is required" class="p">
           </div>
-          <div class="centred-block">
+          <div class="centred-block logged-out hidden">
             <label for="firebase-password" class="mw8">Password</label>
             <input id="firebase-password" type="password" required minlength="6" placeholder="Password must be at least 6 characters" autocomplete="true" current-password="true" class="p">
-          </div>
-        </form>
+          </div>        
         <div class="double-centred-block mt mb">
           <div>
             <span id="authenticate-state-text" class="mr">Logged in state unknown.</span>
           </div>
           <button id="authenticate-btn">Checking…</button>
         </div>
+      </form>
       </section>
     </aside>
 
@@ -273,32 +273,34 @@
     </template>
 
     <template id="images-write-template">
-      <div class="small">Add up to 3 photos per section</div>
-      <div class="centred-block mt2">
-        <label for="image-url-input-0">1 Link</label>
-        <input id="image-url-input-0" placeholder="Insert the link to your photo here" class="p" type="text" data-key="src"></input>
+      <div id="section-id">
+        <div class="small">Add up to 3 photos per section</div>
+        <div class="centred-block mt2">
+          <label for="image-url-input-0">1 Link</label>
+          <input id="image-url-input-0" placeholder="Insert the link to your photo here" class="p" type="text" data-key="src"></input>
+        </div>
+        <div class="centred-block mt">
+          <label for="image-title-input-0">1 Title</label>
+          <input id="image-title-input-0" placeholder="Insert a title for your photo here" class="p" type="text" minlength="2" maxlength="60" data-key="alt"></input>
+        </div>
+        <div class="centred-block mt2">
+          <label for="image-url-input-1">2 Link</label>
+          <input id="image-url-input-1" placeholder="e.g. https://drive.google.com/thumbnail?id={photo id 2}" class="p" type="text" data-key="src"></input>
+        </div>
+        <div class="centred-block mt">
+          <label for="image-title-input-1">2 Title</label>
+          <input id="image-title-input-1" placeholder="Minium 2 characters, maximum 60 characters in length" class="p" type="text" minlength="2" maxlength="60" data-key="alt"></input>
+        </div>
+        <div class="centred-block mt2">
+          <label for="image-url-input-2">3 Link</label>
+          <input id="image-url-input-2" placeholder="e.g. https://drive.google.com/thumbnail?id={photo id 3}" class="p" type="text" data-key="src"></input>
+        </div>
+        <div class="centred-block mt">
+          <label for="image-title-input-2">3 Title</label>
+          <input id="image-title-input-2" placeholder="e.g. Mount Ras Dashen, Simien Mountains" class="p" type="text" minlength="2" maxlength="60" data-key="alt"></input>
+        </div>
+        <div class="edit hidden"></div>
       </div>
-      <div class="centred-block mt">
-        <label for="image-title-input-0">1 Title</label>
-        <input id="image-title-input-0" placeholder="Insert a title for your photo here" class="p" type="text" minlength="2" maxlength="60" data-key="alt"></input>
-      </div>
-      <div class="centred-block mt2">
-        <label for="image-url-input-1">2 Link</label>
-        <input id="image-url-input-1" placeholder="e.g. https://drive.google.com/thumbnail?id={photo id 2}" class="p" type="text" data-key="src"></input>
-      </div>
-      <div class="centred-block mt">
-        <label for="image-title-input-1">2 Title</label>
-        <input id="image-title-input-1" placeholder="Minium 2 characters, maximum 60 characters in length" class="p" type="text" minlength="2" maxlength="60" data-key="alt"></input>
-      </div>
-      <div class="centred-block mt2">
-        <label for="image-url-input-2">3 Link</label>
-        <input id="image-url-input-2" placeholder="e.g. https://drive.google.com/thumbnail?id={photo id 3}" class="p" type="text" data-key="src"></input>
-      </div>
-      <div class="centred-block mt">
-        <label for="image-title-input-2">3 Title</label>
-        <input id="image-title-input-2" placeholder="e.g. Mount Ras Dashen, Simien Mountains" class="p" type="text" minlength="2" maxlength="60" data-key="alt"></input>
-      </div>
-      <div class="edit hidden"></div>
     </template>
 
     <template id="observations-write-template">      

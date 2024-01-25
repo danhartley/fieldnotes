@@ -41,6 +41,7 @@ import {
   , authenticateUserEmailAndPassword
   , saveNewTerm
   , authenticateNewUserEmailAndPassword
+  , editSection
 } from './ui-actions.js'
 
 import {
@@ -348,15 +349,17 @@ const init = () => {
         })
         break
       case 'images-write-template':
+        const sectionContainer = typeClone.getElementById('section-id')
+        sectionContainer.id = `${sectionContainer.id}-${sectionIndex}`
         const url1 = typeClone.getElementById('image-url-input-0')
         const title1 = typeClone.getElementById('image-title-input-0')
         url1.addEventListener('input', () => handleImageInputChangeEvent({
-            addBtn: addOrUpdateSectionBtn
+            addOrUpdateSectionBtn
           , url1
           , title1
         }), true)
         title1.addEventListener('input', () => handleImageInputChangeEvent({
-            addBtn: addOrUpdateSectionBtn
+            addOrUpdateSectionBtn
           , url1
           , title1
         }), true)
@@ -690,21 +693,6 @@ const init = () => {
     globalWrite.fieldnotes.sections.push(sectionAddedOrUpdated)
     globalWrite.fieldnotes.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)   
     globalWrite.nextSectionIndex++
-  }
-
-  const editSection = ({e, addOrUpdateSectionBtn, editSectionBtn, cancelActionBtn, contentContainer}) => {
-    const parent = e.target.parentElement
-    contentContainer.classList.toggle('disabled')
-
-    addOrUpdateSectionBtn.setText({
-      text: 'Save changes' 
-    })
-    addOrUpdateSectionBtn.enable()
-    editSectionBtn.hide()
-    cancelActionBtn.show()
-
-    Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
-    Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
   }
 
   const enableSaveFieldNotesSection = () => {

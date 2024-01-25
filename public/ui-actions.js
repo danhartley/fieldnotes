@@ -864,10 +864,10 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
     })
   }
 
-  export const handleImageInputChangeEvent = ({addBtn, url1, title1}) => {
+  export const handleImageInputChangeEvent = ({addOrUpdateSectionBtn, url1, title1}) => {
       (url1.value.length >= 5 && title1.value.length >= 2)
-        ? addBtn.classList.remove('disabled')
-        : addBtn.classList.add('disabled')    
+        ? addOrUpdateSectionBtn.enable()
+        : addOrUpdateSectionBtn.disable()
   }
 
   export const toggleSpeciesList = ({btn, fieldset}) => {    
@@ -1066,3 +1066,18 @@ export const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) 
         console.log(e.message)
     }
 }
+
+export const editSection = ({e, addOrUpdateSectionBtn, editSectionBtn, cancelActionBtn, contentContainer}) => {
+    const parent = e.target.parentElement
+    contentContainer.classList.remove('disabled')
+
+    addOrUpdateSectionBtn.setText({
+      text: 'Save changes' 
+    })
+    addOrUpdateSectionBtn.enable()
+    editSectionBtn.hide()
+    cancelActionBtn.show()
+
+    Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
+    Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
+  }

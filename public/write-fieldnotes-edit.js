@@ -48,6 +48,7 @@ import {
   , authenticateUserEmailAndPassword
   , saveJson
   , saveNewTerm
+  , editSection
 } from './ui-actions.js'
 
 import {
@@ -110,7 +111,8 @@ const init = () => {
   const selectSectionTypeSection = d.getElementById('select-section-type-section')
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
   const updateFieldnotesStatusText = d.getElementById('update-fieldnotes-status-text')
-  const updateFieldnotesCurrentStatusText = d.getElementById('update-fieldnotes-current-status-text')  
+  const updateFieldnotesCurrentStatusText = d.getElementById('update-fieldnotes-current-status-text')
+  const authenticationForm = d.getElementById('authentication-form')
   
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
@@ -249,15 +251,17 @@ const init = () => {
         })
         break
       case 'images-write-template':
+        const sectionContainer = typeClone.getElementById('section-id')
+        sectionContainer.id = `${sectionContainer.id}-${sectionIndex}`
         const url1 = typeClone.getElementById('image-url-input-0')
         const title1 = typeClone.getElementById('image-title-input-0')
         url1.addEventListener('input', () => handleImageInputChangeEvent({
-            addBtn: addOrUpdateSectionBtn
+            addOrUpdateSectionBtn
           , url1
           , title1
         }), true)
         title1.addEventListener('input', () => handleImageInputChangeEvent({
-            addBtn: addOrUpdateSectionBtn
+            addOrUpdateSectionBtn
           , url1
           , title1
         }), true)
@@ -591,21 +595,6 @@ const init = () => {
     addOrUpdateSectionArray({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isEdit})
   }
 
-  const editSection = ({e, addOrUpdateSectionBtn, editSectionBtn, cancelActionBtn, contentContainer}) => {
-    const parent = e.target.parentElement
-    contentContainer.classList.toggle('disabled')
-
-    addOrUpdateSectionBtn.setText({
-      text: 'Save changes' 
-    })
-    addOrUpdateSectionBtn.enable()
-    editSectionBtn.hide()
-    cancelActionBtn.show()
-
-    Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
-    Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
-  }
-
   const updateSingleFields = async ({prop, value}) => {
     let response
     try {
@@ -850,8 +839,8 @@ const init = () => {
             })       
             section.images.forEach((img, i) => {
               if(img.src.length > 0) {
-                d.querySelector(`#image-url-input-${i}`).value = img.src
-                d.querySelector(`#image-title-input-${i}`).value = img.alt
+                d.querySelector(`#section-id-${section.sectionIndex} #image-url-input-${i}`).value = img.src
+                d.querySelector(`#section-id-${section.sectionIndex} #image-title-input-${i}`).value = img.alt
               }
             })
             break
@@ -1021,6 +1010,11 @@ const init = () => {
         , title: globalWrite.fieldnotes.title
       })
     }
+  })
+
+  // Prevent form submission disrupting log and sign up  
+  authenticationForm.addEventListener('submit', e => {
+    e.preventDefault()
   })
 }
 
