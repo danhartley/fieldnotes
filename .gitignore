@@ -3,6 +3,3 @@ archive/
 node_modules/
 dist/
 *.parcel-cache
-public/firebase-config.js
-messages.js
-router.js

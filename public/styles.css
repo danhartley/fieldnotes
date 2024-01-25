@@ -94,7 +94,7 @@ aside * {
 }
 
 aside div {
-  margin-top: .25rem;
+  margin-top: var(--d);
 }
 
 aside menu li {
@@ -398,7 +398,7 @@ figure input[type='text'] {
 
 a {
   border-bottom: 1px solid var(--c8);
-  padding-bottom: 0.125rem;
+  padding-bottom: calc(var(--d) *.25);
   text-decoration: none;
   color: var(--c8);
 }
@@ -425,7 +425,7 @@ a.info span:nth-child(2) {
   top: calc(var(--d) * -4.5);
   left: calc(var(--d) * 5);
   border: 1px solid var(--c2);
-  width: 10rem;
+  width: calc(var(--d) * 20);
   padding: var(--d);
   text-align: center;
   background-color: var(--c0);
@@ -830,6 +830,10 @@ th, td {
 
 .ml6 {
   margin-left: calc(var(--d) * 6);
+}
+
+.ml8 {
+  margin-left: calc(var(--d) * 8);
 }
 
 .p {
