@@ -21,22 +21,26 @@
 
     <aside>
       <section class="inat-preferences-section m0">
-        <form class="logged-out hidden">
-          <div class="centred-block">
-            <label for="firebase-email" class="mw8">Email</label>
-            <input id="firebase-email" type="email" required pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" placeholder="A valid email is required" class="p">
-          </div>
-          <div class="centred-block">
-            <label for="firebase-password" class="mw8">Password</label>
-            <input id="firebase-password" type="password" required minlength="6" placeholder="Password must be at least 6 characters" autocomplete="true" current-password="true" class="p">
-          </div>
-        </form>
+        <div class="centred-block logged-out hidden">
+          <label for="firebase-email" class="mw8">Email</label>
+          <input id="firebase-email" type="email" required pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" placeholder="A valid email is required" class="p">
+        </div>
+        <div class="centred-block logged-out hidden">
+          <label for="firebase-password" class="mw8">Password</label>
+          <input id="firebase-password" type="password" required minlength="6" placeholder="Password must be at least 6 characters" autocomplete="true" current-password="true" class="p">
+        </div>
         <div class="double-centred-block mt mb">
           <div>
             <span id="authenticate-state-text" class="mr">Logged in state unknown.</span>
           </div>
           <button id="authenticate-btn">Checking…</button>
+          <button id="sign-up-btn" class="hidden">Sign up</button>
         </div>
+        <div class="centred-block mt2 mb2 ml8 logged-out hidden">
+          <input id="firebase-sign-up-checkbox" type="checkbox" />
+          <label for="firebase-sign-up-checkbox" class="initial-text">First time user (sign up)</label>
+        </div>        
+      </form>
       </section>
     </aside>
 

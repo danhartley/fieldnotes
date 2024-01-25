@@ -89,7 +89,7 @@ export const firebaseAuthentication = () => {
   return getAuth(getApp())
 }
 
-export const firebaseLogin = ({email = 'readandwrite@learn-the-planet.com', password = 'readandwrite'}) => {
+export const firebaseLogin = ({email, password}) => {
   const auth = getAuth(getApp())
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {

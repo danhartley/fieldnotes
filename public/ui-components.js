@@ -87,7 +87,7 @@ export class RadioButtonComponent {
 }
 
 class BaseComponent {
-  constructor({parent = document, selector, clickHandler}) {
+  constructor({parent = document, selector, clickHandler, changeHandler}) {
     this.element = parent.querySelector(selector)
 
     if (!this.element) {
@@ -98,15 +98,20 @@ class BaseComponent {
     if(clickHandler) {
       this.element.addEventListener('click', clickHandler)
     }
+
+    if(changeHandler) {
+      this.element.addEventListener('change', changeHandler)
+    }
   }
 }
 
-export class ULComponent extends BaseComponent {
-  constructor({parent = document, selector, clickHandler}) {
+export class CheckBoxComponent extends BaseComponent {
+  constructor({parent = document, selector, clickHandler, changeHandler}) {
     super({
         parent
       , selector
       , clickHandler
+      , changeHandler
     })
   }
 }

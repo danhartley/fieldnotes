@@ -40,10 +40,12 @@ import {
   , toggleSpeciesList
   , authenticateUserEmailAndPassword
   , saveNewTerm
+  , authenticateNewUserEmailAndPassword
 } from './ui-actions.js'
 
 import {
-    ButtonComponent
+      ButtonComponent
+    , CheckBoxComponent
 } from './ui-components.js'
 
 import { appLocalStorage } from './utils.js'
@@ -878,12 +880,6 @@ const init = () => {
     })
   })
 
-  authenticateUserEmailAndPassword({
-      user: globalWrite.user
-    , email: d.getElementById('firebase-email')
-    , password: d.getElementById('firebase-password')
-  })
-
   globalWrite.user = onFirebaseAuthStateChange({
       auth: getFirebaseAuth()
     , globalWrite
@@ -901,6 +897,10 @@ const init = () => {
     globalWrite.login = inatUser.login
     iNatAutocompleteInputText.value = inatUser.name    
   }
+
+  const firebaseSignUpCheckbox = new CheckBoxComponent({
+    selector: '#firebase-sign-up-checkbox'
+  })
 }
 
 init()

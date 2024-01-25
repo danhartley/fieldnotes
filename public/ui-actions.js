@@ -9,6 +9,7 @@ import {
     , firebaseLogin
     , firebaseSignOut
     , addTerm
+    , firebaseCreateAccount
 } from './api.js'
 
 import { 
@@ -915,6 +916,24 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
       }      
     }    
   }
+
+  export const authenticateNewUserEmailAndPassword = ({user, email, password}) => {
+    try {
+        if(user) {
+            firebaseSignOut({
+            auth: getFirebaseAuth()
+            })   
+        }
+        if(email.validity.valid) {
+            firebaseCreateAccount({
+                  email: email.value
+                , password: password.value
+            })
+        }
+    } catch (e) {
+        console.log(e.message)
+    }
+}
 
 const encode = s => {
     var out = []
