@@ -516,7 +516,7 @@ th, td {
 }
 
 .error-icon::before {
-  content: '\1F5F4';
+  content: '\2717';
   margin-right: calc(var(--d) * .25);
 }
 

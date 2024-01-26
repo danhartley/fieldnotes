@@ -89,36 +89,53 @@ export const firebaseAuthentication = () => {
   return getAuth(getApp())
 }
 
-export const firebaseLogin = ({email, password}) => {
+export const firebaseLogin = ({email, password, showNotificationsDialog}) => {
   const auth = getAuth(getApp())
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user
-      console.log('user: ', user)
+      return {
+        success: true,
+        message: 'Your log in was successful.'
+      }
     })
-    .catch((error) => {
-      console.log(error.message)
+    .catch((e) => {
+      showNotificationsDialog({
+          message: e.message
+        , type: 'error'
+        , displayDuration: 5000
+      })
     })
 }
 
-export const firebaseSignOut = ({auth}) => {
+export const firebaseSignOut = ({auth, showNotificationsDialog}) => {
   signOut(auth).then(() => {
     console.log('Sign-out successful')
-  }).catch((error) => {
-    console.log('An error happened.')
+  }).catch((e) => {
+    showNotificationsDialog({
+        message: e.message
+      , type: 'error'
+      , displayDuration: 5000
+    })
   });
 }
 
-export const firebaseCreateAccount = ({email, password}) => {
+export const firebaseCreateAccount = async ({email, password, showNotificationsDialog}) => {
   const auth = getAuth(getApp())
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed up 
-      const user = userCredential.user    
+  try {
+    const user = await createUserWithEmailAndPassword(auth, email, password)
+    if(user) {
+      console.log(user)
+    } else {
+      console.log('error')
+    }
+  } catch (e) {    
+    showNotificationsDialog({
+        message: e.message
+      , type: 'error'      
+      , displayDuration: 5000
     })
-    .catch((error) => {
-      console.log(error.message)
-    })
+  }    
 }
 
 export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticateBtn, signUpBtn, firebaseSignUpCheckbox, fetchFieldnotesStubs, isAuthenticatedSections}) => {

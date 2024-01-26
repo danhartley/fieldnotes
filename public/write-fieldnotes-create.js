@@ -866,7 +866,8 @@ const init = () => {
   , clickHandler: e => authenticateUserEmailAndPassword({
         user: globalWrite.user
       , email: d.getElementById('firebase-email')
-      , password: d.getElementById('firebase-password')      
+      , password: d.getElementById('firebase-password')
+      , showNotificationsDialog
     })
   })
 
@@ -874,7 +875,8 @@ const init = () => {
     elementSelector: 'sign-up-btn'
   , clickHandler: e => authenticateNewUserEmailAndPassword({
         email: d.getElementById('firebase-email')
-      , password: d.getElementById('firebase-password')      
+      , password: d.getElementById('firebase-password')
+      , showNotificationsDialog
     })
   })
 

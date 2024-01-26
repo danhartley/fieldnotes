@@ -691,7 +691,7 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
   }
 }
 
-export const showNotificationsDialog = ({message, type = 'success', displayDuration = 3500, icon = 'success-icon'}) => {
+export const showNotificationsDialog = ({message, type = 'success', icon, displayDuration = 3500}) => {
     const dialog = d.getElementById('state-notifications')
     const div1 = dialog.querySelector('div > div:nth-child(1)')
 
@@ -699,9 +699,16 @@ export const showNotificationsDialog = ({message, type = 'success', displayDurat
     div1.classList.remove(...div1.classList)
     div1.classList.add(icon)
 
-    const className = type === 'success'
-        ? 'success-bg'
-        : 'error-bg'
+    className, iconName
+
+    if(type === 'success') {
+        className = 'success-bg'
+        iconName = 'success-icon'
+    } else {
+        className = 'error-bg'
+        iconName = 'error-icon'
+    }
+    
     dialog.classList.remove(...dialog.classList)
     dialog.classList.add(className)
     dialog.show()
@@ -904,30 +911,37 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
     }
   }
 
-  export const authenticateUserEmailAndPassword = ({user, email, password}) => {
+  export const authenticateUserEmailAndPassword = ({user, email, password, showNotificationsDialog}) => {
     if(user) {
       firebaseSignOut({
-        auth: getFirebaseAuth()
+          auth: getFirebaseAuth()
+        , showNotificationsDialog
       })      
     } else {
       if(email.validity.valid) {
         firebaseLogin({
             email: email.value
           , password: password.value
+          , showNotificationsDialog
         })
       }      
     }    
   }
 
-  export const authenticateNewUserEmailAndPassword = ({email, password}) => {
+  export const authenticateNewUserEmailAndPassword = async({email, password, showNotificationsDialog}) => {
     try {
         if(email.validity.valid) {
             firebaseCreateAccount({
                   email: email.value
                 , password: password.value
+                , showNotificationsDialog
             })
         }
     } catch (e) {
+        showNotificationsDialog({
+              message: e.message
+            , type: 'error'
+        })
         console.log(e.message)
     }
 }
