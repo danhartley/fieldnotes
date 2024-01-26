@@ -34,7 +34,6 @@ import {
   , isValidDate
   , handleImageTextChange
   , calcImageIndex
-  , toggleBtnEnabledState
   , handleInputChangeEvent
   , handleImageInputChangeEvent
   , toggleSpeciesList
@@ -516,11 +515,9 @@ const init = () => {
         d.querySelector('label[for="input-dx"]').htmlFor = dx.id
         
         dt.addEventListener('change', e => {
-
-          toggleBtnEnabledState({
-              str: e.target.value
-            , btn: addNewTermBtn.buttonElement
-          })  
+          e.target.value.length > 0
+            ? addNewTermBtn.enable()
+            : addNewTermBtn.disable()
         })
         
         addNewTermBtn.addClickHandler({

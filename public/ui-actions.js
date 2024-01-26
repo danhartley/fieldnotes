@@ -859,12 +859,6 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
     : ((index -1) / 2)
   }
 
-  export const toggleBtnEnabledState = ({str, btn}) => {
-    str.length > 0
-    ? btn.classList.remove('disabled')
-    : btn.classList.add('disabled')
-  }
-
   export const handleInputChangeEvent = (e, addBtn) => {
     addBtn.toggleActiveStateByInput({
         str: e.target.value
