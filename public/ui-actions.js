@@ -201,7 +201,7 @@ export const mapUser = ({user}) => {
     return {
           icon: user.icon
         , id: user.id
-        , identifications_count: user.identifications_count
+        , identifications_count: user.identifications_count || 0
         , journal_posts_count: user.journal_posts_count
         , login: user.login
         , name: user.name
@@ -326,7 +326,7 @@ const handleSpeciesCheckState = async({e, observation, sectionIndex, globalWrite
             taxon: {
                   id: taxon.id
                 , name: taxon.name
-                , preferred_common_name: taxon.preferred_common_name
+                , preferred_common_name: taxon.preferred_common_name || '-'
                 , iconic_taxon_name: taxon.iconic_taxon_name
                 , default_photo: {
                     square_url: taxon.default_photo.square_url
@@ -339,7 +339,7 @@ const handleSpeciesCheckState = async({e, observation, sectionIndex, globalWrite
        return {
             id: observation.taxon.id,
             name: observation.taxon.name,
-            preferred_common_name: observation.taxon.preferred_common_name,
+            preferred_common_name: observation.taxon.preferred_common_name || '-',
             iconic_taxon_name: observation.taxon.iconic_taxon_name,
             default_photo: {
                 square_url: observation.taxon.default_photo.square_url
@@ -410,11 +410,11 @@ const handleSpeciesCheckState = async({e, observation, sectionIndex, globalWrite
         switch(writeTemplateId) {
             case 'species-write-template':
                 section = { 
-                    ...species
+                      ...species
                     , species: [{
-                          name: sp.name
-                        , taxon : getTaxon({ observation })
-                    }]
+                              name
+                            , taxon : getTaxon({ observation })
+                        }]
                     , templateId: species.templateId
                     , sectionIndex
                 }
@@ -441,6 +441,8 @@ const handleSpeciesCheckState = async({e, observation, sectionIndex, globalWrite
                 break
         }
         globalWrite.fieldnotes.sections.push(section)
+        globalWrite.fieldnotes.sectionOrder.push(section.sectionIndex)   
+        globalWrite.nextSectionIndex++
     }
 
     if(!globalWrite.fieldnotes.taxa.find(t => t.name === name)) {
@@ -448,11 +450,14 @@ const handleSpeciesCheckState = async({e, observation, sectionIndex, globalWrite
               id: globalWrite.observations.find(sp => sp.taxon.name === name)?.taxon?.id
             , name
         })
-        updateFieldnoteProperty({
-              fieldnotes: globalWrite.fieldnotes
-            , prop: 'taxa'
-            , value: globalWrite.fieldnotes.taxa
-        })
+        // Check fieldnotes exist in the db before trying to update a field
+        if(globalWrite.fieldnotes.id.length > 0) {
+            updateFieldnoteProperty({
+                  fieldnotes: globalWrite.fieldnotes
+                , prop: 'taxa'
+                , value: globalWrite.fieldnotes.taxa
+            })
+        }
     }
 }
 
@@ -537,7 +542,7 @@ export const cloneImageTemplate = ({observation, index, sectionIndex, imgUrl, gl
         taxon: observation.taxon.iconic_taxon_name
     }))
 
-    spans[0].textContent = observation.taxon.preferred_common_name
+    spans[0].textContent = observation.taxon.preferred_common_name || '-'
     spans[1].textContent = observation.taxon.name
     spans[1].classList.add('latin')
 
@@ -552,7 +557,6 @@ export const cloneImageTemplate = ({observation, index, sectionIndex, imgUrl, gl
     checkbox.value = observation.taxon.name
     checkbox.addEventListener('change', e => handleSpeciesCheckState({
           e 
-        // , taxon: observation.taxon
         , observation
         , sectionIndex
         , globalWrite
@@ -696,10 +700,9 @@ export const showNotificationsDialog = ({message, type = 'success', icon, displa
     const div1 = dialog.querySelector('div > div:nth-child(1)')
 
     div1.innerText = message
-    div1.classList.remove(...div1.classList)
-    div1.classList.add(icon)
+    div1.classList.remove(...div1.classList)    
 
-    className, iconName
+    let className, iconName
 
     if(type === 'success') {
         className = 'success-bg'
@@ -708,7 +711,8 @@ export const showNotificationsDialog = ({message, type = 'success', icon, displa
         className = 'error-bg'
         iconName = 'error-icon'
     }
-    
+
+    div1.classList.add(iconName)
     dialog.classList.remove(...dialog.classList)
     dialog.classList.add(className)
     dialog.show()
@@ -1007,7 +1011,7 @@ export const checkForLocalisedCommonSpeciesNames = ({s, sp}) => {
         if(s?.taxon?.preferred_common_name) {
             if(!prohibitedNames.includes(s.taxon.preferred_common_name)) {
                 if(sp.taxon) {
-                    sp.taxon.preferred_common_name = s.taxon.preferred_common_name
+                    sp.taxon.preferred_common_name = s.taxon.preferred_common_name || '-'
                 } else { // observations (for now)
                     sp.taxon = {
                           ...s.taxon
@@ -1049,7 +1053,7 @@ export const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) 
         const figcaption = clone.querySelector('figcaption')
         const spans = figcaption.querySelectorAll('span')
 
-        const commonName = species.species_guess || species.taxon.preferred_common_name
+        const commonName = species.species_guess || species.taxon.preferred_common_name || '-'
         const taxonName = species.taxon.name
         const url = species?.observation_photos?.[0]?.photo?.url || species.taxon.default_photo.square_url
         const taxonId = species.taxon.id

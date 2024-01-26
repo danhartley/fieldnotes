@@ -28,8 +28,6 @@ import {
   , deleteSection
   , showNotificationsDialog
   , addContentToPreviewContainer
-  , getOriginalTypeValues
-  , hasOriginalTypeValues
   , addTermToList
   , isValidDate
   , handleImageTextChange
@@ -393,7 +391,7 @@ const init = () => {
             , cancelActionBtn
           })
         })
-        // addOrUpdateSectionBtn.enable()
+        addOrUpdateSectionBtn.enable()
         break
     }
     editSectionBtn.addClickHandler({
@@ -618,12 +616,11 @@ const init = () => {
   const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex, cancelActionBtn}) => {
     cancelActionBtn.hide()
 
-    let sectionToUpdate, sectionAddedOrUpdated, isEdit = null
+    let sectionToUpdate, sectionAddedOrUpdated, isCreate
 
     sectionToUpdate = structuredClone(globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)) || null
 
-    isEdit = (sectionToUpdate !== null && globalWrite.fieldnotes.sectionOrder.includes(sectionToUpdate.sectionIndex)) 
-          || hasOriginalTypeValues({globalWrite, section: sectionToUpdate})
+    isCreate = sectionToUpdate === null
     
     const writeTemplate = writeTemplates.find(template => template.templateId === writeTemplateId)
     const previewTemplate = previewTemplates.find(template => template.templateId === writeTemplate.previewTemplateId)
@@ -655,41 +652,24 @@ const init = () => {
           , textContent:text.p
           , previewContainer}))
         break
-      case 'observations-write-template':
-      case 'species-write-template':
-      case 'inat-lookup-write-template':
-        sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
-        if(sectionToUpdate) sectionToUpdate.species = getOriginalTypeValues({
-            globalWrite
-          , section: sectionToUpdate
-          , type: sectionToUpdate.type
-        })
-        break
-      case 'terms-write-template':                
-        sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
-        if(sectionToUpdate) sectionToUpdate.terms = getOriginalTypeValues({
-            globalWrite
-          , section: sectionToUpdate
-          , type: sectionToUpdate.type
-        })
-        break
-      case 'images-write-template':
-        sectionAddedOrUpdated = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)
-        if(sectionToUpdate) sectionToUpdate.images = getOriginalTypeValues({
-            globalWrite
-          , section: sectionToUpdate
-          , type: sectionToUpdate.type
-        })
-        break
     }
     
     // Show the preview section and hide the edit section
     Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
     Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
 
-    globalWrite.fieldnotes.sections.push(sectionAddedOrUpdated)
-    globalWrite.fieldnotes.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)   
-    globalWrite.nextSectionIndex++
+    if(isCreate) {
+      globalWrite.fieldnotes.sections.push(sectionAddedOrUpdated)
+      globalWrite.fieldnotes.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)   
+      globalWrite.nextSectionIndex++
+    } else {
+      if(!!typeValue) {
+        globalWrite.fieldnotes.sections = [
+            ...globalWrite.fieldnotes.sections.filter(section => section.sectionIndex !== sectionAddedOrUpdated.sectionIndex)
+          , sectionAddedOrUpdated
+        ]
+      }
+    }
   }
 
   const enableSaveFieldNotesSection = () => {
@@ -797,7 +777,7 @@ const init = () => {
         , user: {
             id: globalWrite.fieldnotes.user.id
           , icon: globalWrite.fieldnotes.user.icon
-          , identifications_count: globalWrite.fieldnotes.user.identifications_count
+          , identifications_count: globalWrite.fieldnotes.user.identifications_count || 0
           , login: globalWrite.fieldnotes.user.login
           , observations_count: globalWrite.fieldnotes.user.observations_count
           , species_count: globalWrite.fieldnotes.user.species_count
@@ -807,12 +787,7 @@ const init = () => {
         , location: globalWrite.fieldnotes.location
         , language: globalWrite.fieldnotes.language
         , taxa: globalWrite.fieldnotes.taxa
-        , sections: globalWrite.fieldnotes.sections.map(t => {
-          const {templateId, ...validProps} = t
-          return {
-            ...validProps,
-          }
-        })
+        , sections: globalWrite.fieldnotes.sections
         , sectionOrder: globalWrite.fieldnotes.sections.map(section => section.sectionIndex)
       })
       
