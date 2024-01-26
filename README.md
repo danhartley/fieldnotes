@@ -1,13 +1,13 @@
-# iFieldnotes
+## iFieldnotes
 
-## Overview
+### Overview
 Write, edit and view fieldnotes. 
 
 This app is best used in conjunction with (iNaturalist)[https://www.inaturalist.org/].
 
 Visit the web site at: (iFieldnotes)[https://www.ifieldnotes.org/]
 
-### Running the project on your local machine
+#### Running the project on your local machine
 
 ```bash
 # Clone the repository
@@ -21,3 +21,12 @@ npm run install
 
 # Run the project on your machine
 npm run start
+
+````
+
+I haven't set up client side routing so to view pages locally use their full URLS e.g.:
+http://localhost:1234/read-fieldnotes.html
+http://localhost:1234/write-fieldnotes-create.html
+http://localhost:1234/write-fieldnotes-edit.html
+http://localhost:1234/read-inaturalist.html
+
