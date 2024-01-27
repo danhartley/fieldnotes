@@ -33,9 +33,7 @@ import {
   , addContentToPreviewContainer
   , setOriginalTypeValues
   , getOriginalTypeValues
-  , hasOriginalTypeValues
   , addTermToList
-  , isValidDate
   , mapTaxon
   , mapUser
   , handleImageTextChange
@@ -997,7 +995,7 @@ const init = () => {
     }
   })
 
-  // Prevent form submission disrupting log and sign up  
+  // Prevent form submission disrupting log in and sign up  
   authenticationForm.addEventListener('submit', e => {
     e.preventDefault()
   })
