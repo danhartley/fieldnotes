@@ -48,6 +48,7 @@ import {
   , saveJson
   , saveNewTerm
   , editSection
+  , isSectionBeingAdded
 } from './ui-actions.js'
 
 import {
@@ -520,12 +521,13 @@ const init = () => {
   const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex, cancelActionBtn}) => {
     cancelActionBtn.hide()
 
-    let sectionToUpdate, sectionAddedOrUpdated, isEdit = null
+    let sectionAddedOrUpdated = null
 
-    sectionToUpdate = structuredClone(globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)) || null
-
-    isEdit = (sectionToUpdate !== null && globalWrite.fieldnotes.sectionOrder.includes(sectionToUpdate.sectionIndex)) 
-          || hasOriginalTypeValues({globalWrite, section: sectionToUpdate})
+    const sectionToUpdate = structuredClone(globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)) || null
+    const isBeingAdded = isSectionBeingAdded({
+        globalWrite
+      , sectionToUpdate
+    })
     
     const writeTemplate = writeTemplates.find(template => template.templateId === writeTemplateId)
     const previewTemplate = previewTemplates.find(template => template.templateId === writeTemplate.previewTemplateId)
@@ -589,7 +591,7 @@ const init = () => {
     Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
     Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
 
-    addOrUpdateSectionArray({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isEdit})
+    addOrUpdateSectionArray({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isBeingAdded})
   }
 
   const updateSingleFields = async ({prop, value}) => {

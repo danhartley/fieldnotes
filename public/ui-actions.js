@@ -243,7 +243,10 @@ export const handleTermCheckState = ({e, globalWrite, selectedTerm, li, sectionI
             : section.terms = section.terms.filter(t => t !== selectedTerm) 
     } else {
         section = {...terms, terms: [selectedTerm], templateId: terms.templateId, sectionIndex }
-        globalWrite.fieldnotes.sections.push(section)
+        addSectionToFieldnotes({
+              globalWrite
+            , section
+        })
     }
 }
 
@@ -440,9 +443,10 @@ const handleSpeciesCheckState = async({e, observation, sectionIndex, globalWrite
                 }
                 break
         }
-        globalWrite.fieldnotes.sections.push(section)
-        globalWrite.fieldnotes.sectionOrder.push(section.sectionIndex)   
-        globalWrite.nextSectionIndex++
+        addSectionToFieldnotes({
+            globalWrite
+          , section
+        })
     }
 
     if(!globalWrite.fieldnotes.taxa.find(t => t.name === name)) {
@@ -752,33 +756,63 @@ export const deleteSection = async ({sectionIndex, globalWrite}) => {
     }
 }
 
-export const addOrUpdateSectionArray = async ({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isEdit}) => {
+export const isSectionBeingAdded = ({ globalWrite, sectionToUpdate }) => {
+    let isBeingAdded = sectionToUpdate === null
+    isBeingAdded = isBeingAdded || !hasOriginalTypeValues({globalWrite, section: sectionToUpdate})
+
+    return isBeingAdded
+}
+
+export const addSectionToFieldnotes = async ({globalWrite, section}) => {
+    const array = 'sections'
+    const isEdit = false
+    
+    const response = await addElementToArray({
+          fieldnotes: globalWrite.fieldnotes
+        , element: section
+        , array
+        , isEdit
+    })
+
+    // Update changes in memory where necessary (species and terms sections will already have been addded at this point)
+    if(response.success) {
+        const hasSectionAlreadyBeenAdded = globalWrite.fieldnotes.sections.find(s => s.sectionIndex === section.sectionIndex)
+        if(hasSectionAlreadyBeenAdded) return 
+
+        globalWrite.fieldnotes.sections.push(section)
+        globalWrite.fieldnotes.sectionOrder.push(section.sectionIndex)   
+        globalWrite.nextSectionIndex++
+    }
+
+    return response
+}
+
+export const addOrUpdateSectionArray = async ({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isBeingAdded}) => {
     try {
         const array = 'sections'
 
         // Save changes to the db
         let response
         
-        if(isEdit) {
-            response = await updateElementFromArray({fieldnotes: globalWrite.fieldnotes, array, elementToUpdate: sectionToUpdate, elementAddedOrUpdated: sectionAddedOrUpdated, isEdit})
-            // Update changes in memory
-            if(response.success) {                
-                console.log('Section updated')
-            }
+        if(isBeingAdded) {
+            response = await addSectionToFieldnotes({
+                globalWrite
+              , section: sectionAddedOrUpdated
+            })
         } else {
-            response = await addElementToArray({fieldnotes: globalWrite.fieldnotes, array, element: sectionAddedOrUpdated, isEdit})
-            // Update changes in memory
-            if(response.success) {                
-                globalWrite.fieldnotes.sections.push(sectionAddedOrUpdated)
-                globalWrite.fieldnotes.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)   
-                globalWrite.nextSectionIndex++  
-            }
-        }
-
-        if(response.success) {            
-            if(sectionToUpdate && sectionToUpdate.type) {
-                setOriginalTypeValues({section:sectionAddedOrUpdated, globalWrite, type: sectionToUpdate.type})
-            }
+            response = await updateElementFromArray({
+                  fieldnotes: globalWrite.fieldnotes
+                , array
+                , elementToUpdate: sectionToUpdate
+                , elementAddedOrUpdated: sectionAddedOrUpdated
+                , isEdit
+            })
+            // Set the original values to the updated values
+            setOriginalTypeValues({
+                  section:sectionAddedOrUpdated
+                , globalWrite
+                , type: sectionToUpdate.type
+            })
         }
 
         // Notify user
@@ -852,8 +886,11 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
     if(section) {
       section.images = imageSrcs
     } else {
-      section = {...images, images: imageSrcs, templateId: images.templateId, sectionIndex: globalWrite.nextSectionIndex }
-      globalWrite.fieldnotes.sections.push(section)
+        section = {...images, images: imageSrcs, templateId: images.templateId, sectionIndex: globalWrite.nextSectionIndex }
+        addSectionToFieldnotes({
+              globalWrite
+            , section
+        })
     }
 }
 

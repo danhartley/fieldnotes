@@ -39,6 +39,7 @@ import {
   , saveNewTerm
   , authenticateNewUserEmailAndPassword
   , editSection
+  , addOrUpdateSectionArray
 } from './ui-actions.js'
 
 import {
@@ -616,11 +617,11 @@ const init = () => {
   const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex, cancelActionBtn}) => {
     cancelActionBtn.hide()
 
-    let sectionToUpdate, sectionAddedOrUpdated, isCreate
+    let sectionToUpdate, sectionAddedOrUpdated, isBeingAdded
 
     sectionToUpdate = structuredClone(globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)) || null
 
-    isCreate = sectionToUpdate === null
+    isBeingAdded = sectionToUpdate === null
     
     const writeTemplate = writeTemplates.find(template => template.templateId === writeTemplateId)
     const previewTemplate = previewTemplates.find(template => template.templateId === writeTemplate.previewTemplateId)
@@ -658,19 +659,14 @@ const init = () => {
     Array.from(parent.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
     Array.from(parent.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
 
-    if(isCreate) {
-      globalWrite.fieldnotes.sections.push(sectionAddedOrUpdated)
-      globalWrite.fieldnotes.sectionOrder.push(sectionAddedOrUpdated.sectionIndex)   
-      globalWrite.nextSectionIndex++
-    } else {
-      if(!!typeValue) {
-        globalWrite.fieldnotes.sections = [
-            ...globalWrite.fieldnotes.sections.filter(section => section.sectionIndex !== sectionAddedOrUpdated.sectionIndex)
-          , sectionAddedOrUpdated
-        ]
-      }
+    if(!!typeValue) {
+      addOrUpdateSectionArray({
+          globalWrite
+        , sectionToUpdate
+        , sectionAddedOrUpdated
+        , isBeingAdded: true
+      })
     }
-  }
 
   const enableSaveFieldNotesSection = () => {
     // Check fields added by the user
