@@ -442,7 +442,7 @@ export const updateFieldnotesTitle = async ({fieldnotes, prop, value, fieldnotes
   }
 }
 
-export const addElementToArray = async ({fieldnotes, array, element, isEdit = false}) => {
+export const addElementToArray = async ({fieldnotes, array, element, isBeingAdded = true}) => {
   let docRef, data  = null
 
   try {
@@ -454,7 +454,7 @@ export const addElementToArray = async ({fieldnotes, array, element, isEdit = fa
     }
     await updateDoc(docRef, data)
 
-    if(array === 'sections' && !isEdit) {
+    if(array === 'sections' && isBeingAdded) {
       data = {
         sectionOrder: arrayUnion(element.sectionIndex)
       }
@@ -477,7 +477,7 @@ export const addElementToArray = async ({fieldnotes, array, element, isEdit = fa
   }
 }
 
-export const removeElementFromArray = async ({fieldnotes, array, element, isEdit = false}) => {
+export const removeElementFromArray = async ({fieldnotes, array, element, isBeingAdded = true}) => {
   let docRef, data  = null
 
   try {
@@ -490,7 +490,7 @@ export const removeElementFromArray = async ({fieldnotes, array, element, isEdit
     
     await updateDoc(docRef, data)
     
-    if(array === 'sections' && !isEdit) {
+    if(array === 'sections' && isBeingAdded) {
       data = {
         sectionOrder: arrayRemove(element.sectionIndex)
       }
@@ -513,12 +513,12 @@ export const removeElementFromArray = async ({fieldnotes, array, element, isEdit
   }
 }
 
-export const updateElementFromArray = async ({fieldnotes, array, elementToUpdate, elementAddedOrUpdated, isEdit}) => {
+export const updateElementFromArray = async ({fieldnotes, array, elementToUpdate, elementAddedOrUpdated, isBeingAdded}) => {
   // There is no native operation to update the element of an array
   // Instead, we remove the element, then add (the now updated) element
-  const response = await removeElementFromArray({fieldnotes, array, element: elementToUpdate, isEdit})
+  const response = await removeElementFromArray({fieldnotes, array, element: elementToUpdate, isBeingAdded})
   if(response.success) {
-    await addElementToArray({fieldnotes, array, element: elementAddedOrUpdated, isEdit})
+    await addElementToArray({fieldnotes, array, element: elementAddedOrUpdated, isBeingAdded})
     
     return {
       success: true,

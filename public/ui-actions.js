@@ -756,22 +756,21 @@ export const deleteSection = async ({sectionIndex, globalWrite}) => {
     }
 }
 
-export const isSectionBeingAdded = ({ globalWrite, sectionToUpdate }) => {
-    let isBeingAdded = sectionToUpdate === null
-    isBeingAdded = isBeingAdded || !hasOriginalTypeValues({globalWrite, section: sectionToUpdate})
+export const isSectionBeingAdded = ({ globalWrite, sectionToUpdate }) => {    
+    let isBeingAdded = sectionToUpdate === null && !hasOriginalTypeValues({globalWrite, section: sectionToUpdate})
 
     return isBeingAdded
 }
 
 export const addSectionToFieldnotes = async ({globalWrite, section}) => {
     const array = 'sections'
-    const isEdit = false
+    const isBeingAdded = true
     
     const response = await addElementToArray({
           fieldnotes: globalWrite.fieldnotes
         , element: section
         , array
-        , isEdit
+        , isBeingAdded
     })
 
     // Update changes in memory where necessary (species and terms sections will already have been addded at this point)
@@ -805,11 +804,11 @@ export const addOrUpdateSectionArray = async ({globalWrite, sectionToUpdate, sec
                 , array
                 , elementToUpdate: sectionToUpdate
                 , elementAddedOrUpdated: sectionAddedOrUpdated
-                , isEdit
+                , isBeingAdded
             })
             // Set the original values to the updated values
             setOriginalTypeValues({
-                  section:sectionAddedOrUpdated
+                  section: sectionAddedOrUpdated
                 , globalWrite
                 , type: sectionToUpdate.type
             })

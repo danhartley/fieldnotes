@@ -781,11 +781,6 @@ const init = () => {
             break
           case 'species-preview-template':
           case 'observations-preview-template':
-            setOriginalTypeValues({
-                globalWrite
-              , section
-              , type:section.type
-            })
             speciesCheckboxes = draggableSection.querySelectorAll('input')
             speciesCheckboxes.forEach(checkbox => {
               let hasMatch
@@ -804,11 +799,6 @@ const init = () => {
             draggableSection.querySelector('#toggle-species-include-all-btn').innerText = 'show all'
             break
           case 'inat-lookup-preview-template':
-            setOriginalTypeValues({
-                globalWrite
-              , section
-              , type:section.type
-            })
             let parent = null
             section.species.forEach((species, index) => {
               parent = draggableSection.querySelector(`#inat-looup-parent-${section.sectionIndex}`)
@@ -830,12 +820,7 @@ const init = () => {
               checkbox.nextElementSibling.innerText = 'Included'
             }) 
             break
-          case 'images-preview-template':
-            setOriginalTypeValues({
-                globalWrite
-              , section
-              , type:section.type
-            })       
+          case 'images-preview-template':    
             section.images.forEach((img, i) => {
               if(img.src.length > 0) {
                 d.querySelector(`#section-id-${section.sectionIndex} #image-url-input-${i}`).value = img.src
@@ -844,11 +829,6 @@ const init = () => {
             })
             break
           case 'terms-preview-template':
-            setOriginalTypeValues({
-                globalWrite
-              , section
-              , type:'terms'
-            })
             const selectedItemsListElement = draggableSection.querySelector('#selected-terms-list')
             const selectedTerms = []        
             section.terms.forEach((term) => {
@@ -860,8 +840,13 @@ const init = () => {
                 , sectionIndex: section.sectionIndex
               })
               selectedTerms.push(term)
-            })
+          })
         }
+        setOriginalTypeValues({
+            globalWrite
+          , section
+          , type: section.type
+        })
       })
 
       // Enable the create observation and species section buttons

@@ -6,7 +6,8 @@
     "public/read-fieldnotes.html",
     "public/read-inaturalist.html",
     "public/write-fieldnotes-create.html",
-    "public/write-fieldnotes-edit.html"
+    "public/write-fieldnotes-edit.html",
+    "public/write-fieldnotes.html"
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
