@@ -855,31 +855,31 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
       section = {...images, images: imageSrcs, templateId: images.templateId, sectionIndex: globalWrite.nextSectionIndex }
       globalWrite.fieldnotes.sections.push(section)
     }
-  }
-  
-  export const calcImageIndex = (index) => {
-    return (index % 2 === 0)
-    ? index / 2
-    : ((index -1) / 2)
-  }
+}
 
-  export const handleInputChangeEvent = (e, addBtn) => {
+export const calcImageIndex = (index) => {
+    return (index % 2 === 0)
+        ? index / 2
+        : ((index -1) / 2)
+}
+
+export const handleInputChangeEvent = (e, addBtn) => {
     addBtn.toggleActiveStateByInput({
         str: e.target.value
     })
-  }
+}
 
-  export const handleImageInputChangeEvent = ({addOrUpdateSectionBtn, url1, title1}) => {
-      (url1.value.length >= 5 && title1.value.length >= 2)
+export const handleImageInputChangeEvent = ({addOrUpdateSectionBtn, url1, title1}) => {
+    (url1.value.length >= 5 && title1.value.length >= 2)
         ? addOrUpdateSectionBtn.enable()
         : addOrUpdateSectionBtn.disable()
-  }
+}
 
-  export const toggleSpeciesList = ({btn, fieldset}) => {    
+export const toggleSpeciesList = ({btn, fieldset}) => {    
     if(btn.getText().toLowerCase() === 'show only included') {
-      fieldset.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(input => {
-        input.closest('figure').classList.add('hidden')
-      })
+        fieldset.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(input => {
+            input.closest('figure').classList.add('hidden')
+        })
         btn.setText({
             text: 'show all'
         })
@@ -891,42 +891,42 @@ export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, ind
             text: 'show only included'
         })
     }
-  }
+}
 
-  export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnotesBtn}) => {
+export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnotesBtn}) => {
     return async ({user}) => {
-      const fieldnotesStubs = user 
-        ? await getFieldnotesStubs({user})
-        : []
+        const fieldnotesStubs = user 
+            ? await getFieldnotesStubs({user})
+            : []
 
-      fieldsnotesAutocomplete({ 
-          inputText
-        , dataList
-        , global
-        , fetchFieldnotesBtn
-        , fieldnotesStubs
-      })
-    }
-  }
-
-  export const authenticateUserEmailAndPassword = ({user, email, password, showNotificationsDialog}) => {
-    if(user) {
-      firebaseSignOut({
-          auth: getFirebaseAuth()
-        , showNotificationsDialog
-      })      
-    } else {
-      if(email.validity.valid) {
-        firebaseLogin({
-            email: email.value
-          , password: password.value
-          , showNotificationsDialog
+        fieldsnotesAutocomplete({ 
+              inputText
+            , dataList
+            , global
+            , fetchFieldnotesBtn
+            , fieldnotesStubs
         })
-      }      
-    }    
-  }
+    }
+}
 
-  export const authenticateNewUserEmailAndPassword = async({email, password, showNotificationsDialog}) => {
+export const authenticateUserEmailAndPassword = ({user, email, password, showNotificationsDialog}) => {
+    if(user) {
+        firebaseSignOut({
+              auth: getFirebaseAuth()
+            , showNotificationsDialog
+        })      
+    } else {
+        if(email.validity.valid) {
+        firebaseLogin({
+              email: email.value
+            , password: password.value
+            , showNotificationsDialog
+        })
+        }      
+    }    
+}
+
+export const authenticateNewUserEmailAndPassword = async({email, password, showNotificationsDialog}) => {
     try {
         if(email.validity.valid) {
             firebaseCreateAccount({
@@ -1092,4 +1092,4 @@ export const editSection = ({e, addOrUpdateSectionBtn, editSectionBtn, cancelAct
 
     Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
     Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
-  }
+}
