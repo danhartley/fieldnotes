@@ -127,7 +127,7 @@ const init = () => {
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
 
-  // User selectd option: create or edit fieldnotes
+  // User action: select create or edit fieldnotes
   const toggleView = ({e}) => {
     const view = e.target.dataset.view
 
@@ -683,7 +683,7 @@ const init = () => {
     })
   }, true))
 
-  // user action: add or update a section
+  // User action: add or update a section
   const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex, cancelActionBtn}) => {
     cancelActionBtn.hide()
 
@@ -760,6 +760,7 @@ const init = () => {
     addOrUpdateSectionArray({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isBeingAdded})
   }
 
+  // User action: change metadata value
   titleInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.title = e.target.value
     updateMetadataFields({
@@ -1134,7 +1135,7 @@ const init = () => {
 
   fnAutocompleteTitleInputText.focus()
 
-  // Authentication  
+  // User action: log in or log out
   const authenticateBtn = new ButtonComponent({
       elementSelector: 'authenticate-btn'
     , clickHandler: e => authenticateUserEmailAndPassword({
@@ -1145,6 +1146,7 @@ const init = () => {
     })
   })
 
+  // User action: sign up
   const signUpBtn = new ButtonComponent({
     elementSelector: 'sign-up-btn'
   , clickHandler: e => authenticateNewUserEmailAndPassword({
@@ -1154,6 +1156,7 @@ const init = () => {
     })
   })
 
+  // User action: enable firebase sign up
   const firebaseSignUpCheckbox = new CheckBoxComponent({
     selector: '#firebase-sign-up-checkbox'
   , clickHandler: e => {
@@ -1170,12 +1173,14 @@ const init = () => {
     }
   })
 
+  // Email and password firebase authentication
   authenticateUserEmailAndPassword({
       user: globalWrite.user
     , email: d.getElementById('firebase-email')
     , password: d.getElementById('firebase-password')
   })
   
+  // Observe changes to user authentication on firenase
   globalWrite.user = onFirebaseAuthStateChange({
       auth: getFirebaseAuth()
     , globalWrite
@@ -1190,6 +1195,7 @@ const init = () => {
     , isAuthenticatedSections: d.querySelectorAll('.is-authenticated')
   })
 
+  // User action: chnge access to fieldnotes 
   updateFieldnotesStatusBtn.addClickHandler({
     clickHandler: async () => {
       const btn = updateFieldnotesStatusBtn
@@ -1226,6 +1232,7 @@ const init = () => {
     }
   })
 
+  // User action: delete fieldnotes
   const deleteFieldnotesBtn = new ButtonComponent({
       elementSelector: 'delete-fieldnotes-btn'
     , clickHandler: async () => {
@@ -1248,6 +1255,7 @@ const init = () => {
     }
   })
 
+  // User action: save fieldnotes to file (export)
   const saveFieldnotesToFileBtn = new ButtonComponent({
       elementSelector: 'save-fieldnotes-to-file-btn'
     , clickHandler: () => {
