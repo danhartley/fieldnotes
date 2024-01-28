@@ -47,10 +47,12 @@ import {
   , saveNewTerm
   , editSection
   , isSectionBeingAdded
+  , handleInatAutocomplete
 } from './ui-actions.js'
 
 import {
-    ButtonComponent
+      ButtonComponent
+    , CheckBoxComponent
 } from './ui-components.js'
 
 const init = () => {
@@ -111,14 +113,132 @@ const init = () => {
   const updateFieldnotesStatusText = d.getElementById('update-fieldnotes-status-text')
   const updateFieldnotesCurrentStatusText = d.getElementById('update-fieldnotes-current-status-text')
   const authenticationForm = d.getElementById('authentication-form')
+
+  const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
+  const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
+  const singleObservationsInputDate = d.getElementById('single-observations-input-date')
+  const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
+  const saveFieldNotesSection = d.getElementById('save-fieldnotes-section')
+  const rememberInatUserCheckbox = d.getElementById('remember-inat-user-checkbox')
+  const authenticateStateText = d.getElementById('authenticate-state-text')
   
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
 
-  const updateFieldnotesStatusBtn = new ButtonComponent({
-    elementSelector: 'update-fieldnotes-status-btn'
-})
+  /**
+   * Create fieldnotes
+   */ 
+  const searchInatObservations = async () => {
+    try {
+        searchInatObservationsNotificationText.classList.toggle('hidden')
+        searchInatObservationsBtn.toggleActiveState()
+  
+        const defaultUser = globalWrite.fieldnotes.user
+        // If there is no user available via autocomplete, use the default (saved) inat user, if there is one
+        globalWrite.fieldnotes.user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')?.user || defaultUser
+  
+        globalWrite.observations = await getInatObservations({ 
+              user_id: globalWrite.fieldnotes.user.id
+            , place_id: null
+            , iconic_taxa: globalWrite.iconicTaxa
+            , per_page: 200
+            ,locale: globalWrite.fieldnotes.language.id
+            , species_count: false
+            , d1: singleObservationsInputDate.value
+            , d2: singleObservationsInputDate.value
+        })    
+        
+        searchInatObservationsBtn.toggleActiveState()
+  
+        searchInatObservationsNotificationText.innerText = 'Search complete'
+  
+        setTimeout(() => {
+          searchInatObservationsNotificationText.classList.toggle('hidden')
+          searchInatObservationsNotificationText.innerText = 'Waiting for response from iNaturalist…'
+        }, 1500)
+  
+        if(globalWrite.observations.length === 0) return
+  
+        const { author, date, location } = {
+            author: globalWrite.observations[0].user.name
+          , date: globalWrite.observations[0].observed_on
+          , location: {
+              location: globalWrite.observations[0].location
+            , place_guess: globalWrite.observations[0].place_guess
+          }
+        }
+        const title = `${location.place_guess}, ${(new Date(date)).toDateString()}`
+  
+        titleInputText.value = title
+        authorInputText.value = author
+        dateInputText.value = date
+        placeInputText.value = location.place_guess
+  
+        globalWrite.fieldnotes.title = title
+        globalWrite.fieldnotes.author = author
+        globalWrite.fieldnotes.d1 = date
+        globalWrite.fieldnotes.d2 = date
+        globalWrite.fieldnotes.location = location
+  
+        // Enable the create observation and species section buttons
+        selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
+        selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
+  
+        // Enable saving fieldnotes
+        saveFieldNotesSection.classList.remove('disabled')
+  
+        // Save inat user
+        if(rememberInatUserCheckbox.checked) {
+          const { icon, id, login, name, name_autocomplete, observations_count, species_count } = globalWrite.observations[0].user
+  
+          appLocalStorage.set({
+              key: 'inat-user'
+            , value: {
+                icon
+              , id
+              , login
+              , name
+              , name_autocomplete
+              , observations_count
+              , species_count
+            }
+          })
+        }
+  
+        // Notify user that observations are available
+        showNotificationsDialog({
+            message: 'iNaturalist observations now available'
+          , type: 'success'
+        })
+      } catch (e) {
+          showNotificationsDialog({
+              message: e.message
+            , type: 'error'
+          })
+      }
+  }
+  
+  const searchInatObservationsBtn = new ButtonComponent({
+        elementSelector: 'search-inat-observations-btn'
+      , clickHandler: searchInatObservations
+  })
 
+  handleInatAutocomplete({ 
+      inputText: iNatAutocompleteInputText
+    , dataList: iNatAutocompleteDatalist
+    , globalWrite
+    , id: globalWrite.inatAutocomplete.id
+    , prop: globalWrite.inatAutocomplete.prop
+    , cbParent: d.getElementById('inat-params-input-check-box-group')
+  })
+
+  const updateFieldnotesStatusBtn = new ButtonComponent({
+      elementSelector: 'update-fieldnotes-status-btn'
+  })
+
+  /**
+   * Create & edit fieldnotes
+   */ 
   const createSection = ({writeTemplateId, typeText, sectionTemplate, sectionIndex}) => {
     const sectionClone = sectionTemplate.content.cloneNode(true)
     const draggableSection = sectionClone.querySelector('section.draggable')
@@ -908,6 +1028,32 @@ const init = () => {
     })
   })
 
+
+  const signUpBtn = new ButtonComponent({
+    elementSelector: 'sign-up-btn'
+  , clickHandler: e => authenticateNewUserEmailAndPassword({
+        email: d.getElementById('firebase-email')
+      , password: d.getElementById('firebase-password')
+      , showNotificationsDialog
+    })
+  })
+
+  const firebaseSignUpCheckbox = new CheckBoxComponent({
+    selector: '#firebase-sign-up-checkbox'
+  , clickHandler: e => {
+      const checkbox = e.target
+      if(checkbox.checked) {
+        authenticateBtn.hide()
+        signUpBtn.show()
+        authenticateStateText.innerText = 'You can sign up with a valid email and password.'
+      } else {
+        authenticateStateText.innerText = 'You are logged out.'
+        authenticateBtn.show()
+        signUpBtn.hide()
+      }
+    }
+  })
+
   authenticateUserEmailAndPassword({
       user: globalWrite.user
     , email: d.getElementById('firebase-email')
@@ -918,6 +1064,7 @@ const init = () => {
       auth: getFirebaseAuth()
     , globalWrite
     , authenticateBtn
+    , firebaseSignUpCheckbox
     , fetchFieldnotesStubs: fetchFieldnotesStubs({
         inputText: fnAutocompleteTitleInputText
       , dataList: fnAutocompleteTitleDatalist

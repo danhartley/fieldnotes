@@ -862,7 +862,7 @@ const init = () => {
       signUpBtn.hide()
     }
   }
-})
+  })
 
   globalWrite.user = onFirebaseAuthStateChange({
       auth: getFirebaseAuth()

@@ -14,8 +14,7 @@
     <header>
       <menu>
           <li><a data-view="fieldnotes-search-view" href="/">Read fieldnotes</a></li>
-          <li><a data-view="create-fieldnotes-view" href="/create">Create fieldnotes</a></li>
-          <li><a data-view="edit-fieldnotes-view" href="/edit" class="selected">Edit fieldnotes</a></li>
+          <li><a data-view="write-fieldnotes-view" href="/write" class="selected">Write fieldnotes</a></li>
       </menu>
     </header>
 
@@ -35,6 +34,11 @@
             <span id="authenticate-state-text" class="mr">Logged in state unknown.</span>
           </div>
           <button id="authenticate-btn">Checking…</button>
+          <button id="sign-up-btn" class="hidden">Sign up</button>
+        </div>
+        <div class="centred-block mt2 mb2 ml8 logged-out hidden">
+          <input id="firebase-sign-up-checkbox" type="checkbox" />
+          <label for="firebase-sign-up-checkbox" class="initial-text">First time user (sign up)</label>
         </div>
       </form>
       </section>
@@ -57,6 +61,30 @@
               <div id="import-fieldnotes-notification-text" class="small hidden">Fetching fieldnotes…</div>
             </div>
             <p class="mt2 small"><em>These fieldnotes will be updated each time you add, edit, delete or move a section.</em></p>
+          </fieldset>
+        </section>
+
+        <section class="is-authenticated disabled">
+          <fieldset>
+            <legend>iNaturalist observations</legend>
+            <p class="mt0 small">Filter iNaturalist to search for observations by user and date.</p>
+            <div class="centred-block">
+                <label for="inat-autocomplete-input-text">User</label>
+                <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing a username or user ID…">
+                <datalist id="inat-autocomplete-data-list"></datalist>
+            </div>
+            <div class="centred-block mt2">
+              <label for="single-observations-input-date">Date</label>
+              <input type="date" id="single-observations-input-date" name="single-observations-input-date" class="mr" />
+            </div>
+            <div class="centred-block mt2">
+              <button id="search-inat-observations-btn" class="ml6 mr submit disabled">Search iNaturalist for observations </button>
+              <div id="search-inat-observations-notification-text" class="small hidden">Connecting…</div>
+            </div>
+            <div class="centred-block mt2 ml6">
+              <input id="remember-inat-user-checkbox" type="checkbox" />
+              <label for="remember-inat-user-checkbox" class="initial-text">Remember inat user</label>
+            </div>
           </fieldset>
         </section>
   
@@ -104,6 +132,18 @@
         </section>
 
         <div id="draggable-sections"></div>
+
+        <section id="save-fieldnotes-section" class="is-valid disabled">
+          <fieldset>
+            <legend>Save fieldnotes</legend>
+            <p class="mt0 small">If you choose to publish your fieldnotes, you will be able to revert to a private draft.</p>
+            <div>
+              <button id="save-fieldnotes-btn" class="p btn-save">Save private draft of your fieldnotes</button>
+              <button id="save-and-publish-fieldnotes-btn" class="mt p btn-save">Save and publish fieldnotes</button>
+            </div>
+            <p class="mt2 small"><em>You will be able to edit your fieldnotes whether you choose to save them as a private draft or to publish them.</em></p>            
+          </fieldset>
+        </section>
 
         <section id="fieldnotes-state-section" class="has-fieldnotes disabled">
           <fieldset>
