@@ -126,6 +126,50 @@ const init = () => {
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
 
   /**
+   * 
+   * User selectd option: create or edit fieldnotes
+   */
+  const toggleView = ({e}) => {
+    const view = e.target.dataset.view
+
+    // const sectionViews = d.querySelectorAll('section')
+    // sectionViews.forEach(v => v.classList.add('hidden'))
+    
+    // const views = d.querySelectorAll(`.${view}`)
+    // views.forEach(v => v.classList.remove('hidden'))
+    
+    // Change the text of the buttons that trigger a change of view
+      Array.from(d.getElementsByClassName('view-btn')).forEach(btn => {
+        btn.innerText = btn.innerText.toLowerCase() === 'show'
+          ? 'hide'
+          : 'show'
+    })
+
+    // Show or hide associated view
+    Array.from(d.getElementsByClassName('fieldnotes-view'))
+      .forEach(view => view.classList.toggle('hidden'))      
+
+    switch(view) {
+      case 'create':
+        iNatAutocompleteInputText.focus()
+        break
+      case 'edit':
+        fnAutocompleteTitleInputText.focus()
+        break
+    }    
+  }
+
+  const showHideEditFieldnotesBtn = new ButtonComponent({
+      elementSelector: 'show-hide-edit-fieldnotes-btn'
+    , clickHandler: e => toggleView({ e })
+  })
+
+  const showHideCreateFieldnotesBtn = new ButtonComponent({
+      elementSelector: 'show-hide-create-fieldnotes-btn'
+    , clickHandler: e => toggleView({ e })
+  })
+
+  /**
    * Create fieldnotes
    */ 
   const searchInatObservations = async () => {
