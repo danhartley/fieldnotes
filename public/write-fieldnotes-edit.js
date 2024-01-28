@@ -594,7 +594,7 @@ const init = () => {
     addOrUpdateSectionArray({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isBeingAdded})
   }
 
-  const updateSingleFields = async ({prop, value}) => {
+  const updateMetadataFields = async ({prop, value}) => {
     let response
     try {
       response = prop === 'title'
@@ -625,14 +625,14 @@ const init = () => {
 
   titleInputText.addEventListener('change', e => { 
     globalWrite.fieldnotes.title = e.target.value
-    updateSingleFields({
+    updateMetadataFields({
         prop: 'title'
       , value: globalWrite.fieldnotes.title
     })
   })
   authorInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.author = e.target.value
-    updateSingleFields({
+    updateMetadataFields({
         prop: 'author'
       , value: globalWrite.fieldnotes.author
     })
@@ -641,18 +641,18 @@ const init = () => {
     const date = e.target.value        
     globalWrite.fieldnotes.d1 = date
     globalWrite.fieldnotes.d2 = date
-    updateSingleFields({
+    updateMetadataFields({
         prop: 'd1'
       , value: globalWrite.fieldnotes.d1
     })
-    updateSingleFields({
+    updateMetadataFields({
         prop: 'd2'
       , value: globalWrite.fieldnotes.d2
     })    
   })
   placeInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.location.place_guess = e.target.value
-    updateSingleFields({
+    updateMetadataFields({
           prop: 'location'
         , value: { 
             place_guess: globalWrite.fieldnotes.location.place_guess

@@ -105,7 +105,7 @@ const init = () => {
   const placeInputText = d.getElementById('place-input-text')
   const selectSectionTypeSection = d.getElementById('select-section-type-section')
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
-  const saveFieldNotesSection = d.getElementById('save-fieldnotes-section')
+  const saveFieldnotesSection = d.getElementById('save-fieldnotes-section')
   const rememberInatUserCheckbox = d.getElementById('remember-inat-user-checkbox')
   const authenticateStateText = d.getElementById('authenticate-state-text')
   const authenticationForm = d.getElementById('authentication-form')
@@ -170,7 +170,7 @@ const init = () => {
       selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
 
       // Enable saving fieldnotes
-      saveFieldNotesSection.classList.remove('disabled')
+      saveFieldnotesSection.classList.remove('disabled')
 
       // Save inat user
       if(rememberInatUserCheckbox.checked) {
@@ -668,29 +668,7 @@ const init = () => {
       })
     }
 
-  const enableSaveFieldNotesSection = () => {
-    // Check fields added by the user
-    let areFieldsValid = true
-    
-    // Title
-    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.title.length > 2
-
-    // Author
-    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.author.length > 2
-
-    // Date
-    areFieldsValid = areFieldsValid && isValidDate({date: globalWrite.fieldnotes.d1})
-    areFieldsValid = areFieldsValid && isValidDate({date:globalWrite.fieldnotes.d2})
-
-    // Location
-    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.location.place_guess.length > 2
-
-    areFieldsValid
-      ? saveFieldNotesSection.classList.remove('disabled')
-      : saveFieldNotesSection.classList.add('disabled')    
-  }
-
-  const updateSingleFields = async ({prop, value}) => {
+  const updateMetadataFields = async ({prop, value}) => {
     if(globalWrite.view === 'edit') {
       let response
       try {
@@ -723,29 +701,29 @@ const init = () => {
 
   titleInputText.addEventListener('change', e => { 
     globalWrite.fieldnotes.title = e.target.value
-    enableSaveFieldNotesSection()
+    enableSaveFieldNotesSection({ globalWrite, saveFieldnotesSection })
   })
   authorInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.author = e.target.value
-    enableSaveFieldNotesSection()
+    enableSaveFieldNotesSection({ globalWrite, saveFieldnotesSection })
   })
   dateInputText.addEventListener('change', e => {
     const date = e.target.value        
     globalWrite.fieldnotes.d1 = date
     globalWrite.fieldnotes.d2 = date
-    updateSingleFields({
+    updateMetadataFields({
         prop: 'd1'
       , value: globalWrite.fieldnotes.d1
     })
-    updateSingleFields({
+    updateMetadataFields({
         prop: 'd2'
       , value: globalWrite.fieldnotes.d2
     })
-    enableSaveFieldNotesSection()
+    enableSaveFieldNotesSection({ globalWrite, saveFieldnotesSection })
   })
   placeInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.location.place_guess = e.target.value
-    enableSaveFieldNotesSection()
+    enableSaveFieldNotesSection({ globalWrite, saveFieldnotesSection })
   })
   
   const enableSearchBtn = () => {

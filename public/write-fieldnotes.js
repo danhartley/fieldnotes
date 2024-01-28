@@ -3,8 +3,7 @@ import {
 , g
 , getFieldnotesById
 , updateFieldNotes
-, updateFieldnoteProperty
-, updateFieldnotesTitle
+, addFieldnotes
 , getFirebaseAuth
 , onFirebaseAuthStateChange
 , updateFieldnoteStubProperty
@@ -48,6 +47,8 @@ import {
   , editSection
   , isSectionBeingAdded
   , handleInatAutocomplete
+  , enableSaveFieldNotesSection
+  , updateMetadataFields
 } from './ui-actions.js'
 
 import {
@@ -66,32 +67,33 @@ const init = () => {
       , inatAutocompleteOptions: g.inatAutocompleteOptions
       , inatAutocomplete: g.inatAutocomplete
       , fieldnotesStubs: []
-      , fieldnotes: {
-        author: ''
-      , d1: ''
-      , d2: ''
-      , fnId: ''
-      , id: ''
-      , language: g.LANGUAGES[1]
-      , location: {
-            location: ''
-          , place_guess: ''
-        }
-      , sectionOrder: []
-      , sections: []
-      , taxa: []
-      , title: ''
-      , user: {
-            id: ''
-          , icon: ''
-          , identifications_count: 0
-          , login: ''
-          , observations_count: 0
-          , species_count: 0
-        }
+        , fieldnotes: {
+          author: ''
+        , d1: ''
+        , d2: ''
+        , fnId: ''
+        , id: ''
+        , language: g.LANGUAGES[1]
+        , location: {
+              location: ''
+            , place_guess: ''
+          }
+        , sectionOrder: []
+        , sections: []
+        , taxa: []
+        , title: ''
+        , user: {
+              id: ''
+            , icon: ''
+            , identifications_count: 0
+            , login: ''
+            , observations_count: 0
+            , species_count: 0
+          }
       }
       , originalTypeValues: []
       , authentication: {}
+      , isUserEditing: false
     })
 
     return globalWrite
@@ -113,31 +115,24 @@ const init = () => {
   const updateFieldnotesStatusText = d.getElementById('update-fieldnotes-status-text')
   const updateFieldnotesCurrentStatusText = d.getElementById('update-fieldnotes-current-status-text')
   const authenticationForm = d.getElementById('authentication-form')
-
   const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
   const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
   const singleObservationsInputDate = d.getElementById('single-observations-input-date')
   const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
-  const saveFieldNotesSection = d.getElementById('save-fieldnotes-section')
+  const saveFieldnotesSection = d.getElementById('save-fieldnotes-section')
   const rememberInatUserCheckbox = d.getElementById('remember-inat-user-checkbox')
   const authenticateStateText = d.getElementById('authenticate-state-text')
+  const metaDataSection = d.getElementById('meta-data-section')
   
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
 
-  /**
-   * 
-   * User selectd option: create or edit fieldnotes
-   */
+  // User selectd option: create or edit fieldnotes
   const toggleView = ({e}) => {
     const view = e.target.dataset.view
 
-    // const sectionViews = d.querySelectorAll('section')
-    // sectionViews.forEach(v => v.classList.add('hidden'))
-    
-    // const views = d.querySelectorAll(`.${view}`)
-    // views.forEach(v => v.classList.remove('hidden'))
-    
+    globalWrite.view = view
+
     // Change the text of the buttons that trigger a change of view
       Array.from(d.getElementsByClassName('view-btn')).forEach(btn => {
         btn.innerText = btn.innerText.toLowerCase() === 'show'
@@ -152,11 +147,16 @@ const init = () => {
     switch(view) {
       case 'create':
         iNatAutocompleteInputText.focus()
+        metaDataSection.classList.remove('disabled')
         break
       case 'edit':
         fnAutocompleteTitleInputText.focus()
+        metaDataSection.classList.add('disabled')
         break
     }    
+
+    // Remove existing sections
+    draggableSections.replaceChildren()
   }
 
   const showHideEditFieldnotesBtn = new ButtonComponent({
@@ -169,9 +169,9 @@ const init = () => {
     , clickHandler: e => toggleView({ e })
   })
 
-  /**
-   * Create fieldnotes
-   */ 
+  // Create fieldnotes
+  
+  // search iNaturalist for observations
   const searchInatObservations = async () => {
     try {
         searchInatObservationsNotificationText.classList.toggle('hidden')
@@ -229,7 +229,7 @@ const init = () => {
         selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
   
         // Enable saving fieldnotes
-        saveFieldNotesSection.classList.remove('disabled')
+        saveFieldnotesSection.classList.remove('disabled')
   
         // Save inat user
         if(rememberInatUserCheckbox.checked) {
@@ -248,6 +248,9 @@ const init = () => {
             }
           })
         }
+
+        // Enable other sections
+        d.querySelectorAll('.has-fieldnotes').forEach(section => section.classList.remove('disabled'))
   
         // Notify user that observations are available
         showNotificationsDialog({
@@ -280,9 +283,9 @@ const init = () => {
       elementSelector: 'update-fieldnotes-status-btn'
   })
 
-  /**
-   * Create & edit fieldnotes
-   */ 
+  // Create & edit fieldnotes
+  
+  // Create new fieldnotes section
   const createSection = ({writeTemplateId, typeText, sectionTemplate, sectionIndex}) => {
     const sectionClone = sectionTemplate.content.cloneNode(true)
     const draggableSection = sectionClone.querySelector('section.draggable')
@@ -680,6 +683,7 @@ const init = () => {
     })
   }, true))
 
+  // user action: add or update a section
   const addOrUpdateSection = async ({parent, writeTemplateId, typeValue, previewContainer, sectionIndex, cancelActionBtn}) => {
     cancelActionBtn.hide()
 
@@ -756,73 +760,140 @@ const init = () => {
     addOrUpdateSectionArray({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isBeingAdded})
   }
 
-  const updateSingleFields = async ({prop, value}) => {
-    let response
-    try {
-      response = prop === 'title'
-        ? await updateFieldnotesTitle({
-            fieldnotes: globalWrite.fieldnotes
-          , prop
-          , value
-          , fieldnotesStubs: globalWrite.fieldnotesStubs
-        })
-        : await updateFieldnoteProperty({
-            fieldnotes: globalWrite.fieldnotes
-          , prop
-          , value
-        })
-      
-      showNotificationsDialog({
-          message: response.message
-        , type: response.type
-        , displayDuration: 2000
-      })
-    } catch (e) {
-      showNotificationsDialog({
-          message: `${e.message} for ${prop}`
-        , type: 'error'
-      })
-    }
-  }
-
-  titleInputText.addEventListener('change', e => { 
+  titleInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.title = e.target.value
-    updateSingleFields({
-        prop: 'title'
+    updateMetadataFields({
+        globalWrite
+      , prop: 'title'
       , value: globalWrite.fieldnotes.title
+    })
+    enableSaveFieldNotesSection({ 
+        globalWrite
+      , saveFieldnotesSection 
     })
   })
   authorInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.author = e.target.value
-    updateSingleFields({
-        prop: 'author'
+    updateMetadataFields({
+        globalWrite
+      , prop: 'author'
       , value: globalWrite.fieldnotes.author
+    })
+    enableSaveFieldNotesSection({ 
+        globalWrite
+      , saveFieldnotesSection 
     })
   })
   dateInputText.addEventListener('change', e => {
     const date = e.target.value        
     globalWrite.fieldnotes.d1 = date
     globalWrite.fieldnotes.d2 = date
-    updateSingleFields({
-        prop: 'd1'
+    updateMetadataFields({
+        globalWrite
+      , prop: 'd1'
       , value: globalWrite.fieldnotes.d1
     })
-    updateSingleFields({
-        prop: 'd2'
+    updateMetadataFields({
+        globalWrite
+      , prop: 'd2'
       , value: globalWrite.fieldnotes.d2
     })    
+    enableSaveFieldNotesSection({ 
+        globalWrite
+      , saveFieldnotesSection 
+    })
   })
   placeInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.location.place_guess = e.target.value
-    updateSingleFields({
-          prop: 'location'
+    updateMetadataFields({
+          globalWrite
+        , prop: 'location'
         , value: { 
             place_guess: globalWrite.fieldnotes.location.place_guess
           , location: globalWrite.fieldnotes.location.location
       }
     })
+    enableSaveFieldNotesSection({ 
+        globalWrite
+      , saveFieldnotesSection 
+    })
   })
+
+  const enableSearchBtn = () => {
+    const hasUser = globalWrite.login && globalWrite.login.length > 0
+    const date = new Date(singleObservationsInputDate.value)
+    const hasDate = singleObservationsInputDate.value.length > 0 && Object.prototype.toString.call(date) === '[object Date]'
+
+    hasUser && hasDate
+      ? searchInatObservationsBtn.enable()
+      : searchInatObservationsBtn.disable()
+  }
   
+  singleObservationsInputDate.addEventListener('blur', enableSearchBtn, true)
+  iNatAutocompleteInputText.addEventListener('blur', enableSearchBtn, true)
+
+  // Save newly created fieldnotes
+  const saveFieldnotes = async({status}) => {
+    try {
+      const notes = {}
+
+      Object.assign(notes, {
+          id: globalWrite.fieldnotes.id || ''
+        , fnId: globalWrite.fieldnotes.title
+        , title: globalWrite.fieldnotes.title
+        , author: globalWrite.fieldnotes.author
+        , user: {
+            id: globalWrite.fieldnotes.user.id
+          , icon: globalWrite.fieldnotes.user.icon
+          , identifications_count: globalWrite.fieldnotes.user.identifications_count || 0
+          , login: globalWrite.fieldnotes.user.login
+          , observations_count: globalWrite.fieldnotes.user.observations_count
+          , species_count: globalWrite.fieldnotes.user.species_count
+        }
+        , d1: globalWrite.fieldnotes.d1
+        , d2: globalWrite.fieldnotes.d2
+        , location: globalWrite.fieldnotes.location
+        , language: globalWrite.fieldnotes.language
+        , taxa: globalWrite.fieldnotes.taxa
+        , sections: globalWrite.fieldnotes.sections
+        , sectionOrder: globalWrite.fieldnotes.sections.map(section => section.sectionIndex)
+      })
+      
+      const response = await addFieldnotes({
+          fieldnotes: notes
+        , status
+        , user: globalWrite.user
+        , isUserEditing: true
+      })
+
+      if(response.success) {
+        globalWrite.fieldnotes.id = response.id
+        setTimeout(() => {
+          window.location.reload()
+        }, 4000)
+      }
+
+      showNotificationsDialog({
+          message: response.message
+        , type: response.type
+        , displayDuration: 3000
+      })
+    } catch (e) {
+      showNotificationsDialog({
+          message: e.message
+        , type: 'error'
+      })
+    }
+  }
+
+  const saveFieldNotesBtn = new ButtonComponent({
+      elementSelector: 'save-fieldnotes-btn'
+      , clickHandler: () => saveFieldnotes({
+        status: 'private'
+      })
+  })
+
+  // Edit fieldnotes   
   const fetchFieldnotes = async () => {
     try {
       importFieldNotesNotificationText.classList.remove('hidden')
@@ -839,8 +910,9 @@ const init = () => {
         fieldnotes: {
             ...fieldnotes
           , sections: fieldnotes.sectionOrder.map(sectionIndex => {
-            return fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
-          })
+              return fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
+            })
+          , isUserEditing: true
         }
       })
 
@@ -877,7 +949,7 @@ const init = () => {
       importFieldNotesNotificationText.classList.add('hidden')
 
       // Enable other sections
-      d.querySelectorAll('.has-fieldnotes').forEach(section => section.classList.remove('disabled')) 
+      d.querySelectorAll('.has-fieldnotes').forEach(section => section.classList.remove('disabled'))
 
       // Set the index for the next section
       globalWrite.nextSectionIndex = globalWrite.fieldnotes.sections.length > 0
@@ -1062,6 +1134,7 @@ const init = () => {
 
   fnAutocompleteTitleInputText.focus()
 
+  // Authentication  
   const authenticateBtn = new ButtonComponent({
       elementSelector: 'authenticate-btn'
     , clickHandler: e => authenticateUserEmailAndPassword({
@@ -1071,7 +1144,6 @@ const init = () => {
       , showNotificationsDialog 
     })
   })
-
 
   const signUpBtn = new ButtonComponent({
     elementSelector: 'sign-up-btn'

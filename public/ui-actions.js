@@ -1129,3 +1129,61 @@ export const editSection = ({e, addOrUpdateSectionBtn, editSectionBtn, cancelAct
     Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
     Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
 }
+
+export const enableSaveFieldNotesSection = ({globalWrite, saveFieldnotesSection}) => {
+    // Check fieldnotes have not been saved
+    if(globalWrite.isUserEditing) return
+
+    // Check fields added by the user
+    let areFieldsValid = true
+    
+    // Title
+    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.title.length > 2
+
+    // Author
+    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.author.length > 2
+
+    // Date
+    areFieldsValid = areFieldsValid && isValidDate({date: globalWrite.fieldnotes.d1})
+    areFieldsValid = areFieldsValid && isValidDate({date:globalWrite.fieldnotes.d2})
+
+    // Location
+    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.location.place_guess.length > 2
+
+    areFieldsValid
+      ? saveFieldnotesSection.classList.remove('disabled')
+      : saveFieldnotesSection.classList.add('disabled')    
+  }
+
+// user action: update metadata e.g. title, author
+export const updateMetadataFields = async ({globalWrite, prop, value}) => {
+    // Check fieldnotes have been saved
+    if(!globalWrite.isUserEditing) return
+
+    let response
+    try {
+      response = prop === 'title'
+        ? await updateFieldnotesTitle({
+            fieldnotes: globalWrite.fieldnotes
+          , prop
+          , value
+          , fieldnotesStubs: globalWrite.fieldnotesStubs
+        })
+        : await updateFieldnoteProperty({
+            fieldnotes: globalWrite.fieldnotes
+          , prop
+          , value
+        })
+      
+      showNotificationsDialog({
+          message: response.message
+        , type: response.type
+        , displayDuration: 2000
+      })
+    } catch (e) {
+        showNotificationsDialog({
+            message: `${e.message} for ${prop}`
+          , type: 'error'
+        })
+    }
+}
