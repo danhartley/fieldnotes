@@ -45,7 +45,7 @@ export const templates = [
 {
     id: 'species-list-template'
   , templateId: 'species-list-template'
-  , name: 'Species list'
+  , name: 'Observations catalogue'
   , parent: 'grid-template'
   , isTest: false
   , requiresSpecies: true

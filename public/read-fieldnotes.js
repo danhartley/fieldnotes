@@ -285,7 +285,11 @@ const init = async () => {
         
             switch(globalRead.template.templateId) {
                 case 'species-template':
-                    globalRead.species.forEach((sp, i) => {
+                case 'species-list-template':
+                    const species = globalRead.template.templateId === 'species-list-template'
+                        ? globalRead.fieldnotes.observations
+                        : globalRead.species
+                    species.forEach((sp, i) => {
                         const clone = cloneSpeciesCardFromTemplate({
                               templateToClone
                             , species: sp
@@ -296,16 +300,16 @@ const init = async () => {
                     })
                     article.appendChild(parent)
                     break
-                case 'species-list-template':            
-                    globalRead.species.forEach(sp => {
-                        const clone = templateToClone.content.cloneNode(true)
-                        const li = clone.querySelector('li')                        
-                        li.textContent = sp.taxon.name                
-                        parent = parentClone.querySelector('div')          
-                        parent.appendChild(clone)
-                    })
-                    article.appendChild(parent)
-                    break
+                // case 'species-list-template':        
+                //     globalRead.fieldnotes.species.forEach(sp => {
+                //         const clone = templateToClone.content.cloneNode(true)
+                //         const li = clone.querySelector('li')                        
+                //         li.textContent = sp.taxon.name                
+                //         parent = parentClone.querySelector('div')          
+                //         parent.appendChild(clone)
+                //     })
+                //     article.appendChild(parent)
+                //     break
                 case 'species-test-template':
                     globalRead.species.forEach((sp, i) => {
                         const clone = templateToClone.content.cloneNode(true)
@@ -585,11 +589,16 @@ const init = async () => {
             if(!response.success) return 
 
             const fieldnotes = { 
-                ...response.data
+                  ...response.data
                 , sections: response.data.sectionOrder.map(sectionIndex => {
                     return response.data.sections.find(section => section.sectionIndex === sectionIndex)
                 })  
             }
+
+            // Get the observations (only includes those selected by the author)
+            fieldnotes.observations = fieldnotes.sections
+                .filter(fn => fn.templateId === 'observations-preview-template')
+                .map(section => section.species).flat()
 
             globalRead.fieldnotes = fieldnotes
             globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
