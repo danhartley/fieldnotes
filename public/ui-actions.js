@@ -1091,7 +1091,7 @@ export const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) 
 
         const commonName = species.species_guess || species.taxon.preferred_common_name || '-'
         const taxonName = species.taxon.name
-        const url = species?.observation_photos?.[0]?.photo?.url || species.taxon.default_photo.square_url
+        const url = species?.observation?.default_photo.url || species.taxon.default_photo.square_url
         const taxonId = species.taxon.id
 
         figcaption.style.setProperty("background-color", getTaxonGroupColour({
