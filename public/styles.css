@@ -324,7 +324,6 @@ dialog, dialog:focus-visible, dialog:focus {
   padding: calc(var(--d) * 2);
   border: 1px solid var(--c4);
   border-radius: var(--d);
-  background-color: var(--success-bg-light);
   outline: none;
   z-index: 2;
 }

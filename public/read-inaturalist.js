@@ -531,9 +531,9 @@ const init = async () => {
     })  
     rbInatUseObservationSpeciesCountGroup = createRadioBtnGroup({
           collection: globalRead.useObservationsSpeciesCountOptions
-        , checked:globalRead.useObservationsSpeciesCount
-        , rbGroup:'inat-use-observations-species-count'
-        , parent:inatUseObservationSpeciesCountGroupContainer
+        , checked: globalRead.useObservationsSpeciesCount
+        , rbGroup: 'inat-use-observations-species-count'
+        , parent :inatUseObservationSpeciesCountGroupContainer
     })
 
     createTaxaCheckboxGroup()

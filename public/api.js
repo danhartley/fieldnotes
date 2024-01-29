@@ -1166,7 +1166,7 @@ export const g = {
     //     name: 'name',
     // },
     matches: [],    
-    useObservationsSpeciesCountOptions: [{name:'Species', id: "true"}, {name:'Observations', id: "false"}],
+    useObservationsSpeciesCountOptions: [{name:'Species (default photos)', id: "true"}, {name:'Observations (user photos)', id: "false"}],
     dateOption: 'none',    
 }
 

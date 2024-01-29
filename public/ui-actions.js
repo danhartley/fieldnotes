@@ -699,12 +699,12 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
   }
 }
 
-export const showNotificationsDialog = ({message, type = 'success', icon, displayDuration = 3500}) => {
+export const showNotificationsDialog = ({message, type = 'success', displayDuration = 3500}) => {
     const dialog = d.getElementById('state-notifications')
     const div1 = dialog.querySelector('div > div:nth-child(1)')
 
     div1.innerText = message
-    div1.classList.remove(...div1.classList)    
+    div1.classList.remove(...div1.classList)  
 
     let className, iconName
 
@@ -719,6 +719,7 @@ export const showNotificationsDialog = ({message, type = 'success', icon, displa
     div1.classList.add(iconName)
     dialog.classList.remove(...dialog.classList)
     dialog.classList.add(className)
+
     dialog.show()
     setTimeout(() => {
         dialog.close()
