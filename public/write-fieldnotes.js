@@ -101,30 +101,42 @@ const init = () => {
   let globalWrite = initGlobalWrite()
 
   const d = document
+
   const draggableSections = d.getElementById('draggable-sections')
   const fnAutocompleteTitleInputText = d.getElementById('fn-autocomplete-title-input-text')
   const fnAutocompleteTitleDatalist = d.getElementById('fn-autocomplete-title-data-list')
   const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
+  
+  const metaDataSection = d.getElementById('meta-data-section')
   const titleInputText = d.getElementById('title-input-text')
   const authorInputText = d.getElementById('author-input-text')
   const dateInputText = d.getElementById('date-input-text')
   const placeInputText = d.getElementById('place-input-text')
-  const selectSectionTypeSection = d.getElementById('select-section-type-section')
+
+  const selectSectionTypeSection = d.getElementById('select-section-type-section')  
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
+  
   const updateFieldnotesStatusText = d.getElementById('update-fieldnotes-status-text')
   const updateFieldnotesCurrentStatusText = d.getElementById('update-fieldnotes-current-status-text')
+  
   const authenticationForm = d.getElementById('authentication-form')
+  const authenticateStateText = d.getElementById('authenticate-state-text')
   const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
   const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
+  
   const singleObservationsInputDate = d.getElementById('single-observations-input-date')
   const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
+  
   const saveFieldnotesSection = d.getElementById('save-fieldnotes-section')
   const rememberInatUserCheckbox = d.getElementById('remember-inat-user-checkbox')
-  const authenticateStateText = d.getElementById('authenticate-state-text')
-  const metaDataSection = d.getElementById('meta-data-section')
   
   draggableSections.addEventListener('dragover', dragoverHandler)
-  draggableSections.addEventListener('drop', e => dropHandler({e, globalWrite, draggableSections, apiCallback: updateFieldNotes}))
+  draggableSections.addEventListener('drop', e => dropHandler({
+      e
+    , globalWrite
+    , draggableSections
+    , apiCallback: updateFieldNotes
+  }))
 
   // User action: select create or edit fieldnotes
   const toggleView = ({e}) => {
