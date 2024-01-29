@@ -694,6 +694,7 @@ const init = async () => {
     const printFieldnotesBtn = new ButtonComponent({
         elementSelector: 'print-fieldnotes-btn'
       , clickHandler: () => {
+        Array.from(d.querySelectorAll('.grid')).forEach(grid => grid.classList.remove('page-breaks'))
         print()
       }
     })
