@@ -915,12 +915,6 @@ th, td {
 
 /* MEDIA */
 
-/* @media screen {
-  figure img {
-    width: initial;
-  }
-}  */
-
 @media (orientation: landscape) {
   header {
     margin: 0 10vw;
