@@ -1,16 +1,16 @@
 import { 
-      snapSpeciesTraits
+      g
     , getInatObservations
-    , g
+    , snapSpeciesTraits
 } from './api.js'
 
 import { 
-      handleInatAutocomplete
-    , mapInatSpeciesToRequiredSpecies
+      cloneSpeciesCardFromTemplate
     , getTaxonGroupColour
-    , showNotificationsDialog
+    , handleInatAutocomplete
+    , mapInatSpeciesToRequiredSpecies
     , scoreLesson
-    , cloneSpeciesCardFromTemplate
+    , showNotificationsDialog
 } from './ui-actions.js'
 
 import {

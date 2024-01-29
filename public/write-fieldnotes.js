@@ -1,13 +1,13 @@
 import {   
-  getInatObservations
+  addFieldnotes
 , g
 , getFieldnotesById
-, updateFieldNotes
-, addFieldnotes
 , getFirebaseAuth
-, onFirebaseAuthStateChange
-, updateFieldnoteStubProperty
+, getInatObservations
 , getTerms
+, onFirebaseAuthStateChange
+, updateFieldNotes
+, updateFieldnoteStubProperty
 } from './api.js'
 
 import { 
@@ -16,38 +16,37 @@ import {
 } from './templates.js'
 
 import { 
-    handleInatAutocomplete
-  , createInatLookups
-  , handleTermAutocomplete
+    addContentToPreviewContainer
+  , addOrUpdateSectionArray
+  , addTermToList
+  , authenticateUserEmailAndPassword
+  , calcImageIndex
   , cloneImages
   , cloneImageTemplate
-  , dragstartHandler
-  , dragoverHandler
+  , createInatLookups
+  , deleteSection
   , dragenterHandler
   , dragleaveHandler
+  , dragoverHandler
+  , dragstartHandler
   , dropHandler
-  , deleteSection
-  , addOrUpdateSectionArray
-  , showNotificationsDialog
-  , addContentToPreviewContainer
-  , setOriginalTypeValues
+  , editSection
+  , enableSaveFieldNotesSection
+  , fetchFieldnotesStubs
   , getOriginalTypeValues
-  , addTermToList
+  , handleImageInputChangeEvent
+  , handleImageTextChange
+  , handleInputChangeEvent
+  , handleInatAutocomplete
+  , handleTermAutocomplete
+  , isSectionBeingAdded
   , mapTaxon
   , mapUser
-  , handleImageTextChange
-  , calcImageIndex
-  , handleInputChangeEvent
-  , handleImageInputChangeEvent
-  , toggleSpeciesList
-  , fetchFieldnotesStubs
-  , authenticateUserEmailAndPassword
   , saveJson
   , saveNewTerm
-  , editSection
-  , isSectionBeingAdded
-  , handleInatAutocomplete
-  , enableSaveFieldNotesSection
+  , setOriginalTypeValues
+  , showNotificationsDialog
+  , toggleSpeciesList
   , updateMetadataFields
 } from './ui-actions.js'
 

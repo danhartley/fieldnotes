@@ -1,22 +1,22 @@
 import { 
-      snapSpeciesTraits
-    , getInatTaxa
-    , g
+      g
     , getFieldnotesById
-    , getTerms
     , getFirebaseAuth
+    , getInatTaxa
+    , getTerms
     , onUserLoggedIn
+    , snapSpeciesTraits
 } from './api.js'
 
 import {
-      mapTaxon
-    , getTaxonGroupColour
-    , showNotificationsDialog
-    , scoreLesson
+      addImageBlockCaption
     , checkForLocalisedCommonSpeciesNames
-    , addImageBlockCaption
     , cloneSpeciesCardFromTemplate
     , fetchFieldnotesStubs
+    , getTaxonGroupColour
+    , mapTaxon
+    , scoreLesson
+    , showNotificationsDialog
 } from './ui-actions.js'
 
 import {
