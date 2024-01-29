@@ -141,8 +141,8 @@ const init = () => {
   }))
 
   // User action: select create or edit fieldnotes
-  const toggleView = ({e}) => {
-    const btn = e.target
+  const toggleView = ({e, overrideBtn}) => {
+    const btn = overrideBtn || e.target
     const view = btn.dataset.view
 
     globalWrite.view = view
@@ -263,22 +263,37 @@ const init = () => {
           status: 'private'
         })
 
+       await fetchFieldnotesStubs({
+          inputText: fnAutocompleteTitleInputText
+        , dataList: fnAutocompleteTitleDatalist
+        , global: globalWrite
+        , fetchFieldnotesBtn
+        })({ user: globalWrite.user })
+
         // Immediately hide save options
         saveFieldnotesSection.classList.add('hidden')
 
         // Enable option to toggle fieldnotes state between private and public
         fieldnotesStateSection.classList.remove('disabled')
 
-        // Set fieldnotesStubs status to private (we don't have the object proper available until we select a title)
-        globalWrite.fieldnotesStubs.status = 'private'
+        // Set fieldnotesStubs as if it had been selected        
+        globalWrite.fieldnotesStubs = globalWrite.fetchFieldnotesStubsCollection.find(stub => stub.title === globalWrite.fieldnotes.title)
 
         // Set values for fieldnotes status text and update button
         updateFieldnotesStateSection({
-          globalWrite
-        , updateFieldnotesStatusBtn
-        , updateFieldnotesStatusText
-        , updateFieldnotesCurrentStatusText
-      })
+            globalWrite
+          , updateFieldnotesStatusBtn
+          , updateFieldnotesStatusText
+          , updateFieldnotesCurrentStatusText
+        })
+
+        // Trigger the switch to edit view
+        toggleView({
+          overrideBtn: showHideEditFieldnotesBtn.buttonElement
+        })
+
+        // Set the selected title as the title of the newly created fieldnotes
+        fnAutocompleteTitleInputText.value = globalWrite.fieldnotesStubs.title
   
         // Save inat user
         if(rememberInatUserCheckbox.checked) {
