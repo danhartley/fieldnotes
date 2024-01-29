@@ -238,7 +238,7 @@ input[type='checkbox'] + label {
 
 input[type='text'], input[type='email'], input[type='password'], textarea {
   border: 1px solid var(--c3);
-  width: 100%;
+  width: -webkit-fill-available;
   border-radius: calc(var(--d) * .5);
 }
 
@@ -920,6 +920,7 @@ th, td {
     aspect-ratio: 1/1;
     object-fit: cover;
     width: 100%;
+    min-height: var(--img-min-height);
     max-height: var(--img-min-height);
   }
 
@@ -973,9 +974,9 @@ th, td {
     margin: 0 0 var(--d) 0;
   }
 
-  img {
+  /* img {
     max-height: var(--img-min-height);
-  }
+  } */
 }
 
 @media print {
