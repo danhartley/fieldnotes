@@ -1091,7 +1091,8 @@ export const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) 
 
         const commonName = species.species_guess || species.taxon.preferred_common_name || '-'
         const taxonName = species.taxon.name
-        const url = species?.observation?.default_photo.url || species.taxon.default_photo.square_url
+        // Check for observations saved (fieldnotes), then observations directly from inat (inat search), then finally use the taxon fallback (i.e. species)
+        const url = species?.observation?.default_photo.url || species?.observation_photos?.[0]?.photo?.url || species.taxon.default_photo.square_url
         const taxonId = species.taxon.id
 
         figcaption.style.setProperty("background-color", getTaxonGroupColour({
