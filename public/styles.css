@@ -428,6 +428,18 @@ th, td {
   font-weight: normal;
 }
 
+img {
+  object-fit: cover;
+  width: 100%;
+}
+
+/* Write fieldset only */
+.species-list figure img {
+  width: initial;
+  min-height: initial;
+  max-height: initial;
+}
+
 /* STATES */
 
 .hidden {
@@ -505,6 +517,10 @@ th, td {
 .btn-alert {
   border-color: var(--alert-border);
   background-color: var(--alert-bg-light);
+}
+
+.border-solid {
+  border: solid;
 }
 
 /* SELECTOR RULES */
@@ -960,8 +976,6 @@ th, td {
 
   img {
     aspect-ratio: 1/1;
-    object-fit: cover;
-    width: 100%;
     min-height: var(--img-min-height);
     max-height: var(--img-min-height);
   }

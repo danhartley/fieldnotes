@@ -285,7 +285,7 @@ const init = () => {
         label = typeClone.querySelector('label')
         label.htmlFor = input.id
         cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
-        cbParent.id = `inat-looup-parent-${sectionIndex}`
+        cbParent.id = `inat-lookup-parent-${sectionIndex}`
         addOrUpdateSectionBtn.addClickHandler({
             clickHandler: e => addOrUpdateSection({
               parent: e.target.parentElement
@@ -811,7 +811,7 @@ const init = () => {
             })
             let parent = null
             section.species.forEach((species, index) => {
-              parent = draggableSection.querySelector(`#inat-looup-parent-${section.sectionIndex}`)
+              parent = draggableSection.querySelector(`#inat-lookup-parent-${section.sectionIndex}`)
               const clone = cloneImageTemplate({
                   observation: species
                 , index

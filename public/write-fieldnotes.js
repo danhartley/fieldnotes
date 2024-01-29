@@ -129,7 +129,8 @@ const init = () => {
 
   // User action: select create or edit fieldnotes
   const toggleView = ({e}) => {
-    const view = e.target.dataset.view
+    const btn = e.target
+    const view = btn.dataset.view
 
     globalWrite.view = view
 
@@ -142,7 +143,12 @@ const init = () => {
 
     // Show or hide associated view
     Array.from(d.getElementsByClassName('fieldnotes-view'))
-      .forEach(view => view.classList.toggle('hidden'))      
+      .forEach(view => {
+        view.closest('fieldset')?.classList.remove('border-solid')
+        view.classList.toggle('hidden')
+      })
+
+      btn.closest('fieldset').classList.add('border-solid')
 
     switch(view) {
       case 'create':
@@ -450,7 +456,7 @@ const init = () => {
         label = typeClone.querySelector('label')
         label.htmlFor = input.id
         cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
-        cbParent.id = `inat-looup-parent-${sectionIndex}`
+        cbParent.id = `inat-lookup-parent-${sectionIndex}`
         addOrUpdateSectionBtn.addClickHandler({
             clickHandler: e => addOrUpdateSection({
               parent: e.target.parentElement
@@ -1036,7 +1042,7 @@ const init = () => {
           case 'inat-lookup-preview-template':
             let parent = null
             section.species.forEach((species, index) => {
-              parent = draggableSection.querySelector(`#inat-looup-parent-${section.sectionIndex}`)
+              parent = draggableSection.querySelector(`#inat-lookup-parent-${section.sectionIndex}`)
               const clone = cloneImageTemplate({
                   observation: species
                 , index

@@ -381,7 +381,7 @@ const init = () => {
         label = typeClone.querySelector('label')
         label.htmlFor = input.id
         cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
-        cbParent.id = `inat-looup-parent-${sectionIndex}`
+        cbParent.id = `inat-lookup-parent-${sectionIndex}`
         addOrUpdateSectionBtn.addClickHandler({
             clickHandler: e => addOrUpdateSection({
               parent: e.target.parentElement

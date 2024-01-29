@@ -48,14 +48,14 @@
     <main>
       <article>
         <section class="is-authenticated disabled">
-          <fieldset id="edit-field-notes">
+          <fieldset id="edit-field-notes" class="border-solid">
             <legend>Edit fieldnotes</legend>
             <button id="show-hide-edit-fieldnotes-btn" data-view="edit" class="view-btn btn-secondary">Hide</button>
             <div class="fieldnotes-view">
-              <p class="mt0 small">Find and edit previous fieldnotes.</p>
+              <p class="mt0 small">Find and edit previous fieldnotes by title.</p>
               <div class="centred-block">
                   <label for="fn-autocomplete-title-input-text">Title</label>
-                  <input id="fn-autocomplete-title-input-text" list="fn-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing to find existing fieldnotes by their title…">
+                  <input id="fn-autocomplete-title-input-text" list="fn-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing…">
                   <datalist id="fn-autocomplete-title-data-list"></datalist>
               </div>
               <div id="field-notes-lookup-callback-parent" class="mt2"></div>
