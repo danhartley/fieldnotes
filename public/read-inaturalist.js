@@ -352,7 +352,7 @@ const init = async () => {
                     })
                     article.appendChild(parent)
                     break
-                case 'species-list-template':            
+                case 'observations-template':            
                     species.forEach(sp => {
                         const clone = templateToClone.content.cloneNode(true)
                         const li = clone.querySelector('li')

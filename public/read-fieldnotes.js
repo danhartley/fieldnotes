@@ -285,8 +285,8 @@ const init = async () => {
         
             switch(globalRead.template.templateId) {
                 case 'species-template':
-                case 'species-list-template':
-                    const species = globalRead.template.templateId === 'species-list-template'
+                case 'observations-template':
+                    const species = globalRead.template.templateId === 'observations-template'
                         ? globalRead.fieldnotes.observations
                         : globalRead.species
                     species.forEach((sp, i) => {
@@ -300,16 +300,6 @@ const init = async () => {
                     })
                     article.appendChild(parent)
                     break
-                // case 'species-list-template':        
-                //     globalRead.fieldnotes.species.forEach(sp => {
-                //         const clone = templateToClone.content.cloneNode(true)
-                //         const li = clone.querySelector('li')                        
-                //         li.textContent = sp.taxon.name                
-                //         parent = parentClone.querySelector('div')          
-                //         parent.appendChild(clone)
-                //     })
-                //     article.appendChild(parent)
-                //     break
                 case 'species-test-template':
                     globalRead.species.forEach((sp, i) => {
                         const clone = templateToClone.content.cloneNode(true)

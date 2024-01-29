@@ -43,8 +43,8 @@ export const templates = [
     , types: ['inatSearch', 'fieldnotes']
 },
 {
-    id: 'species-list-template'
-  , templateId: 'species-list-template'
+    id: 'observations-template'
+  , templateId: 'observations-template'
   , name: 'Observations catalogue'
   , parent: 'grid-template'
   , isTest: false
