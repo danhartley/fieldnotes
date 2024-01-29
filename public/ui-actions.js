@@ -1193,3 +1193,18 @@ export const updateMetadataFields = async ({globalWrite, prop, value}) => {
         })
     }
 }
+
+export const updateFieldnotesStateSection = ({globalWrite, updateFieldnotesStatusBtn, updateFieldnotesStatusText, updateFieldnotesCurrentStatusText}) => {
+    if (globalWrite.fieldnotesStubs.status === 'public') {
+      updateFieldnotesStatusBtn.setText({
+        text: 'Set your fieldnotes to private'
+      })
+      updateFieldnotesStatusText.innerText = 'If you set your fieldnotes to private, they will no longer viewable by others.'
+    } else {
+      updateFieldnotesStatusBtn.setText({
+        text: 'Publish your fieldnotes'
+      })
+      updateFieldnotesStatusText.innerText = 'Publishing your fieldnotes will make them available to others.'
+    }
+    updateFieldnotesCurrentStatusText.innerText = globalWrite.fieldnotesStubs.status
+  }

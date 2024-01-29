@@ -47,6 +47,7 @@ import {
   , setOriginalTypeValues
   , showNotificationsDialog
   , toggleSpeciesList
+  , updateFieldnotesStateSection
   , updateMetadataFields
 } from './ui-actions.js'
 
@@ -65,30 +66,30 @@ const init = () => {
       , nextSectionIndex: 0
       , inatAutocompleteOptions: g.inatAutocompleteOptions
       , inatAutocomplete: g.inatAutocomplete
-      , fieldnotesStubs: []
-        , fieldnotes: {
-          author: ''
-        , d1: ''
-        , d2: ''
-        , fnId: ''
-        , id: ''
-        , language: g.LANGUAGES[1]
-        , location: {
-              location: ''
-            , place_guess: ''
-          }
-        , sectionOrder: []
-        , sections: []
-        , taxa: []
-        , title: ''
-        , user: {
-              id: ''
-            , icon: ''
-            , identifications_count: 0
-            , login: ''
-            , observations_count: 0
-            , species_count: 0
-          }
+      , fieldnotesStubs: {}
+      , fieldnotes: {
+        author: ''
+      , d1: ''
+      , d2: ''
+      , fnId: ''
+      , id: ''
+      , language: g.LANGUAGES[1]
+      , location: {
+            location: ''
+          , place_guess: ''
+        }
+      , sectionOrder: []
+      , sections: []
+      , taxa: []
+      , title: ''
+      , user: {
+            id: ''
+          , icon: ''
+          , identifications_count: 0
+          , login: ''
+          , observations_count: 0
+          , species_count: 0
+        }
       }
       , originalTypeValues: []
       , authentication: {}
@@ -128,6 +129,7 @@ const init = () => {
   const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
   
   const saveFieldnotesSection = d.getElementById('save-fieldnotes-section')
+  const fieldnotesStateSection = d.getElementById('fieldnotes-state-section')
   const rememberInatUserCheckbox = d.getElementById('remember-inat-user-checkbox')
   
   draggableSections.addEventListener('dragover', dragoverHandler)
@@ -197,6 +199,7 @@ const init = () => {
         searchInatObservationsBtn.toggleActiveState()
   
         const defaultUser = globalWrite.fieldnotes.user
+        
         // If there is no user available via autocomplete, use the default (saved) inat user, if there is one
         globalWrite.fieldnotes.user = globalWrite.inatAutocompleteOptions.find(o => o.id === 'users')?.user || defaultUser
   
@@ -254,9 +257,28 @@ const init = () => {
         // Enable the create observation and species section buttons
         selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
         selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
-  
-        // Enable saving fieldnotes
-        saveFieldnotesSection.classList.remove('disabled')
+        
+        // Immeditely save a private draft of the fieldnotes
+        await saveFieldnotes({
+          status: 'private'
+        })
+
+        // Immediately hide save options
+        saveFieldnotesSection.classList.add('hidden')
+
+        // Enable option to toggle fieldnotes state between private and public
+        fieldnotesStateSection.classList.remove('disabled')
+
+        // Set fieldnotesStubs status to private (we don't have the object proper available until we select a title)
+        globalWrite.fieldnotesStubs.status = 'private'
+
+        // Set values for fieldnotes status text and update button
+        updateFieldnotesStateSection({
+          globalWrite
+        , updateFieldnotesStatusBtn
+        , updateFieldnotesStatusText
+        , updateFieldnotesCurrentStatusText
+      })
   
         // Save inat user
         if(rememberInatUserCheckbox.checked) {
@@ -896,9 +918,6 @@ const init = () => {
 
       if(response.success) {
         globalWrite.fieldnotes.id = response.id
-        setTimeout(() => {
-          window.location.reload()
-        }, 4000)
       }
 
       showNotificationsDialog({
@@ -1127,18 +1146,12 @@ const init = () => {
       })
 
       // Set values for fieldnotes status text and update button
-      if(globalWrite.fieldnotesStubs.status === 'public') {
-        updateFieldnotesStatusBtn.setText({
-          text: 'Set your fieldnotes to private'
-        })
-        updateFieldnotesStatusText.innerText = 'If you set your fieldnotes to private, they will no longer viewable by others.'
-      } else {
-        updateFieldnotesStatusBtn.setText({
-          text: 'Publish your fieldnotes'
-        })
-        updateFieldnotesStatusText.innerText = 'Publishing your fieldnotes will make them available to others.'
-      }
-      updateFieldnotesCurrentStatusText.innerText = globalWrite.fieldnotesStubs.status
+      updateFieldnotesStateSection({
+          globalWrite
+        , updateFieldnotesStatusBtn
+        , updateFieldnotesStatusText
+        , updateFieldnotesCurrentStatusText
+      })
 
       showNotificationsDialog({
           message: 'Your fieldnotes are available to edit'
@@ -1275,9 +1288,6 @@ const init = () => {
           , type: response.type
           , displayDuration: 3000
         })
-        setTimeout(() => {
-          window.location.reload()
-        }, 4000)
       }
     }
   })
