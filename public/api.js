@@ -138,12 +138,12 @@ export const firebaseCreateAccount = async ({email, password, showNotificationsD
   }    
 }
 
-export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticateBtn, signUpBtn, firebaseSignUpCheckbox, fetchFieldnotesStubs, isAuthenticatedSections}) => {
+export const onFirebaseAuthStateChange = ({auth, globalWrite, authenticateBtn, signUpBtn, firebaseSignUpCheckbox, fetchFieldnotesStubs, isAuthenticatedSections}) => {
   const container = authenticateBtn.buttonElement .parentElement.closest('.inat-preferences-section')
   const text = container.querySelector('#authenticate-state-text')
   const loggedOut = container.querySelectorAll('.logged-out')  
 
-  return await onAuthStateChanged(auth, (user) => {
+  return onAuthStateChanged(auth, (user) => {
     globalWrite.user = user
     if(user) {
       authenticateBtn.show()
@@ -152,7 +152,7 @@ export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticate
       })
       if(signUpBtn) signUpBtn.hide()
       if(firebaseSignUpCheckbox) firebaseSignUpCheckbox.uncheck()
-      if(fetchFieldnotesStubs) fetchFieldnotesStubs({user})
+      if(fetchFieldnotesStubs) fetchFieldnotesStubs({ user })
       text.innerText = 'You are logged in.'
       loggedOut.forEach(out => out.classList.add('hidden'))
       
@@ -163,11 +163,21 @@ export const onFirebaseAuthStateChange = async ({auth, globalWrite, authenticate
         text: 'Log in'
       })
 
-      if(fetchFieldnotesStubs) fetchFieldnotesStubs({user:null})
+      if(fetchFieldnotesStubs) fetchFieldnotesStubs({ user: null })
       text.innerText = 'You are logged out.'
       loggedOut.forEach(out => out.classList.remove('hidden'))
       if(isAuthenticatedSections) isAuthenticatedSections.forEach(section => section.classList.add('disabled')) 
     }
+  })
+}
+export const onUserLoggedIn = ({auth, globalRead, fetchFieldnotesStubs}) => {
+  return onAuthStateChanged(auth, (user) => {
+    globalRead.user = user
+    if(user) {
+      console.log(user)
+      if(fetchFieldnotesStubs) fetchFieldnotesStubs({ user })
+    } else {
+      if(fetchFieldnotesStubs) fetchFieldnotesStubs({ user: null} )}
   })
 }
 

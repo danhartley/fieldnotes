@@ -140,14 +140,16 @@ const init = () => {
           ? 'hide'
           : 'show'
     })
-
-    // Show or hide associated view
+    
     Array.from(d.getElementsByClassName('fieldnotes-view'))
       .forEach(view => {
+        // Remove solid fieldset borders
         view.closest('fieldset')?.classList.remove('border-solid')
+        // Show or hide actie view
         view.classList.toggle('hidden')
       })
 
+      // Highlight active view with solid fieldset border
       btn.closest('fieldset').classList.add('border-solid')
 
     switch(view) {
@@ -1187,7 +1189,7 @@ const init = () => {
   })
   
   // Observe changes to user authentication on firenase
-  globalWrite.user = onFirebaseAuthStateChange({
+  onFirebaseAuthStateChange({
       auth: getFirebaseAuth()
     , globalWrite
     , authenticateBtn

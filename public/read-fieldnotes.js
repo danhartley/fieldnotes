@@ -2,20 +2,21 @@ import {
       snapSpeciesTraits
     , getInatTaxa
     , g
-    , getFieldnotesStubs
     , getFieldnotesById
     , getTerms
+    , getFirebaseAuth
+    , onUserLoggedIn
 } from './api.js'
 
 import {
       mapTaxon
     , getTaxonGroupColour
-    , fieldsnotesAutocomplete
     , showNotificationsDialog
     , scoreLesson
     , checkForLocalisedCommonSpeciesNames
     , addImageBlockCaption
     , cloneSpeciesCardFromTemplate
+    , fetchFieldnotesStubs
 } from './ui-actions.js'
 
 import {
@@ -651,17 +652,6 @@ const init = async () => {
 
     createRadioBtnTemplateGroup()
 
-    fieldsnotesAutocomplete({ 
-          inputText: fnAutocompleteTitleInputText
-        , dataList: fnAutocompleteTitleDatalist
-        , global: globalRead
-        , fieldnotesStubs: getFieldnotesStubs({
-              user: null
-            , readonly: true
-        })
-        , fetchFieldnotesBtn
-    })
-
     fnAutocompleteTitleInputText.focus()
     globalRead.templates = g.templates.filter(template => template.types.includes('fieldnotes'))
     globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
@@ -725,7 +715,18 @@ const init = async () => {
     if(language) {
         globalRead.language = language
     }
+
+    // Check for logged in users. Logged in users can preview their private fieldnotes
+    onUserLoggedIn({ 
+          auth: getFirebaseAuth() 
+        , globalRead
+        , fetchFieldnotesStubs: fetchFieldnotesStubs({
+            inputText: fnAutocompleteTitleInputText
+          , dataList: fnAutocompleteTitleDatalist
+          , global: globalRead
+          , fetchFieldnotesBtn
+        })
+    })
 }
 
 init()
-

@@ -931,16 +931,20 @@ export const toggleSpeciesList = ({btn, fieldset}) => {
 
 export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnotesBtn}) => {
     return async ({user}) => {
+        let stubs
         const fieldnotesStubs = user 
             ? await getFieldnotesStubs({user})
-            : []
+            : await getFieldnotesStubs({
+                user: null
+              , readonly: true
+            })
 
         fieldsnotesAutocomplete({ 
               inputText
             , dataList
             , global
             , fetchFieldnotesBtn
-            , fieldnotesStubs
+            , fieldnotesStubs: fieldnotesStubs || stubs
         })
     }
 }
