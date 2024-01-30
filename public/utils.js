@@ -61,3 +61,7 @@ export const saveJson = ({obj, title = 'fieldnotes'}) => {
 
   // With thanks: https://gist.github.com/yiwenl/8f2b735a2263bc93ee33
 }
+
+export const isValidDate = ({date}) => {
+  return date.length > 0 && Object.prototype.toString.call(new Date(date)) === '[object Date]'
+}

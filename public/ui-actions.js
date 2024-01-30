@@ -22,10 +22,23 @@ import {
 } from './templates.js'
 
 import {
-    debounce
+      debounce
+    , isValidDate
 } from './utils.js'
 
 const d = document
+
+// iNaturalist
+export const mapTaxon = ({taxon}) => {
+    return {
+        iconic_taxon_id: taxon.iconic_taxon_id,
+        name: taxon.name,
+        id: taxon.id,
+        default_photo: taxon.default_photo, // map again to remove properties that aren't needed
+        iconic_taxon_name: taxon.iconic_taxon_name,
+        preferred_common_name: taxon.preferred_common_name || '-'
+    }
+}
 
 export const createInatLookups = ({globalWrite, parent, writeTemplateId, sectionIndex}) => {
     cloneImages({
@@ -77,6 +90,39 @@ export const handleInatAutocomplete = ({globalWrite, inputText, dataList, id, pr
     })
 }
 
+export const mapUser = ({user}) => {
+    return {
+          icon: user.icon
+        , id: user.id
+        , identifications_count: user.identifications_count || 0
+        , journal_posts_count: user.journal_posts_count
+        , login: user.login
+        , name: user.name
+        , observations_count: user.observations_count
+        , species_count: user.species_count
+    }
+}
+
+export const mapInatSpeciesToRequiredSpecies = ({species, count, taxa}) => {    
+    return species  
+        .filter(sp => taxa.map(t => t.name).includes(sp.taxon.iconic_taxon_name.toLowerCase()))      
+        .map(sp => {
+            return {
+                  species_guess: sp.species_guess
+                , observation_photos: sp.observation_photos
+                , taxon: {
+                    ...sp.taxon
+                    , count: sp.count || 0
+                }            
+            }
+    })
+}
+
+export const getTaxonGroupColour = ({taxon}) => {
+    return getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
+}
+
+// Terms
 export const handleTermAutocomplete = async ({selectedTerms, inputText, dataList, globalWrite, data, parent, addSelectedTermBtn, handleOnClickAddSelectedTermBtn}) => {
     let termData
 
@@ -122,102 +168,6 @@ export const handleTermAutocomplete = async ({selectedTerms, inputText, dataList
             }), true)            
         }
     })
-}
-
-export const fieldsnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubs, fetchFieldnotesBtn}) => {
-    const addTitlesToList = async ({dataList, strToComplete, fieldnotesStubs}) => {
-        try {
-            const stubs = await fieldnotesStubs
-    
-            while (dataList.firstChild) {
-                dataList.removeChild(dataList.firstChild)
-            }
-    
-            const matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
-    
-            dataList.replaceChildren()
-    
-            matches.forEach(match => {
-                const option = d.createElement('option')
-                option.value = match['title']
-                dataList.appendChild(option)
-            })
-    
-            return stubs
-        } catch (e) {
-            showNotificationsDialog({
-                  message: 'You are not logged in.'
-                , type: 'error'
-            })
-        }
-    }
-
-    // The list of titles will initially be short, so we load it at once, in its entirety
-    let stubs = await addTitlesToList({
-          dataList
-        , strToComplete: ''
-        , fieldnotesStubs
-    })
-
-    inputText.addEventListener('input', debounce(async (e) => {
-        stubs = await addTitlesToList({
-              dataList
-            , strToComplete: e.target.value
-            , fieldnotesStubs
-        })
-    }, 0))
-
-    inputText.addEventListener('change', e => {
-        const match = e.target.value
-
-        if(match) {
-            global.fieldnotesStubs = stubs.find(option => option.title === match)
-            fetchFieldnotesBtn.enable() 
-        }
-    })
-}
-
-export const mapTaxon = ({taxon}) => {
-    return {
-        iconic_taxon_id: taxon.iconic_taxon_id,
-        name: taxon.name,
-        id: taxon.id,
-        default_photo: taxon.default_photo, // map again to remove properties that aren't needed
-        iconic_taxon_name: taxon.iconic_taxon_name,
-        preferred_common_name: taxon.preferred_common_name || '-'
-    }
-}
-
-export const mapUser = ({user}) => {
-    return {
-          icon: user.icon
-        , id: user.id
-        , identifications_count: user.identifications_count || 0
-        , journal_posts_count: user.journal_posts_count
-        , login: user.login
-        , name: user.name
-        , observations_count: user.observations_count
-        , species_count: user.species_count
-    }
-}
-
-export const mapInatSpeciesToRequiredSpecies = ({species, count, taxa}) => {    
-    return species  
-        .filter(sp => taxa.map(t => t.name).includes(sp.taxon.iconic_taxon_name.toLowerCase()))      
-        .map(sp => {
-            return {
-                  species_guess: sp.species_guess
-                , observation_photos: sp.observation_photos
-                , taxon: {
-                    ...sp.taxon
-                    , count: sp.count || 0
-                }            
-            }
-    })
-}
-
-export const getTaxonGroupColour = ({taxon}) => {
-    return getComputedStyle(d.documentElement).getPropertyValue(`--${taxon.toLowerCase()}`)
 }
 
 export const handleTermCheckState = ({e, globalWrite, selectedTerm, li, sectionIndex}) => {
@@ -310,6 +260,7 @@ export const saveNewTerm = async ({terms, term}) => {
     }
 }
 
+// Observation, species and iNaturalist lookup images
 export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}) => {
     switch(writeTemplateId) {
         case 'species-write-template':
@@ -565,6 +516,47 @@ export const cloneImageTemplate = ({observation, index, sectionIndex, imgUrl, gl
     return clone
 }
 
+export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, index, strValue, property}) => {
+    const image = imageSrcs[index]
+    if(image) {
+      image[property] = strValue
+      imageSrcs[index] = image
+    } else {
+      imageSrcs.push({
+        [property]: strValue              
+      })            
+    }
+    let section = globalWrite.fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
+    if(section) {
+      section.images = imageSrcs
+    } else {
+        section = {...images, images: imageSrcs, templateId: images.templateId, sectionIndex: globalWrite.nextSectionIndex }
+        addSectionToFieldnotes({
+              globalWrite
+            , section
+        })
+    }
+}
+
+export const calcImageIndex = (index) => {
+    return (index % 2 === 0)
+        ? index / 2
+        : ((index -1) / 2)
+}
+
+export const handleImageInputChangeEvent = ({addOrUpdateSectionBtn, url1, title1}) => {
+    (url1.value.length >= 5 && title1.value.length >= 2)
+        ? addOrUpdateSectionBtn.enable()
+        : addOrUpdateSectionBtn.disable()
+}
+
+export const addImageBlockCaption = ({caption, text, parent}) => {
+    caption.innerText = text
+    caption.classList.add('caption', 'smallish')
+    parent.appendChild(caption)    
+}
+
+// Drop & drag sections
 let sectionToMove = null
 
 export const dragstartHandler = e => {
@@ -693,6 +685,7 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
   }
 }
 
+// Notifications (toast)
 export const showNotificationsDialog = ({message, type = 'success', displayDuration = 3500}) => {
     const dialog = d.getElementById('state-notifications')
     const div1 = dialog.querySelector('div > div:nth-child(1)')
@@ -720,6 +713,7 @@ export const showNotificationsDialog = ({message, type = 'success', displayDurat
     }, displayDuration)
 }
 
+// Section actions
 export const deleteSection = async ({sectionIndex, globalWrite}) => {
     try {        
         const elementToRemove = globalWrite.fieldnotes.sections.find(t => t.sectionIndex == sectionIndex)
@@ -844,92 +838,28 @@ export const addOrUpdateSectionArray = async ({globalWrite, sectionToUpdate, sec
     }
 }
 
+export const editSection = ({e, addOrUpdateSectionBtn, editSectionBtn, cancelActionBtn, contentContainer}) => {
+    const parent = e.target.parentElement
+    contentContainer.classList.remove('disabled')
+
+    addOrUpdateSectionBtn.setText({
+      text: 'Save changes' 
+    })
+    addOrUpdateSectionBtn.enable()
+    editSectionBtn.hide()
+    cancelActionBtn.show()
+
+    Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
+    Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
+}
+
+// UI updates
 export const addContentToPreviewContainer = ({previewTemplate, textContent, previewContainer}) => {
     const t = d.getElementById(previewTemplate.templateId)
     const clone = t.content.cloneNode(true)
     const p = clone.querySelector(previewTemplate.element)
     p.textContent = textContent    
     previewContainer.appendChild(clone)
-}
-
-export const setOriginalTypeValues = ({globalWrite, section, type}) => {
-    // Updating an element in an array such as section in sections, requires us first to delete
-    // the original element as it was before it was changed. Which is why we need to track original values.
-    const typeValues = structuredClone({
-        values: section[type],
-        sectionIndex: section['sectionIndex']
-    })
-    const hasOriginalValues = globalWrite.originalTypeValues.find(type => type.sectionIndex === section['sectionIndex'])
-    if (hasOriginalValues) {
-        globalWrite.originalTypeValues.forEach(type => {
-            if (type.sectionIndex === section['sectionIndex']) {
-                type.values = typeValues.values
-            }
-        })
-    } else {
-        globalWrite.originalTypeValues.push(typeValues)
-    }
-    console.log(globalWrite.originalTypeValues)
-}
-
-export const getOriginalTypeValues = ({globalWrite, section, type}) => {
-    const typeValues = section === null
-        ? []
-        : structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === section['sectionIndex'])?.values) || section[type]
-
-    return typeValues
-}
-
-export const hasOriginalTypeValues = ({globalWrite, section}) => {
-    const typeValues = section === null
-    ? []
-    : structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === section['sectionIndex'])?.values) || []
-
-return typeValues.length > 0
-}
-
-export const isValidDate = ({date}) => {
-    return date.length > 0 && Object.prototype.toString.call(new Date(date)) === '[object Date]'
-}
-
-export const handleImageTextChange = ({globalWrite, sectionIndex, imageSrcs, index, strValue, property}) => {
-    const image = imageSrcs[index]
-    if(image) {
-      image[property] = strValue
-      imageSrcs[index] = image
-    } else {
-      imageSrcs.push({
-        [property]: strValue              
-      })            
-    }
-    let section = globalWrite.fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
-    if(section) {
-      section.images = imageSrcs
-    } else {
-        section = {...images, images: imageSrcs, templateId: images.templateId, sectionIndex: globalWrite.nextSectionIndex }
-        addSectionToFieldnotes({
-              globalWrite
-            , section
-        })
-    }
-}
-
-export const calcImageIndex = (index) => {
-    return (index % 2 === 0)
-        ? index / 2
-        : ((index -1) / 2)
-}
-
-export const handleInputChangeEvent = (e, addBtn) => {
-    addBtn.toggleActiveStateByInput({
-        str: e.target.value
-    })
-}
-
-export const handleImageInputChangeEvent = ({addOrUpdateSectionBtn, url1, title1}) => {
-    (url1.value.length >= 5 && title1.value.length >= 2)
-        ? addOrUpdateSectionBtn.enable()
-        : addOrUpdateSectionBtn.disable()
 }
 
 export const toggleSpeciesList = ({btn, fieldset}) => {    
@@ -946,66 +876,6 @@ export const toggleSpeciesList = ({btn, fieldset}) => {
         })
         btn.setText({
             text: 'show only included'
-        })
-    }
-}
-
-export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnotesBtn}) => {
-    return async ({user}) => {
-        const fieldnotesStubs = user 
-            ? await getFieldnotesStubs({user})
-            : await getFieldnotesStubs({
-                user: null
-              , readonly: true
-            })
-
-        global.fetchFieldnotesStubsCollection = await fieldnotesStubs
-
-        fieldsnotesAutocomplete({ 
-              inputText
-            , dataList
-            , global
-            , fetchFieldnotesBtn
-            , fieldnotesStubs
-        })
-    }
-}
-
-export const authenticateUserEmailAndPassword = ({user, email, password, showNotificationsDialog}) => {
-    if(user) {
-        firebaseSignOut({
-              auth: getFirebaseAuth()
-            , showNotificationsDialog
-        })      
-    } else {
-        if(email.validity.valid) {
-        firebaseLogin({
-              email: email.value
-            , password: password.value
-            , showNotificationsDialog
-        })
-        }      
-    }    
-}
-
-export const authenticateNewUserEmailAndPassword = async ({email, password, showNotificationsDialog, signUpBtn, callback}) => {
-    try {
-        let success = false
-        if(email.validity.valid) {
-            success = await firebaseCreateAccount({
-                  email: email.value
-                , password: password.value
-                , showNotificationsDialog
-            })
-            if(success) {
-                signUpBtn.hide()
-                callback()
-            }
-        }
-    } catch (e) {
-        showNotificationsDialog({
-              message: e.message
-            , type: 'error'
         })
     }
 }
@@ -1078,10 +948,44 @@ export const checkForLocalisedCommonSpeciesNames = ({s, sp}) => {
     }    
 }
 
-export const addImageBlockCaption = ({caption, text, parent}) => {
-    caption.innerText = text
-    caption.classList.add('caption', 'smallish')
-    parent.appendChild(caption)    
+export const enableSaveFieldNotesSection = ({globalWrite, saveFieldnotesSection}) => {
+    // Check fieldnotes have not been saved
+    if(globalWrite.isUserEditing) return
+
+    // Check fields added by the user
+    let areFieldsValid = true
+    
+    // Title
+    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.title.length > 2
+
+    // Author
+    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.author.length > 2
+
+    // Date
+    areFieldsValid = areFieldsValid && isValidDate({date: globalWrite.fieldnotes.d1})
+    areFieldsValid = areFieldsValid && isValidDate({date:globalWrite.fieldnotes.d2})
+
+    // Location
+    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.location.place_guess.length > 2
+
+    areFieldsValid
+      ? saveFieldnotesSection.classList.remove('disabled')
+      : saveFieldnotesSection.classList.add('disabled')    
+}
+
+export const updateFieldnotesStateSection = ({globalWrite, updateFieldnotesStatusBtn, updateFieldnotesStatusText, updateFieldnotesCurrentStatusText}) => {
+    if (globalWrite.fieldnotesStubs.status === 'public') {
+      updateFieldnotesStatusBtn.setText({
+        text: 'Set your fieldnotes to private'
+      })
+      updateFieldnotesStatusText.innerText = 'If you set your fieldnotes to private, they will no longer viewable by others.'
+    } else {
+      updateFieldnotesStatusBtn.setText({
+        text: 'Publish your fieldnotes'
+      })
+      updateFieldnotesStatusText.innerText = 'Publishing your fieldnotes will make them available to others.'
+    }
+    updateFieldnotesCurrentStatusText.innerText = globalWrite.fieldnotesStubs.status
 }
 
 export const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) => {
@@ -1119,44 +1023,162 @@ export const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) 
     }
 }
 
-export const editSection = ({e, addOrUpdateSectionBtn, editSectionBtn, cancelActionBtn, contentContainer}) => {
-    const parent = e.target.parentElement
-    contentContainer.classList.remove('disabled')
-
-    addOrUpdateSectionBtn.setText({
-      text: 'Save changes' 
+// Section state
+export const setOriginalTypeValues = ({globalWrite, section, type}) => {
+    // Updating an element in an array such as section in sections, requires us first to delete
+    // the original element as it was before it was changed. Which is why we need to track original values.
+    const typeValues = structuredClone({
+        values: section[type],
+        sectionIndex: section['sectionIndex']
     })
-    addOrUpdateSectionBtn.enable()
-    editSectionBtn.hide()
-    cancelActionBtn.show()
-
-    Array.from(parent.querySelectorAll('.edit:not(.add')).forEach(el => el.classList.add('hidden'))
-    Array.from(parent.querySelectorAll('.add')).forEach(el => el.classList.remove('hidden'))
+    const hasOriginalValues = globalWrite.originalTypeValues.find(type => type.sectionIndex === section['sectionIndex'])
+    if (hasOriginalValues) {
+        globalWrite.originalTypeValues.forEach(type => {
+            if (type.sectionIndex === section['sectionIndex']) {
+                type.values = typeValues.values
+            }
+        })
+    } else {
+        globalWrite.originalTypeValues.push(typeValues)
+    }
+    console.log(globalWrite.originalTypeValues)
 }
 
-export const enableSaveFieldNotesSection = ({globalWrite, saveFieldnotesSection}) => {
-    // Check fieldnotes have not been saved
-    if(globalWrite.isUserEditing) return
+export const getOriginalTypeValues = ({globalWrite, section, type}) => {
+    const typeValues = section === null
+        ? []
+        : structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === section['sectionIndex'])?.values) || section[type]
 
-    // Check fields added by the user
-    let areFieldsValid = true
+    return typeValues
+}
+
+export const hasOriginalTypeValues = ({globalWrite, section}) => {
+    const typeValues = section === null
+    ? []
+    : structuredClone(globalWrite.originalTypeValues.find(values => values.sectionIndex === section['sectionIndex'])?.values) || []
+
+return typeValues.length > 0
+}
+
+export const handleInputChangeEvent = (e, addBtn) => {
+    addBtn.toggleActiveStateByInput({
+        str: e.target.value
+    })
+}
+
+export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnotesBtn}) => {
+    return async ({user}) => {
+        const fieldnotesStubs = user 
+            ? await getFieldnotesStubs({user})
+            : await getFieldnotesStubs({
+                user: null
+              , readonly: true
+            })
+
+        global.fetchFieldnotesStubsCollection = await fieldnotesStubs
+
+        fieldsnotesAutocomplete({ 
+              inputText
+            , dataList
+            , global
+            , fetchFieldnotesBtn
+            , fieldnotesStubs
+        })
+    }
+}
+
+// Firebase authentication
+export const authenticateUserEmailAndPassword = ({user, email, password, showNotificationsDialog}) => {
+    if(user) {
+        firebaseSignOut({
+              auth: getFirebaseAuth()
+            , showNotificationsDialog
+        })      
+    } else {
+        if(email.validity.valid) {
+        firebaseLogin({
+              email: email.value
+            , password: password.value
+            , showNotificationsDialog
+        })
+        }      
+    }    
+}
+
+export const authenticateNewUserEmailAndPassword = async ({email, password, showNotificationsDialog, signUpBtn, callback}) => {
+    try {
+        let success = false
+        if(email.validity.valid) {
+            success = await firebaseCreateAccount({
+                  email: email.value
+                , password: password.value
+                , showNotificationsDialog
+            })
+            if(success) {
+                signUpBtn.hide()
+                callback()
+            }
+        }
+    } catch (e) {
+        showNotificationsDialog({
+              message: e.message
+            , type: 'error'
+        })
+    }
+}
+
+// Additional Firebase calls
+export const fieldsnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubs, fetchFieldnotesBtn}) => {
+    const addTitlesToList = async ({dataList, strToComplete, fieldnotesStubs}) => {
+        try {
+            const stubs = await fieldnotesStubs
     
-    // Title
-    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.title.length > 2
+            while (dataList.firstChild) {
+                dataList.removeChild(dataList.firstChild)
+            }
+    
+            const matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
+    
+            dataList.replaceChildren()
+    
+            matches.forEach(match => {
+                const option = d.createElement('option')
+                option.value = match['title']
+                dataList.appendChild(option)
+            })
+    
+            return stubs
+        } catch (e) {
+            showNotificationsDialog({
+                  message: 'You are not logged in.'
+                , type: 'error'
+            })
+        }
+    }
 
-    // Author
-    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.author.length > 2
+    // The list of titles will initially be short, so we load it at once, in its entirety
+    let stubs = await addTitlesToList({
+          dataList
+        , strToComplete: ''
+        , fieldnotesStubs
+    })
 
-    // Date
-    areFieldsValid = areFieldsValid && isValidDate({date: globalWrite.fieldnotes.d1})
-    areFieldsValid = areFieldsValid && isValidDate({date:globalWrite.fieldnotes.d2})
+    inputText.addEventListener('input', debounce(async (e) => {
+        stubs = await addTitlesToList({
+              dataList
+            , strToComplete: e.target.value
+            , fieldnotesStubs
+        })
+    }, 0))
 
-    // Location
-    areFieldsValid = areFieldsValid && globalWrite.fieldnotes.location.place_guess.length > 2
+    inputText.addEventListener('change', e => {
+        const match = e.target.value
 
-    areFieldsValid
-      ? saveFieldnotesSection.classList.remove('disabled')
-      : saveFieldnotesSection.classList.add('disabled')    
+        if(match) {
+            global.fieldnotesStubs = stubs.find(option => option.title === match)
+            fetchFieldnotesBtn.enable() 
+        }
+    })
 }
 
 export const updateMetadataFields = async ({globalWrite, prop, value}) => {
@@ -1189,19 +1211,4 @@ export const updateMetadataFields = async ({globalWrite, prop, value}) => {
           , type: 'error'
         })
     }
-}
-
-export const updateFieldnotesStateSection = ({globalWrite, updateFieldnotesStatusBtn, updateFieldnotesStatusText, updateFieldnotesCurrentStatusText}) => {
-    if (globalWrite.fieldnotesStubs.status === 'public') {
-      updateFieldnotesStatusBtn.setText({
-        text: 'Set your fieldnotes to private'
-      })
-      updateFieldnotesStatusText.innerText = 'If you set your fieldnotes to private, they will no longer viewable by others.'
-    } else {
-      updateFieldnotesStatusBtn.setText({
-        text: 'Publish your fieldnotes'
-      })
-      updateFieldnotesStatusText.innerText = 'Publishing your fieldnotes will make them available to others.'
-    }
-    updateFieldnotesCurrentStatusText.innerText = globalWrite.fieldnotesStubs.status
 }
