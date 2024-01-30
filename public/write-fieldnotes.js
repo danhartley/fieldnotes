@@ -43,7 +43,6 @@ import {
   , isSectionBeingAdded
   , mapTaxon
   , mapUser
-  , saveJson
   , saveNewTerm
   , setOriginalTypeValues
   , showNotificationsDialog
@@ -56,6 +55,10 @@ import {
       ButtonComponent
     , CheckBoxComponent
 } from './ui-components.js'
+
+import {
+  saveJson
+} from './utils.js'
 
 const init = () => {
 

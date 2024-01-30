@@ -21,21 +21,11 @@ import {
     , images
 } from './templates.js'
 
+import {
+    debounce
+} from './utils.js'
+
 const d = document
-
-const debounce = (func, wait) => {
-  let timeout
-
-  return function executedFunction(...args) {
-      const later = () => {
-        clearTimeout(timeout)
-        func(...args)
-      }
-
-      clearTimeout(timeout)
-      timeout = setTimeout(later, wait)
-  }
-}
 
 export const createInatLookups = ({globalWrite, parent, writeTemplateId, sectionIndex}) => {
     cloneImages({
@@ -134,34 +124,34 @@ export const handleTermAutocomplete = async ({selectedTerms, inputText, dataList
     })
 }
 
-const addTitlesToList = async ({dataList, strToComplete, fieldnotesStubs}) => {
-    try {
-        const stubs = await fieldnotesStubs
-
-        while (dataList.firstChild) {
-            dataList.removeChild(dataList.firstChild)
-        }
-
-        const matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
-
-        dataList.replaceChildren()
-
-        matches.forEach(match => {
-            const option = d.createElement('option')
-            option.value = match['title']
-            dataList.appendChild(option)
-        })
-
-        return stubs
-    } catch (e) {
-        showNotificationsDialog({
-              message: 'You are not logged in.'
-            , type: 'error'
-        })
-    }
-}
-
 export const fieldsnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubs, fetchFieldnotesBtn}) => {
+    const addTitlesToList = async ({dataList, strToComplete, fieldnotesStubs}) => {
+        try {
+            const stubs = await fieldnotesStubs
+    
+            while (dataList.firstChild) {
+                dataList.removeChild(dataList.firstChild)
+            }
+    
+            const matches = stubs.filter(item => item.title.toLowerCase().startsWith(strToComplete.toLowerCase()))
+    
+            dataList.replaceChildren()
+    
+            matches.forEach(match => {
+                const option = d.createElement('option')
+                option.value = match['title']
+                dataList.appendChild(option)
+            })
+    
+            return stubs
+        } catch (e) {
+            showNotificationsDialog({
+                  message: 'You are not logged in.'
+                , type: 'error'
+            })
+        }
+    }
+
     // The list of titles will initially be short, so we load it at once, in its entirety
     let stubs = await addTitlesToList({
           dataList
@@ -320,155 +310,6 @@ export const saveNewTerm = async ({terms, term}) => {
     }
 }
 
-const handleSpeciesCheckState = async({e, observation, sectionIndex, globalWrite,  writeTemplateId}) => {
-    const checkbox = e.target
-    const name = checkbox.value
-    const label = checkbox.nextElementSibling
-
-    let section = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)    
-    let index = globalWrite.fieldnotes.sections.findIndex(t => t.sectionIndex === sectionIndex)
-
-    const getSpeciesForInatLookup = ({taxon}) => {
-        return {
-            taxon: {
-                  id: taxon.id
-                , name: taxon.name
-                , preferred_common_name: taxon.preferred_common_name || '-'
-                , iconic_taxon_name: taxon.iconic_taxon_name
-                , default_photo: {
-                    square_url: taxon.default_photo.square_url
-                }
-            }
-        }
-    }
-
-    const getTaxon = ({observation}) => {
-       return {
-            id: observation.taxon.id,
-            name: observation.taxon.name,
-            preferred_common_name: observation.taxon.preferred_common_name || '-',
-            iconic_taxon_name: observation.taxon.iconic_taxon_name,
-            default_photo: {
-                square_url: observation.taxon.default_photo.square_url
-            }
-       }
-    }
-
-    const getObservation = ({observation}) => {
-        return {
-            species_guess: observation.species_guess,
-            id: observation.id,
-            default_photo: {
-                url: observation.photos[0].url
-            },
-            photos: observation.photos.map(photo => {
-                return {
-                    id: photo.id,
-                    url: photo.url,
-                    attribution: photo.attribution
-                }
-            })
-        }
-    }
-
-    if(section) {        
-        switch(writeTemplateId) {
-            case 'species-write-template':
-                if(section.species.find(sp => sp.taxon.name === name)) {
-                    section.species = section.species.filter(sp => sp.taxon.name !== name)
-                    label.innerText = 'Not included'
-                } else {
-                    section.species.push({
-                            name
-                          , taxon : getTaxon({ observation })
-                    })
-                    label.innerText = 'Included'
-                }
-                globalWrite.fieldnotes.sections[index] = section
-                break
-            case 'observations-write-template':
-                if(section.species.find(sp => sp.observation.id === observation.id)) {
-                    section.species = section.species.filter(sp => sp.observation.id !== observation.id)
-                    label.innerText = 'Not included'
-                } else {
-                    section.species.push({
-                          name
-                        , taxon : getTaxon({ observation })
-                        , observation: getObservation({ observation })
-                    })
-                    label.innerText = 'Included'
-                }
-                globalWrite.fieldnotes.sections[index] = section
-                break
-            case 'inat-lookup-write-template':
-                    if(section.species.find(sp => sp.taxon.name === name)) {
-                        section.species = section.species.filter(sp => sp.taxon.name !== name)
-                        label.innerText = 'Not included'
-                    } else {
-                        section.species.push(getSpeciesForInatLookup({ taxon: observation.taxon })) 
-                        label.innerText = 'Included'
-                    }
-                    globalWrite.fieldnotes.sections[index] = section
-                break
-        }
-    } else {
-        const sp = [name]
-        label.innerText = 'Included'
-        switch(writeTemplateId) {
-            case 'species-write-template':
-                section = { 
-                      ...species
-                    , species: [{
-                              name
-                            , taxon : getTaxon({ observation })
-                        }]
-                    , templateId: species.templateId
-                    , sectionIndex
-                }
-                break
-            case 'observations-write-template':
-                section = {
-                      ...observations
-                    , species: [{
-                          name
-                        , taxon : getTaxon({ observation })
-                        , observation: getObservation({ observation })                        
-                    }]
-                    , templateId: observations.templateId
-                    , sectionIndex
-                }
-                break
-            case 'inat-lookup-write-template':
-                section = {
-                      ...inatlookup
-                    , species: [getSpeciesForInatLookup({ taxon: observation.taxon })]
-                    , templateId: inatlookup.templateId
-                    , sectionIndex 
-                }
-                break
-        }
-        addSectionToFieldnotes({
-            globalWrite
-          , section
-        })
-    }
-
-    if(!globalWrite.fieldnotes.taxa.find(t => t.name === name)) {
-        globalWrite.fieldnotes.taxa.push({
-              id: globalWrite.observations.find(sp => sp.taxon.name === name)?.taxon?.id
-            , name
-        })
-        // Check fieldnotes exist in the db before trying to update a field
-        if(globalWrite.fieldnotes.id.length > 0) {
-            updateFieldnoteProperty({
-                  fieldnotes: globalWrite.fieldnotes
-                , prop: 'taxa'
-                , value: globalWrite.fieldnotes.taxa
-            })
-        }
-    }
-}
-
 export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}) => {
     switch(writeTemplateId) {
         case 'species-write-template':
@@ -538,6 +379,155 @@ export const cloneImages = ({globalWrite, parent, writeTemplateId, sectionIndex}
 }
 
 export const cloneImageTemplate = ({observation, index, sectionIndex, imgUrl, globalWrite, writeTemplateId}) => {
+    const handleSpeciesCheckState = async({e, observation, sectionIndex, globalWrite,  writeTemplateId}) => {
+        const checkbox = e.target
+        const name = checkbox.value
+        const label = checkbox.nextElementSibling
+    
+        let section = globalWrite.fieldnotes.sections.find(t => t.sectionIndex === sectionIndex)    
+        let index = globalWrite.fieldnotes.sections.findIndex(t => t.sectionIndex === sectionIndex)
+    
+        const getSpeciesForInatLookup = ({taxon}) => {
+            return {
+                taxon: {
+                      id: taxon.id
+                    , name: taxon.name
+                    , preferred_common_name: taxon.preferred_common_name || '-'
+                    , iconic_taxon_name: taxon.iconic_taxon_name
+                    , default_photo: {
+                        square_url: taxon.default_photo.square_url
+                    }
+                }
+            }
+        }
+    
+        const getTaxon = ({observation}) => {
+           return {
+                id: observation.taxon.id,
+                name: observation.taxon.name,
+                preferred_common_name: observation.taxon.preferred_common_name || '-',
+                iconic_taxon_name: observation.taxon.iconic_taxon_name,
+                default_photo: {
+                    square_url: observation.taxon.default_photo.square_url
+                }
+           }
+        }
+    
+        const getObservation = ({observation}) => {
+            return {
+                species_guess: observation.species_guess,
+                id: observation.id,
+                default_photo: {
+                    url: observation.photos[0].url
+                },
+                photos: observation.photos.map(photo => {
+                    return {
+                        id: photo.id,
+                        url: photo.url,
+                        attribution: photo.attribution
+                    }
+                })
+            }
+        }
+    
+        if(section) {        
+            switch(writeTemplateId) {
+                case 'species-write-template':
+                    if(section.species.find(sp => sp.taxon.name === name)) {
+                        section.species = section.species.filter(sp => sp.taxon.name !== name)
+                        label.innerText = 'Not included'
+                    } else {
+                        section.species.push({
+                                name
+                              , taxon : getTaxon({ observation })
+                        })
+                        label.innerText = 'Included'
+                    }
+                    globalWrite.fieldnotes.sections[index] = section
+                    break
+                case 'observations-write-template':
+                    if(section.species.find(sp => sp.observation.id === observation.id)) {
+                        section.species = section.species.filter(sp => sp.observation.id !== observation.id)
+                        label.innerText = 'Not included'
+                    } else {
+                        section.species.push({
+                              name
+                            , taxon : getTaxon({ observation })
+                            , observation: getObservation({ observation })
+                        })
+                        label.innerText = 'Included'
+                    }
+                    globalWrite.fieldnotes.sections[index] = section
+                    break
+                case 'inat-lookup-write-template':
+                        if(section.species.find(sp => sp.taxon.name === name)) {
+                            section.species = section.species.filter(sp => sp.taxon.name !== name)
+                            label.innerText = 'Not included'
+                        } else {
+                            section.species.push(getSpeciesForInatLookup({ taxon: observation.taxon })) 
+                            label.innerText = 'Included'
+                        }
+                        globalWrite.fieldnotes.sections[index] = section
+                    break
+            }
+        } else {
+            const sp = [name]
+            label.innerText = 'Included'
+            switch(writeTemplateId) {
+                case 'species-write-template':
+                    section = { 
+                          ...species
+                        , species: [{
+                                  name
+                                , taxon : getTaxon({ observation })
+                            }]
+                        , templateId: species.templateId
+                        , sectionIndex
+                    }
+                    break
+                case 'observations-write-template':
+                    section = {
+                          ...observations
+                        , species: [{
+                              name
+                            , taxon : getTaxon({ observation })
+                            , observation: getObservation({ observation })                        
+                        }]
+                        , templateId: observations.templateId
+                        , sectionIndex
+                    }
+                    break
+                case 'inat-lookup-write-template':
+                    section = {
+                          ...inatlookup
+                        , species: [getSpeciesForInatLookup({ taxon: observation.taxon })]
+                        , templateId: inatlookup.templateId
+                        , sectionIndex 
+                    }
+                    break
+            }
+            addSectionToFieldnotes({
+                globalWrite
+              , section
+            })
+        }
+    
+        if(!globalWrite.fieldnotes.taxa.find(t => t.name === name)) {
+            globalWrite.fieldnotes.taxa.push({
+                  id: globalWrite.observations.find(sp => sp.taxon.name === name)?.taxon?.id
+                , name
+            })
+            // Check fieldnotes exist in the db before trying to update a field
+            if(globalWrite.fieldnotes.id.length > 0) {
+                updateFieldnoteProperty({
+                      fieldnotes: globalWrite.fieldnotes
+                    , prop: 'taxa'
+                    , value: globalWrite.fieldnotes.taxa
+                })
+            }
+        }
+    }
+    
     const templateToClone = d.getElementById('images-preview-template')
     const clone = templateToClone.content.cloneNode(true)
     const spans = clone.querySelectorAll('span')
@@ -860,7 +850,7 @@ export const addContentToPreviewContainer = ({previewTemplate, textContent, prev
     const p = clone.querySelector(previewTemplate.element)
     p.textContent = textContent    
     previewContainer.appendChild(clone)
-  }
+}
 
 export const setOriginalTypeValues = ({globalWrite, section, type}) => {
     // Updating an element in an array such as section in sections, requires us first to delete
@@ -1020,33 +1010,6 @@ export const authenticateNewUserEmailAndPassword = async ({email, password, show
     }
 }
 
-const encode = s => {
-    var out = []
-    for ( var i = 0; i < s.length; i++ ) {
-        out[i] = s.charCodeAt(i)
-    }
-    return new Uint8Array(out)
-}
-
-export const saveJson = ({obj, title = 'fieldnotes'}) => {
-    var str = JSON.stringify(obj)
-    var data = encode(str)
-
-    var blob = new Blob([data], {
-        type: 'application/octet-stream'
-    })
-
-    var url = URL.createObjectURL(blob)
-    var link = document.createElement('a')
-    link.setAttribute('href', url)
-    link.setAttribute('download', `${title}.json`)
-    var event = document.createEvent('MouseEvents')
-    event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null)
-    link.dispatchEvent(event)
-
-    // With thanks: https://gist.github.com/yiwenl/8f2b735a2263bc93ee33
-}
-
 export const scoreLesson = ({answers, global}) => {
     answers.forEach(answer => {
         const sp = global.species.find(s => s.taxon.id === Number(answer.id))
@@ -1194,9 +1157,8 @@ export const enableSaveFieldNotesSection = ({globalWrite, saveFieldnotesSection}
     areFieldsValid
       ? saveFieldnotesSection.classList.remove('disabled')
       : saveFieldnotesSection.classList.add('disabled')    
-  }
+}
 
-// user action: update metadata e.g. title, author
 export const updateMetadataFields = async ({globalWrite, prop, value}) => {
     // Check fieldnotes have been saved
     if(!globalWrite.isUserEditing) return
@@ -1242,4 +1204,4 @@ export const updateFieldnotesStateSection = ({globalWrite, updateFieldnotesStatu
       updateFieldnotesStatusText.innerText = 'Publishing your fieldnotes will make them available to others.'
     }
     updateFieldnotesCurrentStatusText.innerText = globalWrite.fieldnotesStubs.status
-  }
+}
