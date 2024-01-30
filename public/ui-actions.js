@@ -794,6 +794,15 @@ export const addSectionToFieldnotes = async ({globalWrite, section}) => {
     return response
 }
 
+export const updateSectionArray = ({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isBeingAdded}) => {
+    addOrUpdateSectionArray({
+          globalWrite
+        , sectionToUpdate
+        , sectionAddedOrUpdated
+        , isBeingAdded: false
+    })
+}
+
 export const addOrUpdateSectionArray = async ({globalWrite, sectionToUpdate, sectionAddedOrUpdated, isBeingAdded}) => {
     try {
         const array = 'sections'

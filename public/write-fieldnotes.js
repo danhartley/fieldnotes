@@ -565,6 +565,26 @@ const init = () => {
             , cancelActionBtn
           })
         })
+        // Observe changes to the species list
+        observer = new MutationObserver(() => {
+          const section = globalWrite.fieldnotes.sections.find(s => s.sectionIndex === sectionIndex)
+          const speciesCount = section?.species?.length || 0
+          if(speciesCount > 0) {
+            addOrUpdateSectionBtn.enable()
+            addOrUpdateSectionBtn.setText({
+              text: 'Save changes' 
+            })
+          } else {
+            addOrUpdateSectionBtn.setText({
+              text: 'Add section' 
+            })
+            addOrUpdateSectionBtn.disable()
+          }
+        })
+        observer.observe(draggableSection.querySelector('.content-container'), {
+              subtree: true
+            , childList: true
+        })
         break
     }
     editSectionBtn.addClickHandler({

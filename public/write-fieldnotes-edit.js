@@ -33,9 +33,7 @@ import {
   , addContentToPreviewContainer
   , setOriginalTypeValues
   , getOriginalTypeValues
-  , hasOriginalTypeValues
   , addTermToList
-  , isValidDate
   , mapTaxon
   , mapUser
   , handleImageTextChange
@@ -45,7 +43,6 @@ import {
   , toggleSpeciesList
   , fetchFieldnotesStubs
   , authenticateUserEmailAndPassword
-  , saveJson
   , saveNewTerm
   , editSection
   , isSectionBeingAdded
@@ -54,6 +51,11 @@ import {
 import {
     ButtonComponent
 } from './ui-components.js'
+
+import {
+    saveJson
+  , isValidDate
+} from './utils.js'
 
 const init = () => {
 
