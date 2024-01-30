@@ -19,6 +19,7 @@ import {
     addContentToPreviewContainer
   , addOrUpdateSectionArray
   , addTermToList
+  , authenticateNewUserEmailAndPassword
   , authenticateUserEmailAndPassword
   , calcImageIndex
   , cloneImages
@@ -169,10 +170,12 @@ const init = () => {
       case 'create':
         iNatAutocompleteInputText.focus()
         metaDataSection.classList.remove('disabled')
+        globalWrite.isUserEditing = false
         break
       case 'edit':
         fnAutocompleteTitleInputText.focus()
         metaDataSection.classList.add('disabled')
+        globalWrite.isUserEditing = true
         break
     }    
 
@@ -273,9 +276,6 @@ const init = () => {
         // Immediately hide save options
         saveFieldnotesSection.classList.add('hidden')
 
-        // Enable option to toggle fieldnotes state between private and public
-        fieldnotesStateSection.classList.remove('disabled')
-
         // Set fieldnotesStubs as if it had been selected        
         globalWrite.fieldnotesStubs = globalWrite.fetchFieldnotesStubsCollection.find(stub => stub.title === globalWrite.fieldnotes.title)
 
@@ -294,6 +294,9 @@ const init = () => {
 
         // Set the selected title as the title of the newly created fieldnotes
         fnAutocompleteTitleInputText.value = globalWrite.fieldnotesStubs.title
+
+        // Enable fetch 
+        fetchFieldnotesBtn.enable()
   
         // Save inat user
         if(rememberInatUserCheckbox.checked) {
@@ -315,6 +318,12 @@ const init = () => {
 
         // Enable other sections
         d.querySelectorAll('.has-fieldnotes').forEach(section => section.classList.remove('disabled'))
+
+        // Remove manual save options
+        saveFieldnotesSection.classList.add('hidden')
+
+        // Enable option to toggle fieldnotes state between private and public
+        fieldnotesStateSection.classList.remove('disabled')    
   
         // Notify user that observations are available
         showNotificationsDialog({
@@ -385,7 +394,7 @@ const init = () => {
     draggableSection.setAttribute('id', sectionIndex)
     draggableSection.addEventListener('dragstart', dragstartHandler)    
     
-    let input, label, textarea, datalist, previewContainer, images, cbParent = null
+    let input, label, textarea, datalist, previewContainer, images, cbParent, observer = null
 
     legend.innerText = typeText
 
@@ -448,12 +457,20 @@ const init = () => {
           })
         })
         // Observe changes to the species list
-        const observer = new MutationObserver(() => {
+        observer = new MutationObserver(() => {
           const section = globalWrite.fieldnotes.sections.find(s => s.sectionIndex === sectionIndex)
           const speciesCount = section?.species?.length || 0
-          speciesCount > 0
-            ? addOrUpdateSectionBtn.enable()
-            : addOrUpdateSectionBtn.disable()
+          if(speciesCount > 0) {
+            addOrUpdateSectionBtn.enable()
+            addOrUpdateSectionBtn.setText({
+              text: 'Save changes' 
+            })
+          } else {
+            addOrUpdateSectionBtn.setText({
+              text: 'Add section' 
+            })
+            addOrUpdateSectionBtn.disable()
+          }
         })
         observer.observe(draggableSection.querySelector('.content-container'), {
               subtree: true
@@ -477,6 +494,26 @@ const init = () => {
             , sectionIndex
             , cancelActionBtn
           })
+        })
+        // Observe changes to the terms list
+        observer = new MutationObserver(() => {
+          const section = globalWrite.fieldnotes.sections.find(s => s.sectionIndex === sectionIndex)
+          const termsCount = section?.terms?.length || 0
+          if(termsCount > 0) {
+            addOrUpdateSectionBtn.enable()
+            addOrUpdateSectionBtn.setText({
+              text: 'Save changes' 
+            })
+          } else {
+            addOrUpdateSectionBtn.setText({
+              text: 'Add section' 
+            })
+            addOrUpdateSectionBtn.disable()
+          }
+        })
+        observer.observe(draggableSection.querySelector('.content-container'), {
+              subtree: true
+            , childList: true
         })
         break
       case 'images-write-template':
@@ -1204,10 +1241,17 @@ const init = () => {
   // User action: sign up
   const signUpBtn = new ButtonComponent({
     elementSelector: 'sign-up-btn'
-  , clickHandler: e => authenticateNewUserEmailAndPassword({
+  })
+
+  signUpBtn.addClickHandler({
+    clickHandler: e => authenticateNewUserEmailAndPassword({
         email: d.getElementById('firebase-email')
       , password: d.getElementById('firebase-password')
       , showNotificationsDialog
+      , signUpBtn
+      , callback: () => toggleView({
+          overrideBtn: showHideCreateFieldnotesBtn.buttonElement
+        })
     })
   })
 

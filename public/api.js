@@ -125,7 +125,11 @@ export const firebaseCreateAccount = async ({email, password, showNotificationsD
   try {
     const user = await createUserWithEmailAndPassword(auth, email, password)
     if(user) {
-      console.log(user)
+      showNotificationsDialog({
+          message: 'You successfully created a new account.'
+        , displayDuration: 5000
+      })
+      return true
     } else {
       console.log('error')
     }

@@ -1,15 +1,16 @@
 import { 
-      getIdByAutocomplete
-    , removeElementFromArray
-    , addElementToArray
-    , updateElementFromArray
-    , updateFieldnoteProperty
+      addElementToArray
+    , addTerm
+    , getIdByAutocomplete
     , getFieldnotesStubs
     , getFirebaseAuth
+    , firebaseCreateAccount
     , firebaseLogin
     , firebaseSignOut
-    , addTerm
-    , firebaseCreateAccount
+    , removeElementFromArray
+    , updateElementFromArray
+    , updateFieldnoteProperty
+    , updateFieldnotesTitle
 } from './api.js'
 
 import { 
@@ -264,7 +265,10 @@ export const addTermToList = ({selectedTerms, selectedTerm, selectedItemsListEle
         }
     } else {
         section = {...terms, terms: [selectedTerm], templateId: terms.templateId, sectionIndex }
-        globalWrite.fieldnotes.sections.push(section)
+        addSectionToFieldnotes({
+            globalWrite
+          , section
+      })
     }
 
     // Add the new term to the list
@@ -750,10 +754,16 @@ export const deleteSection = async ({sectionIndex, globalWrite}) => {
             globalWrite.fieldnotes.sectionOrder = globalWrite.fieldnotes.sectionOrder.filter(id => id !== sectionIndex)
 
             // Notify user
-            showNotificationsDialog({message: response.message, type: 'success'})
+            showNotificationsDialog({
+                  message: response.message
+                , type: 'success'
+            })
         }    
     } catch (e) {
-      showNotificationsDialog({message: e.message, type: 'error'})
+        showNotificationsDialog({
+            message: e.message
+            , type: 'error'
+        })
     }
 }
 
@@ -782,6 +792,19 @@ export const addSectionToFieldnotes = async ({globalWrite, section}) => {
         globalWrite.fieldnotes.sections.push(section)
         globalWrite.fieldnotes.sectionOrder.push(section.sectionIndex)   
         globalWrite.nextSectionIndex++
+
+        // Set the original values to the updated values
+        setOriginalTypeValues({
+              section
+            , globalWrite
+            , type: section.type
+        })
+
+        showNotificationsDialog({
+              message: `${section.name} added.`
+            , type: 'success'
+            , displayDuration: 4000
+        })
     }
 
     return response
@@ -816,12 +839,18 @@ export const addOrUpdateSectionArray = async ({globalWrite, sectionToUpdate, sec
         }
 
         // Notify user
-        showNotificationsDialog({message: response.message, type: 'success'})
+        showNotificationsDialog({
+              message: response.message
+            , type: 'success'
+        })
 
         return response
         
     } catch (e) {
-        showNotificationsDialog({message: e.message, type: 'error'})
+        showNotificationsDialog({
+              message: e.message
+            , type: 'error'
+        })
     }
 }
 
@@ -850,6 +879,7 @@ export const setOriginalTypeValues = ({globalWrite, section, type}) => {
     } else {
         globalWrite.originalTypeValues.push(typeValues)
     }
+    console.log(globalWrite.originalTypeValues)
 }
 
 export const getOriginalTypeValues = ({globalWrite, section, type}) => {
@@ -968,21 +998,25 @@ export const authenticateUserEmailAndPassword = ({user, email, password, showNot
     }    
 }
 
-export const authenticateNewUserEmailAndPassword = async({email, password, showNotificationsDialog}) => {
+export const authenticateNewUserEmailAndPassword = async ({email, password, showNotificationsDialog, signUpBtn, callback}) => {
     try {
+        let success = false
         if(email.validity.valid) {
-            firebaseCreateAccount({
+            success = await firebaseCreateAccount({
                   email: email.value
                 , password: password.value
                 , showNotificationsDialog
             })
+            if(success) {
+                signUpBtn.hide()
+                callback()
+            }
         }
     } catch (e) {
         showNotificationsDialog({
               message: e.message
             , type: 'error'
         })
-        console.log(e.message)
     }
 }
 
