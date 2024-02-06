@@ -38,16 +38,8 @@ const init = async () => {
 
     const d = document   
         
-    const sectionsWithHeader = d.querySelectorAll('.section-with-header')
-    const lessonFieldsetLegend = d.querySelector('#lesson-fieldset > legend')
-    const article = d.getElementById('article')
-    const rbTemplate = d.getElementById('radio-button-template')
-    const languageGroupContainer = d.getElementById('language-group-container')
+    // Filters and search
     const inatAutocompleteGroupContainer = d.getElementById('inat-autocomplete-group-container')
-    const inatUseObservationSpeciesCountGroupContainer = d.getElementById('inat-use-observations-species-count-group-container')
-    const targetGroupContainer = d.getElementById('target-group-container')
-    const targetsFieldset = d.getElementById('targets-fieldset')
-    const speciesDisplayContainer = d.getElementById('species-display-container')
     const iNatAutocompleteInputText = d.getElementById('inat-autocomplete-input-text')
     const iNatAutocompleteDatalist = d.getElementById('inat-autocomplete-data-list')
     const searchInatObservationsNotificationText = d.getElementById('search-inat-observations-notification-text')
@@ -55,20 +47,19 @@ const init = async () => {
     const endDate = d.getElementById('observations-end-date')
     const singleDate = d.getElementById('single-observations-input-date')
     const rbDateGroup = d.querySelectorAll('input[name="rbDate"]')
+    const languageGroupContainer = d.getElementById('language-group-container')
     const rememberLanguageCheckbox = d.getElementById('remember-language-checkbox')
 
-    const displayOptionsToggleVisibilityBtn = new ButtonHideShowComponent({
-        elementSelector: 'display-options-toggle-visibility-btn'
-    })    
-    const contentToggleVisibilityBtn = new ButtonHideShowComponent({
-        elementSelector: 'content-toggle-visibility-btn'
-    })    
-    const progressToggleVisibilityBtn = new ButtonHideShowComponent({
-        elementSelector: 'progress-toggle-visibility-btn'
-    })    
-    const preferencesToggleVisibilityBtn = new ButtonHideShowComponent({
-        elementSelector: 'preferences-toggle-visibility-btn'
-    })
+    // Display
+    const sectionsWithHeader = d.querySelectorAll('.section-with-header')
+    const lessonFieldsetLegend = d.querySelector('#lesson-fieldset > legend')
+    const article = d.getElementById('article')
+    const rbTemplate = d.getElementById('radio-button-template')
+    const targetGroupContainer = d.getElementById('target-group-container')
+    const targetsFieldset = d.getElementById('targets-fieldset')
+    const speciesDisplayContainer = d.getElementById('species-display-container')
+    const inatUseObservationOrSpeciesContainer = d.getElementById('inat-use-observations-or-species-container')
+  
     const showTestBtn = new ButtonComponent({
           elementSelector: 'show-test-btn'        
     })
@@ -413,8 +404,6 @@ const init = async () => {
             }
             
             addImgClickEventHandlers()
-        
-            contentToggleVisibilityBtn.scrollIntoView({})
         } catch (e) {
             showNotificationsDialog({message: e.message, type: 'error'})
         }
@@ -534,7 +523,7 @@ const init = async () => {
           collection: globalRead.useObservationsSpeciesCountOptions
         , checked: globalRead.useObservationsSpeciesCount
         , rbGroup: 'inat-use-observations-species-count'
-        , parent :inatUseObservationSpeciesCountGroupContainer
+        , parent :inatUseObservationOrSpeciesContainer
     })
 
     createTaxaCheckboxGroup()

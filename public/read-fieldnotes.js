@@ -44,11 +44,14 @@ const init = async () => {
     const globalRead = initGlobalRead()
 
     const d = document   
-        
+    
+    // Select title
     const fnAutocompleteTitleInputText = d.getElementById('fn-autocomplete-title-input-text')
     const fnAutocompleteTitleDatalist = d.getElementById('fn-autocomplete-title-data-list')
-    const sectionsWithHeader = d.querySelectorAll('.section-with-header')
     const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
+    
+    // Display
+    const sectionsWithHeader = d.querySelectorAll('.section-with-header')
     const lessonFieldsetLegend = d.querySelector('#lesson-fieldset > legend')
     const article = d.getElementById('article')
     const rbTemplate = d.getElementById('radio-button-template')
@@ -58,9 +61,6 @@ const init = async () => {
     const speciesDisplayContainer = d.getElementById('species-display-container')
     const rememberLanguageCheckbox = d.getElementById('remember-language-checkbox')
 
-    const contentToggleVisibilityBtn = new ButtonHideShowComponent({
-        elementSelector: 'content-toggle-visibility-btn'
-    })    
     const showTestBtn = new ButtonComponent({
           elementSelector: 'show-test-btn'        
     })
@@ -516,8 +516,6 @@ const init = async () => {
             }
             
             addImgClickEventHandlers()
-        
-            contentToggleVisibilityBtn.scrollIntoView({})
         } catch (e) {
             console.log(e.message)
             showNotificationsDialog({
