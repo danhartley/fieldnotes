@@ -20,6 +20,10 @@ export class ButtonComponent {
     this.buttonElement.classList.remove('disabled')
   }
 
+  focus() {
+    this.buttonElement.focus()
+  }
+
   toggleActiveState() {
     this.buttonElement.classList.toggle('disabled')
   }

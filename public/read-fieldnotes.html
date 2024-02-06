@@ -19,28 +19,9 @@
       </menu>
     </header>
 
-    <aside class="print-ignore">
-      <menu>
-        <li><button id="inat-preferences-btn" data-action="inat-preferences">Show your preferences</button></li>
-      </menu>
-
-      <section class="inat-preferences-section hidden">
-        <fieldset id="languages">
-          <legend>Language</legend>
-          <p class="mt0 small">The language you choose will be used to determine the preferred common name for a species or taxa.</p>
-          <div id="language-group-container" class="grid"></div>
-          <div class="centred-block mt2">
-            <input id="remember-language-checkbox" type="checkbox" />
-            <label for="remember-language-checkbox" class="initial-text">Remember language</label>
-          </div>
-          <p class="small"><em>The chosen language applies only to photo captions. It does not apply to the names given to species by the author.</em></p>
-        </fieldset>
-      </section>
-    </aside>
-
     <main>
-      <section class="print-ignore">
-        <fieldset>
+      <section class="mt2 print-ignore">
+        <fieldset class="border-solid">
           <legend>Fieldnotes search</legend>
           <p class="mt0 small">Search for fieldnotes by title.</p>
           <div class="centred-block">
@@ -138,6 +119,25 @@
         </div>
       </dialog>
     </main>    
+
+    <aside class="print-ignore">
+      <section>
+        <!-- <fieldset id="preferences-fieldset">
+          <legend>Preferences</legend> -->
+          <section class="mt inat-preferences-section">
+            <fieldset id="languages">
+              <legend>Preferences</legend>
+              <p class="mt0 small">The language you choose will be used to determine the preferred common name for a species and taxa.</p>
+              <div id="language-group-container" class="grid"></div>
+              <div class="centred-block mt2">
+                <input id="remember-language-checkbox" type="checkbox" />
+                <label for="remember-language-checkbox" class="initial-text">Remember language</label>
+              </div>
+              <p class="small"><em>The chosen language applies only to photo captions. It does not apply to the names given to species by the author.</em></p>
+            </fieldset>
+          <!-- </section>
+        </fieldset>       -->
+    </aside>
 
     <!-- Read templates -->
 

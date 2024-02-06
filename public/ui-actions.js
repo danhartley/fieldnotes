@@ -1084,9 +1084,9 @@ export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnot
               , readonly: true
             })
 
-        global.fetchFieldnotesStubsCollection = await fieldnotesStubs
+        global.fieldnotesStubsCollection = await fieldnotesStubs
 
-        fieldsnotesAutocomplete({ 
+        fieldnotesAutocomplete({ 
               inputText
             , dataList
             , global
@@ -1137,7 +1137,7 @@ export const authenticateNewUserEmailAndPassword = async ({email, password, show
 }
 
 // Additional Firebase calls
-export const fieldsnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubs, fetchFieldnotesBtn}) => {
+export const fieldnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubs, fetchFieldnotesBtn}) => {
     const addTitlesToList = async ({dataList, strToComplete, fieldnotesStubs}) => {
         try {
             const stubs = await fieldnotesStubs
@@ -1186,6 +1186,7 @@ export const fieldsnotesAutocomplete = async ({inputText, dataList, global, fiel
         if(match) {
             global.fieldnotesStubs = stubs.find(option => option.title === match)
             fetchFieldnotesBtn.enable() 
+            fetchFieldnotesBtn.focus()
         }
     })
 }

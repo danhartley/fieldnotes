@@ -280,7 +280,7 @@ const init = () => {
         saveFieldnotesSection.classList.add('hidden')
 
         // Set fieldnotesStubs as if it had been selected        
-        globalWrite.fieldnotesStubs = globalWrite.fetchFieldnotesStubsCollection.find(stub => stub.title === globalWrite.fieldnotes.title)
+        globalWrite.fieldnotesStubs = globalWrite.fieldnotesStubsCollection.find(stub => stub.title === globalWrite.fieldnotes.title)
 
         // Set values for fieldnotes status text and update button
         updateFieldnotesStateSection({
@@ -1302,7 +1302,7 @@ const init = () => {
     , password: d.getElementById('firebase-password')
   })
   
-  // Observe changes to user authentication on firenase
+  // Observe changes to user authentication on firebase
   onFirebaseAuthStateChange({
       auth: getFirebaseAuth()
     , globalWrite

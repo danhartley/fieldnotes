@@ -13,6 +13,7 @@ import {
     , checkForLocalisedCommonSpeciesNames
     , cloneSpeciesCardFromTemplate
     , fetchFieldnotesStubs
+    , fieldnotesAutocomplete
     , getTaxonGroupColour
     , mapTaxon
     , scoreLesson
@@ -56,18 +57,9 @@ const init = async () => {
     const speciesDisplayContainer = d.getElementById('species-display-container')
     const rememberLanguageCheckbox = d.getElementById('remember-language-checkbox')
 
-    const displayOptionsToggleVisibilityBtn = new ButtonHideShowComponent({
-        elementSelector: 'display-options-toggle-visibility-btn'
-    })    
     const contentToggleVisibilityBtn = new ButtonHideShowComponent({
         elementSelector: 'content-toggle-visibility-btn'
     })    
-    const progressToggleVisibilityBtn = new ButtonHideShowComponent({
-        elementSelector: 'progress-toggle-visibility-btn'
-    })    
-    const preferencesToggleVisibilityBtn = new ButtonHideShowComponent({
-        elementSelector: 'preferences-toggle-visibility-btn'
-    })
     const showTestBtn = new ButtonComponent({
           elementSelector: 'show-test-btn'        
     })
@@ -559,172 +551,177 @@ const init = async () => {
         })
     
         addImgClickEventHandlers()
-    })
+    
+        const fetchFieldnotes = async () => {
+            try {
+                importFieldNotesNotificationText.classList.remove('hidden')
 
-    const fetchFieldnotes = async () => {
-        try {
-            importFieldNotesNotificationText.classList.remove('hidden')
+                const response = false 
+                ? await globalRead.fieldnotesStubs
+                : await getFieldnotesById({id: globalRead.fieldnotesStubs.fieldnotesId})
 
-            const response = false 
-            ? await globalRead.fieldnotesStubs
-            : await getFieldnotesById({id: globalRead.fieldnotesStubs.fieldnotesId})
+                importFieldNotesNotificationText.innerText = 'Fetching iNaturalist species…'
 
-            importFieldNotesNotificationText.innerText = 'Fetching iNaturalist species…'
+                setTimeout(() => {
+                    importFieldNotesNotificationText.classList.add('hidden')
+                    importFieldNotesNotificationText.innerText = 'Fetching fieldnotes…'
+                }, 2000)
 
-            setTimeout(() => {
-                importFieldNotesNotificationText.classList.add('hidden')
-                importFieldNotesNotificationText.innerText = 'Fetching fieldnotes…'
-            }, 2000)
+                if(!response.success) return 
 
-            if(!response.success) return 
+                const fieldnotes = { 
+                    ...response.data
+                    , sections: response.data.sectionOrder.map(sectionIndex => {
+                        return response.data.sections.find(section => section.sectionIndex === sectionIndex)
+                    })  
+                }
 
-            const fieldnotes = { 
-                  ...response.data
-                , sections: response.data.sectionOrder.map(sectionIndex => {
-                    return response.data.sections.find(section => section.sectionIndex === sectionIndex)
-                })  
-            }
+                // Get the observations (only includes those selected by the author)
+                fieldnotes.observations = fieldnotes.sections
+                    .filter(fn => fn.templateId === 'observations-preview-template')
+                    .map(section => section.species).flat()
 
-            // Get the observations (only includes those selected by the author)
-            fieldnotes.observations = fieldnotes.sections
-                .filter(fn => fn.templateId === 'observations-preview-template')
-                .map(section => section.species).flat()
+                globalRead.fieldnotes = fieldnotes
+                globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
+                Object.assign(globalRead.template, fieldnotes)
 
-            globalRead.fieldnotes = fieldnotes
-            globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
-            Object.assign(globalRead.template, fieldnotes)
+                // Reorder the species list so that those with a binomial species name come first, 
+                const inatLookupSections = globalRead.fieldnotes.sections.filter(s => s.templateId === 'inat-lookup-preview-template') || []
+                const inatLookupSpecies = inatLookupSections?.map(s => s.species)?.flat() || []
+                // Those with only a genus, or higher taxa, name come after. This reduces the number of records
+                // we need to request from iNaturalist to match every taxon.
+                const inatLookupSpeciesByRank = inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') > 0)
+                    .concat(inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') === 0))
+                const inatLookupTaxaIds = inatLookupSpeciesByRank.map(s => s.taxon.id)
+                const inatLookupTaxaNames = inatLookupSpeciesByRank.map(s => s.taxon.name)
 
-            // Reorder the species list so that those with a binomial species name come first, 
-            const inatLookupSections = globalRead.fieldnotes.sections.filter(s => s.templateId === 'inat-lookup-preview-template') || []
-            const inatLookupSpecies = inatLookupSections?.map(s => s.species)?.flat() || []
-            // Those with only a genus, or higher taxa, name come after. This reduces the number of records
-            // we need to request from iNaturalist to match every taxon.
-            const inatLookupSpeciesByRank = inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') > 0)
-                .concat(inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') === 0))
-            const inatLookupTaxaIds = inatLookupSpeciesByRank.map(s => s.taxon.id)
-            const inatLookupTaxaNames = inatLookupSpeciesByRank.map(s => s.taxon.name)
+                const taxaIds = [ ...new Set(globalRead.fieldnotes.taxa
+                    .map(t => t.id)
+                    .concat(inatLookupTaxaIds)) ]
+                const taxaNames = [ ...new Set(globalRead.fieldnotes.taxa
+                    .map(t => t.name)
+                    .concat(inatLookupTaxaNames)) ]
 
-            const taxaIds = [ ...new Set(globalRead.fieldnotes.taxa
-                .map(t => t.id)
-                .concat(inatLookupTaxaIds)) ]
-            const taxaNames = [ ...new Set(globalRead.fieldnotes.taxa
-                .map(t => t.name)
-                .concat(inatLookupTaxaNames)) ]
-
-            const inatTaxa = await getInatTaxa({ 
-                taxaIds
-                , locale: globalRead.language.id 
-                , per_page: taxaIds.length
-            })
-            
-            globalRead.species = inatTaxa.results
-                .filter(t => t.default_photo)
-                .map(t => { 
-                    // Only allow one name for a taxon
-                    if(taxaNames.includes(t.name)) {
-                        return {
-                            taxon: mapTaxon({
-                                taxon: t
-                            })
+                const inatTaxa = await getInatTaxa({ 
+                    taxaIds
+                    , locale: globalRead.language.id 
+                    , per_page: taxaIds.length
+                })
+                
+                globalRead.species = inatTaxa.results
+                    .filter(t => t.default_photo)
+                    .map(t => { 
+                        // Only allow one name for a taxon
+                        if(taxaNames.includes(t.name)) {
+                            return {
+                                taxon: mapTaxon({
+                                    taxon: t
+                                })
+                            }
                         }
+                    })
+                    .filter(t => t)
+                    
+                createRadioBtnTemplateGroup()
+                
+                article.innerHTML = ''
+                speciesDisplayContainer.classList.remove('disabled')
+                
+                globalRead.terms = await getTerms()
+
+                renderDisplayTemplate()
+
+                fnAutocompleteTitleInputText.closest('fieldset').classList.remove('border-solid')
+            } catch (e) {
+                console.log(e.message)
+            }
+        }
+
+        const fetchFieldnotesBtn = new ButtonComponent({
+            elementSelector: 'fetch-fieldnotes-btn'
+        , clickHandler: fetchFieldnotes
+        })
+
+        createRadioBtnTemplateGroup()
+
+        globalRead.templates = g.templates.filter(template => template.types.includes('fieldnotes'))
+        globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
+
+        const getLanguages = () => {
+            const rbLanguageGroup = createRadioBtnGroup({
+                collection: globalRead.LANGUAGES
+                , checked: globalRead.language
+                , rbGroup: 'language'
+                , parent: languageGroupContainer
+            })
+            rbLanguageGroup.forEach(rb => {
+                rb.addEventListener('change', () => {
+                    globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value)
+                    if(rememberLanguageCheckbox.checked) {
+                        appLocalStorage.set({
+                            key: 'language'
+                            , value: globalRead.language
+                        })
+                        showNotificationsDialog({
+                            message: 'Your preferred language has been saved.'
+                        })
                     }
                 })
-                .filter(t => t)
-                
-            createRadioBtnTemplateGroup()
-            
-            article.innerHTML = ''
-            speciesDisplayContainer.classList.remove('disabled')
-            
-            globalRead.terms = await getTerms()
-
-            renderDisplayTemplate()
-        } catch (e) {
-            console.log(e.message)
+            })
         }
-    }
 
-    const fetchFieldnotesBtn = new ButtonComponent({
-        elementSelector: 'fetch-fieldnotes-btn'
-      , clickHandler: fetchFieldnotes
-    })
+        getLanguages()
 
-    createRadioBtnTemplateGroup()
-
-    fnAutocompleteTitleInputText.focus()
-    globalRead.templates = g.templates.filter(template => template.types.includes('fieldnotes'))
-    globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
-
-    const toggleInaturalistPreferences = e => {
-        const btn = d.getElementById(e.target.id)
-        const rbLanguageGroup = createRadioBtnGroup({
-              collection: globalRead.LANGUAGES
-            , checked: globalRead.language
-            , rbGroup: 'language'
-            , parent: languageGroupContainer
+        const printFieldnotesBtn = new ButtonComponent({
+            elementSelector: 'print-fieldnotes-btn'
+        , clickHandler: () => {
+            Array.from(d.querySelectorAll('.grid')).forEach(grid => grid.classList.remove('page-breaks'))
+            print()
+        }
         })
-        rbLanguageGroup.forEach(rb => {
-            rb.addEventListener('change', () => {
-                globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value)
-                if(rememberLanguageCheckbox.checked) {
-                    appLocalStorage.set({
-                          key: 'language'
-                        , value: globalRead.language
-                    })
-                    showNotificationsDialog({
-                        message: 'Your preferred language has been saved.'
-                    })
-                }
+
+        const printFieldnotesWithPageBreaksBtn = new ButtonComponent({
+            elementSelector: 'print-fieldnotes-with-page-breaks-btn'
+        , clickHandler: () => {
+            Array.from(d.querySelectorAll('.grid')).forEach(grid => grid.classList.add('page-breaks'))
+            print()
+        }
+        })
+
+        //Check for saved language
+        const language = appLocalStorage.get({
+            key: 'language'
+        })
+
+        if(language) {
+            globalRead.language = language
+        }
+
+        // Check for logged in users. Logged in users can preview their private fieldnotes
+        onUserLoggedIn({ 
+            auth: getFirebaseAuth() 
+            , globalRead
+            , fetchFieldnotesStubs: fetchFieldnotesStubs({
+                inputText: fnAutocompleteTitleInputText
+            , dataList: fnAutocompleteTitleDatalist
+            , global: globalRead
+            , fetchFieldnotesBtn
             })
         })
 
-        const section = d.querySelector('.inat-preferences-section')
-        if(section) section.classList.toggle('hidden')
+        fnAutocompleteTitleInputText.focus()
 
-        btn.innerText = btn.innerText === 'Show user preferences' 
-            ? 'Hide user preferences'
-            : 'Show user preferences'
-    }
-
-    const iNaturalistPreferencesButton = new ButtonComponent({
-          elementSelector: 'inat-preferences-btn'
-        , clickHandler: toggleInaturalistPreferences
-    })
-
-    const printFieldnotesBtn = new ButtonComponent({
-        elementSelector: 'print-fieldnotes-btn'
-      , clickHandler: () => {
-        Array.from(d.querySelectorAll('.grid')).forEach(grid => grid.classList.remove('page-breaks'))
-        print()
-      }
-    })
-
-    const printFieldnotesWithPageBreaksBtn = new ButtonComponent({
-        elementSelector: 'print-fieldnotes-with-page-breaks-btn'
-      , clickHandler: () => {
-        Array.from(d.querySelectorAll('.grid')).forEach(grid => grid.classList.add('page-breaks'))
-        print()
-      }
-    })
-
-    //Check for saved language
-    const language = appLocalStorage.get({
-        key: 'language'
-    })
-
-    if(language) {
-        globalRead.language = language
-    }
-
-    // Check for logged in users. Logged in users can preview their private fieldnotes
-    onUserLoggedIn({ 
-          auth: getFirebaseAuth() 
-        , globalRead
-        , fetchFieldnotesStubs: fetchFieldnotesStubs({
-            inputText: fnAutocompleteTitleInputText
-          , dataList: fnAutocompleteTitleDatalist
-          , global: globalRead
-          , fetchFieldnotesBtn
+        fnAutocompleteTitleInputText.addEventListener('focus', e => {
+            if(fnAutocompleteTitleDatalist.innerHTML !== '') {
+                fnAutocompleteTitleInputText.value = ''
+                fieldnotesAutocomplete({ 
+                    inputText: fnAutocompleteTitleInputText
+                  , dataList: fnAutocompleteTitleDatalist
+                  , global: globalRead
+                  , fetchFieldnotesBtn
+                  , fieldnotesStubs: globalRead.fieldnotesStubsCollection
+              })
+            }
         })
     })
 }
