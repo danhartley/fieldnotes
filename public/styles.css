@@ -374,6 +374,7 @@ a {
   padding-bottom: calc(var(--d) *.25);
   text-decoration: none;
   color: var(--c8);
+  line-height: 1.6;
 }
 
 a.info {

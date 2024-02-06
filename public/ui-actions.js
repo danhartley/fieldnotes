@@ -922,39 +922,39 @@ export const scoreLesson = ({answers, global}) => {
     global.template.score = global.template.scores.filter(score => score.isCorrect)?.length || 0
 }
 
-export const checkForLocalisedCommonSpeciesNames = ({s, sp}) => {
+export const checkForLocalisedCommonSpeciesNames = ({globalSpecies, sectionSpecies}) => {
     // Check that there is a valid name for a taxa e.g. not the empty string or a placeholder (-) 
     const prohibitedNames = [' ', '-']
 
     try {
-        if(s?.taxon?.preferred_common_name) {
-            if(!prohibitedNames.includes(s.taxon.preferred_common_name)) {
-                if(sp.taxon) {
-                    sp.taxon.preferred_common_name = s.taxon.preferred_common_name || '-'
+        if(globalSpecies?.taxon?.preferred_common_name) {
+            if(!prohibitedNames.includes(globalSpecies.taxon.preferred_common_name)) {
+                if(sectionSpecies.taxon) {
+                    sectionSpecies.taxon.preferred_common_name = globalSpecies.taxon.preferred_common_name || '-'
                 } else { // observations (for now)
-                    sp.taxon = {
-                          ...s.taxon
+                    sectionSpecies.taxon = {
+                          ...globalSpecies.taxon
                         , default_photo: {
-                              ...s.taxon.default_photo
-                            , src: sp.src
+                              ...globalSpecies.taxon.default_photo
+                            , src: sectionSpecies.src
                         }
-                     } 
+                    } 
                 }
             } else {
-                sp.taxon = {
-                    ...s.taxon
+                sectionSpecies.taxon = {
+                    ...globalSpecies.taxon
                   , default_photo: {
-                        ...s.taxon.default_photo
-                      , src: sp.src
+                        ...globalSpecies.taxon.default_photo
+                      , src: sectionSpecies.src
                   }
                }
             }
         } 
-        return sp
+        return sectionSpecies
     } catch (e) {
         console.log(e.message)
-        if(s) console.log('s :', s)
-        if(sp) console.log('sp :', sp)
+        if(globalSpecies) console.log('globalSpecies :', globalSpecies)
+        if(sectionSpecies) console.log('sectionSpecies :', sectionSpecies)
     }    
 }
 

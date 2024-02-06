@@ -40,7 +40,7 @@ export const templates = [
     , isTest: false
     , isTestable: true
     , requiresSpecies: true
-    , types: ['inatSearch', 'fieldnotes']
+    , types: ['fieldnotes', 'inatSearch']
 },
 {
     id: 'observations-template'
@@ -49,7 +49,7 @@ export const templates = [
   , parent: 'grid-template'
   , isTest: false
   , requiresSpecies: true
-  , types: ['inatSearch', 'fieldnotes']
+  , types: ['fieldnotes']
 },
 ]
 

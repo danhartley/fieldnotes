@@ -5,7 +5,8 @@ import {
 } from './api.js'
 
 import { 
-      cloneSpeciesCardFromTemplate
+      checkForLocalisedCommonSpeciesNames
+    , cloneSpeciesCardFromTemplate
     , getTaxonGroupColour
     , handleInatAutocomplete
     , handleLanguagePreference
@@ -28,7 +29,8 @@ const init = async () => {
             ...g
           , iconicTaxa: g.ICONIC_TAXA
           , language: g.LANGUAGES[1]
-          , useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0]          
+          , useObservationsSpeciesCount: g.useObservationsSpeciesCountOptions[0]     
+          , templates: g.templates.filter(template => template.types.includes('inatSearch'))
           , template: g.templates.find(template => template.templateId === 'species-template')
       })
       return globalRead
@@ -86,7 +88,7 @@ const init = async () => {
               user_id: user ? user.id : null
             , place_id: place ? place.id : null
             , iconic_taxa: globalRead.iconicTaxa
-            , per_page: globalRead.count + 10
+            , per_page: globalRead.count
             , locale: globalRead.language.id
             , species_count: (globalRead.useObservationsSpeciesCount.id === "true")
             , d1
@@ -344,18 +346,6 @@ const init = async () => {
                     })
                     article.appendChild(parent)
                     break
-                case 'observations-template':            
-                    species.forEach(sp => {
-                        const clone = templateToClone.content.cloneNode(true)
-                        const li = clone.querySelector('li')
-                        
-                        li.textContent = sp.taxon.name
-                
-                        parent = parentClone.querySelector('div')          
-                        parent.appendChild(clone)
-                    })
-                    article.appendChild(parent)
-                    break
                 case 'species-test-template':
                     species.forEach((sp, i) => {
                         const clone = templateToClone.content.cloneNode(true)
@@ -406,6 +396,7 @@ const init = async () => {
             addImgClickEventHandlers()
         } catch (e) {
             showNotificationsDialog({message: e.message, type: 'error'})
+            console.log(e)
         }
     }     
     
@@ -558,8 +549,6 @@ const init = async () => {
     sectionsWithHeader.forEach(sh => sh.classList.toggle('hidden'))
 
     iNatAutocompleteInputText.value = ''
-    globalRead.templates = g.templates.filter(template => template.types.includes('inatSearch'))
-    globalRead.template = globalRead.templates.find(template => template.templateId === 'species-template')
 
     // Check for saved inat user
     const user = appLocalStorage.get({

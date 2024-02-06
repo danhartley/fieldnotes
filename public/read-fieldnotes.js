@@ -423,8 +423,8 @@ const init = async () => {
                                         const clone = cloneSpeciesCardFromTemplate({
                                             templateToClone
                                             , species: checkForLocalisedCommonSpeciesNames({
-                                                      s: globalRead.species.find(s => s.taxon.id === sp.taxon.id)
-                                                    , sp
+                                                      globalSpecies: globalRead.species.find(s => s.taxon.id === sp.taxon.id)
+                                                    , sectionSpecies: sp
                                                 })
                                             , index: i
                                         })                                  
@@ -447,8 +447,8 @@ const init = async () => {
                                         const clone = cloneSpeciesCardFromTemplate({
                                             templateToClone
                                             , species: checkForLocalisedCommonSpeciesNames({
-                                                      s: globalRead.species.find(s => s.taxon.name === sp.name)
-                                                    , sp
+                                                      globalSpecies: globalRead.species.find(s => s.taxon.name === sp.name)
+                                                    , sectionSpecies: sp
                                                 })
                                             , index: i
                                         })

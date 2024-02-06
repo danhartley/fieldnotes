@@ -214,7 +214,7 @@ const init = () => {
             , place_id: null
             , iconic_taxa: globalWrite.iconicTaxa
             , per_page: 200
-            ,locale: globalWrite.fieldnotes.language.id
+            , locale: globalWrite.fieldnotes.language.id
             , species_count: false
             , d1: singleObservationsInputDate.value
             , d2: singleObservationsInputDate.value
