@@ -22,7 +22,8 @@ import {
 } from './templates.js'
 
 import {
-      debounce
+      appLocalStorage
+    , debounce
     , isValidDate
 } from './utils.js'
 
@@ -1039,12 +1040,19 @@ export const handleLanguagePreference = ({globalRead, createRadioBtnGroup, langu
         , rbGroup: 'language'
         , parent: languageGroupContainer
     })
+
     rbLanguageGroup.forEach(rb => {
+        // If language preference was saved in local storage, preselect it
+        if(globalRead.language && rb.value === globalRead.language.id) {
+            rb.checked = true
+        }
+
+        // Update preference on selecting a language, if save option is checked
         rb.addEventListener('change', () => {
-            globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value)
+            globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value)   
             if(rememberLanguageCheckbox.checked) {
                 appLocalStorage.set({
-                    key: 'language'
+                      key: 'language'
                     , value: globalRead.language
                 })
                 showNotificationsDialog({
@@ -1052,6 +1060,16 @@ export const handleLanguagePreference = ({globalRead, createRadioBtnGroup, langu
                 })
             }
         })
+    })
+
+    // Save currently selected language if user checks save option
+    rememberLanguageCheckbox.addEventListener('change', () => {
+        if(rememberLanguageCheckbox.checked) {
+            appLocalStorage.set({
+                key: 'language'
+              , value: globalRead.language
+          })
+        }
     })
 }
 

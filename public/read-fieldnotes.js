@@ -646,13 +646,6 @@ const init = async () => {
         globalRead.templates = g.templates.filter(template => template.types.includes('fieldnotes'))
         globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
 
-        handleLanguagePreference({
-              globalRead
-            , createRadioBtnGroup
-            , languageGroupContainer
-            , rememberLanguageCheckbox
-        })
-
         const printFieldnotesBtn = new ButtonComponent({
             elementSelector: 'print-fieldnotes-btn'
         , clickHandler: () => {
@@ -669,7 +662,7 @@ const init = async () => {
         }
         })
 
-        //Check for saved language
+        // Check for saved language
         const language = appLocalStorage.get({
             key: 'language'
         })
@@ -677,6 +670,14 @@ const init = async () => {
         if(language) {
             globalRead.language = language
         }
+
+        handleLanguagePreference({
+            globalRead
+          , createRadioBtnGroup
+          , languageGroupContainer
+          , rememberLanguageCheckbox
+      })
+
 
         // Check for logged in users. Logged in users can preview their private fieldnotes
         onUserLoggedIn({ 

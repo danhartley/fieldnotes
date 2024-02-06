@@ -561,14 +561,7 @@ const init = async () => {
     globalRead.templates = g.templates.filter(template => template.types.includes('inatSearch'))
     globalRead.template = globalRead.templates.find(template => template.templateId === 'species-template')
 
-    handleLanguagePreference({
-          globalRead
-        , createRadioBtnGroup
-        , languageGroupContainer
-        , rememberLanguageCheckbox
-    })
-
-    //Check for saved inat user
+    // Check for saved inat user
     const user = appLocalStorage.get({
         key: 'inat-user'
     })
@@ -585,7 +578,7 @@ const init = async () => {
         iNatAutocompleteInputText.value = user.name    
     }
 
-    //Check for saved language
+    // Check for saved language
     const language = appLocalStorage.get({
         key: 'language'
     })
@@ -593,6 +586,13 @@ const init = async () => {
     if(language) {
         globalRead.language = language
     }
+
+    handleLanguagePreference({
+        globalRead
+      , createRadioBtnGroup
+      , languageGroupContainer
+      , rememberLanguageCheckbox
+  })
 }
 
 init()
