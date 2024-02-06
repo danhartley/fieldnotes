@@ -1032,6 +1032,29 @@ export const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) 
     }
 }
 
+export const handleLanguagePreference = ({globalRead, createRadioBtnGroup, languageGroupContainer, rememberLanguageCheckbox}) => {
+    const rbLanguageGroup = createRadioBtnGroup({
+        collection: globalRead.LANGUAGES
+        , checked: globalRead.language
+        , rbGroup: 'language'
+        , parent: languageGroupContainer
+    })
+    rbLanguageGroup.forEach(rb => {
+        rb.addEventListener('change', () => {
+            globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value)
+            if(rememberLanguageCheckbox.checked) {
+                appLocalStorage.set({
+                    key: 'language'
+                    , value: globalRead.language
+                })
+                showNotificationsDialog({
+                    message: 'Your preferred language has been saved.'
+                })
+            }
+        })
+    })
+}
+
 // Section state
 export const setOriginalTypeValues = ({globalWrite, section, type}) => {
     // Updating an element in an array such as section in sections, requires us first to delete

@@ -19,25 +19,6 @@
       </menu>
     </header>
 
-    <aside>
-      <menu>
-        <li><button id="inat-preferences-btn" data-action="inat-preferences">Show your preferences</button></li>
-      </menu>
-
-      <section class="inat-preferences-section">
-        <fieldset id="languages">
-          <legend>Language</legend>
-          <p class="mt0 small">Language determines the locale preference for taxon common names.</p>
-          <div id="language-group-container" class="grid"></div>
-          <div class="centred-block mt2">
-            <input id="remember-language-checkbox" type="checkbox" />
-            <label for="remember-language-checkbox" class="initial-text">Remember language</label>
-          </div>
-          <p class="small"><em>The preferred language does not apply to observation names which reflect the language preference of the observer.</em></p>
-        </fieldset>
-      </section>
-    </aside>
-
     <main>
       <section>
         <div>
@@ -77,7 +58,7 @@
 
             <fieldset id="observation-dates" class="fieldset-reset">
               <legend class="as-p mt0">When the observations were made.</legend>
-              <div class="box mb4">
+              <div class="box mb2">
                 <div class="centred-block mb2">
                   <label for="rbDateRange" class="invisible">Date range</label>
                   <input id="rbDateRange" type="radio" name="rbDate" value="range" />             
@@ -99,7 +80,17 @@
               </div>
             </fieldset>
 
-            <div class="centred-block">
+            <fieldset id="languages" class="fieldset-reset">
+              <legend class="as-p">The language you choose will be used to determine the preferred common name for a species and taxa.</legend>
+              <div id="language-group-container" class="grid"></div>
+              <div class="centred-block mt2">
+                <input id="remember-language-checkbox" type="checkbox" />
+                <label for="remember-language-checkbox" class="initial-text">Remember language</label>
+              </div>
+              <p class="small"><em>The chosen language applies only to photo captions. It does not apply to the names given to species by the author.</em></p>
+            </fieldset>
+
+            <div class="mt2 centred-block">
               <button id="search-inat-observations-btn" class="submit mr">Search iNaturalist for species</button>
               <div id="search-inat-observations-notification-text" class="small hidden">Waiting for response from iNaturalist…</div>
             </div>
@@ -137,33 +128,32 @@
       </section>
 
       <section class="progress-view hidden">
-        <!-- <div> -->
-          <fieldset id="progress-fieldset">
-            <legend>Score</legend>
-            <table>
-              <thead>
-                <tr>
-                  <td></td>
-                  <th>Number</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Correct</td>
-                  <td id="score-correct-td">-</td>
-                </tr>
-                <tr>
-                  <td>Incorrect</td>
-                  <td id="score-incorrect-td">-</td>
-                </tr>
-                <tr>
-                  <td>Total</td>
-                  <td id="score-count-td">-</td>
-                </tr>
-              </tbody>
-            </table>
-          </fieldset>
-        <!-- </div> -->
+        <fieldset id="progress-fieldset">
+          <legend>Score</legend>
+          <table>
+            <thead>
+              <tr>
+                <td></td>
+                <th>Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Correct</td>
+                <td id="score-correct-td">-</td>
+              </tr>
+              <tr>
+                <td>Incorrect</td>
+                <td id="score-incorrect-td">-</td>
+              </tr>
+              <tr>
+                <td>Total</td>
+                <td id="score-count-td">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </fieldset>
+      </section>
 
       <dialog id="state-notifications">
         <div class="flex-columns small">

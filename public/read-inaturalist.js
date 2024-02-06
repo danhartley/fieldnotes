@@ -8,6 +8,7 @@ import {
       cloneSpeciesCardFromTemplate
     , getTaxonGroupColour
     , handleInatAutocomplete
+    , handleLanguagePreference
     , mapInatSpeciesToRequiredSpecies
     , scoreLesson
     , showNotificationsDialog
@@ -571,39 +572,12 @@ const init = async () => {
     globalRead.templates = g.templates.filter(template => template.types.includes('inatSearch'))
     globalRead.template = globalRead.templates.find(template => template.templateId === 'species-template')
 
-    const toggleInaturalistPreferences = e => {
-        const btn = d.getElementById(e.target.id)
-        const rbLanguageGroup = createRadioBtnGroup({collection: globalRead.LANGUAGES, checked:globalRead.language, rbGroup:'language', parent:languageGroupContainer})
-        rbLanguageGroup.forEach(rb => {
-            rb.addEventListener('change', () => {
-                globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value)
-                if(rememberLanguageCheckbox.checked) {
-                    appLocalStorage.set({
-                          key: 'language'
-                        , value: globalRead.language
-                    })
-                    showNotificationsDialog({
-                        message: 'Your preferred language has been saved.'
-                    })
-                }
-            })
-        })
-
-        const section = d.querySelector('.inat-preferences-section')
-        section.classList.toggle('hidden')
-
-        btn.innerText = btn.innerText === 'Show your preferences' 
-            ? 'Hide your preferences'
-            : 'Show your preferences'
-    }
-
-    const iNaturalistPreferencesButton = new ButtonComponent({
-          elementSelector: 'inat-preferences-btn'
-        , clickHandler: toggleInaturalistPreferences
+    handleLanguagePreference({
+          globalRead
+        , createRadioBtnGroup
+        , languageGroupContainer
+        , rememberLanguageCheckbox
     })
-
-    const section = d.querySelector('.inat-preferences-section')
-    if(section) section.classList.toggle('hidden')
 
     //Check for saved inat user
     const user = appLocalStorage.get({
@@ -612,7 +586,7 @@ const init = async () => {
 
     if(user) {
         globalRead.user = {
-                id: 'users'
+              id: 'users'
             , name: 'user'
             , prop: 'login'
             , placeholder: 'Start typing a username or user ID…'

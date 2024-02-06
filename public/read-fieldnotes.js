@@ -15,6 +15,7 @@ import {
     , fetchFieldnotesStubs
     , fieldnotesAutocomplete
     , getTaxonGroupColour
+    , handleLanguagePreference
     , mapTaxon
     , scoreLesson
     , showNotificationsDialog
@@ -647,30 +648,12 @@ const init = async () => {
         globalRead.templates = g.templates.filter(template => template.types.includes('fieldnotes'))
         globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
 
-        const getLanguages = () => {
-            const rbLanguageGroup = createRadioBtnGroup({
-                collection: globalRead.LANGUAGES
-                , checked: globalRead.language
-                , rbGroup: 'language'
-                , parent: languageGroupContainer
-            })
-            rbLanguageGroup.forEach(rb => {
-                rb.addEventListener('change', () => {
-                    globalRead.language = globalRead.LANGUAGES.find(l => l.id === rb.value)
-                    if(rememberLanguageCheckbox.checked) {
-                        appLocalStorage.set({
-                            key: 'language'
-                            , value: globalRead.language
-                        })
-                        showNotificationsDialog({
-                            message: 'Your preferred language has been saved.'
-                        })
-                    }
-                })
-            })
-        }
-
-        getLanguages()
+        handleLanguagePreference({
+              globalRead
+            , createRadioBtnGroup
+            , languageGroupContainer
+            , rememberLanguageCheckbox
+        })
 
         const printFieldnotesBtn = new ButtonComponent({
             elementSelector: 'print-fieldnotes-btn'
