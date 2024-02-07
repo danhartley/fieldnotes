@@ -137,7 +137,7 @@ export const handleTermAutocomplete = async ({selectedTerms, inputText, dataList
 
         const strToComplete = e.target.value
 
-        if(strToComplete.length < 3) return
+        if(strToComplete.length < 2) return
 
         termData = await data
 
@@ -170,6 +170,9 @@ export const handleTermAutocomplete = async ({selectedTerms, inputText, dataList
                   terms: termData
                 , selectedTerm: term
             }), true)            
+
+            // Clear the input
+            inputText.value = ''
         }
     })
 }
