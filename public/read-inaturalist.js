@@ -326,12 +326,18 @@ const init = async () => {
             let parentClone = parentTemplate.content.cloneNode(true)
             let templateToClone = d.getElementById(globalRead.template.templateId) 
             let parent = null
-
-            sectionsWithHeader.forEach(sh => sh.classList.remove('hidden'))
-                
-            lessonFieldsetLegend.innerText = globalRead.template.name
+            
+            if(species.length === 0) {
+                showNotificationsDialog({
+                      message: 'Your search returned no results. Try broadening your filters.'
+                    , displayDuration: 5000
+                })
+                return
+            }
 
             if(species) article.innerHTML = ''
+            sectionsWithHeader.forEach(sh => sh.classList.remove('hidden'))                
+            lessonFieldsetLegend.innerText = globalRead.template.name
         
             switch(globalRead.template.templateId) {
                 case 'species-template':
@@ -394,6 +400,9 @@ const init = async () => {
             }
             
             addImgClickEventHandlers()
+
+            // Scroll to results
+            Array.from(sectionsWithHeader)[0].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
         } catch (e) {
             showNotificationsDialog({message: e.message, type: 'error'})
             console.log(e)
@@ -461,6 +470,7 @@ const init = async () => {
     
             searchInatObservationsNotificationText.classList.toggle('hidden')
             searchInatObservationsBtn.toggleActiveState()
+            
             const input = speciesDisplayContainer.querySelector('input')
             if(input) input.click()
         }

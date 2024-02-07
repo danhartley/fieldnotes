@@ -230,10 +230,8 @@ const init = () => {
         }, 1500)
   
         if(globalWrite.observations.length === 0) {
-          // Notify user that no observations were found
           showNotificationsDialog({
               message: 'Unfortunately your search returned no observations.'
-            , type: 'error'
             , displayDuration: 5000
           })
           return
