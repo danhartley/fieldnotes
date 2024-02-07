@@ -1027,13 +1027,13 @@ const init = () => {
       const fieldnotes = response.data
 
       Object.assign(globalWrite, {
-        fieldnotes: {
-            ...fieldnotes
-          , sections: fieldnotes.sectionOrder.map(sectionIndex => {
-              return fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
-            })
-          , isUserEditing: true
-        }
+          fieldnotes: {
+              ...fieldnotes
+            , sections: fieldnotes.sectionOrder.map(sectionIndex => {
+                return fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
+              })
+            }
+        , isUserEditing: true
       })
 
       const { title, author, d1, d2, location } = globalWrite.fieldnotes
