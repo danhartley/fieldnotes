@@ -34,7 +34,7 @@ export const templates = [
 {
       id: 'species-template'
     , templateId: 'species-template'
-    , name: 'Species catalogue'
+    , name: 'iNaturalist photos'
     , parent: 'grid-template'
     , pairedTemplateId: 'species-test-template'
     , isTest: false
@@ -45,7 +45,7 @@ export const templates = [
 {
     id: 'observations-template'
   , templateId: 'observations-template'
-  , name: 'Observations catalogue'
+  , name: 'Author\'s photos'
   , parent: 'grid-template'
   , isTest: false
   , requiresSpecies: true
@@ -107,7 +107,7 @@ export const species = {
   , templateId: 'species-preview-template'
   , writeTemplateId: 'species-write-template'
   , writeParentTemplateId: 'section-with-species-parent-template'
-  , name: 'Species catalogue'
+  , name: 'iNaturalist photos'
   , parent: 'grid-template'
   , type: 'species'
   , species: []
@@ -118,7 +118,7 @@ export const observations = {
   , templateId: 'observations-preview-template'
   , writeTemplateId: 'observations-write-template'
   , writeParentTemplateId: 'section-with-species-parent-template'
-  , name: 'Observations catalogue'
+  , name: 'Author\'s photos'
   , parent: 'grid-template'
   , type: 'species'
   , species: []
@@ -140,7 +140,7 @@ export const images = {
   , templateId: 'images-preview-template'
   , writeTemplateId: 'images-write-template'
   , writeParentTemplateId: 'section-parent-template'
-  , name: 'Context photos'
+  , name: 'Field trip photos'
   , parent: 'grid-template'
   , type: 'images'
   , images: []

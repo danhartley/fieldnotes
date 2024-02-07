@@ -87,6 +87,9 @@ export const handleInatAutocomplete = ({globalWrite, inputText, dataList, id, pr
             
             globalWrite[prop] = match
             if(callback) callback({globalWrite, parent: cbParent, writeTemplateId, sectionIndex})
+
+            // Clear the input
+            inputText.value = ''
         }
     })
 }

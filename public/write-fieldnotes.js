@@ -565,7 +565,7 @@ const init = () => {
           })
         })
         // Observe changes to the species list
-        observer = new MutationObserver(() => {
+        observer = new MutationObserver(e => {
           const section = globalWrite.fieldnotes.sections.find(s => s.sectionIndex === sectionIndex)
           const speciesCount = section?.species?.length || 0
           if(speciesCount > 0) {
