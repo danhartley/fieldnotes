@@ -693,6 +693,7 @@ const init = async () => {
 
         fnAutocompleteTitleInputText.focus()
 
+        // Clear input so that user can select new title
         fnAutocompleteTitleInputText.addEventListener('focus', e => {
             if(fnAutocompleteTitleDatalist.innerHTML !== '') {
                 fnAutocompleteTitleInputText.value = ''

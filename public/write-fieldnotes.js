@@ -34,6 +34,7 @@ import {
   , editSection
   , enableSaveFieldNotesSection
   , fetchFieldnotesStubs
+  , fieldnotesAutocomplete
   , getOriginalTypeValues
   , handleImageInputChangeEvent
   , handleImageTextChange
@@ -1387,6 +1388,20 @@ const init = () => {
   authenticationForm.addEventListener('submit', e => {
     e.preventDefault()
   })
+
+  // Clear input so that user can select new title
+  fnAutocompleteTitleInputText.addEventListener('focus', e => {
+    if(fnAutocompleteTitleDatalist.innerHTML !== '' && titleInputText.value.length > 0) {
+        fnAutocompleteTitleInputText.value = ''
+        fieldnotesAutocomplete({ 
+            inputText: fnAutocompleteTitleInputText
+          , dataList: fnAutocompleteTitleDatalist
+          , global: globalWrite
+          , fetchFieldnotesBtn
+          , fieldnotesStubs: globalWrite.fieldnotesStubsCollection
+      })
+    }
+})
 }
 
 init()
