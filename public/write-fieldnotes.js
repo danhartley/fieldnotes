@@ -1253,7 +1253,8 @@ const init = () => {
   const authenticateBtn = new ButtonComponent({
       elementSelector: 'authenticate-btn'
     , clickHandler: e => authenticateUserEmailAndPassword({
-        user: globalWrite.user
+        global: globalWrite
+      , user: globalWrite.user
       , email: d.getElementById('firebase-email')
       , password: d.getElementById('firebase-password')
       , showNotificationsDialog 
@@ -1299,6 +1300,7 @@ const init = () => {
       user: globalWrite.user
     , email: d.getElementById('firebase-email')
     , password: d.getElementById('firebase-password')
+    , showNotificationsDialog
   })
   
   // Observe changes to user authentication on firebase
@@ -1405,8 +1407,7 @@ const init = () => {
 
   // Check for changes to the list of titles; if the list is empty, change to create fieldnotes views
   const titlesObserver = new MutationObserver(() => {
-    const options = Array.from(fnAutocompleteTitleDatalist.getElementsByTagName('option')).map(option => option.value)
-    if(options.length === 0) {
+    if(globalWrite.fieldnotesStubsCollection.length === 0) {
       toggleView({
         btn: showHideCreateFieldnotesBtn.buttonElement
       })

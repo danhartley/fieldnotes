@@ -1087,7 +1087,7 @@ export const setOriginalTypeValues = ({globalWrite, section, type}) => {
     // Updating an element in an array such as section in sections, requires us first to delete
     // the original element as it was before it was changed. Which is why we need to track original values.
     const typeValues = structuredClone({
-        values: section[type],
+        values: section[type] || section.paras || section.h3 || section.h4,
         sectionIndex: section['sectionIndex']
     })
     const hasOriginalValues = globalWrite.originalTypeValues.find(type => type.sectionIndex === section['sectionIndex'])
@@ -1147,12 +1147,13 @@ export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnot
 }
 
 // Firebase authentication
-export const authenticateUserEmailAndPassword = ({user, email, password, showNotificationsDialog}) => {
+export const authenticateUserEmailAndPassword = ({global, user, email, password, showNotificationsDialog}) => {
     if(user) {
+        global.fieldnotesStubsCollection = []
         firebaseSignOut({
               auth: getFirebaseAuth()
             , showNotificationsDialog
-        })      
+        })
     } else {
         if(email.validity.valid) {
         firebaseLogin({

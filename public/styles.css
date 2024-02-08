@@ -435,6 +435,7 @@ img {
 
 /* Write fieldset only */
 .species-list figure img {
+  aspect-ratio: 1/1;
   width: initial;
   min-height: initial;
   max-height: initial;

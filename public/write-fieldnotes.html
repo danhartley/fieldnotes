@@ -24,11 +24,11 @@
         <form id="authentication-form">
           <div class="centred-block logged-out hidden">
             <label for="firebase-email" class="mw8">Email</label>
-            <input id="firebase-email" type="email" required pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" placeholder="A valid email is required" class="p">
+            <input id="firebase-email" name="firebase-email" type="email" required pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" placeholder="A valid email is required" class="p">
           </div>
           <div class="centred-block logged-out hidden">
             <label for="firebase-password" class="mw8">Password</label>
-            <input id="firebase-password" type="password" required minlength="6" placeholder="Password must be at least 6 characters" autocomplete="true" current-password="true" class="p">
+            <input id="firebase-password" name="firebase-password" type="password" required minlength="6" placeholder="Password must be at least 6 characters" autocomplete="true" current-password="true" class="p">
           </div>        
         <div class="double-centred-block mt mb">
           <div>
