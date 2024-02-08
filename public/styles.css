@@ -484,6 +484,10 @@ img {
   text-transform: initial !important;
 }
 
+label::first-letter {
+  text-transform: initial !important;
+}
+
 .error-bg {
   background-color: var(--error-bg-light);
 }

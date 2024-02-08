@@ -309,7 +309,7 @@ const init = async () => {
             input.checked = t.templateId === 'fieldnotes-template'        
             label.textContent = t.name
             label.htmlFor = input.id
-    
+            
             if(globalRead.template && globalRead.template.templateId === t.templateId) {
                 input.setAttribute('checked', true)
             }
