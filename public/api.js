@@ -157,7 +157,7 @@ export const onFirebaseAuthStateChange = ({auth, globalWrite, authenticateBtn, s
       if(signUpBtn) signUpBtn.hide()
       if(firebaseSignUpCheckbox) firebaseSignUpCheckbox.uncheck()
       if(fetchFieldnotesStubs) fetchFieldnotesStubs({ user })
-      text.innerText = 'You are logged in.'
+      text.innerText = `Logged in as ${user.email}`
       loggedOut.forEach(out => out.classList.add('hidden'))
       
       // Enable site
