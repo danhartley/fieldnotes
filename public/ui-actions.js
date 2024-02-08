@@ -1087,8 +1087,8 @@ export const setOriginalTypeValues = ({globalWrite, section, type}) => {
     // Updating an element in an array such as section in sections, requires us first to delete
     // the original element as it was before it was changed. Which is why we need to track original values.
     const typeValues = structuredClone({
-        values: section[type] || section.paras || section.h3 || section.h4,
-        sectionIndex: section['sectionIndex']
+          values: section[type] || section.paras || section.h3 || section.h4 || section.p
+        , sectionIndex: section['sectionIndex']
     })
     const hasOriginalValues = globalWrite.originalTypeValues.find(type => type.sectionIndex === section['sectionIndex'])
     if (hasOriginalValues) {
@@ -1100,7 +1100,6 @@ export const setOriginalTypeValues = ({globalWrite, section, type}) => {
     } else {
         globalWrite.originalTypeValues.push(typeValues)
     }
-    console.log(globalWrite.originalTypeValues)
 }
 
 export const getOriginalTypeValues = ({globalWrite, section, type}) => {
