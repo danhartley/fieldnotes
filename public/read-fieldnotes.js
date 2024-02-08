@@ -706,13 +706,21 @@ const init = async () => {
               })
             }
         })
+        
+        // Check for change in the titles list
+        const titlesObserver = new MutationObserver(() => {
+            // Check whether user is authenticated, and if they are logged in, let them know.
+            const auth = getFirebaseAuth()
+            if(auth?.currentUser?.email) {
+                firebaseAuthDisplay.innerText = `Your are logged in as ${auth.currentUser.email}. You can view your private fieldnotes as well as all public fieldnotes.`
+                firebaseAuthDisplay.classList.remove('hidden')
+            }    
+        })
 
-        // Check whether user is authenticated, and if they are logged in, let them know.
-        const auth = getFirebaseAuth()
-        if(auth?.currentUser?.email) {
-            firebaseAuthDisplay.innerText = `Your are logged in as ${auth.currentUser.email}. You can view your private fieldnotes as well as public fieldnotes.`
-            firebaseAuthDisplay.classList.remove('hidden')
-        }
+        titlesObserver.observe(fnAutocompleteTitleDatalist, {
+            subtree: true
+            , childList: true
+        })
     })
 }
 
