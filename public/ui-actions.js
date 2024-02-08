@@ -88,7 +88,7 @@ export const handleInatAutocomplete = ({globalWrite, inputText, dataList, id, pr
             globalWrite[prop] = match
             if(callback) callback({globalWrite, parent: cbParent, writeTemplateId, sectionIndex})
 
-            // Clear the input
+            // Clear the input to make new search easier
             inputText.value = ''
         }
     })
@@ -171,7 +171,7 @@ export const handleTermAutocomplete = async ({selectedTerms, inputText, dataList
                 , selectedTerm: term
             }), true)            
 
-            // Clear the input
+            // Clear the input to make new search easier
             inputText.value = ''
         }
     })
@@ -1074,7 +1074,10 @@ export const handleLanguagePreference = ({globalRead, createRadioBtnGroup, langu
             appLocalStorage.set({
                 key: 'language'
               , value: globalRead.language
-          })
+            })
+            showNotificationsDialog({
+                message: 'Your preferred language has been saved.'
+            })
         }
     })
 }
