@@ -146,8 +146,7 @@ const init = () => {
   }))
 
   // User action: select create or edit fieldnotes
-  const toggleView = ({e, overrideBtn}) => {
-    const btn = overrideBtn || e.target
+  const toggleView = ({btn}) => {
     const view = btn.dataset.view
 
     globalWrite.view = view
@@ -163,7 +162,7 @@ const init = () => {
       .forEach(view => {
         // Remove solid fieldset borders
         view.closest('fieldset')?.classList.remove('border-solid')
-        // Show or hide actie view
+        // Show or hide active view
         view.classList.toggle('hidden')
       })
 
@@ -189,12 +188,12 @@ const init = () => {
 
   const showHideEditFieldnotesBtn = new ButtonComponent({
       elementSelector: 'show-hide-edit-fieldnotes-btn'
-    , clickHandler: e => toggleView({ e })
+    , clickHandler: e => toggleView({ btn: e.target })
   })
 
   const showHideCreateFieldnotesBtn = new ButtonComponent({
       elementSelector: 'show-hide-create-fieldnotes-btn'
-    , clickHandler: e => toggleView({ e })
+    , clickHandler: e => toggleView({ btn: e.target })
   })
 
   // Create fieldnotes
@@ -268,11 +267,12 @@ const init = () => {
           status: 'private'
         })
 
-       await fetchFieldnotesStubs({
-          inputText: fnAutocompleteTitleInputText
-        , dataList: fnAutocompleteTitleDatalist
-        , global: globalWrite
-        , fetchFieldnotesBtn
+        // Update the titles list
+        await fetchFieldnotesStubs({
+            inputText: fnAutocompleteTitleInputText
+          , dataList: fnAutocompleteTitleDatalist
+          , global: globalWrite
+          , fetchFieldnotesBtn
         })({ user: globalWrite.user })
 
         // Immediately hide save options
@@ -291,7 +291,7 @@ const init = () => {
 
         // Trigger the switch to edit view
         toggleView({
-          overrideBtn: showHideEditFieldnotesBtn.buttonElement
+          btn: showHideEditFieldnotesBtn.buttonElement
         })
 
         // Set the selected title as the title of the newly created fieldnotes
@@ -1272,7 +1272,7 @@ const init = () => {
       , showNotificationsDialog
       , signUpBtn
       , callback: () => toggleView({
-          overrideBtn: showHideCreateFieldnotesBtn.buttonElement
+          btn: showHideCreateFieldnotesBtn.buttonElement
         })
     })
   })
@@ -1308,10 +1308,10 @@ const init = () => {
     , authenticateBtn
     , firebaseSignUpCheckbox
     , fetchFieldnotesStubs: fetchFieldnotesStubs({
-        inputText: fnAutocompleteTitleInputText
-      , dataList: fnAutocompleteTitleDatalist
-      , global: globalWrite
-      , fetchFieldnotesBtn
+          inputText: fnAutocompleteTitleInputText
+        , dataList: fnAutocompleteTitleDatalist
+        , global: globalWrite
+        , fetchFieldnotesBtn
       })    
     , isAuthenticatedSections: d.querySelectorAll('.is-authenticated')
   })
@@ -1401,7 +1401,22 @@ const init = () => {
           , fieldnotesStubs: globalWrite.fieldnotesStubsCollection
       })
     }
-})
+  })
+
+  // Check for changes to the list of titles; if the list is empty, change to create fieldnotes views
+  const titlesObserver = new MutationObserver(() => {
+    const options = Array.from(fnAutocompleteTitleDatalist.getElementsByTagName('option')).map(option => option.value)
+    if(options.length === 0) {
+      toggleView({
+        btn: showHideCreateFieldnotesBtn.buttonElement
+      })
+    }
+  })
+
+  titlesObserver.observe(fnAutocompleteTitleDatalist, {
+      subtree: true
+    , childList: true
+  })
 }
 
 init()
