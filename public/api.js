@@ -174,6 +174,7 @@ export const onFirebaseAuthStateChange = ({auth, globalWrite, authenticateBtn, s
     }
   })
 }
+
 export const onUserLoggedIn = ({auth, globalRead, fetchFieldnotesStubs}) => {
   return onAuthStateChanged(auth, (user) => {
     globalRead.user = user

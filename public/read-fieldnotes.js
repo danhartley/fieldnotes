@@ -51,6 +51,7 @@ const init = async () => {
     const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
     
     // Display
+    const firebaseAuthDisplay = d.getElementById('firebase-auth-display')
     const sectionsWithHeader = d.querySelectorAll('.section-with-header')
     const lessonFieldsetLegend = d.querySelector('#lesson-fieldset > legend')
     const article = d.getElementById('article')
@@ -676,18 +677,17 @@ const init = async () => {
           , createRadioBtnGroup
           , languageGroupContainer
           , rememberLanguageCheckbox
-      })
-
+        })
 
         // Check for logged in users. Logged in users can preview their private fieldnotes
         onUserLoggedIn({ 
-            auth: getFirebaseAuth() 
+              auth: getFirebaseAuth()
             , globalRead
             , fetchFieldnotesStubs: fetchFieldnotesStubs({
-                inputText: fnAutocompleteTitleInputText
-            , dataList: fnAutocompleteTitleDatalist
-            , global: globalRead
-            , fetchFieldnotesBtn
+                  inputText: fnAutocompleteTitleInputText
+                , dataList: fnAutocompleteTitleDatalist
+                , global: globalRead
+                , fetchFieldnotesBtn
             })
         })
 
@@ -706,6 +706,13 @@ const init = async () => {
               })
             }
         })
+
+        // Check whether user is authenticated, and if they are logged in, let them know.
+        const auth = getFirebaseAuth()
+        if(auth?.currentUser?.email) {
+            firebaseAuthDisplay.innerText = `Your are logged in as ${auth.currentUser.email}. You can view your private fieldnotes as well as public fieldnotes.`
+            firebaseAuthDisplay.classList.remove('hidden')
+        }
     })
 }
 
