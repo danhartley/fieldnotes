@@ -727,6 +727,11 @@ label::first-letter {
   background-color: var(--c0);
 }
 
+.btn-secondary-bottom {
+  top: initial;
+  bottom: var(--d);
+}
+
 .btn-secondary:focus {
   background-color: var(--c0);
   outline: 1px solid var(--c4);
@@ -785,6 +790,10 @@ label::first-letter {
   padding-block-start: calc(var(--d) * 4);
   border-color: var(--c5);
   border-style: solid;
+}
+
+fieldset.species-list {
+  padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 6) calc(var(--d) * 2);
 }
 
 /* VIEWS */

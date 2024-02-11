@@ -878,7 +878,7 @@ export const addContentToPreviewContainer = ({previewTemplate, textContent, prev
     previewContainer.appendChild(clone)
 }
 
-export const toggleSpeciesList = ({btn, fieldset}) => {    
+export const toggleSpeciesList = ({btn, btnPair, fieldset}) => {    
     if(btn.getText().toLowerCase() === 'show only included') {
         fieldset.querySelectorAll('input[type="checkbox"]:not(:checked)').forEach(input => {
             input.closest('figure').classList.add('hidden')
@@ -886,11 +886,17 @@ export const toggleSpeciesList = ({btn, fieldset}) => {
         btn.setText({
             text: 'show all'
         })
+        btnPair.setText({
+            text: 'show all'
+        })
     } else {
         fieldset.querySelectorAll('input[type="checkbox"]').forEach(input => {
             input.closest('figure').classList.remove('hidden')
         })
         btn.setText({
+            text: 'show only included'
+        })
+        btnPair.setText({
             text: 'show only included'
         })
     }

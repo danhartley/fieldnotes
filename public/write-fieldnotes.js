@@ -369,9 +369,13 @@ const init = () => {
     const legend = sectionClone.querySelector('legend')
     const parentContainer = sectionClone.querySelector('div')
     
-    const toggleSpeciesListBtn = new ButtonComponent({
+    const toggleSpeciesListTopBtn = new ButtonComponent({
         parent: sectionClone
-      , elementSelector: 'toggle-species-include-all-btn'
+      , elementSelector: 'toggle-species-include-all-top-btn'
+    })
+    const toggleSpeciesListBottomBtn = new ButtonComponent({
+        parent: sectionClone
+      , elementSelector: 'toggle-species-include-all-bottom-btn'
     })
     const addOrUpdateSectionBtn = new ButtonComponent({
         parent: sectionClone
@@ -642,9 +646,17 @@ const init = () => {
         break
       case 'species-write-template':
       case 'observations-write-template':
-          toggleSpeciesListBtn.addClickHandler({
+          toggleSpeciesListTopBtn.addClickHandler({
             clickHandler: () => toggleSpeciesList({
-                btn:toggleSpeciesListBtn
+                btn: toggleSpeciesListTopBtn
+              , btnPair: toggleSpeciesListBottomBtn
+              , fieldset
+            })
+          }) 
+          toggleSpeciesListBottomBtn.addClickHandler({
+            clickHandler: () => toggleSpeciesList({
+                btn: toggleSpeciesListBottomBtn
+              , btnPair: toggleSpeciesListTopBtn
               , fieldset
             })
           }) 
@@ -766,12 +778,20 @@ const init = () => {
         Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
         break
       case 'inat-lookup-write-template':
-        toggleSpeciesListBtn.addClickHandler({
+        toggleSpeciesListTopBtn.addClickHandler({
           clickHandler: () => toggleSpeciesList({
-              btn: toggleSpeciesListBtn
+              btn: toggleSpeciesListTopBtn
+            , btnPair: toggleSpeciesListBottomBtn
             , fieldset
           })
-        })
+        }) 
+        toggleSpeciesListBottomBtn.addClickHandler({
+          clickHandler: () => toggleSpeciesList({
+              btn: toggleSpeciesListBottomBtn
+            , btnPair: toggleSpeciesListTopBtn
+            , fieldset
+          })
+        }) 
         Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
 
         globalWrite.inatAutocomplete = globalWrite.inatAutocompleteOptions.find(option => option.id === 'taxa')
@@ -1151,7 +1171,7 @@ const init = () => {
                 checkbox.closest('figure').classList.add('hidden')                
               }
             })            
-            draggableSection.querySelector('#toggle-species-include-all-btn').innerText = 'show all'
+            draggableSection.querySelector('#toggle-species-include-all-top-btn').innerText = 'show all'
             break
           case 'inat-lookup-preview-template':
             let parent = null
@@ -1209,14 +1229,9 @@ const init = () => {
       selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
 
       // Hide all species that are not included
-      const btns = d.querySelectorAll('.toggle-species-include-all-btn')
+      const btns = d.querySelectorAll('.toggle-species-include-all-btns')
       btns.forEach(btn => {
-        btn.innerText = 'show only included'
-        const fieldset = btn.parentElement
-        toggleSpeciesList({
-            btn
-          , fieldset
-        })
+        btn.innerText = 'show all'        
       })
 
       // Set values for fieldnotes status text and update button
