@@ -238,13 +238,29 @@ export const getFieldnotesStubs = async ({user, readonly = false}) => {
         db
     })
 
-    let notesDocsRef, q
+    let notesDocsRef, q, or_q, or_notesDocsRef, or_stubsList
 
     if(readonly) {
-      // Readonly
+      // Read fieldnotes: show public 
       q = query(collectionRef, where('status', '==', 'public'))
+      // And private when logged in
+      if(user) {
+        or_q = query(collectionRef, and(
+          where('uid', '==', user.uid),
+          or(
+            where('status', '==', 'private'),
+          )
+        ),)
+        or_notesDocsRef = await getDocs(or_q)
+        or_stubsList = or_notesDocsRef.docs.map(doc => {
+          return doc.data()
+        })
+      } else {
+        or_stubsList = []
+      }
     } else {
-      // Create and edit (allow only private an public states, not deleted)
+      // Create and edit for logged in users 
+      // Allow only private and public states, not deleted
       q = query(collectionRef, 
           and(
             where('uid', '==', user.uid),
@@ -252,16 +268,20 @@ export const getFieldnotesStubs = async ({user, readonly = false}) => {
               where('status', '==', 'private'),
               where('status', '==', 'public')
             )
-          )
+          ),
         )
     }
+  
     notesDocsRef = await getDocs(q)
 
     const stubsList = notesDocsRef.docs.map(doc => {
       return doc.data()
-    })
+    })    
 
-    return stubsList
+    return readonly
+      ? stubsList.concat(or_stubsList)
+      // ? [ ...new Set(stubsList.concat(or_stubsList)) ]
+      : stubsList
   } catch (e) {
     console.log(e.message)
   }

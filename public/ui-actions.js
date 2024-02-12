@@ -1127,10 +1127,13 @@ export const handleInputChangeEvent = (e, addBtn) => {
     })
 }
 
-export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnotesBtn}) => {
+export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnotesBtn, readonly = false}) => {
     return async ({user}) => {
         const fieldnotesStubs = user 
-            ? await getFieldnotesStubs({user})
+            ? await getFieldnotesStubs({
+                user
+              , readonly
+            })
             : await getFieldnotesStubs({
                 user: null
               , readonly: true

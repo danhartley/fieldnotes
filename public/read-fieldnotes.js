@@ -688,6 +688,7 @@ const init = async () => {
                 , dataList: fnAutocompleteTitleDatalist
                 , global: globalRead
                 , fetchFieldnotesBtn
+                , readonly: true
             })
         })
 
