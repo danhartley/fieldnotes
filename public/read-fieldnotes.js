@@ -489,8 +489,12 @@ const init = async () => {
                                         dd.textContent = def.dd
             
                                         if(def.dx) {                                
-                                            eg.textContent = 'e.globalRead.'                                
-                                            dx.append(def.dx.join(', '))
+                                            eg.textContent = 'e.g. '                          
+                                            dx.append(
+                                                Array.isArray(def.dx)
+                                                    ? def.dx.join(', ')
+                                                    : def.dx
+                                                )
                                         } else {
                                             clone.removeChild(div1)
                                         }
