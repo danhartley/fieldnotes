@@ -136,6 +136,9 @@ const init = () => {
   const saveFieldnotesSection = d.getElementById('save-fieldnotes-section')
   const fieldnotesStateSection = d.getElementById('fieldnotes-state-section')
   const rememberInatUserCheckbox = d.getElementById('remember-inat-user-checkbox')
+
+  const exportFieldnotesNotificationText = d.getElementById('export-fieldnotes-notification-text')
+  const exportFieldnotesInputCheck = d.getElementById('export-fieldnotes-input-check')
   
   draggableSections.addEventListener('dragover', dragoverHandler)
   draggableSections.addEventListener('drop', e => dropHandler({
@@ -1391,13 +1394,18 @@ const init = () => {
   })
 
   // User action: save fieldnotes to file (export)
-  const saveFieldnotesToFileBtn = new ButtonComponent({
-      elementSelector: 'save-fieldnotes-to-file-btn'
+  const exportFieldnotesToFileBtn = new ButtonComponent({
+      elementSelector: 'export-fieldnotes-to-file-btn'
     , clickHandler: () => {
       saveJson({
           obj: globalWrite.fieldnotes
         , title: globalWrite.fieldnotes.title
+        , textOnly: exportFieldnotesInputCheck.checked
       })
+      exportFieldnotesNotificationText.classList.remove('hidden')
+      setTimeout(() => {
+        exportFieldnotesNotificationText.classList.add('hidden')
+      }, 3000)
     }
   })
 

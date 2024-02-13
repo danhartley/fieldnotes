@@ -168,7 +168,14 @@
           <fieldset>
             <legend>Export fieldnotes</legend>
             <p class="mt0 small">Export your fieldnotes to file in the JSON format.</p>
-            <button id="save-fieldnotes-to-file-btn" class="btn-save">Export your fieldnotes</button>
+            <div class="centred-block mt2">
+              <button id="export-fieldnotes-to-file-btn" class="btn-save">Export your fieldnotes</button>
+              <div id="export-fieldnotes-notification-text" class="ml small hidden">Exporting…</div>
+            </div>
+            <div class="centred-block mt2">
+              <label for="export-fieldnotes-input-check" class="mr">Text only in HTML format</label>
+              <input id="export-fieldnotes-input-check" type="checkbox">
+            </div>
           </fieldset>
         </section>
 

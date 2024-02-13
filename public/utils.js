@@ -43,19 +43,66 @@ const encode = s => {
   return new Uint8Array(out)
 }
 
-export const saveJson = ({obj, title = 'fieldnotes'}) => {
-  var str = JSON.stringify(obj)
-  var data = encode(str)
+export const saveJson = ({obj, title = 'fieldnotes', textOnly = false}) => {
+  const formatAuthor = author => {
+    return author.split(' ').map(name => {
+      return name.charAt(0).toUpperCase() + name.substring(1)
+    }).join(' ')
+  }
+  const formatDate = date => {
+    return new Date(date).toLocaleDateString('en-gb', { 
+      weekday: 'long'
+    , year: 'numeric'
+    , month: 'long'
+    , day: 'numeric'
+})
+  }
+  const filterByText = obj => {
+    let text = `[Originally published at <a href=https://ifieldnotes.org>iFieldnotes.org</a>]`
+    text += `<p><em>${formatAuthor(obj.author)}</em></p>`
+    text += `<p><em>${formatDate(obj.d1)}</em></p>`
+    text += `<p><em><a href=https://www.google.com/maps/place/${obj.location.location}>${obj.location.place_guess}</a></em></p>`
 
-  var blob = new Blob([data], {
+    obj.sections.map(section => {
+      switch(section.name) {
+        case 'Header':
+          text += `<h3>${section.h3}</h3>`
+          break
+        case 'Subheader':
+          text += `<h4>${section.h4}</h4>`
+          break
+        case 'Text block':
+          section.paras.forEach(p => {
+            text += `<p>${p.p}</p>`
+          })            
+          break
+      }
+    })
+    return text
+  }
+
+  const uniCodeEncode = str => {
+    const out = []
+    for (let i = 0; i < str.length; i++) {
+      out[i] = str.charCodeAt(i)
+    }
+    return new Uint16Array(out)
+  }
+
+  const str = textOnly
+    ? JSON.stringify(filterByText(obj))
+    : JSON.stringify(obj)
+  const data = uniCodeEncode(str)
+
+  const blob = new Blob([data], {
       type: 'application/octet-stream'
   })
 
-  var url = URL.createObjectURL(blob)
-  var link = document.createElement('a')
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
   link.setAttribute('href', url)
   link.setAttribute('download', `${title}.json`)
-  var event = document.createEvent('MouseEvents')
+  const event = document.createEvent('MouseEvents')
   event.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null)
   link.dispatchEvent(event)
 
