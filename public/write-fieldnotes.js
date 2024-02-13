@@ -1429,18 +1429,19 @@ const init = () => {
   })
 
   // Check for changes to the list of titles; if the list is empty, change to create fieldnotes views
-  const titlesObserver = new MutationObserver(() => {
-    if(globalWrite.fieldnotesStubsCollection.length === 0) {
-      toggleView({
-        btn: showHideCreateFieldnotesBtn.buttonElement
-      })
-    }
-  })
+  // DISABLED BECAUSE CAUSES TOGGLEVIEW TO RUN AFTER AUTH, HIDING CREATE OPTIONS
+  // const titlesObserver = new MutationObserver(() => {
+  //   if(globalWrite.fieldnotesStubsCollection.length === 0) {
+  //     toggleView({
+  //       btn: showHideCreateFieldnotesBtn.buttonElement
+  //     })
+  //   }
+  // })
 
-  titlesObserver.observe(fnAutocompleteTitleDatalist, {
-      subtree: true
-    , childList: true
-  })
+  // titlesObserver.observe(fnAutocompleteTitleDatalist, {
+  //     subtree: true
+  //   , childList: true
+  // })
 }
 
 init()
