@@ -229,7 +229,7 @@ const init = () => {
   
         setTimeout(() => {
           searchInatObservationsNotificationText.classList.toggle('hidden')
-          searchInatObservationsNotificationText.innerText = 'Waiting for response from iNaturalist…'
+          searchInatObservationsNotificationText.innerText = 'Waiting for a response…'
         }, 1500)
   
         if(globalWrite.observations.length === 0) {
