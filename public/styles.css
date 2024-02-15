@@ -525,7 +525,7 @@ label::first-letter {
 }
 
 .border-solid {
-  border: solid;
+  border: 1px solid var(--c8);
 }
 
 /* SELECTOR RULES */
