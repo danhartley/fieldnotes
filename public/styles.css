@@ -237,8 +237,11 @@ input[type='checkbox'] + label {
 }
 
 input[type='text'], input[type='email'], input[type='password'], textarea {
-  border: 1px solid var(--c3);
-  width: -webkit-fill-available;
+  width: 100%;
+  width: -moz-available;          /* WebKit-based browsers will ignore this. */
+  width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+  width: fill-available;
+  border: 1px solid var(--c3);  
   border-radius: calc(var(--d) * .5);
 }
 

@@ -455,8 +455,8 @@ const init = async () => {
             searchInatObservationsBtn.toggleActiveState()
     
             globalRead.inatSpecies = await getInatSpecies({
-                  user: user.isActive ? user.user : null
-                , place: place.isActive ? place.place : null
+                  user: user?.isActive ? user.user : null
+                , place: place?.isActive ? place.place : null
             })
     
             globalRead.species = mapInatSpeciesToRequiredSpecies({

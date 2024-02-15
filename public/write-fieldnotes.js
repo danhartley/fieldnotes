@@ -111,7 +111,7 @@ const init = () => {
   const draggableSections = d.getElementById('draggable-sections')
   const fnAutocompleteTitleInputText = d.getElementById('fn-autocomplete-title-input-text')
   const fnAutocompleteTitleDatalist = d.getElementById('fn-autocomplete-title-data-list')
-  const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
+  const importFieldNotesNotificationText = d.getElementById('fetching-fieldnotes-notification-text')
   
   const metaDataSection = d.getElementById('meta-data-section')
   const titleInputText = d.getElementById('title-input-text')

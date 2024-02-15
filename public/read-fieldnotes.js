@@ -48,7 +48,7 @@ const init = async () => {
     // Select title
     const fnAutocompleteTitleInputText = d.getElementById('fn-autocomplete-title-input-text')
     const fnAutocompleteTitleDatalist = d.getElementById('fn-autocomplete-title-data-list')
-    const importFieldNotesNotificationText = d.getElementById('import-fieldnotes-notification-text')
+    const importFieldNotesNotificationText = d.getElementById('fetching-fieldnotes-notification-text')
     
     // Display
     const firebaseAuthDisplay = d.getElementById('firebase-auth-display')

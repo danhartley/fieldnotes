@@ -1188,7 +1188,7 @@ export const g = {
         place: null,
     },    
     matches: [],    
-    useObservationsSpeciesCountOptions: [{name:'Species (iNat photos)', id: "true"}, {name:'Observations (user photos)', id: "false"}],
+    useObservationsSpeciesCountOptions: [{name:'Species (iNaturalist photos)', id: "true"}, {name:'Observations (user photos)', id: "false"}],
     dateOption: 'none',    
 }
 
