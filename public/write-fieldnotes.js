@@ -5,6 +5,7 @@ import {
 , getFirebaseAuth
 , getInatObservations
 , getTerms
+, isFieldnotesTitleUnique
 , onFirebaseAuthStateChange
 , updateFieldNotes
 , updateFieldnoteStubProperty
@@ -1003,12 +1004,26 @@ const init = () => {
         }
         , d1: globalWrite.fieldnotes.d1
         , d2: globalWrite.fieldnotes.d2
-        , location: globalWrite.fieldnotes.location.trim()
+        , location: globalWrite.fieldnotes.location
         , language: globalWrite.fieldnotes.language
         , taxa: globalWrite.fieldnotes.taxa
         , sections: globalWrite.fieldnotes.sections
         , sectionOrder: globalWrite.fieldnotes.sections.map(section => section.sectionIndex)
       })
+
+      const hasDuplicateTitle = !isFieldnotesTitleUnique({
+          titles: globalWrite.fieldnotesStubsCollection.map(stub => stub.title)
+        , title: globalWrite.fieldnotes.title
+      })
+
+      if(hasDuplicateTitle) {
+        showNotificationsDialog({
+            message: 'Titles must be unique. Your title is already in use.'
+          , type: 'error'
+        })        
+      }
+
+      if(hasDuplicateTitle) return
       
       const response = await addFieldnotes({
           fieldnotes: notes
@@ -1388,8 +1403,10 @@ const init = () => {
         , value: 'deleted'
       })
       if(response.success) {
+        globalWrite.fieldnotesStubsCollection = globalWrite.fieldnotesStubsCollection.filter(stub => stub.id !== globalWrite.fieldnotesStubs.title)
+        fnAutocompleteTitleInputText.value = ''
         showNotificationsDialog({
-            message: 'Your fielnotes have been deleted.'
+            message: 'Your fieldnotes have been deleted.'
           , type: response.type
           , displayDuration: 3000
         })

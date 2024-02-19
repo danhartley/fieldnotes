@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Paths through the forest are without number</title>
+    <link rel="stylesheet" href=".././styles.css">
+    <link rel="icon" href=".././favicon.ico" />
+    <script src="./admin.js" type="module"></script>
+  </head>
+  <body class="m">
+    <header>
+      <menu>
+        <li>Admin</li>
+      </menu>
+    </header>
+    <aside>
+      <fieldset class="mt">
+        <legend>Filters</legend>
+        <div class="centred-block">
+          <input type="checkbox" id="deleted-input-checkbox" data-status="">
+          <label for="deleted-input-checkbox">Show deleted only</label>
+        </div>
+      </fieldset>
+    </aside>
+    <main>
+      <fieldset class="mt flex-row">
+        <legend>Fieldnotes</legend>
+        <section id="stubs-collection" class="max-content"></section>     
+      </fieldset>
+      <dialog id="state-notifications">
+        <div class="flex-columns small">
+          <div class="success-icon">Success</div>
+          <div></div>
+        </div>
+      </dialog>
+    </main>
+  </body>
+
+  <template id="stubs-collection-template">
+    <ul class="m"></ul>
+    <button id="delete-document" class="mt2">Delete document</button>
+  </template>
+
+  <template id="stubs-template">
+    <li>
+      <div class="centred-block">
+        <input type="checkbox" id="stubs-input-checkbox">
+        <label for="stubs-input-checkbox"></label>
+      </div>
+    </li>
+  </template>

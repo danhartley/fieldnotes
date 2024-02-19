@@ -529,6 +529,10 @@ label::first-letter {
   border: 1px solid var(--c8);
 }
 
+.max-content {
+  width: max-content;
+}
+
 /* SELECTOR RULES */
 
 .grid {

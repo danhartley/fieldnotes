@@ -2,7 +2,7 @@
 
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth'
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, query, and, where, or, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from 'firebase/firestore'
+import { getFirestore, collection, query, and, where, or, doc, getDocs, getDoc, setDoc,deleteDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from 'firebase/firestore'
 
 import { templates } from './templates.js'
 
@@ -1337,3 +1337,47 @@ export const inatControls = [
     "label": "Evidence of Presence"
   }
 ]
+
+// Admin
+
+export const onAdminFirebaseAuthStateChange = ({auth, getStubs}) => {
+  return onAuthStateChanged(auth, async (user) => {
+    getStubs({user})
+  })
+}
+
+export const getAdminFieldnotesStubs = async ({}) => {
+  try {
+    const db = getDb()
+    const collectionRef = getFieldnotesStubsCollectionRef({
+        db
+    })
+
+    q = query(collectionRef)
+
+    const notesDocsRef = await getDocs(q)
+
+    return notesDocsRef.docs.map(doc => {
+      return doc.data()
+    })  
+
+  } catch (e) {
+    console.log(e.message)
+  }
+}
+
+export const deleteFieldnotesById = async ({id, fieldnotesId}) => {
+  const db = getDb()
+  try {
+    await deleteDoc(doc(db, "fieldnotes", fieldnotesId))
+    await deleteDoc(doc(db, "fieldnotes-stubs", id))
+    return {
+      success: true,
+      message: 'Fieldnotes deleted'
+    }
+  } catch (e) {
+    if(id) console.log('API docRef: ', id)
+    if(fieldnotesId) console.warn('API error: ', fieldnotesId)
+    throw e
+  }
+}
