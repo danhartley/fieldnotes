@@ -1353,7 +1353,7 @@ export const getAdminFieldnotesStubs = async ({}) => {
         db
     })
 
-    q = query(collectionRef)
+    const q = query(collectionRef)
 
     const notesDocsRef = await getDocs(q)
 
