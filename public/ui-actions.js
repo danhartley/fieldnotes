@@ -7,10 +7,11 @@ import {
     , firebaseCreateAccount
     , firebaseLogin
     , firebaseSignOut
+    , isFieldnotesTitleUnique
     , removeElementFromArray
     , updateElementFromArray
     , updateFieldnoteProperty
-    , updateFieldnotesTitle
+    , updateFieldnotesTitle    
 } from './api.js'
 
 import { 
@@ -1253,24 +1254,40 @@ export const updateMetadataFields = async ({globalWrite, prop, value}) => {
 
     let response
     try {
-      response = prop === 'title'
-        ? await updateFieldnotesTitle({
+      if(prop === 'title') {
+        if(isFieldnotesTitleUnique({
+              titles: globalWrite.fieldnotesStubsCollection.map(stub => stub.title)
+            , title: value
+        })) {
+            response = await updateFieldnotesTitle({
+                  fieldnotes: globalWrite.fieldnotes
+                , prop
+                , value
+                , fieldnotesStubs: globalWrite.fieldnotesStubs
+            })
+            // Update currently selected fieldnotes stub
+            globalWrite.fieldnotesStubs.title = value
+        } else {
+            response = {
+                  message: 'Titles must be unique. Your new title is already in use.'
+                , type: 'error'
+            }
+        }
+      } else {
+        response = await updateFieldnoteProperty({
             fieldnotes: globalWrite.fieldnotes
           , prop
           , value
-          , fieldnotesStubs: globalWrite.fieldnotesStubs
         })
-        : await updateFieldnoteProperty({
-            fieldnotes: globalWrite.fieldnotes
-          , prop
-          , value
-        })
+      }
       
       showNotificationsDialog({
           message: response.message
         , type: response.type
         , displayDuration: 2000
       })
+
+      return response
     } catch (e) {
         showNotificationsDialog({
             message: `${e.message} for ${prop}`

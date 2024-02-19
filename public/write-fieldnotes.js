@@ -907,20 +907,24 @@ const init = () => {
   }
 
   // User action: change metadata value
-  titleInputText.addEventListener('change', e => {
-    globalWrite.fieldnotes.title = e.target.value
-    updateMetadataFields({
+  titleInputText.addEventListener('change', async (e) => {
+    const title = e.target.value.trim()
+    globalWrite.fieldnotes.title = title
+    const response = await updateMetadataFields({
         globalWrite
       , prop: 'title'
       , value: globalWrite.fieldnotes.title
     })
+    if(response.success) {
+      fnAutocompleteTitleInputText.value = title
+    }
     enableSaveFieldNotesSection({ 
         globalWrite
       , saveFieldnotesSection 
     })
   })
   authorInputText.addEventListener('change', e => {
-    globalWrite.fieldnotes.author = e.target.value
+    globalWrite.fieldnotes.author = e.target.value.trim()
     updateMetadataFields({
         globalWrite
       , prop: 'author'
@@ -932,7 +936,7 @@ const init = () => {
     })
   })
   dateInputText.addEventListener('change', e => {
-    const date = e.target.value        
+    const date = e.target.value
     globalWrite.fieldnotes.d1 = date
     globalWrite.fieldnotes.d2 = date
     updateMetadataFields({
@@ -951,7 +955,7 @@ const init = () => {
     })
   })
   placeInputText.addEventListener('change', e => {
-    globalWrite.fieldnotes.location.place_guess = e.target.value
+    globalWrite.fieldnotes.location.place_guess = e.target.value.trim()
     updateMetadataFields({
           globalWrite
         , prop: 'location'
@@ -986,9 +990,9 @@ const init = () => {
 
       Object.assign(notes, {
           id: globalWrite.fieldnotes.id || ''
-        , fnId: globalWrite.fieldnotes.title
-        , title: globalWrite.fieldnotes.title
-        , author: globalWrite.fieldnotes.author
+        , fnId: globalWrite.fieldnotes.title.trim()
+        , title: globalWrite.fieldnotes.title.trim()
+        , author: globalWrite.fieldnotes.author.trim()
         , user: {
             id: globalWrite.fieldnotes.user.id
           , icon: globalWrite.fieldnotes.user.icon
@@ -999,7 +1003,7 @@ const init = () => {
         }
         , d1: globalWrite.fieldnotes.d1
         , d2: globalWrite.fieldnotes.d2
-        , location: globalWrite.fieldnotes.location
+        , location: globalWrite.fieldnotes.location.trim()
         , language: globalWrite.fieldnotes.language
         , taxa: globalWrite.fieldnotes.taxa
         , sections: globalWrite.fieldnotes.sections

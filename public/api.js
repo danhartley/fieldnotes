@@ -477,6 +477,14 @@ export const updateFieldnotesTitle = async ({fieldnotes, prop, value, fieldnotes
   }
 }
 
+export const removeWhitespace = str => {
+  return str.replace(/\s+/g, '')
+}
+
+export const isFieldnotesTitleUnique = ({titles, title}) => {
+  return !titles.map(t => removeWhitespace(t.toLowerCase())).includes(removeWhitespace(title.toLowerCase()))
+}
+
 export const addElementToArray = async ({fieldnotes, array, element, isBeingAdded = true}) => {
   let docRef, data  = null
 
