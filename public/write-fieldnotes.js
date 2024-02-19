@@ -1017,14 +1017,19 @@ const init = () => {
       })
 
       if(hasDuplicateTitle) {
-        showNotificationsDialog({
-            message: 'Titles must be unique. Your title is already in use.'
-          , type: 'error'
-        })        
+        // Add a timestamp to the title; not pretty but effective
+        const timestamp = Date.now()
+        const uniqueTitle = notes.title + timestamp
+        // Update notes to create new set of fieldnotes from
+        notes.title = uniqueTitle
+        // Update in memory notes
+        globalWrite.fieldnotes.title = uniqueTitle
+        // Update autocomplete value
+        fnAutocompleteTitleInputText.value = uniqueTitle
+        // Update the title field
+        titleInputText.value = uniqueTitle
       }
 
-      if(hasDuplicateTitle) return
-      
       const response = await addFieldnotes({
           fieldnotes: notes
         , status
