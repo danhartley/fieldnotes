@@ -47,7 +47,7 @@
 /* ELEMENTS */
 
 body {  
-  font-family: Open Sans,sans-serif;
+  font-family: Elena, "PT Serif", serif;
   background-color: var(--c1);
   -webkit-font-smoothing: antialiased;
 }
@@ -85,10 +85,6 @@ header menu a.selected {
 main, aside {
   margin: auto;
   max-width: 80ch; 
-}
-
-article {
-  font-family: Elena, "PT Serif", serif;
 }
 
 aside * {
@@ -136,7 +132,6 @@ h2 label::first-letter, label.text-initial::first-letter {
 
 h3 {
   margin: var(--d) 0;
-  font-family: Elena, "PT Serif", serif;
   font-size: var(--s5);
   letter-spacing: calc(var(--d) / 10);
   color: var(--c6);
@@ -144,7 +139,6 @@ h3 {
 
 h4 {
   margin: var(--d) 0;
-  font-family: Elena, "PT Serif", serif;
   font-size: var(--s4);
   letter-spacing: calc(var(--d) / 10);
 }
@@ -426,7 +420,6 @@ figcaption {
 
 p {
   margin: calc(var(--d) * 2) 0;
-  font-family: Elena, "PT Serif", serif;
 }
 
 th, td {
@@ -631,7 +624,6 @@ label::first-letter {
 }
 
 #inat-autocomplete-input-text::placeholder {
-  font-family: Elena, "PT Serif", serif;
   opacity: 1;
 }
 
@@ -705,7 +697,6 @@ label::first-letter {
 }
 
 .as-p {
-  font-family: Elena, "PT Serif", serif;
   position: initial;
   padding: 0 0 var(--d) 0;
   width: initial;
