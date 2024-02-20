@@ -26,6 +26,7 @@ import {
       appLocalStorage
     , debounce
     , isValidDate
+    , logger
 } from './utils.js'
 
 const d = document
@@ -716,6 +717,11 @@ export const showNotificationsDialog = ({message, type = 'success', displayDurat
     setTimeout(() => {
         dialog.close()
     }, displayDuration)
+
+    logger({
+        message
+      , type
+    })
 }
 
 // Section actions
@@ -962,9 +968,10 @@ export const checkForLocalisedCommonSpeciesNames = ({globalSpecies, sectionSpeci
         } 
         return sectionSpecies
     } catch (e) {
-        console.log(e.message)
-        if(globalSpecies) console.log('globalSpecies :', globalSpecies)
-        if(sectionSpecies) console.log('sectionSpecies :', sectionSpecies)
+        logger({
+              message: e.message
+            , type:'warn'
+        })
     }    
 }
 
@@ -1038,8 +1045,10 @@ export const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) 
     
         return clone
     } catch (e) {
-        if(species) console.log('species', species)
-        console.log(e.message)
+        logger({
+              message: e.message
+            , type: 'error'
+        })
     }
 }
 

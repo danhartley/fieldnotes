@@ -59,7 +59,8 @@ import {
 } from './ui-components.js'
 
 import {
-  saveJson
+    logger
+  , saveJson
 } from './utils.js'
 
 const init = () => {
@@ -1275,8 +1276,6 @@ const init = () => {
         , displayDuration: 2000
       })
     } catch (e) {
-      console.log('Error importing fieldnotes')
-      console.log(e.stack)
       showNotificationsDialog({
           message: e.message
         , type: 'error'

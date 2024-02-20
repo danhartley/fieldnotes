@@ -5,6 +5,9 @@ import { initializeApp } from 'firebase/app'
 import { getFirestore, collection, query, and, where, or, doc, getDocs, getDoc, setDoc,deleteDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from 'firebase/firestore'
 
 import { templates } from './templates.js'
+import {
+  logger
+} from './utils.js'
 
 // INAT API
 
@@ -110,7 +113,7 @@ export const firebaseLogin = ({email, password, showNotificationsDialog}) => {
 
 export const firebaseSignOut = ({auth, showNotificationsDialog}) => {
   signOut(auth).then(() => {
-    console.log('Sign-out successful')
+    logger({message:'Sign-out successful'})
   }).catch((e) => {
     showNotificationsDialog({
         message: e.message
@@ -131,7 +134,7 @@ export const firebaseCreateAccount = async ({email, password, showNotificationsD
       })
       return true
     } else {
-      console.log('error')
+      logger({message:'Could not create account'})
     }
   } catch (e) {    
     showNotificationsDialog({
@@ -159,18 +162,18 @@ export const onFirebaseAuthStateChange = ({auth, globalWrite, authenticateBtn, s
       if(fetchFieldnotesStubs) fetchFieldnotesStubs({ user })
       text.innerText = `Logged in as ${user.email}`
       loggedOut.forEach(out => out.classList.add('hidden'))
-      
       // Enable site
       if(isAuthenticatedSections) isAuthenticatedSections.forEach(section => section.classList.remove('disabled'))
+      logger({message: `User is logged in`})
     } else {
       authenticateBtn.setText({
         text: 'Log in'
       })
-
       if(fetchFieldnotesStubs) fetchFieldnotesStubs({ user: null })
       text.innerText = 'You are logged out.'
       loggedOut.forEach(out => out.classList.remove('hidden'))
-      if(isAuthenticatedSections) isAuthenticatedSections.forEach(section => section.classList.add('disabled')) 
+      if(isAuthenticatedSections) isAuthenticatedSections.forEach(section => section.classList.add('disabled'))
+      logger({message: `User is logged out`})
     }
   })
 }
@@ -179,7 +182,6 @@ export const onUserLoggedIn = ({auth, globalRead, fetchFieldnotesStubs}) => {
   return onAuthStateChanged(auth, (user) => {
     globalRead.user = user
     if(user) {
-      console.log(user)
       if(fetchFieldnotesStubs) fetchFieldnotesStubs({ user })
     } else {
       if(fetchFieldnotesStubs) fetchFieldnotesStubs({ user: null} )}
@@ -199,8 +201,10 @@ const getFieldnotesStubsCollectionRef = ({db}) => {
   try {    
     return collection(db, 'fieldnotes-stubs')
   } catch (e) {
-    console.log(e.message)
-    console.log('user: ', user)
+    logger({
+        message: e.message
+      , type: 'error'
+    })
   }
 }
 
@@ -226,8 +230,10 @@ export const getFieldnotesById = async ({id}) => {
       message: 'Fieldnotes returned'
     }
   } catch (e) {
-    console.log('API docRef: ', docRef)
-    console.warn('API error: ', e)
+    logger({
+        message: e.message
+      , type: 'error'
+    })
   }
 }
 
@@ -280,10 +286,12 @@ export const getFieldnotesStubs = async ({user, readonly = false}) => {
 
     return readonly
       ? stubsList.concat(or_stubsList)
-      // ? [ ...new Set(stubsList.concat(or_stubsList)) ]
       : stubsList
   } catch (e) {
-    console.log(e.message)
+    logger({
+      message: e.message
+    , type: 'error'
+  })
   }
 }
 
@@ -309,8 +317,10 @@ export const addTerm = async({term}) => {
   }
 
   } catch (e) {
-    console.log('API term id: ', id)
-    console.warn('API error: ', e)
+    logger({
+        message: e.message
+      , type: 'error'
+    })
   }
 }
 
@@ -365,9 +375,10 @@ export const addFieldnotes = async ({fieldnotes, status = 'private', user}) => {
         , type: 'success'
       }
     } catch (e) {
-      console.log('API fieldnotes id: ', id)
-
-      console.warn('API error: ', e)
+      logger({
+          message: e.message
+        , type: 'error'
+      })
     }
 }
 
@@ -384,8 +395,10 @@ export const updateFieldNotes = async ({fieldnotes, data}) => {
       message: 'Fieldnotes updated'
     }
   } catch (e) {
-    console.log('API docRef: ', docRef)
-    console.warn('API error: ', e)
+    logger({
+        message: e.message
+      , type: 'error'
+    })
   }
 }
 
@@ -402,8 +415,10 @@ export const updateFieldNotesStubs = async ({fieldnotesStubs, data}) => {
       message: 'Fieldnotes stubs updated'
     }
   } catch (e) {
-    console.log('API docRef: ', docRef)
-    console.warn('API error: ', e)
+    logger({
+        message: e.message
+      , type: 'error'
+    })
   }
 }
 
@@ -432,9 +447,10 @@ export const updateFieldnoteProperty = async ({fieldnotes, prop, value}) => {
       message: `${prop.charAt(0).toUpperCase() + prop.slice(1)} updated`
     }
   } catch (e) {
-    console.log('API element to update: ', prop, value)
-    console.log('API docRef: ', docRef)
-    console.warn('API error: ', e)
+    logger({
+        message: e.message
+      , type: 'error'
+    })
   }
 }
 
@@ -454,9 +470,10 @@ export const updateFieldnoteStubProperty = async ({fieldnotesStubs, prop, value}
       message: `${prop.charAt(0).toUpperCase() + prop.slice(1)} updated`
     }
   } catch (e) {
-    console.log('API element to update: ', prop, value)
-    console.log('API docRef: ', docRef)
-    console.warn('API error: ', e)
+    logger({
+        message: e.message
+      , type: 'error'
+    })
   }
 }
 
@@ -514,9 +531,10 @@ export const addElementToArray = async ({fieldnotes, array, element, isBeingAdde
       }
     }
   } catch (e) {
-    console.log('API element to remove: ', element)
-    console.log('API docRef: ', docRef)
-    console.warn('API error: ', e)
+    logger({
+        message: e.message
+      , type: 'error'
+    })
   }
 }
 
@@ -550,9 +568,10 @@ export const removeElementFromArray = async ({fieldnotes, array, element, isBein
       }
     }
   } catch (e) {
-    console.log('API element to remove: ', element)
-    console.log('API docRef: ', docRef)
-    console.warn('API error: ', e)
+    logger({
+        message: e.message
+      , type: 'error'
+    })
   }
 }
 
@@ -1362,7 +1381,10 @@ export const getAdminFieldnotesStubs = async ({}) => {
     })  
 
   } catch (e) {
-    console.log(e.message)
+    logger({
+        message: e.message
+      , type: 'error'
+    })
   }
 }
 
@@ -1376,8 +1398,10 @@ export const deleteFieldnotesById = async ({id, fieldnotesId}) => {
       message: 'Fieldnotes deleted'
     }
   } catch (e) {
-    if(id) console.log('API docRef: ', id)
-    if(fieldnotesId) console.warn('API error: ', fieldnotesId)
+    logger({
+        message: e.message
+      , type: 'error'
+    })
     throw e
   }
 }

@@ -112,3 +112,21 @@ export const saveJson = ({obj, title = 'fieldnotes', textOnly = false}) => {
 export const isValidDate = ({date}) => {
   return date.length > 0 && Object.prototype.toString.call(new Date(date)) === '[object Date]'
 }
+
+export const logger = ({message, type =''}) => {
+  const log = process.env.LOG
+
+  if(log === 'true') {
+    switch(type) {
+      case 'success':
+        console.log(message)
+        break
+      case 'error':
+        console.warn(message)
+        break
+      default:
+        console.log(message)
+        break
+    }
+  }
+}

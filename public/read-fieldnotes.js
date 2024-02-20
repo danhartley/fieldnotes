@@ -26,7 +26,10 @@ import {
     , ButtonHideShowComponent
 } from './ui-components.js'
 
-import { appLocalStorage } from './utils.js'
+import { 
+      appLocalStorage 
+    , logger
+} from './utils.js'
 
 const init = async () => {    
     const initGlobalRead = () => {
@@ -432,7 +435,10 @@ const init = async () => {
                                         parent = parentClone.querySelector('div')
                                         parent.appendChild(clone)
                                     } catch (e) {
-                                        console.log(e.message)
+                                        logger({
+                                            message: e.message
+                                          , type: 'error'
+                                        })
                                     }
                                 })
                                 article.appendChild(parent)
@@ -456,7 +462,10 @@ const init = async () => {
                                         parent = parentClone.querySelector('div')
                                         parent.appendChild(clone)
                                     } catch (e) {
-                                        console.log(e.message)
+                                        logger({
+                                            message: e.message
+                                          , type: 'error'
+                                        })
                                     }
                                 })
                                 article.appendChild(parent)
@@ -510,7 +519,10 @@ const init = async () => {
                                         parent = parentClone.querySelector('dl')
                                         parent.appendChild(clone)
                                     } catch(e) {
-                                        console.log(e.message)
+                                        logger({
+                                            message: e.message
+                                          , type: 'error'
+                                        })
                                     }              
                                 })
                                 article.appendChild(parent)
@@ -522,7 +534,6 @@ const init = async () => {
             
             addImgClickEventHandlers()
         } catch (e) {
-            console.log(e.message)
             showNotificationsDialog({
                   message: e.message
                 , type: 'error'
@@ -637,7 +648,10 @@ const init = async () => {
 
                 fnAutocompleteTitleInputText.closest('fieldset').classList.remove('border-solid')
             } catch (e) {
-                console.log(e.message)
+                logger({
+                    message: e.message
+                  , type: 'error'
+                })
             }
         }
 

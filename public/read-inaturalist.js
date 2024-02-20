@@ -405,7 +405,6 @@ const init = async () => {
             Array.from(sectionsWithHeader)[0].scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
         } catch (e) {
             showNotificationsDialog({message: e.message, type: 'error'})
-            console.log(e)
         }
     }     
     
