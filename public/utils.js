@@ -111,7 +111,7 @@ export const saveJson = ({obj, title = 'fieldnotes', textOnly = false}) => {
           text+= '<br /><br />'
           break
           case 'Terms':
-            text+= `<dl style='font-weight:bold;margin-bottom:-1.5rem'>`
+            text+= `<dl style='font-weight:bold;'>`
             section.terms.forEach(term => {              
               text+= `<dt style='margin-bottom:-1rem;'>${term.dt}</dt><dd><small>${term.dd}</small></dd>`
             })
