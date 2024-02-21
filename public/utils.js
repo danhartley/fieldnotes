@@ -57,27 +57,70 @@ export const saveJson = ({obj, title = 'fieldnotes', textOnly = false}) => {
     , day: 'numeric'
 })
   }
+  const formatSpeciesImgSrc = ({src, part}) => {
+    return src.replace('square', part)
+  }
+  const styleFieldTripPhotos = 'height:165px;width:220px;object-fit:fill;margin-right:.25rem;margin-bottom:.25rem;'
+  const styleSpeciesPhotos = 'height:150px;width:150px;object-fit:fill;margin-right:.25rem;margin-bottom:.25rem;'
+
   const filterByText = obj => {
-    let text = `[Originally published at <a href=https://ifieldnotes.org>iFieldnotes.org</a>]`
-    text += `<p><em>${formatAuthor(obj.author)}</em></p>`
-    text += `<p><em>${formatDate(obj.d1)}</em></p>`
-    text += `<p><em><a href=https://www.google.com/maps/place/${obj.location.location}>${obj.location.place_guess}</a></em></p>`
+    let text = `<div style='font-size:1rem;'>`
+    text+= '<p><small><strong>[Originally published at <a href=https://ifieldnotes.org>iFieldnotes.org</a>]</strong></small></p>'
+    text+= `<p><strong>${formatAuthor(obj.author)}</strong></p>`
+    text+= `<p><strong>${formatDate(obj.d1)}</strong></p>`
+    text+= `<p><em><a href=https://www.google.com/maps/place/${obj.location.location}>${obj.location.place_guess}</a></em></p>`
 
     obj.sections.map(section => {
       switch(section.name) {
         case 'Header':
-          text += `<h3>${section.h3}</h3>`
+          text+= `<h3>${section.h3}</h3>`
           break
         case 'Subheader':
-          text += `<h4>${section.h4}</h4>`
+          text+= `<h4>${section.h4}</h4>`
           break
         case 'Text block':
           section.paras.forEach(p => {
-            text += `<p>${p.p}</p>`
-          })            
+            text+= `<p>${p.p}</p>`
+          })    
           break
+        case 'Field trip photos':
+          text+= `<h4 style='padding: 1rem 0 0 0;margin-bottom:-.5rem;font-weight:bold;'>Field trip photos</h4>`
+          section.images.forEach(img => {
+            text+= `<img src=${img.src} alt=${img.alt} style=${styleFieldTripPhotos} />`
+          })
+          text+= '<br /><br />'
+          break
+        case 'Author\'s photos':
+          text+= `<h4 style='padding: 1rem 0 0 0;margin-bottom:-.5rem;font-weight:bold;'>Author's photos</h4>`
+          section.species.forEach(sp => {
+            text+= `<img src=${formatSpeciesImgSrc({
+                src: sp.observation.default_photo.url
+              , part: 'small'
+            })} alt=${sp.observation.species_guess} style=${styleSpeciesPhotos} />`
+          })
+          text+= '<br /><br />'
+          break
+        case 'iNat species':
+          text+= `<h4 style='padding: 1rem 0 0 0;margin-bottom:-.5rem;font-weight:bold;'><strong>iNat species</strong></h4>`
+          section.species.forEach(sp => {
+            text+= `<img src=${formatSpeciesImgSrc({
+                src: sp.taxon.default_photo.square_url
+              , part: 'small'
+            })} alt=${sp.taxon.name} style=${styleSpeciesPhotos} />`
+          })
+          text+= '<br /><br />'
+          break
+          case 'Terms':
+            text+= `<dl style='font-weight:bold;margin-bottom:-1.5rem'>`
+            section.terms.forEach(term => {              
+              text+= `<dt style='margin-bottom:-1rem;'>${term.dt}</dt><dd><small>${term.dd}</small></dd>`
+            })
+            text+= '</dl>'
+            break
       }
     })
+    text+= '</div>'
+
     return text
   }
 
