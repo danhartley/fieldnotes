@@ -840,6 +840,9 @@ export const addOrUpdateSectionArray = async ({globalWrite, sectionToUpdate, sec
                 , globalWrite
                 , type: sectionToUpdate.type
             })
+
+            // Update the fieldnotes section
+            Object.assign(globalWrite.fieldnotes.sections.find(section => section.sectionIndex === sectionAddedOrUpdated.sectionIndex), sectionAddedOrUpdated)
         }
 
         // Notify user
