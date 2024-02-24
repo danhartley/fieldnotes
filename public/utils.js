@@ -60,8 +60,8 @@ export const saveJson = ({obj, title = 'fieldnotes', textOnly = false}) => {
   const formatSpeciesImgSrc = ({src, part}) => {
     return src.replace('square', part)
   }
-  const styleFieldTripPhotos = 'height:165px;width:220px;object-fit:fill;margin-right:.25rem;margin-bottom:.25rem;'
-  const styleSpeciesPhotos = 'height:150px;width:150px;object-fit:fill;margin-right:.25rem;margin-bottom:.25rem;'
+  const styleFieldTripPhotos = 'height:165px;width:220px;object-fit:cover;margin-right:.25rem;margin-bottom:.25rem;'
+  const styleSpeciesPhotos = 'height:170px;width:170px;object-fit:cover;margin-right:.25rem;margin-bottom:.25rem;'
 
   const filterByText = obj => {
     let text = `<div style='font-size:1rem;'>`

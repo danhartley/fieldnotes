@@ -796,7 +796,7 @@ export const addSectionToFieldnotes = async ({globalWrite, section}) => {
         })
 
         showNotificationsDialog({
-              message: `${section.name} added.`
+              message: `${section.name} added`
             , type: 'success'
             , displayDuration: 4000
         })

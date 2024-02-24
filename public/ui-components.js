@@ -1,9 +1,12 @@
+import {
+  logger
+} from './utils.js'
+
 export class ButtonComponent {
   constructor({parent = document, elementSelector, clickHandler}) {
     this.buttonElement = parent.querySelector(`#${elementSelector}`)
 
     if (!this.buttonElement) {
-      // console.error(`Element with Id ${elementSelector} not found.`)
       return
     }
 
@@ -80,7 +83,10 @@ export class RadioButtonComponent {
     this.radioButtonElement = document.getElementById(elementSelector)
 
     if (!this.radioButtonElement) {
-      console.error(`Element with Id ${elementSelector} not found.`)
+      logger({
+          message: `Element with Id ${elementSelector} not found`
+        , type: 'error'
+      })
       return
     }
 
@@ -95,7 +101,10 @@ class BaseComponent {
     this.element = parent.querySelector(selector)
 
     if (!this.element) {
-      console.error(`Element with selector ${selector} not found.`)
+      logger({
+          message: `Element with selector ${selector} not found`
+        , type: 'error'
+      })
       return
     }
 
