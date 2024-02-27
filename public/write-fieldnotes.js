@@ -120,6 +120,11 @@ const init = () => {
   const authorInputText = d.getElementById('author-input-text')
   const dateInputText = d.getElementById('date-input-text')
   const placeInputText = d.getElementById('place-input-text')
+  
+  const timeStartInputText = d.getElementById('time-start-input-text')
+  const timeEndInputText = d.getElementById('time-end-input-text')
+  const weatherInputText = d.getElementById('weather-input-text')
+  const habitatInputText = d.getElementById('habitat-input-text')
 
   const selectSectionTypeSection = d.getElementById('select-section-type-section')  
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
@@ -971,6 +976,54 @@ const init = () => {
       , saveFieldnotesSection 
     })
   })
+  weatherInputText.addEventListener('change', e => {
+    globalWrite.fieldnotes.weather = e.target.value.trim()
+    updateMetadataFields({
+          globalWrite
+        , prop: 'weather'
+        , value: globalWrite.fieldnotes.weather
+    })
+    enableSaveFieldNotesSection({ 
+        globalWrite
+      , saveFieldnotesSection 
+    })
+  })
+  habitatInputText.addEventListener('change', e => {
+    globalWrite.fieldnotes.habitat = e.target.value.trim()
+    updateMetadataFields({
+          globalWrite
+        , prop: 'habitat'
+        , value: globalWrite.fieldnotes.habitat
+    })
+    enableSaveFieldNotesSection({ 
+        globalWrite
+      , saveFieldnotesSection 
+    })
+  })
+  timeStartInputText.addEventListener('change', e => {
+    globalWrite.fieldnotes.startTime = e.target.value
+    updateMetadataFields({
+        globalWrite
+      , prop: 'startTime'
+      , value: globalWrite.fieldnotes.startTime
+    })
+    enableSaveFieldNotesSection({ 
+        globalWrite
+      , saveFieldnotesSection 
+    })
+  })
+  timeEndInputText.addEventListener('change', e => {
+    globalWrite.fieldnotes.endTime = e.target.value
+    updateMetadataFields({
+        globalWrite
+      , prop: 'endTime'
+      , value: globalWrite.fieldnotes.endTime
+    })
+    enableSaveFieldNotesSection({ 
+        globalWrite
+      , saveFieldnotesSection 
+    })
+  })
 
   const enableSearchBtn = () => {
     const hasUser = globalWrite.login && globalWrite.login.length > 0
@@ -1085,12 +1138,16 @@ const init = () => {
         , isUserEditing: true
       })
 
-      const { title, author, d1, d2, location } = globalWrite.fieldnotes
+      const { title, author, d1, d2, location, weather, habitat, startTime, endTime } = globalWrite.fieldnotes
 
       titleInputText.value = title
       authorInputText.value = author
       dateInputText.value = d1
       placeInputText.value = location.place_guess
+      weatherInputText.value = weather || ''
+      habitatInputText.value = habitat || ''
+      timeStartInputText.value = startTime || ''
+      timeEndInputText.value = endTime || ''
 
       const observations = await getInatObservations({ 
           user_id: globalWrite.fieldnotes.user.id
@@ -1158,6 +1215,7 @@ const init = () => {
 
         let speciesCheckboxes = null
 
+        // Iterate the sections updating content according to type
         switch(section.templateId) {
           case 'h3-preview-template':
           case 'h4-preview-template':

@@ -114,10 +114,24 @@
               <input id="date-input-text" type="date" autocomplete="off">
             </div>
             <div class="centred-block mt2">
+              <label for="time-start-input-text">Start</label>      
+              <input id="time-start-input-text" type="time" autocomplete="off" placeholder="Optional">
+              <label for="time-end-input-text" class="ml initial-width mr">End</label>
+              <input id="time-end-input-text" type="time" autocomplete="off"><span class="ml small">(Optional)</span>
+            </div>
+            <div class="centred-block mt2">
               <label for="place-input-text">Place</label>      
               <input id="place-input-text" type="text" class="p" autocomplete="off" minlength="3" placeholder="Minimum length 3 characters">
             </div>
-            <p class="small"><em>A title, author, date and place are all required to create, or edit, fieldnotes.</em></p>
+            <div class="centred-block mt2">
+              <label for="weather-input-text">Weather</label>      
+              <input id="weather-input-text" type="text" class="p" autocomplete="off" placeholder="(Optional) e.g. High 27, low 10, wind 12 mph, sunny">
+            </div>
+            <div class="centred-block mt2">
+              <label for="habitat-input-text">Habitat</label>      
+              <input id="habitat-input-text" type="text" class="p" autocomplete="off" placeholder="(Optional) e.g. Northern hardwood forest">
+            </div>
+            <p class="small"><em>A <strong>title</strong>, <strong>author</strong>, <strong>date</strong> and <strong>place</strong> are all required to create, or edit, fieldnotes.</em></p>
           </fieldset>
         </section>
 
@@ -175,7 +189,7 @@
               <div id="export-fieldnotes-notification-text" class="ml small hidden">Exporting…</div>
             </div>
             <div class="centred-block mt2">
-              <label for="export-fieldnotes-input-check" class="mr">Text only in HTML format</label>
+              <label for="export-fieldnotes-input-check" class="mr">iNaturalist post format</label>
               <input id="export-fieldnotes-input-check" type="checkbox">
             </div>
           </fieldset>

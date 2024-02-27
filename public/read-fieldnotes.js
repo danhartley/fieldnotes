@@ -280,6 +280,7 @@ const init = async () => {
         
             if(globalRead.species) article.innerHTML = ''
         
+            // Iterate the sections updating content according to type
             switch(globalRead.template.templateId) {
                 case 'species-template':
                 case 'observations-template':
@@ -346,9 +347,9 @@ const init = async () => {
                     const metaTemplate = d.getElementById('meta-preview-template')
                     const metaClone = metaTemplate.content.cloneNode(true)
                     const metaList = metaClone.querySelector('ul')
-                    const items = metaList.querySelectorAll('li > strong')
-                    items[0].innerText = globalRead.fieldnotes.author
-                    items[1].innerText = new Date(globalRead.fieldnotes.d1).toLocaleDateString('en-gb', { 
+                    const required = metaList.querySelectorAll('li > strong')
+                    required[0].innerText = globalRead.fieldnotes.author
+                    required[1].innerText = new Date(globalRead.fieldnotes.d1).toLocaleDateString('en-gb', { 
                           weekday: 'long'
                         , year: 'numeric'
                         , month: 'long'
@@ -357,6 +358,19 @@ const init = async () => {
                     const a = metaList.querySelector('a')
                     a.textContent = globalRead.fieldnotes.location.place_guess
                     a.setAttribute('href', `https://www.google.com/maps/place/${globalRead.fieldnotes.location.location}`)
+                    // Optional metadata
+                    const optional = metaList.querySelectorAll('li.optional')
+                    if(globalRead.fieldnotes.startTime) {
+                        if(globalRead.fieldnotes.endTime) {
+                            optional[0].innerText = `Time: ${globalRead.fieldnotes.startTime}-${globalRead.fieldnotes.endTime}`
+                        }
+                    }
+                    if(globalRead.fieldnotes.weather) {
+                        optional[1].innerText = `Weather: ${globalRead.fieldnotes.weather}`
+                    }
+                    if(globalRead.fieldnotes.habitat) {
+                        optional[2].innerText = `Habitat: ${globalRead.fieldnotes.habitat}`
+                    }
                     article.appendChild(metaClone)
                     
                     // Iterate over the sections

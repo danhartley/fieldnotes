@@ -64,11 +64,25 @@ export const saveJson = ({obj, title = 'fieldnotes', textOnly = false}) => {
   const styleSpeciesPhotos = 'height:170px;width:170px;object-fit:cover;margin-right:.25rem;margin-bottom:.25rem;'
 
   const filterByText = obj => {
-    let text = `<div style='font-size:1rem;'>`
-    text+= '<p><small><strong>[Originally published at <a href=https://ifieldnotes.org>iFieldnotes.org</a>]</strong></small></p>'
-    text+= `<p><strong>${formatAuthor(obj.author)}</strong></p>`
-    text+= `<p><strong>${formatDate(obj.d1)}</strong></p>`
-    text+= `<p><em><a href=https://www.google.com/maps/place/${obj.location.location}>${obj.location.place_guess}</a></em></p>`
+    let text = `<div style=font-size:1rem;margin-top:-1rem;'><div style='font-size:.9rem;;margin-bottom: -3rem;'>`
+    text+= `<p><strong>[Originally published at <a href=https://ifieldnotes.org>iFieldnotes.org</a>]</strong></p>`
+    text+= `<p style='margin-top:0rem;'>Author: ${formatAuthor(obj.author)}</p>`
+    text+= `<p style='margin-top:-2rem;'>Date: ${formatDate(obj.d1)}</p>`
+    if(obj.startTime?.length > 0) {
+      if(obj.endTime?.length > 0) {
+        text+= `<p style='margin-top:-2rem;'>Time: ${obj.startTime}-${obj.endTime}</p>`
+      } else {
+        text+= `<p style='margin-top:-2rem;'>${obj.startTime}</p>`
+      }
+    }
+    text+= `<p style='margin-top:-2rem;'><a href=https://www.google.com/maps/place/${obj.location.location}>${obj.location.place_guess}</a></p>`
+    if(obj.weather) {
+      text+= `<p style='margin-top:-2rem;'>Weather: ${obj.weather}</p>`
+    }
+    if(obj.habitat) {
+      text+= `<p style='margin-top:-2rem;'>Habitat: ${obj.habitat}</p>`
+    }
+    text+= '</div>'
 
     obj.sections.map(section => {
       switch(section.name) {
@@ -111,9 +125,13 @@ export const saveJson = ({obj, title = 'fieldnotes', textOnly = false}) => {
           text+= '<br /><br />'
           break
           case 'Terms':
-            text+= `<dl style='font-weight:bold;'>`
-            section.terms.forEach(term => {              
-              text+= `<dt style='margin-bottom:-1rem;'>${term.dt}</dt><dd><small>${term.dd}</small></dd>`
+            text+= `<dl style='font-weight:bold;margin: 1rem 0;border:1px solid lightgray;padding:0 0 1rem 1rem;'>`
+            section.terms.forEach((term, index) => {              
+              if(index === 0) {
+                text+= `<dt style='margin-bottom:-1rem;'>${term.dt}</dt><dd><small>${term.dd}</small></dd>`
+              } else {
+                text+= `<dt style='margin-top:1rem;margin-bottom:-1rem;'>${term.dt}</dt><dd><small>${term.dd}</small></dd>`
+              }
             })
             text+= '</dl>'
             break
