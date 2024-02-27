@@ -879,6 +879,10 @@ fieldset.species-list {
   margin-left: calc(var(--d) * 6);
 }
 
+.ml7 {
+  margin-left: calc(var(--d) * 7);
+}
+
 .ml8 {
   margin-left: calc(var(--d) * 8);
 }
