@@ -64,7 +64,7 @@ export const saveJson = ({obj, title = 'fieldnotes', textOnly = false}) => {
   const styleSpeciesPhotos = 'height:170px;width:170px;object-fit:cover;margin-right:.25rem;margin-bottom:.25rem;'
 
   const filterByText = obj => {
-    let text = `<div style=font-size:1rem;margin-top:-1rem;'><div style='font-size:.9rem;;margin-bottom: -3rem;'>`
+    let text = `<div style=font-size:1rem;margin-top:-1rem;'><div style='font-size:.9rem;margin-bottom: -3rem;'>`
     text+= `<p><strong>[Originally published at <a href=https://ifieldnotes.org>iFieldnotes.org</a>]</strong></p>`
     text+= `<p style='margin-top:0rem;'>Author: ${formatAuthor(obj.author)}</p>`
     text+= `<p style='margin-top:-2rem;'>Date: ${formatDate(obj.d1)}</p>`
@@ -190,4 +190,10 @@ export const logger = ({message, type =''}) => {
         break
     }
   }
+}
+
+export const sortBy = (arr, prop, dir = 'asc') => {
+  return dir === 'asc' 
+    ? arr.sort((a, b) => parseFloat(a[prop]) - parseFloat(b[prop]))
+    : arr.sort((a, b) => parseFloat(b[prop]) - parseFloat(a[prop]))
 }

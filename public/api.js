@@ -6,7 +6,8 @@ import { getFirestore, collection, query, and, where, or, doc, getDocs, getDoc, 
 
 import { templates } from './templates.js'
 import {
-  logger
+    logger
+  , sortBy
 } from './utils.js'
 
 // INAT API
@@ -284,9 +285,11 @@ export const getFieldnotesStubs = async ({user, readonly = false}) => {
       return doc.data()
     })    
 
-    return readonly
+    const list = readonly
       ? stubsList.concat(or_stubsList)
       : stubsList
+
+    return sortBy(list, 'created', 'desc')
   } catch (e) {
     logger({
       message: e.message
