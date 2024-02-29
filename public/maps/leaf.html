@@ -7,10 +7,20 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""></script>
-    <link rel="stylesheet" href="./leaf.css">
-    <script src="./leaf.js" type="module"></script>
+    <link rel="stylesheet" href="./leaf.css">    
   </head>
   <body>
-    <div id="map"></div>
+    <div id="map" class="leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"></div>
+    <!-- <script src="./leaf.js" type="module"></script> -->
+    <script>
+      const map = L.map('map').setView([51.505, -0.09], 13)
+
+      console.log(document.getElementById('map'))
+
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map)
+    </script>
   </body>
 </html>
