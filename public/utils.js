@@ -171,7 +171,7 @@ export const saveJson = ({obj, title = 'fieldnotes', textOnly = false}) => {
 }
 
 export const isValidDate = ({date}) => {
-  return date.length > 0 && Object.prototype.toString.call(new Date(date)) === '[object Date]'
+  return date.length > 0 && !isNaN(Date.parse(new Date(date)))
 }
 
 export const logger = ({message, type =''}) => {
