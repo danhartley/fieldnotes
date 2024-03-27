@@ -726,34 +726,41 @@ export const showNotificationsDialog = ({message, type = 'success', displayDurat
 
 // Section actions
 export const deleteSection = async ({sectionIndex, globalWrite}) => {
-    try {        
-        const elementToRemove = globalWrite.fieldnotes.sections.find(t => t.sectionIndex == sectionIndex)
+    try {
+        const elementToRemove = globalWrite.fieldnotes.sections.find(section => section.sectionIndex == sectionIndex)
 
-        const elementHasBeenAdded = !!elementToRemove
+        if (!elementToRemove) {
+            showNotificationsDialog({
+                message: 'Section not found'
+                , type: 'error'
+            })
+            return
+        }
         
-        // Remove section from fieldnotes in the db (or ready for deletion if not)
-        const response = elementHasBeenAdded 
-            ? await removeElementFromArray({fieldnotes: globalWrite.fieldnotes, array: 'sections',  element: elementToRemove})
-            : {
-                success: true,
-                message: 'Section deleted'
+        // Remove section from fieldnotes in the db
+        const response = await removeElementFromArray({
+            fieldnotes: globalWrite.fieldnotes
+            , array: 'sections'
+            , element: elementToRemove
+        })
+
+        if (response.success) {
+            const element = d.getElementById(`section-${sectionIndex}`)
+            if (element) {
+                // Remove section from the DOM
+                element.remove()
             }
 
-        if(response.success) {
-            const element = d.getElementById(sectionIndex)
-            // Remove section from the DOM
-            element.remove()
-
             // Remove section from the in-memory fieldnotes
-            globalWrite.fieldnotes.sections = globalWrite.fieldnotes.sections.filter(t => t.sectionIndex !== sectionIndex)
+            globalWrite.fieldnotes.sections = globalWrite.fieldnotes.sections.filter(section => section.sectionIndex !== sectionIndex)
             globalWrite.fieldnotes.sectionOrder = globalWrite.fieldnotes.sectionOrder.filter(id => id !== sectionIndex)
 
             // Notify user
             showNotificationsDialog({
-                  message: response.message
+                message: response.message
                 , type: 'success'
             })
-        }    
+        }
     } catch (e) {
         showNotificationsDialog({
             message: e.message
