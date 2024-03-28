@@ -289,7 +289,11 @@ export const getFieldnotesStubs = async ({user, readonly = false}) => {
       ? stubsList.concat(or_stubsList)
       : stubsList
 
-    return sortBy(list, 'created', 'desc')
+    return sortBy({
+        arr: list
+      , prop: 'created'
+      , dir: 'desc'
+    })
   } catch (e) {
     logger({
       message: e.message

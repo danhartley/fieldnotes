@@ -192,8 +192,16 @@ export const logger = ({message, type =''}) => {
   }
 }
 
-export const sortBy = (arr, prop, dir = 'asc') => {
+export const sortBy = ({arr, prop, dir = 'asc'}) => {
   return dir === 'asc' 
-    ? arr.sort((a, b) => parseFloat(a[prop]) - parseFloat(b[prop]))
-    : arr.sort((a, b) => parseFloat(b[prop]) - parseFloat(a[prop]))
+   ? arr.sort((a, b) => {
+        const x = a[prop]
+        const y = b[prop]
+        return x - y
+      })
+    : arr.sort((a, b) => {
+        const x = a[prop]
+        const y = b[prop]
+        return y - x
+      })
 }
