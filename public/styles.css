@@ -48,7 +48,7 @@
 
 body {  
   font-family: Elena, "PT Serif", serif;
-  background-color: var(--c1);
+  background-color: var(--c0);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -350,7 +350,7 @@ fieldset {
   margin: 0 0 calc(var(--d) * 2) 0;
   border: 1px dashed var(--c2);
   padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 2) calc(var(--d) * 2);
-  background-color: var(--c0);
+  background-color: var(--c1);
 }
 
 fieldset.fieldset-reset {

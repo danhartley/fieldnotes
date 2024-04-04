@@ -9,11 +9,12 @@
     "public/inaturalist-authentication.html",
     "public/admin/admin.html",
     "public/maps/leaf.html",
-    "public/maps/leaf2.html"
+    "public/maps/leaf2.html",
+    "public/play/responsive.html"
   ],
   "scripts": {
     "copy-redirects": "cp -vR ./_redirects ./dist",
-    "start": "parcel",
+    "start": "parcel --no-cache",
     "build": "parcel build && npm run copy-redirects",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
