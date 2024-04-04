@@ -48,7 +48,7 @@
 
 body {  
   font-family: Elena, "PT Serif", serif;
-  background-color: var(--c0);
+  background-color: var(--c1);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -351,7 +351,7 @@ fieldset {
   margin: 0 0 calc(var(--d) * 2) 0;
   border: 1px dashed var(--c2);
   padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 2) calc(var(--d) * 2);
-  background-color: var(--c1);
+  background-color: var(--c0);
 }
 
 fieldset.fieldset-reset {
@@ -374,7 +374,7 @@ legend  {
   font-size: var(--s3);
   font-weight: bold;
   letter-spacing: calc(var(--d) * .05);
-  color: var(--c8);
+  color: var(--c7);
 }
 
 figure input[type='text'] {
@@ -551,7 +551,7 @@ label::first-letter {
   grid-template-columns: repeat(auto-fit, minmax(200px, auto));
   gap: var(--d);
   margin: 0 auto calc(var(--d)) auto;
-  background-color: var(--c1);
+  background-color: var(--c0);
 }
 
 .inat-preferences-section .grid {
