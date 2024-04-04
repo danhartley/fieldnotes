@@ -160,9 +160,10 @@ li.small {
 
 button {
   margin: 0;
+  line-height: calc(var(--d)* 2);
   border: 1px solid var(--c3);
   border-radius: calc(var(--d) * .5);
-  padding: calc(var(--d) * 1.5) var(--d);
+  padding: calc(var(--d) * 1.5) calc(var(--d) * 3);
   font-size: var(--s3);
   letter-spacing: calc(var(--d) * .025);
   background-color: var(--inactive-bg);
@@ -385,7 +386,7 @@ a {
   padding-bottom: calc(var(--d) *.25);
   text-decoration: none;
   color: var(--c8);
-  line-height: 1.6;
+  line-height: calc(var(--d)* 4);
 }
 
 a.info {
@@ -420,6 +421,7 @@ figure {
   margin: 0 auto var(--d) auto;
   text-align: center;
   border: 1px solid var(--c2);
+  border-radius: calc(var(--d)* .5);
 }
 
 figcaption {
@@ -549,7 +551,7 @@ label::first-letter {
   grid-template-columns: repeat(auto-fit, minmax(200px, auto));
   gap: var(--d);
   margin: 0 auto calc(var(--d)) auto;
-  background-color: var(--c0);
+  background-color: var(--c1);
 }
 
 .inat-preferences-section .grid {
@@ -577,6 +579,7 @@ label::first-letter {
   align-items: center;
   padding: calc(var(--d) * 1.5) var(--d);
   border: 1px dotted var(--c2);
+  border-radius: calc(var(--d)* .5);
   background-color: var(--c1);
 }
 
@@ -606,8 +609,8 @@ label::first-letter {
   margin-bottom: 0;
 }
 
-.non-grid p {
-  line-height: 1.8;
+.non-grid p {  
+  line-height: calc(var(--d)* 4);
   font-size: var(--s6);  
   color: var(--c6);
   -webkit-font-smoothing: antialiased;
@@ -919,10 +922,12 @@ fieldset.species-list {
 
 .small {
   font-size: var(--s3);
+  line-height: calc(var(--d) * 2.5);
 }
 
 .smallish {
   font-size: var(--s2);
+  line-height: calc(var(--d) * 2);
 }
 
 .tiny {
@@ -976,6 +981,7 @@ fieldset.species-list {
   dl {
     margin: 0 auto calc(var(--d) * 4) auto;
     border: 1px solid var(--c3);
+    border-radius: calc(var(--d)* .5);
     padding: calc(var(--d) * 2) calc(var(--d) * 2) 0 calc(var(--d) * 2);
   }
 }
