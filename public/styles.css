@@ -32,10 +32,11 @@
   --insecta: #e2dce2;
   --aves: #d7e3f1;
   --reptilia: #fee2df;  
-  --active-bg: #9fd4be;
-  --inactive-bg: #84c8ab;
-  --inactive-bg-light: #c3e2d3;
+  --active-bg: #e2f2eb;
+  --inactive-bg: #e2f2eb;
+  --inactive-bg-light: #e2f2eb;
   --accent-border: #9fd4be;
+  --accent-border-active: #9fd4be;
   --success-bg-light: #e2e9f1;
   --error-bg-light: #f7eff3;
   --save-bg-light: #e2e9f1;
@@ -184,7 +185,7 @@ button.submit:hover {
 }
 
 button:focus-visible, button:focus {
-  outline: 1px solid var(--accent);
+  outline: 1px solid var(--accent-border-active);
   border: 1px solid transparent !important;
   background-color: var(--active-bg);  
 }
