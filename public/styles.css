@@ -22,9 +22,6 @@
   --s7: 1.2rem;
   --s8: 1.3rem;
   --s9: 1.4rem;
-  --main: #f2ebe2;
-  --secondary: #f8f4f0;
-  --accent: #4f3c24;
   --fungi: #e1e1e1;
   --amphibia: #e2deb4;
   --mammalia: #f0c782;
@@ -32,28 +29,24 @@
   --insecta: #e2dce2;
   --aves: #d7e3f1;
   --reptilia: #fee2df;  
-  --active-bg: #c4e9d8;
-  --inactive-bg: #e2f2eb;
-  --inactive-bg-light: #e2f2eb;
-  --accent-border: #9fd4be;
-  --accent-border-active: #76c2a2;
+  --body-bg: #f2ebe2;
+  --content-bg: #f8f4f0;
+  --accent: #4f3c24;
+  --accent-light: #9b6727;
+  --primary-btn-bg: #fed05e;
+  --warning-btn-bg: #ead5df;  
+  --secondary-action-btn-bg: #e2e9f1;
   --success-bg-light: #e2e9f1;
-  --error-bg-light: #f7eff3;
-  --save-bg-light: #e2e9f1;
-  --save-bg: #c8d5e4;
   --grid-min-max: 180px;
   --img-min-width: 180px;
   --img-min-height: 180px;
-  --alert: #ead5df;
-  --alert-bg-light: #f7eff3;
-  --alert-border: #ead5df;  
 }
 
 /* ELEMENTS */
 
 body {  
   font-family: Elena, "PT Serif", serif;
-  background-color: var(--main);
+  background-color: var(--body-bg);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -105,7 +98,7 @@ aside menu li {
 }
 
 aside menu li button {
-  background-color: var(--secondary);
+  background-color: var(--content-bg);
 }
 
 h1 {
@@ -166,28 +159,23 @@ li.small {
 button {
   margin: 0;
   line-height: calc(var(--d)* 2);
-  border: 1px solid var(--accent-border);
+  border: 1px solid var(--accent-light);
   border-radius: calc(var(--d) * .5);
   padding: calc(var(--d) * 1.25) calc(var(--d) * 2.5);
   font-size: var(--s3);
   letter-spacing: calc(var(--d) * .015);
-  background-color: var(--inactive-bg);
+  background-color: var(--primary-btn-bg);
   cursor: pointer;
-}
-
-button:hover {
-  outline: 1px solid var(--accent-border);
-  color: var(--c8) !important;
 }
 
 button.submit:hover {
   border-color: var(--c8);
-  background-color: var(--active-bg);
+  background-color: var(--primary-btn-bg);
 }
 
-button:focus-visible, button:focus {
-  outline: 1px solid var(--accent-border-active);
-  background-color: var(--active-bg);  
+button:hover, button:focus-visible, button:focus {
+  outline: 1px solid var(--accent);
+  border: 1px solid transparent !important;
 }
 
 label {
@@ -356,7 +344,7 @@ fieldset {
   margin: 0 0 calc(var(--d) * 2) 0;
   border: 1px dashed var(--c4);
   padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 2) calc(var(--d) * 2);
-  background-color: var(--secondary);
+  background-color: var(--content-bg);
 }
 
 fieldset.fieldset-reset {
@@ -485,7 +473,8 @@ img {
 }
 
 .drop-before {
-  background-color: var(--inactive-bg);
+  background-color: var(--primary-btn-bg);
+  /* background-color: var(--inactive-bg); */
 }
 
 .moveable {
@@ -505,7 +494,7 @@ label::first-letter {
 }
 
 .error-bg {
-  background-color: var(--error-bg-light);
+  background-color: var(--warning-btn-bg);
 }
 
 .success-bg {
@@ -531,12 +520,22 @@ label::first-letter {
 }
 
 .alert {
-  border-color: var(--alert);
+  border-color: var(--warning-btn-bg);
 }
 
 .btn-alert {
-  border-color: var(--alert-border);
-  background-color: var(--alert-bg-light);
+  border-color: var(--accent);
+  background-color: var(--warning-btn-bg);
+}
+
+.btn-secondary-action {
+  background-color: var(--success-bg-light);
+  border: 1px solid var(--accent);
+}
+
+.btn-delete-action {
+  background-color: var(--warning-btn-bg);
+  border: 1px solid var(--accent);
 }
 
 .border-solid {
@@ -584,10 +583,6 @@ label::first-letter {
   border: 1px dotted var(--c2);
   border-radius: calc(var(--d)* .5);
   background-color: var(--c1);
-}
-
-#inat-autocomplete-group-container .flex-row {
-  background-color: var(--inactive-bg-light);
 }
 
 .grid .species-panel {
@@ -742,7 +737,7 @@ label::first-letter {
   font-weight: initial;
   text-transform: uppercase;
   color: var(--c5);
-  background-color: var(--secondary);
+  background-color: var(--content-bg);
 }
 
 .btn-secondary-bottom {
@@ -756,12 +751,12 @@ label::first-letter {
 }
 
 .btn-save {
-  background-color: var(--save-bg-light);
+  background-color: var(--secondary-action-btn-bg);
 }
 
-.btn-save:focus {
+/* .btn-save:focus {
   background-color: var(--save-bg);
-}
+} */
 
 /* CONTROLS */
 
