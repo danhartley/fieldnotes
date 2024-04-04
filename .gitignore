@@ -3,5 +3,4 @@
 archive/
 dist/
 .parcel-cache
-play/
 node_modules
