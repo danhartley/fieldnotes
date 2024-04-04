@@ -22,6 +22,9 @@
   --s7: 1.2rem;
   --s8: 1.3rem;
   --s9: 1.4rem;
+  --main: #f2ebe2;
+  --secondary: #f8f4f0;
+  --accent: #785b36;
   --fungi: #e1e1e1;
   --amphibia: #e2deb4;
   --mammalia: #f0c782;
@@ -29,11 +32,12 @@
   --insecta: #e2dce2;
   --aves: #d7e3f1;
   --reptilia: #fee2df;  
-  --inactive-bg: #eef2e3;
-  --inactive-bg-light: #f7f9f2;
+  --inactive-bg: #addac7;
+  --inactive-bg-light: #c3e2d3;
   --success-bg-light: #e6edf6;
   --error-bg-light: #feecea;
   --active-bg: #d5e1ba;
+  --active-bg: #84c8ab;
   --save-bg-light: #dff0fe;
   --save-bg: #b8dffb;
   --grid-min-max: 180px;
@@ -41,14 +45,14 @@
   --img-min-height: 180px;
   --alert: #ff0000;
   --alert-bg-light: #fff1f1;
-  --alert-border: #ff7970;
+  --alert-border: #ff7970;  
 }
 
 /* ELEMENTS */
 
 body {  
   font-family: Elena, "PT Serif", serif;
-  background-color: var(--c1);
+  background-color: var(--main);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -100,7 +104,7 @@ aside menu li {
 }
 
 aside menu li button {
-  background-color: var(--inactive-bg-light);
+  background-color: var(--secondary);
 }
 
 h1 {
@@ -161,7 +165,7 @@ li.small {
 button {
   margin: 0;
   line-height: calc(var(--d)* 2);
-  border: 1px solid var(--c3);
+  border: 1px solid var(--accent);
   border-radius: calc(var(--d) * .5);
   padding: calc(var(--d) * 1.25) calc(var(--d) * 2.5);
   font-size: var(--s3);
@@ -180,7 +184,7 @@ button.submit:hover {
 }
 
 button:focus-visible, button:focus {
-  outline: 1px solid var(--c6);
+  outline: 1px solid var(--accent);
   border: 1px solid transparent !important;
   background-color: var(--active-bg);  
 }
@@ -207,7 +211,7 @@ input[type='radio'] + label::first-letter {
 
 input[type='checkbox'], input[type='radio'] {
   margin: 0 calc(var(--d) * .5) 0 0;
-  accent-color: var(--c5);
+  accent-color: var(--accent);
   cursor: pointer;
 }
 
@@ -349,9 +353,9 @@ dialog div {
 fieldset {
   position: relative;
   margin: 0 0 calc(var(--d) * 2) 0;
-  border: 1px dashed var(--c2);
+  border: 1px dashed var(--c4);
   padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 2) calc(var(--d) * 2);
-  background-color: var(--c0);
+  background-color: var(--secondary);
 }
 
 fieldset.fieldset-reset {
@@ -414,13 +418,11 @@ a.info span:nth-child(2) {
   width: calc(var(--d) * 20);
   padding: var(--d);
   text-align: center;
-  background-color: var(--c0);
 }
 
 figure {
   margin: 0 auto var(--d) auto;
   text-align: center;
-  border: 1px solid var(--c2);
   border-radius: calc(var(--d)* .5);
 }
 
@@ -551,7 +553,7 @@ label::first-letter {
   grid-template-columns: repeat(auto-fit, minmax(200px, auto));
   gap: var(--d);
   margin: 0 auto calc(var(--d)) auto;
-  background-color: var(--c0);
+  /* background-color: var(--c0); */
 }
 
 .inat-preferences-section .grid {
@@ -739,7 +741,7 @@ label::first-letter {
   font-weight: initial;
   text-transform: uppercase;
   color: var(--c5);
-  background-color: var(--c0);
+  background-color: var(--secondary);
 }
 
 .btn-secondary-bottom {
