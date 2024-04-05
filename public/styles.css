@@ -744,7 +744,7 @@ label::first-letter {
   font-size: var(--s1);
   font-weight: initial;
   text-transform: uppercase;
-  color: var(--c5);
+  color: var(--c6);
   background-color: var(--content-bg);
 }
 
