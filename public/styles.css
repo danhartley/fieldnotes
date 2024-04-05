@@ -414,6 +414,7 @@ a.info span:nth-child(2) {
 figure {
   margin: 0 auto var(--d) auto;
   text-align: center;
+  background-color: var(--body-bg);
 }
 
 figcaption {
