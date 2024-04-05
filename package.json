@@ -5,12 +5,7 @@
   "source": [
     "public/read-fieldnotes.html",
     "public/read-inaturalist.html",
-    "public/write-fieldnotes.html",
-    "public/inaturalist-authentication.html",
-    "public/admin/admin.html",
-    "public/maps/leaf.html",
-    "public/maps/leaf2.html",
-    "public/play/responsive.html"
+    "public/write-fieldnotes.html"
   ],
   "scripts": {
     "copy-redirects": "cp -vR ./_redirects ./dist",
