@@ -414,7 +414,6 @@ a.info span:nth-child(2) {
 figure {
   margin: 0 auto var(--d) auto;
   text-align: center;
-  /* border-radius: calc(var(--d)* .5); */
 }
 
 figcaption {
@@ -761,10 +760,6 @@ label::first-letter {
 .btn-save {
   background-color: var(--secondary-action-btn-bg);
 }
-
-/* .btn-save:focus {
-  background-color: var(--save-bg);
-} */
 
 /* CONTROLS */
 
