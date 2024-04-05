@@ -127,7 +127,8 @@ const init = async () => {
     const addImgClickEventHandlers = () => {
         const speciesImages = d.querySelectorAll('img')
     
-        const showSpeciesDetails = img => { 
+        const showSpeciesDetails = ({e,img}) => { 
+            console.log(e)
             const container = img.parentElement            
             const grid = container.parentElement
             const speciesPanel = grid.querySelector('.species-panel')
@@ -188,7 +189,8 @@ const init = async () => {
         }
     
         speciesImages.forEach(img => {
-            img.addEventListener('click', e => showSpeciesDetails(img))
+            img.addEventListener('click', e => showSpeciesDetails({e,img}))
+            img.addEventListener('keydown', e => showSpeciesDetails({e,img}))
         })  
     }
     
@@ -391,6 +393,7 @@ const init = async () => {
                         img.id = sp.taxon.id
                         img.setAttribute('data-i', i + 1)
                         img.setAttribute('loading', 'lazy')
+                        img.setAttribute('tabindex', 0)
                         
                         parent = parentClone.querySelector('div')          
                         parent.appendChild(clone)

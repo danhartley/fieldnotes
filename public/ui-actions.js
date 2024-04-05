@@ -506,6 +506,7 @@ export const cloneImageTemplate = ({observation, index, sectionIndex, imgUrl, gl
     img.id = observation.taxon.id
     img.setAttribute('data-i', index + 1)
     img.setAttribute('loading', 'lazy')
+    img.setAttribute('tabindex', 0)
     
     // In order to ensure ids are unique in the DOM, prefix the id with the section index
     checkbox.id = `${sectionIndex}-${observation.id || observation.taxon.id}`
@@ -1052,6 +1053,7 @@ export const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) 
         img.id = taxonId
         img.setAttribute('data-i', index + 1)
         img.setAttribute('loading', 'lazy')
+        img.setAttribute('tabindex', 0)
     
         return clone
     } catch (e) {

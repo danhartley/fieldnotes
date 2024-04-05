@@ -439,6 +439,7 @@ img {
 
 .grid figure img {
   border-radius: calc(var(--d)* .5) calc(var(--d)* .5) 0 0;
+  cursor: pointer;
 }
 
 /* Write fieldset only */
@@ -472,7 +473,7 @@ img {
 
 .disabled {
   pointer-events: none;
-  opacity: .5;
+  opacity: .75;
 }
 
 .draggable {
