@@ -659,6 +659,7 @@ label::first-letter {
 }
 
 #selected-terms-list li {
+  display: flex;
   margin: var(--d) 0;
 }
 

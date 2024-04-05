@@ -746,7 +746,7 @@ export const deleteSection = async ({sectionIndex, globalWrite}) => {
         })
 
         if (response.success) {
-            const element = d.getElementById(`section-${sectionIndex}`)
+            const element = d.getElementById(sectionIndex)
             if (element) {
                 // Remove section from the DOM
                 element.remove()
