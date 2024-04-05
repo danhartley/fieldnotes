@@ -171,11 +171,13 @@ button {
 button.submit:hover {
   border-color: var(--c8);
   background-color: var(--primary-btn-bg);
+  opacity: .8;
 }
 
 button:hover, button:focus-visible, button:focus {
   outline: 1px solid var(--accent);
   border: 1px solid transparent !important;
+  opacity: .8;
 }
 
 label {
@@ -451,10 +453,12 @@ img {
 }
 
 .invisible {
+  display: flex;
   opacity: 0;
   pointer-events: none;
   width: 0;
   min-width: 0;
+  height: 0;
 }
 
 .btn-reset {
