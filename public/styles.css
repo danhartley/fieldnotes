@@ -4,7 +4,7 @@
   --d: .5rem;
   --w: 100vw;
   --h: 100vh;
-  --c0: #ffffff;
+  --c0: #fff;
   --c1: #fbfbfb;
   --c2: #d7d7d7;
   --c3: #b9b9b9;
@@ -12,7 +12,7 @@
   --c5: #565656;
   --c6: #323232;
   --c7: #414141;
-  --c8: #000000;
+  --c8: #000;
   --s1: .6rem;
   --s2: .7rem;
   --s3: .8rem;
@@ -68,18 +68,6 @@ menu {
   font-size: var(--s3);
 }
 
-menu li {
-  cursor: pointer;
-}
-
-header menu a {
-  border-width: 0;
-}
-
-header menu a.selected {
-  border-width: calc(var(--d) * .15);
-}
-
 main, aside {
   margin: auto;
   max-width: 80ch; 
@@ -91,14 +79,6 @@ aside * {
 
 aside div {
   margin-top: var(--d);
-}
-
-aside menu li {
-  margin: calc(1 * var(--d)) 0;
-}
-
-aside menu li button {
-  background-color: var(--content-bg);
 }
 
 h1 {
@@ -117,15 +97,6 @@ h2 {
   font-size: var(--s5);
   letter-spacing: calc(var(--d) * .025);
   -webkit-font-smoothing: antialiased;
-}
-
-h2 label {    
-  text-transform: uppercase;
-  font-size: var(--s2);
-}
-
-h2 label::first-letter, label.text-initial::first-letter {
-  text-transform: initial !important;
 }
 
 h3 {
@@ -152,8 +123,16 @@ li {
   list-style-type: none;
 }
 
+menu li {
+  cursor: pointer;
+}
+
 li.small {
   margin: var(--d) 0;
+}
+
+aside menu li {
+  margin: calc(1 * var(--d)) 0;
 }
 
 button {
@@ -166,6 +145,10 @@ button {
   letter-spacing: calc(var(--d) * .015);
   background-color: var(--primary-btn-bg);
   cursor: pointer;
+}
+
+aside menu li button {
+  background-color: var(--content-bg);
 }
 
 button.submit:hover {
@@ -186,6 +169,19 @@ label {
   width: inherit;
   min-width: calc(var(--d) * 7);
   max-width: 500px;
+}
+
+label::first-letter {
+  text-transform: initial !important;
+}
+
+h2 label {    
+  text-transform: uppercase;
+  font-size: var(--s2);
+}
+
+h2 label::first-letter, label.text-initial::first-letter {
+  text-transform: initial !important;
 }
 
 .flex-row label {
@@ -224,15 +220,9 @@ input[type='checkbox'] {
   flex: none;
 }
 
-input[type='checkbox'] + label {
-  text-transform: capitalize;
-  display: flex; 
-  align-items: center; 
-}
-
 input[type='text'], input[type='email'], input[type='password'], textarea {
   width: 100%;
-  width: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
+  width: fill-available; /* Mozilla-based browsers will ignore this. */
   border: 1px solid var(--c3);  
   border-radius: calc(var(--d) * .5);
 }
@@ -242,29 +232,36 @@ input[type='date'] {
   border-radius: calc(var(--d) * .5);
 }
 
-input[type='text']:focus-visible, input[type='email']:focus-visible, input[type='password']:focus-visible, input[type='date']:focus-visible, textarea:focus-visible {
-  border: 1px solid transparent;
-  outline: 1px solid var(--c8);
-}
-
 textarea {
   resize: none;
   font-family: inherit;
 }
 
-h2 input[type='radio'] + label {
-  position: relative;
-}
-
 @-moz-document url-prefix() {
   input[type='text'], input[type='email'], input[type='password'], input[type='date'], textarea {
     width: 100%;
-    width: -moz-available; /* WebKit-based browsers will ignore this. */
+    width: available; /* WebKit-based browsers will ignore this. */
   }
+
   input[type='date'] {
     height: 34px;
   }
-  .flex-row input[type='radio'] + label, h2 input[type='radio'] + label {
+
+  input[type='checkbox'] + label {
+    text-transform: capitalize;
+    display: flex; 
+    align-items: center; 
+  }
+
+  h2 input[type='radio'] + label {
+    position: relative;
+  }
+
+  dl a {
+    margin: 0 0 var(--d) 0;
+  }
+
+  h2 input[type='radio'] + label, .flex-row input[type='radio'] + label {
     top: 1px;
   }  
 }
@@ -296,10 +293,7 @@ select:focus-visible, select:focus {
 dl {
   max-width: 70ch;
   margin: 0 auto calc(var(--d) * 4) auto;
-  margin-block-start: 0px;
-  margin-block-end: 0px;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
+  margin-block: 0;
   font-size: var(--s3);
 }
 
@@ -308,8 +302,14 @@ dt {
   font-weight: bold;
 }
 
-dd, dl em, dl a {
+dd, dl em {
   margin: 0 0 var(--d) 0;
+}
+
+dialog div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 dd:empty, div:empty {
@@ -318,11 +318,6 @@ dd:empty, div:empty {
 
 dt:has(+ dd:empty) {
   display: none;
-}
-
-main > fieldset {
-  display: grid;
-  grid-template-columns: 1fr 1fr;  
 }
 
 dialog, dialog:focus-visible, dialog:focus {
@@ -335,18 +330,17 @@ dialog, dialog:focus-visible, dialog:focus {
   z-index: 2;
 }
 
-dialog div {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 fieldset {
   position: relative;
   margin: 0 0 calc(var(--d) * 2) 0;
   border: 1px dashed var(--c4);
   padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 2) calc(var(--d) * 2);
   background-color: var(--content-bg);
+}
+
+main > fieldset {
+  display: grid;
+  grid-template-columns: 1fr 1fr;  
 }
 
 fieldset.fieldset-reset {
@@ -376,12 +370,25 @@ figure input[type='text'] {
   width: initial;
 }
 
+input[type='text']:focus-visible, input[type='email']:focus-visible, input[type='password']:focus-visible, input[type='date']:focus-visible, textarea:focus-visible {
+  border: 1px solid transparent;
+  outline: 1px solid var(--c8);
+}
+
 a {
   border-bottom: 1px solid var(--c8);
   padding-bottom: calc(var(--d) *.25);
   text-decoration: none;
   color: var(--c8);
   line-height: calc(var(--d)* 4);
+}
+
+header menu a {
+  border-width: 0;
+}
+
+header menu a.selected {
+  border-width: calc(var(--d) * .15);
 }
 
 a.info {
@@ -395,20 +402,6 @@ a.info span:nth-child(2) {
   left: -9000px;
   width: 0;
   overflow: hidden;
-}
-
-  a.info:hover span:nth-child(2)
-, a.info:focus span:nth-child(2)
-, a.info:active span:nth-child(2) 
-{
-  display: block;
-  position: absolute;
-  top: calc(var(--d) * -4.5);
-  left: calc(var(--d) * 5);
-  border: 1px solid var(--c2);
-  width: calc(var(--d) * 20);
-  padding: var(--d);
-  text-align: center;
 }
 
 figure {
@@ -483,7 +476,6 @@ img {
 
 .drop-before {
   background-color: var(--primary-btn-bg);
-  /* background-color: var(--inactive-bg); */
 }
 
 .moveable {
@@ -495,10 +487,6 @@ img {
 }
 
 .initial-text {
-  text-transform: initial !important;
-}
-
-label::first-letter {
   text-transform: initial !important;
 }
 
@@ -562,11 +550,6 @@ label::first-letter {
   grid-template-columns: repeat(auto-fit, minmax(200px, auto));
   gap: var(--d);
   margin: 0 auto calc(var(--d)) auto;
-  /* background-color: var(--c0); */
-}
-
-.inat-preferences-section .grid {
-  grid-template-columns: repeat(auto-fit, minmax(100px, auto));
 }
 
 .grid:has(figure, img) {
@@ -599,9 +582,7 @@ label::first-letter {
   font-size: var(--s3);
 }
 
-.grid .species-panel hgroup p {
-  white-space: pre-line;
-}
+
 
 .grid .species-panel:empty {
   display: none;
@@ -623,6 +604,10 @@ label::first-letter {
   -webkit-font-smoothing: antialiased;
 }
 
+.grid .species-panel hgroup p {
+  white-space: pre-line;
+}
+
 .grid div > div, .grid figure > figcaption  {
   display: flex;
   flex-direction: column;
@@ -632,6 +617,11 @@ label::first-letter {
   padding: var(--d);
   font-size: var(--s3);
 }
+
+.inat-preferences-section .grid {
+  grid-template-columns: repeat(auto-fit, minmax(100px, auto));
+}
+
 
 #lesson legend:empty {
   display: none;
@@ -644,6 +634,20 @@ label::first-letter {
 .grid figcaption span:nth-child(2) {
   margin-top: calc(var(--d) * .5);
   font-size: var(--s3);
+}
+
+  a.info:hover span:nth-child(2)
+, a.info:focus span:nth-child(2)
+, a.info:active span:nth-child(2) 
+{
+  display: block;
+  position: absolute;
+  top: calc(var(--d) * -4.5);
+  left: calc(var(--d) * 5);
+  border: 1px solid var(--c2);
+  width: calc(var(--d) * 20);
+  padding: var(--d);
+  text-align: center;
 }
 
 #inat-autocomplete-input-text::placeholder {
@@ -777,14 +781,6 @@ label::first-letter {
   max-height: 40.5px;
 }
 
-#observation-dates > div > label:nth-child(2) {
-  width: calc(var(--d) * 4);
-}
-
-#observation-dates div:nth-child(4) > label:nth-child(2) {
-  width: initial;
-}
-
 #observation-dates input[type="date"], #observation-dates label {
   font-size: var(--s1);
 }
@@ -795,6 +791,14 @@ label::first-letter {
 
 #observation-dates input[type="date"] {
   width: calc(var(--d) * 13);
+}
+
+#observation-dates > div > label:nth-child(2) {
+  width: calc(var(--d) * 4);
+}
+
+#observation-dates div:nth-child(4) > label:nth-child(2) {
+  width: initial;
 }
 
 #select-section-type-section {
@@ -989,7 +993,7 @@ fieldset.species-list {
   }
 }
 
-@media only screen and (min-width: 32em) {
+@media only screen and (width >= 32em) {
   #observation-dates input[type="date"] {
     width: initial;
     font-size: var(--s3);
@@ -1004,7 +1008,7 @@ fieldset.species-list {
   }
 }
 
-@media screen and (min-width: 414px){
+@media screen and (width >= 414px){
   .non-grid {
     max-width: 60ch;
   }
