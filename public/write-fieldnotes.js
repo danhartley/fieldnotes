@@ -638,6 +638,10 @@ const init = () => {
         editSectionBtn.show()
         deleteSectionBtn.show()
         contentContainer.classList.toggle('disabled')
+
+        // Show the preview section and hide the edit section
+        Array.from(contentContainer.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
+        Array.from(contentContainer.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
       }
     })
 
