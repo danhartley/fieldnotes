@@ -4,3 +4,4 @@ archive/
 dist/
 .parcel-cache
 node_modules
+public/tests/read-fieldnotes/screenshots

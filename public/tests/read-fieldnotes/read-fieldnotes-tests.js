@@ -17,10 +17,8 @@ const readFieldnotes = async () => {
     await page.goto('http://localhost:1234')  
     
     // Abort test if the fetch button is already enabled
-    if(!hasClass({
-            classList: (await page.$eval('#fetch-fieldnotes-btn', btn => btn.classList))
-          , className: 'disabled'
-      })) {
+    const classList = await page.$eval('#fetch-fieldnotes-btn', el => el.classList)
+    if(isEnabled({classList})) {
       console.error('The initial state is wrong, aborting test')
     }
 
@@ -32,19 +30,16 @@ const readFieldnotes = async () => {
       await page.keyboard.press('Enter')
 
       // Fetch fieldnotes if the fetch button is enabled
-      classList = (await page.$eval('#fetch-fieldnotes-btn', btn => btn.classList))
-      if(hasClass({
-            classList
-          , className: 'disabled'
-        })) {
-          await page.screenshot({path: 'read fieldnotes fetch button not ready.png', fullPage: true})
-      } else {
+      const classList = await page.$eval('#fetch-fieldnotes-btn', el => el.classList)
+      if(isEnabled({classList})) {
         await page.click('#fetch-fieldnotes-btn')
+      } else {
+        await page.screenshot({path: './public/tests/read-fieldnotes/screenshots/fetch button not ready.png', fullPage: true})
       }              
     }, DELAY)    
   } catch (error) { 
     await scroll({page})
-    await page.screenshot({path: 'read fieldnotes error.png', fullPage: true})
+    await page.screenshot({path: './public/tests/read-fieldnotes/screenshots/error.png', fullPage: true})
     console.log(error) 
 
   } finally {
@@ -74,7 +69,7 @@ const scroll = async ({page}) => {
   })
 }
 
-const hasClass = ({classList, className}) => {
+const hasClass = ({classList, className}) => {  
   const classNames = []
   Object.keys(classList).forEach(key => {
     classNames.push(classList[key])
@@ -89,6 +84,20 @@ const hasClass = ({classList, className}) => {
   }
   
   return isTrue
+}
+
+const isDisabled = ({classList}) => {
+  return hasClass({
+      classList
+    , className: 'disabled'
+  })
+}
+
+const isEnabled = ({classList}) => {
+  return !hasClass({
+      classList
+    , className: 'disabled'
+  })
 }
 
 /**
