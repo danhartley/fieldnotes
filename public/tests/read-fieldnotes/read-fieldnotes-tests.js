@@ -1,5 +1,7 @@
 import puppeteer from 'puppeteer'
 
+import { scroll, isEnabled } from '../utils.js'
+
 const DELAY_FOR_TITLES = 1000
 const FIELDNOTES_TITLE = 'Streets of Lisbon, Portugal, Wed Feb 28 2024'
 const FIELDNOTES_TITLE_ID = '#fn-autocomplete-title-input-text'
@@ -16,14 +18,16 @@ const readFieldnotes = async () => {
     // Create a page
     page = await browser.newPage()
 
+    // Set the viewport dimensions
     await page.setViewport({ width: 1280, height: 1024 })
 
     // Go to read fieldnotes page
     await page.goto('http://localhost:1234')  
     
     // Abort test if the fetch button is already enabled
-    const classList = await page.$eval(FIELDNOTES_BTN_ID, el => el.classList)
-    if(isEnabled({classList})) {
+    if(isEnabled({
+      classList: await page.$eval(FIELDNOTES_BTN_ID, el => el.classList)
+    })) {
       console.error('The initial state is wrong, aborting test')
     }
 
@@ -35,8 +39,9 @@ const readFieldnotes = async () => {
       await page.keyboard.press('Enter')
 
       // Fetch fieldnotes if the fetch button is enabled
-      const classList = await page.$eval(FIELDNOTES_BTN_ID, el => el.classList)
-      if(isEnabled({classList})) {
+      if(isEnabled({
+        classList: await page.$eval(FIELDNOTES_BTN_ID, el => el.classList)
+      })) {
         await page.click(FIELDNOTES_BTN_ID)
       } else {
         await page.screenshot({path: './public/tests/read-fieldnotes/screenshots/fetch button not ready.png', fullPage: true})
@@ -50,62 +55,13 @@ const readFieldnotes = async () => {
     console.log(error) 
 
   } finally {
-    setTimeout(async() => {
-      // await browser.close()
-  } , DELAY_FOR_TITLES + 2000)
+      setTimeout(async() => {
+        // await browser.close()
+      } , DELAY_FOR_TITLES + 2000)
   }
 }
 
 readFieldnotes()
-
-const scroll = async ({page}) => {
-  return await page.evaluate(async () => {
-      return await new Promise((resolve, reject) => {
-          var i = setInterval(() => {
-              window.scrollBy(0, window.innerHeight)
-              if (
-                  document.scrollingElement.scrollTop + window.innerHeight >=
-                  document.scrollingElement.scrollHeight
-              ) {
-                  window.scrollTo(0, 0)
-                  clearInterval(i)
-                  resolve()
-              }
-          }, 100)
-      })
-  })
-}
-
-const hasClass = ({classList, className}) => {  
-  const classNames = []
-  Object.keys(classList).forEach(key => {
-    classNames.push(classList[key])
-  })
-  
-  const isTrue = classNames.includes(className)
-
-  if(isTrue) {
-    console.log(`The CSS class "${className}" was in the classList`)
-  } else {
-    console.log(`The CSS class "${className}" was not in the classList`)
-  }
-  
-  return isTrue
-}
-
-const isDisabled = ({classList}) => {
-  return hasClass({
-      classList
-    , className: 'disabled'
-  })
-}
-
-const isEnabled = ({classList}) => {
-  return !hasClass({
-      classList
-    , className: 'disabled'
-  })
-}
 
 /**
  * helper classes
