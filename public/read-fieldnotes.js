@@ -758,7 +758,7 @@ const init = async () => {
         })
 
         titlesObserver.observe(fnAutocompleteTitleDatalist, {
-            subtree: true
+              subtree: true
             , childList: true
         })
     })
