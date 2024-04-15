@@ -5,7 +5,8 @@
   "source": [
     "public/read-fieldnotes.html",
     "public/read-inaturalist.html",
-    "public/write-fieldnotes.html"
+    "public/write-fieldnotes.html",
+    "public/admin/admin.html"
   ],
   "scripts": {
     "copy-redirects": "cp -vR ./_redirects ./dist",

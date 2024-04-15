@@ -51,7 +51,7 @@ const readFieldnotes = async () => {
 
   } catch (error) { 
     await scroll({page})
-    await page.screenshot({path: './public/tests/read-fieldnotes/screenshots/error.png', fullPage: true})
+    await page.screenshot({path: `./public/tests/read-fieldnotes/screenshots/error${Date().now}.png`, fullPage: true})
     console.log(error) 
 
   } finally {

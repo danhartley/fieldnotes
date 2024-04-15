@@ -46,3 +46,12 @@ export const isEnabled = ({classList}) => {
     , className: 'disabled'
   })
 }
+
+// Helper function to use aysnc/await with timers
+export const pause = async ({func, delay = 2000}) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(func())
+    }, delay)
+  })
+}

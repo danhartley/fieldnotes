@@ -24,6 +24,9 @@ npm run start
 
 ````
 
+# Run integration tests
+node {path} e.g. node public/tests/write-fieldnotes/write-fieldnotes-tests.js
+
 I haven't set up client side routing so to view pages locally use their full URLS e.g.:
 http://localhost:1234/read-fieldnotes.html
 http://localhost:1234/write-fieldnotes-create.html
