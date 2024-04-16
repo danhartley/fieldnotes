@@ -6,7 +6,8 @@
     "public/read-fieldnotes.html",
     "public/read-inaturalist.html",
     "public/write-fieldnotes.html",
-    "public/admin/admin.html"
+    "public/admin/admin.html",
+    "public/admin/sustainability.html"
   ],
   "scripts": {
     "copy-redirects": "cp -vR ./_redirects ./dist",
@@ -27,11 +28,13 @@
     "stylelint-config-standard": "^36.0.0"
   },
   "dependencies": {
+    "@tgwf/co2": "^0.14.4",
     "firebase": "^10.7.1",
     "firebaseui": "^6.1.0",
     "inaturalistjs": "github:inaturalist/inaturalistjs",
     "posthog-js": "^1.116.6",
-    "puppeteer": "^22.6.3"
+    "puppeteer": "^22.6.3",
+    "swhook": "^0.5.2"
   },
   "@parcel/resolver-default": {
     "packageExports": true
