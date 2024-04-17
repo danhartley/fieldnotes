@@ -204,7 +204,7 @@ input[type='radio'] + label::first-letter {
 
 input[type='checkbox'], input[type='radio'] {
   margin: 0 calc(var(--d) * .5) 0 0;
-  accent-color: var(--accent);
+  accent-color: var(--accent); /* Not supported by Samsung */
   cursor: pointer;
 }
 
@@ -388,33 +388,33 @@ a {
   color: var(--c8);
   line-height: calc(var(--d)* 4);
 
-  .skiptocontent, .skiptocontent:visited {
+  &.skiptocontent, &.skiptocontent:visited {
     position: absolute;
     top: -40px;
     color: white;
     height: 0;
   }
   
-  .info {
+  &.info {
     position: relative;
     z-index: 24;
     text-decoration: none;
   }
   
-  .info span:nth-child(2) {
+  &.info span:nth-child(2) {
     position: absolute;
     left: -9000px;
     width: 0;
     overflow: hidden;
   }
+
+  &.selected {
+    border-width: calc(var(--d) * .15);
+  }
 }
 
 header menu a {
   border-width: 0;
-}
-
-header menu a.selected {
-  border-width: calc(var(--d) * .15);
 }
 
 figure {
@@ -551,11 +551,11 @@ img {
   margin: 0 auto calc(var(--d) * 4) auto;
   max-width: 30ch;
 
-  &:has(h3), .non-grid:has(h4) {
+  & :has(h3), .non-grid:has(h4) {
     margin-bottom: 0;
   }
 
-  p {  
+  & p {  
     line-height: calc(var(--d)* 4);
     font-size: var(--s6);  
     color: var(--c6);
@@ -569,7 +569,7 @@ img {
   gap: var(--d);
   margin: 0 auto calc(var(--d)) auto;
 
-  figure img {
+  & figure img {
     border-radius: calc(var(--d)* .5) calc(var(--d)* .5) 0 0;
     cursor: pointer;
   }
@@ -590,7 +590,7 @@ img {
     cursor: pointer;  
   }
 
-  .flex-row {
+  &.flex-row {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -600,20 +600,20 @@ img {
     background-color: var(--c1);
   }
   
-  .species-panel {
+  &.species-panel {
     display: flex;
     font-size: var(--s3);
   }
 
-  .species-panel:empty {
+  &.species-panel:empty {
     display: none;
   }
 
-  .species-panel hgroup p {
+  &.species-panel hgroup p {
     white-space: pre-line;
   }
   
-  div > div, .grid figure > figcaption  {
+  & div > div, .grid figure > figcaption  {
     display: flex;
     flex-direction: column;
     align-items: center;  
@@ -623,11 +623,11 @@ img {
     font-size: var(--s3);
   }
 
-  span::first-letter {
+  & span::first-letter {
     text-transform: capitalize;
   }
   
-  figcaption span:nth-child(2) {
+  & figcaption span:nth-child(2) {
     margin-top: calc(var(--d) * .5);
     font-size: var(--s3);
   }
