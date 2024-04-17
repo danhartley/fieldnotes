@@ -388,13 +388,16 @@ a {
   color: var(--c8);
   line-height: calc(var(--d)* 4);
 
-  &.skiptocontent, &.skiptocontent:visited {
+  &.skip-link, &.skip-link:visited {
     position: absolute;
-    top: -40px;
-    color: white;
-    height: 0;
+    top: calc(var(--d) * -10);
+    display: inline-block;    
+    color: var(--c1);
+    background-color: var(--c5);    
   }
-  
+
+  &.skip-link & header { position: relative;}
+
   &.info {
     position: relative;
     z-index: 24;
@@ -590,7 +593,7 @@ img {
     cursor: pointer;  
   }
 
-  &.flex-row {
+  & .flex-row {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -600,16 +603,16 @@ img {
     background-color: var(--c1);
   }
   
-  &.species-panel {
+  & .species-panel {
     display: flex;
     font-size: var(--s3);
   }
 
-  &.species-panel:empty {
+  & .species-panel:empty {
     display: none;
   }
 
-  &.species-panel hgroup p {
+  & .species-panel hgroup p {
     white-space: pre-line;
   }
   
