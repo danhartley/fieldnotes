@@ -31,12 +31,12 @@
   --reptilia: #fee2df;  
   --body-bg: #f2ebe2;
   --content-bg: #f8f4f0;
-  --accent: #4f3c24;
-  --accent-light: #9b6727;
   --primary-btn-bg: #fed05e;
   --warning-btn-bg: #ead5df;  
   --secondary-action-btn-bg: #e2e9f1;
-  --success-bg-light: #e2e9f1;
+  --success-bg: #e2e9f1;
+  --accent: #4f3c24;
+  --accent-light: #9b6727;
   --grid-min-max: 180px;
   --img-min-width: 180px;
   --img-min-height: 180px;
@@ -161,6 +161,12 @@ button:hover, button:focus-visible, button:focus {
   outline: 1px solid var(--accent);
   border: 1px solid transparent !important;
   opacity: .8;
+}
+
+.btn-reset {
+  position: absolute;
+  border: none;
+  background-color: initial;
 }
 
 label {
@@ -391,6 +397,13 @@ header menu a.selected {
   border-width: calc(var(--d) * .15);
 }
 
+a.skiptocontent, a.skiptocontent:visited {
+  position: absolute;
+  top: -40px;
+  color: white;
+  height: 0;
+}
+
 a.info {
   position: relative;
   z-index: 24;
@@ -459,12 +472,6 @@ img {
   height: 0;
 }
 
-.btn-reset {
-  position: absolute;
-  border: none;
-  background-color: initial;
-}
-
 .disabled {
   pointer-events: none;
   opacity: .75;
@@ -495,7 +502,7 @@ img {
 }
 
 .success-bg {
-  background-color: var(--success-bg-light);
+  background-color: var(--success-bg);
 }
 
 .success-icon::before {
@@ -526,7 +533,7 @@ img {
 }
 
 .btn-secondary-action {
-  background-color: var(--success-bg-light);
+  background-color: var(--secondary-action-btn-bg);
   border: 1px solid var(--accent);
 }
 
