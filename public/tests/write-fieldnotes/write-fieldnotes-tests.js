@@ -68,7 +68,7 @@ const INAT_USERNAME = 'danielhartley'
 const SINGLE_OBSERVATIONS_INPUT_DATE = '#single-observations-input-date'
 const INAT_DATE = '2024-04-11'
 const SEARCH_INAT_OBSERVATIONS_BTN = '#search-inat-observations-btn'
-
+  
 const writeFieldnotes = async () => {
   let browser, page = null
   

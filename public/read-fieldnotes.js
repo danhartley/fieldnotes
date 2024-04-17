@@ -273,7 +273,7 @@ const init = async () => {
         addHandlers()        
     }
     
-    const renderDisplayTemplate = () => {
+    const renderDisplayTemplate = () => {        
         try {
             let parentTemplate = d.getElementById(globalRead.template.parent)
             let parentClone = parentTemplate.content.cloneNode(true)
@@ -562,8 +562,8 @@ const init = async () => {
         }
     }         
     
-    d.addEventListener("DOMContentLoaded", () => {
-    
+    d.addEventListener('DOMContentLoaded', () => {
+        performance.mark('dom-content-loaded')
         const updateScore = () => {
             const scoreCountTd = d.getElementById('score-count-td')
             if(scoreCountTd) scoreCountTd.innerText = globalRead.species.length
@@ -589,6 +589,7 @@ const init = async () => {
         addImgClickEventHandlers()
     
         const fetchFieldnotes = async () => {
+            performance.mark('fetch-field-notes: start')
             try {
                 importFieldNotesNotificationText.classList.remove('hidden')
 
@@ -668,6 +669,7 @@ const init = async () => {
                 renderDisplayTemplate()
 
                 fnAutocompleteTitleInputText.closest('fieldset').classList.remove('border-solid')
+                performance.mark('fetch-field-notes: end')
             } catch (e) {
                 logger({
                     message: e.message

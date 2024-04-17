@@ -16,7 +16,7 @@ export const scroll = async ({page}) => {
   })
 }
 
-export const hasClass = ({classList, className}) => {  
+export const hasClass = ({classList, className, logToConsole = false}) => {  
   const classNames = []
   Object.keys(classList).forEach(key => {
     classNames.push(classList[key])
@@ -24,10 +24,12 @@ export const hasClass = ({classList, className}) => {
   
   const isTrue = classNames.includes(className)
 
-  if(isTrue) {
-    console.log(`The CSS class "${className}" was in the classList`)
-  } else {
-    console.log(`The CSS class "${className}" was not in the classList`)
+  if(logToConsole) {
+    if(isTrue) {
+      console.log(`The CSS class "${className}" was in the classList`)
+    } else {
+      console.log(`The CSS class "${className}" was not in the classList`)
+    }
   }
   
   return isTrue
