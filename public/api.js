@@ -2,13 +2,15 @@
 
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth'
 import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, query, and, where, or, doc, getDocs, getDoc, setDoc,deleteDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from 'firebase/firestore'
+import { setLogLevel, getFirestore, collection, query, and, where, or, doc, getDocs, getDoc, setDoc,deleteDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from 'firebase/firestore'
 
 import { templates } from './templates.js'
 import {
     logger
   , sortBy
 } from './utils.js'
+
+setLogLevel('silent')
 
 // INAT API
 
