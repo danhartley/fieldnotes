@@ -1,6 +1,6 @@
-import posthog from 'posthog-js'
+// import posthog from 'posthog-js'
 
-posthog.init('phc_PI6IzYtZjRZA1iuKPhUhHM0yy2T979TYAUM7LqwBCop', { api_host: 'https://eu.posthog.com' })
+// posthog.init('phc_PI6IzYtZjRZA1iuKPhUhHM0yy2T979TYAUM7LqwBCop', { api_host: 'https://eu.posthog.com' })
 
 import { 
       g
