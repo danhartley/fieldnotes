@@ -228,7 +228,6 @@ input[type='checkbox'] {
 
 input[type='text'], input[type='email'], input[type='password'], textarea {
   width: 100%;
-  width: fill-available; /* Mozilla-based browsers will ignore this. */
   border: 1px solid var(--c3);  
   border-radius: calc(var(--d) * .5);
 }
