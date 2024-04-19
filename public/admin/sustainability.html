@@ -3,6 +3,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" 
+      content="
+        default-src 'self' https://*.withcabin.com https://*.googleapis.com https://*.inaturalist.org;
+        img-src https://*; 
+        child-src 'none'; 
+        connect-src 'self' https://*.withcabin.com https://*.googleapis.com https://*.inaturalist.org;
+      " 
+    />
     <title>Paths through the forest are without number</title>
     <link rel="stylesheet" href=".././styles.css">
     <link rel="icon" href=".././favicon.ico" />
