@@ -603,20 +603,7 @@ img {
     background-color: var(--c1);
   }
   
-  & .species-panel {
-    display: flex;
-    font-size: var(--s3);
-  }
-
-  & .species-panel:empty {
-    display: none;
-  }
-
-  & .species-panel hgroup p {
-    white-space: pre-line;
-  }
-  
-  & div > div, .grid figure > figcaption  {
+  & div > div, & figure > figcaption  {
     display: flex;
     flex-direction: column;
     align-items: center;  
@@ -647,6 +634,19 @@ img {
     width: calc(var(--d) * 20);
     padding: var(--d);
     text-align: center;
+  }
+
+  & .species-panel {
+    display: flex;
+    font-size: var(--s3);
+  }
+
+  & .species-panel:empty {
+    display: none;
+  }
+
+  & .species-panel hgroup p {
+    white-space: pre-line;
   }
 }
 

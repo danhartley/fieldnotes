@@ -40,3 +40,6 @@ https://withcabin.com/dashboard/ifieldnotes.org
 # CO2 emissions (online)
 https://ecograder.com/
 
+# Considering BEM?
+Little use (main use case elements under the block-level grid selector class)
+https://www.npmjs.com/package/stylelint-selector-bem-pattern
