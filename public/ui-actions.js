@@ -1069,7 +1069,7 @@ export const handleLanguagePreference = ({globalRead, createRadioBtnGroup, langu
         collection: globalRead.LANGUAGES
         , checked: globalRead.language
         , rbGroup: 'language'
-        , parent: languageGroupContainer
+        , parent: languageGroupContainer.querySelector('div')
     })
 
     rbLanguageGroup.forEach(rb => {
@@ -1105,6 +1105,9 @@ export const handleLanguagePreference = ({globalRead, createRadioBtnGroup, langu
             })
         }
     })
+
+    // Show the container, including the selected language and further options and instructions
+    languageGroupContainer.classList.remove('hidden')
 }
 
 // Section state
