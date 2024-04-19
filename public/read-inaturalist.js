@@ -123,6 +123,14 @@ const init = async () => {
     
         return d.querySelectorAll(`input[name="${rbGroup}"]`)
     }
+
+    // Call this early to prevent delay to page loading (LCP)
+    handleLanguagePreference({
+        globalRead
+      , createRadioBtnGroup
+      , languageGroupContainer
+      , rememberLanguageCheckbox
+    })
     
     const addImgClickEventHandlers = () => {
         const speciesImages = d.querySelectorAll('img')
@@ -587,13 +595,6 @@ const init = async () => {
     if(language) {
         globalRead.language = language
     }
-
-    handleLanguagePreference({
-        globalRead
-      , createRadioBtnGroup
-      , languageGroupContainer
-      , rememberLanguageCheckbox
-  })
 }
 
 init()
