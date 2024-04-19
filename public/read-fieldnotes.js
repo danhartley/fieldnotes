@@ -754,8 +754,8 @@ const init = async () => {
             // Check whether user is authenticated, and if they are logged in, let them know.
             const auth = getFirebaseAuth()
             if(auth?.currentUser?.email) {
-                firebaseAuthDisplay.innerText = `Your are logged in as ${auth.currentUser.email}. You can view your private fieldnotes as well as all public fieldnotes.`
-                firebaseAuthDisplay.classList.remove('hidden')
+                firebaseAuthDisplay.innerText = 'You can view your private and all published fieldnotes.'
+                // firebaseAuthDisplay.innerText = `Your are logged in as ${auth.currentUser.email}. You can view your private and all public fieldnotes.`
             }    
         })
 
