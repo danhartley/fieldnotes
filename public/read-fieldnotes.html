@@ -6,11 +6,11 @@
     <meta name="description" content="Read notes recorded on a field trip by a contributor to iNaturalist. May be supplemented by photos of user observations, taxa photos, definitions, and bird song recordings.">
     <meta http-equiv="Content-Security-Policy" 
       content="
-        default-src 'self' https://*.withcabin.com https://*.googleapis.com https://*.inaturalist.org;
-        img-src https://*; 
+        script-src 'self' https://*.withcabin.com;
+        img-src https://* http://localhost:1234/;
         child-src 'none'; 
         connect-src 'self' https://*.withcabin.com https://*.googleapis.com https://*.inaturalist.org;
-      " 
+      "
     />
     <meta name="robots" content="index,follow">
     <!-- <link rel="alternate" type="application/rss+xml" title="Field notes" href=""> -->
