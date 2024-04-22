@@ -1109,7 +1109,7 @@ export const handleLanguagePreference = ({globalRead, createRadioBtnGroup, langu
     })
 
     // Now the languages are ready, and the current language selected, display the language section
-    languageGroupContainer.classList.remove('hidden')
+    // languageGroupContainer.classList.remove('hidden')
 }
 
 // Section state
