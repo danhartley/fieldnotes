@@ -425,104 +425,78 @@ const init = async () => {
         }, true)
     })
     
-    d.addEventListener("DOMContentLoaded", (event) => {
-    
-        const updateScore = () => {
-            const scoreCountTd = d.getElementById('score-count-td')
-            scoreCountTd.innerText = globalRead.species.length
-            const scoreCorrectTd = d.getElementById('score-correct-td')
-            scoreCorrectTd.innerText = globalRead.template.score
-            const scoreIncorrectTd = d.getElementById('score-incorrect-td')
-            scoreIncorrectTd.innerText = globalRead.species.length - globalRead.template.score
-        }
-    
-        const scoreHandler = () => {
-            const answers = Array.from(article.getElementsByTagName('input'))          
-            scoreLesson({
-                  answers
-                , global: globalRead
-            })
-            updateScore()
-        }
-    
-        testSubmitBtn.addClickHandler({
-            clickHandler: scoreHandler
+    const updateScore = () => {
+        const scoreCountTd = d.getElementById('score-count-td')
+        scoreCountTd.innerText = globalRead.species.length
+        const scoreCorrectTd = d.getElementById('score-correct-td')
+        scoreCorrectTd.innerText = globalRead.template.score
+        const scoreIncorrectTd = d.getElementById('score-incorrect-td')
+        scoreIncorrectTd.innerText = globalRead.species.length - globalRead.template.score
+    }
+
+    const scoreHandler = () => {
+        const answers = Array.from(article.getElementsByTagName('input'))          
+        scoreLesson({
+              answers
+            , global: globalRead
         })
-    
-        const fetchInatSpecies = async () => {
-            const filters = Array.from(d.getElementById('iconic-taxa-container').querySelectorAll('input'))
-            
-            globalRead.iconicTaxa = globalRead.ICONIC_TAXA.filter(taxon => filters.filter(t => t.checked).map(t => t.id.toLowerCase()).includes(taxon.name))
-            
-            // If there is no user available via autocomplete, use the default (saved) user, if there is one
-            const authenticatedUser = globalRead.inatAutocompleteOptions.find(o => o.id === 'users')
-            const user = authenticatedUser.isActive 
-                ? authenticatedUser
-                : globalRead.user
-            const place = globalRead.inatAutocompleteOptions.find(o => o.id === 'places')        
-    
-            searchInatObservationsNotificationText.classList.toggle('hidden')
-            searchInatObservationsBtn.toggleActiveState()
-    
-            globalRead.inatSpecies = await getInatSpecies({
-                  user: user?.isActive ? user.user : null
-                , place: place?.isActive ? place.place : null
-            })
-    
-            globalRead.species = mapInatSpeciesToRequiredSpecies({
-                  species: globalRead.inatSpecies
-                , count: globalRead.count
-                , taxa: globalRead.iconicTaxa
-            })
-        
-            createRadioBtnTemplateGroup()
-            renderDisplayTemplate({ species: globalRead.species })
-    
-            searchInatObservationsNotificationText.classList.toggle('hidden')
-            searchInatObservationsBtn.toggleActiveState()
-            
-            const input = speciesDisplayContainer.querySelector('input')
-            if(input) input.click()
-        }
-    
-        const searchInatObservationsBtn = new ButtonComponent({
-            elementSelector: 'search-inat-observations-btn'
-          , clickHandler: fetchInatSpecies
-        })
-    
-        rbInatAutocompleteGroup.forEach(rb => {
-            rb.addEventListener('change', e => {
-                globalRead.inatAutocomplete = globalRead.inatAutocompleteOptions.find(o => o.id === e.target.value)
-    
-                iNatAutocompleteInputText.value = ''
-                iNatAutocompleteInputText.setAttribute('placeholder', globalRead.inatAutocomplete.placeholder)
-            })
-        })
-    
-        const speciesCountInputNumber = d.getElementById('species-count-input-number')
-    
-        speciesCountInputNumber.value = globalRead.count
-    
-        speciesCountInputNumber.addEventListener('change', () => {
-            globalRead.count = Number(speciesCountInputNumber.value)
-        })
-        
-        rbInatUseObservationSpeciesCountGroup.forEach(rb => {
-            rb.addEventListener('change', () => globalRead.useObservationsSpeciesCount = globalRead.useObservationsSpeciesCountOptions.find(o => o.id === rb.value))
-        })
-    
-        addImgClickEventHandlers()
-    
-        const { id, prop } = globalRead.inatAutocomplete
-        handleInatAutocomplete({ 
-              globalWrite: globalRead
-            , inputText: iNatAutocompleteInputText
-            , dataList: iNatAutocompleteDatalist
-            , id
-            , prop
-            , cbParent: d.getElementById('inat-params-input-check-box-group')
-        })
+        updateScore()
+    }
+
+    testSubmitBtn.addClickHandler({
+        clickHandler: scoreHandler
     })
+
+    const fetchInatSpecies = async () => {
+        const filters = Array.from(d.getElementById('iconic-taxa-container').querySelectorAll('input'))
+        
+        globalRead.iconicTaxa = globalRead.ICONIC_TAXA.filter(taxon => filters.filter(t => t.checked).map(t => t.id.toLowerCase()).includes(taxon.name))
+        
+        // If there is no user available via autocomplete, use the default (saved) user, if there is one
+        const authenticatedUser = globalRead.inatAutocompleteOptions.find(o => o.id === 'users')
+        const user = authenticatedUser.isActive 
+            ? authenticatedUser
+            : globalRead.user
+        const place = globalRead.inatAutocompleteOptions.find(o => o.id === 'places')        
+
+        searchInatObservationsNotificationText.classList.toggle('hidden')
+        searchInatObservationsBtn.toggleActiveState()
+
+        globalRead.inatSpecies = await getInatSpecies({
+              user: user?.isActive ? user.user : null
+            , place: place?.isActive ? place.place : null
+        })
+
+        globalRead.species = mapInatSpeciesToRequiredSpecies({
+              species: globalRead.inatSpecies
+            , count: globalRead.count
+            , taxa: globalRead.iconicTaxa
+        })
+    
+        createRadioBtnTemplateGroup()
+        renderDisplayTemplate({ species: globalRead.species })
+
+        searchInatObservationsNotificationText.classList.toggle('hidden')
+        searchInatObservationsBtn.toggleActiveState()
+        
+        const input = speciesDisplayContainer.querySelector('input')
+        if(input) input.click()
+    }
+
+    const searchInatObservationsBtn = new ButtonComponent({
+        elementSelector: 'search-inat-observations-btn'
+      , clickHandler: fetchInatSpecies
+    })
+
+    const speciesCountInputNumber = d.getElementById('species-count-input-number')
+    
+    speciesCountInputNumber.value = globalRead.count
+
+    speciesCountInputNumber.addEventListener('change', () => {
+        globalRead.count = Number(speciesCountInputNumber.value)
+    })
+
+    addImgClickEventHandlers()
 
     rbInatAutocompleteGroup = createRadioBtnGroup({
           collection: globalRead.inatAutocompleteOptions.filter(option => option.id !== 'taxa')
@@ -569,6 +543,33 @@ const init = async () => {
     sectionsWithHeader.forEach(sh => sh.classList.toggle('hidden'))
 
     iNatAutocompleteInputText.value = ''
+
+    rbInatUseObservationSpeciesCountGroup.forEach(rb => {
+        rb.addEventListener('change', () => globalRead.useObservationsSpeciesCount = globalRead.useObservationsSpeciesCountOptions.find(o => o.id === rb.value))
+    })
+
+    // Check that document has loaded
+    d.addEventListener("DOMContentLoaded", (event) => {    
+    
+        rbInatAutocompleteGroup.forEach(rb => {
+            rb.addEventListener('change', e => {
+                globalRead.inatAutocomplete = globalRead.inatAutocompleteOptions.find(o => o.id === e.target.value)
+    
+                iNatAutocompleteInputText.value = ''
+                iNatAutocompleteInputText.setAttribute('placeholder', globalRead.inatAutocomplete.placeholder)
+            })
+        })        
+    
+        const { id, prop } = globalRead.inatAutocomplete
+        handleInatAutocomplete({ 
+              globalWrite: globalRead
+            , inputText: iNatAutocompleteInputText
+            , dataList: iNatAutocompleteDatalist
+            , id
+            , prop
+            , cbParent: d.getElementById('inat-params-input-check-box-group')
+        })
+    })
 
     // Check for saved inat user
     const user = appLocalStorage.get({

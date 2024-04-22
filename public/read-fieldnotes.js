@@ -569,200 +569,198 @@ const init = async () => {
         }
     }         
     
-    d.addEventListener('DOMContentLoaded', () => {
-        performance.mark('dom-content-loaded')
-        const updateScore = () => {
-            const scoreCountTd = d.getElementById('score-count-td')
-            if(scoreCountTd) scoreCountTd.innerText = globalRead.species.length
-            const scoreCorrectTd = d.getElementById('score-correct-td')
-            if(scoreCorrectTd) scoreCorrectTd.innerText = globalRead.template.score
-            const scoreIncorrectTd = d.getElementById('score-incorrect-td')
-            if(scoreIncorrectTd) scoreIncorrectTd.innerText = globalRead.species.length - globalRead.template.score
-        }
-    
-        const scoreHandler = () => {
-            const answers = Array.from(article.getElementsByTagName('input'))          
-            scoreLesson({
-                  answers
-                , global: globalRead
-            })
-            updateScore()
-        }
-    
-        testSubmitBtn.addClickHandler({
-            clickHandler: scoreHandler
+    performance.mark('dom-content-loaded')
+    const updateScore = () => {
+        const scoreCountTd = d.getElementById('score-count-td')
+        if(scoreCountTd) scoreCountTd.innerText = globalRead.species.length
+        const scoreCorrectTd = d.getElementById('score-correct-td')
+        if(scoreCorrectTd) scoreCorrectTd.innerText = globalRead.template.score
+        const scoreIncorrectTd = d.getElementById('score-incorrect-td')
+        if(scoreIncorrectTd) scoreIncorrectTd.innerText = globalRead.species.length - globalRead.template.score
+    }
+
+    const scoreHandler = () => {
+        const answers = Array.from(article.getElementsByTagName('input'))          
+        scoreLesson({
+                answers
+            , global: globalRead
         })
-    
-        addImgClickEventHandlers()
-    
-        const fetchFieldnotes = async () => {
-            performance.mark('fetch-field-notes: start')
-            try {
-                importFieldNotesNotificationText.classList.remove('hidden')
+        updateScore()
+    }
 
-                const response = false 
-                ? await globalRead.fieldnotesStubs
-                : await getFieldnotesById({id: globalRead.fieldnotesStubs.fieldnotesId})
+    testSubmitBtn.addClickHandler({
+        clickHandler: scoreHandler
+    })
 
-                importFieldNotesNotificationText.innerText = 'Fetching iNaturalist species…'
+    addImgClickEventHandlers()
 
-                setTimeout(() => {
-                    importFieldNotesNotificationText.classList.add('hidden')
-                    importFieldNotesNotificationText.innerText = 'Fetching fieldnotes…'
-                }, 2000)
+    const fetchFieldnotes = async () => {
+        performance.mark('fetch-field-notes: start')
+        try {
+            importFieldNotesNotificationText.classList.remove('hidden')
 
-                if(!response.success) return 
+            const response = false 
+            ? await globalRead.fieldnotesStubs
+            : await getFieldnotesById({id: globalRead.fieldnotesStubs.fieldnotesId})
 
-                const fieldnotes = { 
-                    ...response.data
-                    , sections: response.data.sectionOrder.map(sectionIndex => {
-                        return response.data.sections.find(section => section.sectionIndex === sectionIndex)
-                    })  
-                }
+            importFieldNotesNotificationText.innerText = 'Fetching iNaturalist species…'
 
-                // Get the observations (only includes those selected by the author)
-                fieldnotes.observations = fieldnotes.sections
-                    .filter(fn => fn.templateId === 'observations-preview-template')
-                    .map(section => section.species).flat()
+            setTimeout(() => {
+                importFieldNotesNotificationText.classList.add('hidden')
+                importFieldNotesNotificationText.innerText = 'Fetching fieldnotes…'
+            }, 2000)
 
-                globalRead.fieldnotes = fieldnotes
-                globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
-                Object.assign(globalRead.template, fieldnotes)
+            if(!response.success) return 
 
-                // Reorder the species list so that those with a binomial species name come first, 
-                const inatLookupSections = globalRead.fieldnotes.sections.filter(s => s.templateId === 'inat-lookup-preview-template') || []
-                const inatLookupSpecies = inatLookupSections?.map(s => s.species)?.flat() || []
-                // Those with only a genus, or higher taxa, name come after. This reduces the number of records
-                // we need to request from iNaturalist to match every taxon.
-                const inatLookupSpeciesByRank = inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') > 0)
-                    .concat(inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') === 0))
-                const inatLookupTaxaIds = inatLookupSpeciesByRank.map(s => s.taxon.id)
-                const inatLookupTaxaNames = inatLookupSpeciesByRank.map(s => s.taxon.name)
-
-                const taxaIds = [ ...new Set(globalRead.fieldnotes.taxa
-                    .map(t => t.id)
-                    .concat(inatLookupTaxaIds)) ]
-                const taxaNames = [ ...new Set(globalRead.fieldnotes.taxa
-                    .map(t => t.name)
-                    .concat(inatLookupTaxaNames)) ]
-
-                const inatTaxa = await getInatTaxa({ 
-                    taxaIds
-                    , locale: globalRead.language.id 
-                    , per_page: taxaIds.length
-                })
-                
-                globalRead.species = inatTaxa.results
-                    .filter(t => t.default_photo)
-                    .map(t => { 
-                        // Only allow one name for a taxon
-                        if(taxaNames.includes(t.name)) {
-                            return {
-                                taxon: mapTaxon({
-                                    taxon: t
-                                })
-                            }
-                        }
-                    })
-                    .filter(t => t)
-                    
-                createRadioBtnTemplateGroup()
-                
-                article.innerHTML = ''
-                speciesDisplayContainer.classList.remove('disabled')
-                
-                globalRead.terms = await getTerms()
-
-                renderDisplayTemplate()
-
-                fnAutocompleteTitleInputText.closest('fieldset').classList.remove('border-solid')
-                performance.mark('fetch-field-notes: end')
-            } catch (e) {
-                logger({
-                    message: e.message
-                  , type: 'error'
-                })
+            const fieldnotes = { 
+                ...response.data
+                , sections: response.data.sectionOrder.map(sectionIndex => {
+                    return response.data.sections.find(section => section.sectionIndex === sectionIndex)
+                })  
             }
+
+            // Get the observations (only includes those selected by the author)
+            fieldnotes.observations = fieldnotes.sections
+                .filter(fn => fn.templateId === 'observations-preview-template')
+                .map(section => section.species).flat()
+
+            globalRead.fieldnotes = fieldnotes
+            globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
+            Object.assign(globalRead.template, fieldnotes)
+
+            // Reorder the species list so that those with a binomial species name come first, 
+            const inatLookupSections = globalRead.fieldnotes.sections.filter(s => s.templateId === 'inat-lookup-preview-template') || []
+            const inatLookupSpecies = inatLookupSections?.map(s => s.species)?.flat() || []
+            // Those with only a genus, or higher taxa, name come after. This reduces the number of records
+            // we need to request from iNaturalist to match every taxon.
+            const inatLookupSpeciesByRank = inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') > 0)
+                .concat(inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') === 0))
+            const inatLookupTaxaIds = inatLookupSpeciesByRank.map(s => s.taxon.id)
+            const inatLookupTaxaNames = inatLookupSpeciesByRank.map(s => s.taxon.name)
+
+            const taxaIds = [ ...new Set(globalRead.fieldnotes.taxa
+                .map(t => t.id)
+                .concat(inatLookupTaxaIds)) ]
+            const taxaNames = [ ...new Set(globalRead.fieldnotes.taxa
+                .map(t => t.name)
+                .concat(inatLookupTaxaNames)) ]
+
+            const inatTaxa = await getInatTaxa({ 
+                taxaIds
+                , locale: globalRead.language.id 
+                , per_page: taxaIds.length
+            })
+            
+            globalRead.species = inatTaxa.results
+                .filter(t => t.default_photo)
+                .map(t => { 
+                    // Only allow one name for a taxon
+                    if(taxaNames.includes(t.name)) {
+                        return {
+                            taxon: mapTaxon({
+                                taxon: t
+                            })
+                        }
+                    }
+                })
+                .filter(t => t)
+                
+            createRadioBtnTemplateGroup()
+            
+            article.innerHTML = ''
+            speciesDisplayContainer.classList.remove('disabled')
+            
+            globalRead.terms = await getTerms()
+
+            renderDisplayTemplate()
+
+            fnAutocompleteTitleInputText.closest('fieldset').classList.remove('border-solid')
+            performance.mark('fetch-field-notes: end')
+        } catch (e) {
+            logger({
+                message: e.message
+                , type: 'error'
+            })
         }
+    }
 
-        const fetchFieldnotesBtn = new ButtonComponent({
-            elementSelector: 'fetch-fieldnotes-btn'
-        , clickHandler: fetchFieldnotes
+    const fetchFieldnotesBtn = new ButtonComponent({
+        elementSelector: 'fetch-fieldnotes-btn'
+    , clickHandler: fetchFieldnotes
+    })
+
+    createRadioBtnTemplateGroup()
+
+    globalRead.templates = g.templates.filter(template => template.types.includes('fieldnotes'))
+    globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
+
+    const printFieldnotesBtn = new ButtonComponent({
+        elementSelector: 'print-fieldnotes-btn'
+    , clickHandler: () => {
+        Array.from(d.querySelectorAll('.grid')).forEach(grid => grid.classList.remove('page-breaks'))
+        print()
+    }
+    })
+
+    const printFieldnotesWithPageBreaksBtn = new ButtonComponent({
+        elementSelector: 'print-fieldnotes-with-page-breaks-btn'
+    , clickHandler: () => {
+        Array.from(d.querySelectorAll('.grid')).forEach(grid => grid.classList.add('page-breaks'))
+        print()
+    }
+    })
+
+    // Check for saved language
+    const language = appLocalStorage.get({
+        key: 'language'
+    })
+
+    if(language) {
+        globalRead.language = language
+    }
+
+    // Check for logged in users. Logged in users can preview their private fieldnotes
+    onUserLoggedIn({ 
+            auth: getFirebaseAuth()
+        , globalRead
+        , fetchFieldnotesStubs: fetchFieldnotesStubs({
+                inputText: fnAutocompleteTitleInputText
+            , dataList: fnAutocompleteTitleDatalist
+            , global: globalRead
+            , fetchFieldnotesBtn
+            , readonly: true
         })
+    })
 
-        createRadioBtnTemplateGroup()
+    fnAutocompleteTitleInputText.focus()
 
-        globalRead.templates = g.templates.filter(template => template.types.includes('fieldnotes'))
-        globalRead.template = globalRead.templates.find(template => template.templateId === 'fieldnotes-template')
-
-        const printFieldnotesBtn = new ButtonComponent({
-            elementSelector: 'print-fieldnotes-btn'
-        , clickHandler: () => {
-            Array.from(d.querySelectorAll('.grid')).forEach(grid => grid.classList.remove('page-breaks'))
-            print()
-        }
-        })
-
-        const printFieldnotesWithPageBreaksBtn = new ButtonComponent({
-            elementSelector: 'print-fieldnotes-with-page-breaks-btn'
-        , clickHandler: () => {
-            Array.from(d.querySelectorAll('.grid')).forEach(grid => grid.classList.add('page-breaks'))
-            print()
-        }
-        })
-
-        // Check for saved language
-        const language = appLocalStorage.get({
-            key: 'language'
-        })
-
-        if(language) {
-            globalRead.language = language
-        }
-
-        // Check for logged in users. Logged in users can preview their private fieldnotes
-        onUserLoggedIn({ 
-              auth: getFirebaseAuth()
-            , globalRead
-            , fetchFieldnotesStubs: fetchFieldnotesStubs({
-                  inputText: fnAutocompleteTitleInputText
+    // Clear input so that user can select new title
+    fnAutocompleteTitleInputText.addEventListener('focus', e => {
+        if(fnAutocompleteTitleDatalist.innerHTML !== '') {
+            fnAutocompleteTitleInputText.value = ''
+            fieldnotesAutocomplete({ 
+                inputText: fnAutocompleteTitleInputText
                 , dataList: fnAutocompleteTitleDatalist
                 , global: globalRead
                 , fetchFieldnotesBtn
-                , readonly: true
+                , fieldnotesStubs: globalRead.fieldnotesStubsCollection
             })
-        })
+        }
+    })
+    
+    // Check for change in the titles list
+    const titlesObserver = new MutationObserver(() => {
+        // Check whether user is authenticated, and if they are logged in, let them know.
+        const auth = getFirebaseAuth()
+        if(auth?.currentUser?.email) {
+            firebaseAuthDisplay.innerText = 'You can view your private and all published fieldnotes.'
+            // firebaseAuthDisplay.innerText = `Your are logged in as ${auth.currentUser.email}. You can view your private and all public fieldnotes.`
+        }    
+    })
 
-        fnAutocompleteTitleInputText.focus()
-
-        // Clear input so that user can select new title
-        fnAutocompleteTitleInputText.addEventListener('focus', e => {
-            if(fnAutocompleteTitleDatalist.innerHTML !== '') {
-                fnAutocompleteTitleInputText.value = ''
-                fieldnotesAutocomplete({ 
-                    inputText: fnAutocompleteTitleInputText
-                  , dataList: fnAutocompleteTitleDatalist
-                  , global: globalRead
-                  , fetchFieldnotesBtn
-                  , fieldnotesStubs: globalRead.fieldnotesStubsCollection
-              })
-            }
-        })
-        
-        // Check for change in the titles list
-        const titlesObserver = new MutationObserver(() => {
-            // Check whether user is authenticated, and if they are logged in, let them know.
-            const auth = getFirebaseAuth()
-            if(auth?.currentUser?.email) {
-                firebaseAuthDisplay.innerText = 'You can view your private and all published fieldnotes.'
-                // firebaseAuthDisplay.innerText = `Your are logged in as ${auth.currentUser.email}. You can view your private and all public fieldnotes.`
-            }    
-        })
-
-        titlesObserver.observe(fnAutocompleteTitleDatalist, {
-              subtree: true
-            , childList: true
-        })
+    titlesObserver.observe(fnAutocompleteTitleDatalist, {
+            subtree: true
+        , childList: true
     })
 }
 
