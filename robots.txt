@@ -1,2 +1,5 @@
 User-agent: *
-Disallow:
+Disallow: /public/play
+Disallow: /public/admin
+Disallow: /public/maps
+Disallow: /public/tests
