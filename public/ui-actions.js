@@ -1065,12 +1065,14 @@ export const cloneSpeciesCardFromTemplate = ({templateToClone, species, index}) 
 }
 
 export const handleLanguagePreference = ({globalRead, createRadioBtnGroup, languageGroupContainer, rememberLanguageCheckbox}) => {
-    const rbLanguageGroup = createRadioBtnGroup({
-        collection: globalRead.LANGUAGES
-        , checked: globalRead.language
-        , rbGroup: 'language'
-        , parent: languageGroupContainer.querySelector('.grid')
-    })
+    // const rbLanguageGroup = createRadioBtnGroup({
+    //     collection: globalRead.LANGUAGES
+    //     , checked: globalRead.language
+    //     , rbGroup: 'language'
+    //     , parent: languageGroupContainer.querySelector('.grid')
+    // })
+
+    const rbLanguageGroup = d.querySelectorAll('input[name="language"]')
 
     rbLanguageGroup.forEach(rb => {
         // If language preference was saved in local storage, preselect it
