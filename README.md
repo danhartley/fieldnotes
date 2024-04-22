@@ -3,46 +3,59 @@
 ### Overview
 Write, edit and view fieldnotes. 
 
-This app is best used in conjunction with (iNaturalist)[https://www.inaturalist.org/].
+This app is best used in conjunction with [iNaturalist](https://www.inaturalist.org/).
 
-Visit the web site at: (iFieldnotes)[https://www.ifieldnotes.org/]
+Visit the web site at: [iFieldnotes](https://www.ifieldnotes.org/)
 
 #### Running the project on your local machine
 
 ```bash
-# Clone the repository
+#### Clone the repository
 git clone https://github.com/danhartley/fieldnotes.git
 
-# Change into the project directory
+#### Change into the project directory
 cd fieldnotes
 
-# Install node packages
+#### Install node packages
 npm run install
 
-# Run the project on your machine
+#### Run the project on your machine
 npm run start
 
 ````
 
-# Run integration tests
-node {path} e.g. node public/tests/write-fieldnotes/write-fieldnotes-tests.js
+#### Run integration tests
 
-I haven't set up client side routing so to view pages locally use their full URLS e.g.:
+```bash
+node {path} e.g. node public/tests/write-fieldnotes/write-fieldnotes-tests.js
+````
+
+#### Local routes e.g.
 http://localhost:1234/read-fieldnotes.html
 http://localhost:1234/write-fieldnotes-create.html
 http://localhost:1234/write-fieldnotes-edit.html
 http://localhost:1234/read-inaturalist.html
 
-# Cabin analytics
+See package.json for the complete list
+
+#### Cabin analytics
 Analytics is only running on the read fieldnotes page
 https://withcabin.com/dashboard/ifieldnotes.org
 
-# CO2 emissions (online)
+#### Posthog
+Analytics currently suspended on the read fieldnotes page
+https://eu.posthog.com/
+
+#### CO2 emissions (online)
 https://ecograder.com/
 
-# Considering BEM?
-Little use (main use case elements under the block-level grid selector class)
-https://www.npmjs.com/package/stylelint-selector-bem-pattern
+#### Robots
+/robots.txt
+See: meta data for robots for read fieldnotes page
 
-# Sitemap
-https://www.sitemaps.org/
+#### Sitemap
+/sitemap.xml
+See: https://www.sitemaps.org/
+
+#### Human readable HTML map
+See: https://www.semrush.com/blog/html-sitemap/
