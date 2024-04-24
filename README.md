@@ -59,3 +59,5 @@ See: https://www.sitemaps.org/
 
 #### Human readable HTML map
 See: https://www.semrush.com/blog/html-sitemap/
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9c06d7f9-7099-4196-b685-81166934bfe0/deploy-status)](https://app.netlify.com/sites/keen-crepe-cdae84/deploys)
