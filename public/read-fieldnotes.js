@@ -602,8 +602,8 @@ const init = async () => {
             importFieldNotesNotificationText.classList.remove('hidden')
 
             const response = false 
-            ? await globalRead.fieldnotesStubs
-            : await getFieldnotesById({id: globalRead.fieldnotesStubs.fieldnotesId})
+                ? await globalRead.fieldnotesStubs
+                : await getFieldnotesById({id: globalRead.fieldnotesStubs.fieldnotesId})
 
             importFieldNotesNotificationText.innerText = 'Fetching iNaturalist species…'
 
@@ -690,8 +690,8 @@ const init = async () => {
     }
 
     const fetchFieldnotesBtn = new ButtonComponent({
-        elementSelector: 'fetch-fieldnotes-btn'
-    , clickHandler: fetchFieldnotes
+          elementSelector: 'fetch-fieldnotes-btn'
+        , clickHandler: fetchFieldnotes
     })
 
     createRadioBtnTemplateGroup()
@@ -734,6 +734,7 @@ const init = async () => {
             , global: globalRead
             , fetchFieldnotesBtn
             , readonly: true
+            , fnAutocompleteTitleInputText
         })
     })
 

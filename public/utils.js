@@ -205,3 +205,43 @@ export const sortBy = ({arr, prop, dir = 'asc'}) => {
         return y - x
       })
 }
+
+/*
+  Check for valid slug in url path
+  e.g. 'danielhartley-lisbon-portugal-wed-feb-28-2024'
+*/
+export const validateSlug = ({
+    pathname = '',
+    slugs = [],
+    author = '',
+  }) => {
+
+  let validSlugs, slug
+
+  validSlugs = ['', '/']
+
+  // Remove the leading slash from the pathname
+  slug = pathname.slice(1)
+
+  // slugs should have trailing slash: https://www.w3.org/TR/ldp-bp/#include-a-trailing-slash-in-container-uris
+  slug = slug[slug.length - 1] === '/' 
+    ? slug 
+    : slug + '/' 
+
+  // slugs should be lower case
+  slug = slug.toLowerCase()
+
+  // Add valid ifieldnotes slugs to incoming slugs
+  slugs.concat(validSlugs)
+
+  let isValid = true
+
+  isValid = isValid + slugs.includes(slug)
+  isValid = isValid && slug.includes(author)
+  
+  return {
+      isValid      
+    , slug: isValid ? slug : ''
+    , author
+  }
+}

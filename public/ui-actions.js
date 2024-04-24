@@ -27,6 +27,7 @@ import {
     , debounce
     , isValidDate
     , logger
+    , validateSlug
 } from './utils.js'
 
 const d = document
@@ -1154,7 +1155,7 @@ export const handleInputChangeEvent = (e, addBtn) => {
     })
 }
 
-export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnotesBtn, readonly = false}) => {
+export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnotesBtn, readonly = false, fnAutocompleteTitleInputText}) => {
     return async ({user}) => {
         const fieldnotesStubs = user 
             ? await getFieldnotesStubs({
@@ -1168,12 +1169,25 @@ export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnot
 
         global.fieldnotesStubsCollection = await fieldnotesStubs
 
+        // Check for slug        
+        const { isValid, slug, author } = validateSlug({
+            pathname: window.location.pathname
+            , slugs: []
+            , author: 'danielhartley'
+        })
+
+        const stubs = global.fieldnotesStubsCollection
+        const titleFromSlug = stubs.find(stub => stub.slug === slug)?.title
+
+        fnAutocompleteTitleInputText.value = titleFromSlug
+
         fieldnotesAutocomplete({ 
               inputText
             , dataList
             , global
             , fetchFieldnotesBtn
             , fieldnotesStubs
+            , titleFromSlug
         })
     }
 }
@@ -1220,7 +1234,7 @@ export const authenticateNewUserEmailAndPassword = async ({email, password, show
 }
 
 // Additional Firebase calls
-export const fieldnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubs, fetchFieldnotesBtn}) => {
+export const fieldnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubs, fetchFieldnotesBtn, titleFromSlug}) => {
     const addTitlesToList = async ({dataList, strToComplete, fieldnotesStubs}) => {
         try {
             const stubs = await fieldnotesStubs
@@ -1272,6 +1286,12 @@ export const fieldnotesAutocomplete = async ({inputText, dataList, global, field
             fetchFieldnotesBtn.focus()
         }
     })
+
+    if(titleFromSlug) {
+        global.fieldnotesStubs = stubs.find(option => option.title === titleFromSlug)
+        fetchFieldnotesBtn.enable() 
+        fetchFieldnotesBtn.focus()
+    }
 }
 
 export const updateMetadataFields = async ({globalWrite, prop, value}) => {
