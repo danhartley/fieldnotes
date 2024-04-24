@@ -1179,7 +1179,7 @@ export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnot
         const stubs = global.fieldnotesStubsCollection
         const titleFromSlug = stubs.find(stub => stub.slug === slug)?.title
 
-        fnAutocompleteTitleInputText.value = titleFromSlug
+        if(titleFromSlug) fnAutocompleteTitleInputText.value = titleFromSlug
 
         fieldnotesAutocomplete({ 
               inputText
