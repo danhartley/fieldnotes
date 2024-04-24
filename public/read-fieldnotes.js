@@ -569,7 +569,9 @@ const init = async () => {
         }
     }         
     
+    // Add performance mark that will appear 
     performance.mark('dom-content-loaded')
+    
     const updateScore = () => {
         const scoreCountTd = d.getElementById('score-count-td')
         if(scoreCountTd) scoreCountTd.innerText = globalRead.species.length
@@ -631,8 +633,8 @@ const init = async () => {
             // Reorder the species list so that those with a binomial species name come first, 
             const inatLookupSections = globalRead.fieldnotes.sections.filter(s => s.templateId === 'inat-lookup-preview-template') || []
             const inatLookupSpecies = inatLookupSections?.map(s => s.species)?.flat() || []
-            // Those with only a genus, or higher taxa, name come after. This reduces the number of records
-            // we need to request from iNaturalist to match every taxon.
+            // Those with only a genus, or higher taxa, name come after species name.
+            // This reduces the number of records we need to request from iNaturalist to match every taxon.
             const inatLookupSpeciesByRank = inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') > 0)
                 .concat(inatLookupSpecies.filter(s => s.taxon.name.indexOf(' ') === 0))
             const inatLookupTaxaIds = inatLookupSpeciesByRank.map(s => s.taxon.id)
@@ -646,7 +648,7 @@ const init = async () => {
                 .concat(inatLookupTaxaNames)) ]
 
             const inatTaxa = await getInatTaxa({ 
-                taxaIds
+                  taxaIds
                 , locale: globalRead.language.id 
                 , per_page: taxaIds.length
             })
@@ -675,10 +677,13 @@ const init = async () => {
             renderDisplayTemplate()
 
             fnAutocompleteTitleInputText.closest('fieldset').classList.remove('border-solid')
+
+            // Use marks and measure to display timings e.g. in Chrome DevTools (Performance tab)
             performance.mark('fetch-field-notes: end')
+            performance.measure('fetch-field-notes', 'fetch-field-notes: start', 'fetch-field-notes: end')            
         } catch (e) {
             logger({
-                message: e.message
+                  message: e.message
                 , type: 'error'
             })
         }
@@ -721,10 +726,10 @@ const init = async () => {
 
     // Check for logged in users. Logged in users can preview their private fieldnotes
     onUserLoggedIn({ 
-            auth: getFirebaseAuth()
+          auth: getFirebaseAuth()
         , globalRead
         , fetchFieldnotesStubs: fetchFieldnotesStubs({
-                inputText: fnAutocompleteTitleInputText
+              inputText: fnAutocompleteTitleInputText
             , dataList: fnAutocompleteTitleDatalist
             , global: globalRead
             , fetchFieldnotesBtn
@@ -739,7 +744,7 @@ const init = async () => {
         if(fnAutocompleteTitleDatalist.innerHTML !== '') {
             fnAutocompleteTitleInputText.value = ''
             fieldnotesAutocomplete({ 
-                inputText: fnAutocompleteTitleInputText
+                  inputText: fnAutocompleteTitleInputText
                 , dataList: fnAutocompleteTitleDatalist
                 , global: globalRead
                 , fetchFieldnotesBtn
@@ -759,7 +764,7 @@ const init = async () => {
     })
 
     titlesObserver.observe(fnAutocompleteTitleDatalist, {
-            subtree: true
+          subtree: true
         , childList: true
     })
 }
