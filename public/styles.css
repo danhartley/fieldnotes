@@ -169,7 +169,7 @@ button:hover, button:focus-visible, button:focus {
   background-color: initial;
 }
 
-label {
+label, .as-label {
   font-size: var(--s3);
   -webkit-font-smoothing: antialiased;
   width: inherit;
@@ -685,6 +685,13 @@ img {
   align-items: center;
 }
 
+.justified-space-between-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .flex-columns {
   display: flex;
   flex-direction: column;
@@ -747,10 +754,6 @@ img {
 }
 
 .btn-secondary  {
-  position: absolute;
-  top: var(--d);
-  right: calc(var(--d) * 2);
-  left: initial;
   padding: var(--d);
   width: initial;
   border: 1px solid transparent;
@@ -759,6 +762,13 @@ img {
   text-transform: uppercase;
   color: var(--c6);
   background-color: var(--content-bg);
+}
+
+.btn-absolute {
+  position: absolute;
+  top: var(--d);
+  right: calc(var(--d) * 2);
+  left: initial;
 }
 
 .btn-secondary-bottom {

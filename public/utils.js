@@ -245,3 +245,14 @@ export const validateSlug = ({
     , author
   }
 }
+
+export const createSlug = ({author, location, date}) => {
+  const _author = author
+  const _location = location.replace(',', '').replace(' ', '-')
+  const _date = date.toDateString().toLowerCase().replaceAll(' ', '-')
+  return (`${_author}-${_location}-${_date}`)
+}
+
+export const getURL = ({location, slug}) => {
+  return `${location.origin}/${slug}`
+}

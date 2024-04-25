@@ -1,4 +1,4 @@
-import { isValidDate, sortBy, validateSlug } from './utils.js'
+import { isValidDate, sortBy, validateSlug, createSlug } from './utils.js'
 
 describe('isValidDate', () => {
   it('should return true when the date parameter is a valid date', () => {
@@ -41,5 +41,15 @@ describe('validateSlug', () => {
       , slug: ''
       , author
     })
+  })
+})
+
+describe('createSlug', () => {
+  it('should return a valid slug', () => {
+    const author = 'danielhartley'
+    const location = 'lisbon, portugal'
+    const date = new Date('2024-02-28')
+    const slug = 'danielhartley-lisbon-portugal-wed-feb-28-2024'
+    expect(createSlug({author, location, date})).toBe(slug)
   })
 })

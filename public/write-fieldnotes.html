@@ -44,8 +44,8 @@
           <div>
             <span id="authenticate-state-text" class="mr">Logged in state unknown.</span>
           </div>
-          <button id="authenticate-btn" class="btn-secondary-action">Checking…</button>
-          <button id="sign-up-btn" class="hidden">Sign up</button>
+          <button type="button" id="authenticate-btn" class="btn-secondary-action">Checking…</button>
+          <button type="button" id="sign-up-btn" class="hidden">Sign up</button>
         </div>
         <div class="centred-block mt2 mb2 ml8 logged-out hidden">
           <input id="firebase-sign-up-checkbox" type="checkbox" />
@@ -60,7 +60,7 @@
         <section class="is-authenticated disabled">
           <fieldset id="edit-field-notes" class="border-solid">
             <legend>Edit fieldnotes</legend>
-            <button id="show-hide-edit-fieldnotes-btn" data-view="edit" class="view-btn btn-secondary">Hide</button>
+            <button id="show-hide-edit-fieldnotes-btn" data-view="edit" class="view-btn btn-secondary btn-absolute">Hide</button>
             <div class="fieldnotes-view">
               <p class="mt0 small">Find and edit previous fieldnotes by title.</p>
               <div class="centred-block">
@@ -81,7 +81,7 @@
         <section class="is-authenticated disabled">
           <fieldset>
             <legend>Create fieldnotes</legend>
-            <button id="show-hide-create-fieldnotes-btn" data-view="create" class="view-btn btn-secondary">Show</button>
+            <button id="show-hide-create-fieldnotes-btn" data-view="create" class="view-btn btn-secondary btn-absolute">Show</button>
             <div class="fieldnotes-view hidden">
               <p class="mt0 small">Filter iNaturalist to search for observations by user and date.</p>
               <div class="centred-block">
@@ -140,6 +140,13 @@
             <div class="centred-block mt2">
               <label for="habitat-input-text">Habitat</label>      
               <input id="habitat-input-text" type="text" class="p" autocomplete="off" placeholder="(Optional) e.g. Northern hardwood forest">
+            </div>
+            <div class="centred-block mt2">
+              <div class="as-label">Slug</div>
+              <div class="justified-space-between-block">
+                <div id="slug-text" class="small">--</div>
+                <button id="copy-url-btn" class="btn-secondary">Copy URL</button>
+              </div>
             </div>
             <p class="small"><em>A <strong>title</strong>, <strong>author</strong>, <strong>date</strong> and <strong>place</strong> are all required to create, or edit, fieldnotes.</em></p>
           </fieldset>
@@ -250,9 +257,9 @@
       <section draggable="true" class="draggable">
         <fieldset class="mt2 species-list">
           <legend></legend>
-          <button id="toggle-species-include-all-top-btn" class="toggle-species-include-all-btns btn-secondary">Show only included</button>          
+          <button id="toggle-species-include-all-top-btn" class="toggle-species-include-all-btns btn-secondary btn-absolute">Show only included</button>          
           <div class="content-container disabled"></div>
-          <button id="toggle-species-include-all-bottom-btn" class="toggle-species-include-all-btns btn-secondary btn-secondary-bottom">Show only included</button>
+          <button id="toggle-species-include-all-bottom-btn" class="toggle-species-include-all-btns btn-secondary btn-absolute btn-secondary-bottom">Show only included</button>
           <button id="add-or-update-section-btn" class="small mt2 disabled add">Add section</button>
           <button id="edit-section-btn" class="small mt2 btn-secondary-action edit hidden">Edit section</button>
           <button id="delete-section-btn" class="small mt2 btn-delete-action edit">Delete section</button>

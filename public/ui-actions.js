@@ -1177,9 +1177,9 @@ export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnot
         })
 
         const stubs = global.fieldnotesStubsCollection
-        const titleFromSlug = stubs.find(stub => stub.slug === slug)?.title
+        const fieldnotesFromSlug = stubs.find(stub => stub.slug === slug)
 
-        if(titleFromSlug) fnAutocompleteTitleInputText.value = titleFromSlug
+        if(fieldnotesFromSlug) fnAutocompleteTitleInputText.value = fieldnotesFromSlug?.title
 
         fieldnotesAutocomplete({ 
               inputText
@@ -1187,7 +1187,7 @@ export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnot
             , global
             , fetchFieldnotesBtn
             , fieldnotesStubs
-            , titleFromSlug
+            , fieldnotesFromSlug
         })
     }
 }
@@ -1234,7 +1234,7 @@ export const authenticateNewUserEmailAndPassword = async ({email, password, show
 }
 
 // Additional Firebase calls
-export const fieldnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubs, fetchFieldnotesBtn, titleFromSlug}) => {
+export const fieldnotesAutocomplete = async ({inputText, dataList, global, fieldnotesStubs, fetchFieldnotesBtn, fieldnotesFromSlug}) => {
     const addTitlesToList = async ({dataList, strToComplete, fieldnotesStubs}) => {
         try {
             const stubs = await fieldnotesStubs
@@ -1284,13 +1284,21 @@ export const fieldnotesAutocomplete = async ({inputText, dataList, global, field
             global.fieldnotesStubs = stubs.find(option => option.title === match)
             fetchFieldnotesBtn.enable() 
             fetchFieldnotesBtn.focus()
+            
+            // Hack to check that we are not on the write page
+            if(window.location.pathname.includes('write')) return
+
+            if(global.fieldnotesStubs.slug) {
+                window.location.pathname = global.fieldnotesStubs.slug
+            } else {
+                window.location.pathname = ''
+            }
         }
     })
 
-    if(titleFromSlug) {
-        global.fieldnotesStubs = stubs.find(option => option.title === titleFromSlug)
-        fetchFieldnotesBtn.enable() 
-        fetchFieldnotesBtn.focus()
+    if(fieldnotesFromSlug) {
+        global.fieldnotesStubs = stubs.find(option => option.title === fieldnotesFromSlug.title)
+        fetchFieldnotesBtn.enable()
     }
 }
 

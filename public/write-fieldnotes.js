@@ -61,6 +61,8 @@ import {
 import {
     logger
   , saveJson
+  , createSlug
+  , getURL
 } from './utils.js'
 
 const init = () => {
@@ -125,6 +127,7 @@ const init = () => {
   const timeEndInputText = d.getElementById('time-end-input-text')
   const weatherInputText = d.getElementById('weather-input-text')
   const habitatInputText = d.getElementById('habitat-input-text')
+  const slugText = d.getElementById('slug-text')  
 
   const selectSectionTypeSection = d.getElementById('select-section-type-section')  
   const selectionTypeBtns = selectSectionTypeSection.querySelectorAll('button')
@@ -206,6 +209,12 @@ const init = () => {
     , clickHandler: e => toggleView({ btn: e.target })
   })
 
+
+  // Create copy URL button
+  const createUrlBtn = new ButtonComponent({
+      elementSelector: 'copy-url-btn'
+  })
+
   // Create fieldnotes
   
   // search iNaturalist for observations
@@ -256,18 +265,25 @@ const init = () => {
           }
         }
         const title = `${location.place_guess}, ${(new Date(date)).toDateString()}`
+        const slug = createSlug({
+            author
+          , location
+          , date
+        })
   
         titleInputText.value = title
         authorInputText.value = author
         dateInputText.value = date
         placeInputText.value = location.place_guess
+        slugText.textContent = slug
   
         globalWrite.fieldnotes.title = title
         globalWrite.fieldnotes.author = author
         globalWrite.fieldnotes.d1 = date
         globalWrite.fieldnotes.d2 = date
         globalWrite.fieldnotes.location = location
-  
+        globalWrite.fieldnotes.slug = slug
+
         // Enable the create observation and species section buttons
         selectSectionTypeSection.querySelector('#observations').classList.remove('disabled')
         selectSectionTypeSection.querySelector('#species').classList.remove('disabled')
@@ -335,7 +351,7 @@ const init = () => {
         saveFieldnotesSection.classList.add('hidden')
 
         // Enable option to toggle fieldnotes state between private and public
-        fieldnotesStateSection.classList.remove('disabled')    
+        fieldnotesStateSection.classList.remove('disabled')
   
         // Notify user that observations are available
         showNotificationsDialog({
@@ -1004,6 +1020,18 @@ const init = () => {
       , saveFieldnotesSection 
     })
   })
+  slugText.addEventListener('change', e => {
+    globalWrite.fieldnotes.slug = e.target.value.trim()
+    updateMetadataFields({
+          globalWrite
+        , prop: 'slug'
+        , value: globalWrite.fieldnotes.slug
+    })
+    enableSaveFieldNotesSection({ 
+        globalWrite
+      , saveFieldnotesSection 
+    })
+  })
   timeStartInputText.addEventListener('change', e => {
     globalWrite.fieldnotes.startTime = e.target.value
     updateMetadataFields({
@@ -1142,7 +1170,7 @@ const init = () => {
         , isUserEditing: true
       })
 
-      const { title, author, d1, d2, location, weather, habitat, startTime, endTime } = globalWrite.fieldnotes
+      const { title, author, d1, d2, location, weather, habitat, startTime, endTime, slug } = globalWrite.fieldnotes
 
       titleInputText.value = title
       authorInputText.value = author
@@ -1152,6 +1180,29 @@ const init = () => {
       habitatInputText.value = habitat || ''
       timeStartInputText.value = startTime || ''
       timeEndInputText.value = endTime || ''
+      slugText.textContent = slug || ''
+
+      // Add onclick handler to copy URL button
+      createUrlBtn.addClickHandler({
+        clickHandler: async (e) => {
+          const url = getURL({
+              location: window.location
+            , slug
+          })
+          try {
+            await navigator.clipboard.writeText(url)
+            showNotificationsDialog({
+                message: 'URL copied to clipboard'
+              , type:'success'
+            })
+          } catch (error) {
+            showNotificationsDialog({
+               message: error.message
+             , type: 'error'
+            })
+          }
+        }
+      })
 
       const observations = await getInatObservations({ 
           user_id: globalWrite.fieldnotes.user.id
