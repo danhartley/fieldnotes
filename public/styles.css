@@ -422,7 +422,6 @@ header menu a {
 figure {
   margin: 0 auto var(--d) auto;
   text-align: center;
-  background-color: var(--body-bg);
 }
 
 figcaption {
@@ -442,8 +441,9 @@ th, td {
 }
 
 img {
-  object-fit: cover;
   width: 100%;
+  margin: var(--d) 0;
+  object-fit: contain;
 }
 
 /* Write fieldset only */
@@ -1015,7 +1015,7 @@ fieldset.species-list {
   }
 }
 
-@media screen and (width >= 414px){
+@media screen and (width >= 458){
   .non-grid {
     max-width: 60ch;
   }
@@ -1028,5 +1028,13 @@ fieldset.species-list {
     aspect-ratio: 1/1;
     min-height: var(--img-min-height);
     max-height: var(--img-min-height);
+    margin: 0;
+    object-fit: cover;
+  }
+}
+
+@media screen and (width < 458px){
+    figcaption {
+    background-color: var(--content-bg) !important;
   }
 }
