@@ -1,0 +1,11 @@
+[upstream]
+providers = [
+	{ domain='netlify.com', service='cdn' }
+]
+
+[org]
+credentials = [
+	{ domain='thegreenwebfoundation.org', doctype='certificate', url='https://app.greenweb.org/api/v3/greencheckimage/ifieldnotes.org?nocache=true' },
+    { domain='websitecarbon.com', doctype='certificate', url='https://unpkg.com/website-carbon-badges@1.1.3/b.min.js' },
+    { domain='ecograder.com', doctype='webpage', url='https://ecograder.com/report/5MoaYsaR1UxleYMFc06dGtp7' }
+]

@@ -8,6 +8,8 @@
 /inaturalist                /read-inaturalist.html 200
 /inaturalist-authentication /inaturalist-authentication.html 200
 /admin                      /admin/admin.html 200
+/sustainability             /admin/sustainability.html 200
 /robots.txt                 /robots.txt 200
 /sitemap.xml                /sitemap.xml 200
+/carbon.txt                 /carbon.txt 200
 /*                          /read-fieldnotes.html 200
