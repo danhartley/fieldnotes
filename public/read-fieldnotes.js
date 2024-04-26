@@ -678,6 +678,13 @@ const init = async () => {
 
             fnAutocompleteTitleInputText.closest('fieldset').classList.remove('border-solid')
 
+            // Once the newly selected fieldnotes have loaded, update the browser history
+            if(globalRead.fieldnotesStubs.slug) {
+                window.history.pushState({}, globalRead.fieldnotesStubs.title, `/${globalRead.fieldnotesStubs.slug}`)
+            } else {
+                window.history.pushState({}, globalRead.fieldnotesStubs.title, '/')
+            }
+
             // Use marks and measure to display timings e.g. in Chrome DevTools (Performance tab)
             performance.mark('fetch-field-notes: end')
             performance.measure('fetch-field-notes', 'fetch-field-notes: start', 'fetch-field-notes: end')            

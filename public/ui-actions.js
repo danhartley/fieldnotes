@@ -1171,7 +1171,7 @@ export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnot
 
         // Check for slug        
         const { isValid, slug, author } = validateSlug({
-            pathname: window.location.pathname
+              pathname: window.location.pathname
             , slugs: []
             , author: 'danielhartley'
         })
@@ -1179,7 +1179,10 @@ export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnot
         const stubs = global.fieldnotesStubsCollection
         const fieldnotesFromSlug = stubs.find(stub => stub.slug === slug)
 
-        if(fieldnotesFromSlug) fnAutocompleteTitleInputText.value = fieldnotesFromSlug?.title
+        if(fieldnotesFromSlug) {
+            fnAutocompleteTitleInputText.value = fieldnotesFromSlug?.title
+            fetchFieldnotesBtn.focus()
+        }
 
         fieldnotesAutocomplete({ 
               inputText
@@ -1283,16 +1286,7 @@ export const fieldnotesAutocomplete = async ({inputText, dataList, global, field
         if(match) {
             global.fieldnotesStubs = stubs.find(option => option.title === match)
             fetchFieldnotesBtn.enable() 
-            fetchFieldnotesBtn.focus()
-            
-            // Hack to check that we are not on the write page
-            if(window.location.pathname.includes('write')) return
-
-            if(global.fieldnotesStubs.slug) {
-                window.location.pathname = global.fieldnotesStubs.slug
-            } else {
-                window.location.pathname = ''
-            }
+            fetchFieldnotesBtn.focus()            
         }
     })
 
