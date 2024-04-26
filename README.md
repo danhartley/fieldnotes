@@ -68,6 +68,10 @@ See: https://www.sitemaps.org/
 /carbon.txt
 See: https://carbontxt.org/
 
+#### Changelog
+/CHANGELOG.md
+See: https://keepachangelog.com/en/1.1.0/
+
 #### Human readable HTML map
 See: https://www.semrush.com/blog/html-sitemap/
 
