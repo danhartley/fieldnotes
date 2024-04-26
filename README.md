@@ -22,15 +22,22 @@ npm run install
 #### Run the project on your machine
 npm run start
 
+#### Run unit tests
+npm run test
+
 ````
 
-#### Run integration tests
+#### Running integration tests
 
 ```bash
 node {path} e.g. node public/tests/write-fieldnotes/write-fieldnotes-tests.js
 ````
 
-#### Local routes e.g.
+#### Routing
+Routing on the production site is handled by Netlify.
+See the _redirects file for configuration details
+
+No routing is set up in the development environment. Use full paths e.g.
 http://localhost:1234/read-fieldnotes.html
 http://localhost:1234/write-fieldnotes-create.html
 http://localhost:1234/write-fieldnotes-edit.html
@@ -47,7 +54,7 @@ Analytics currently suspended on the read fieldnotes page
 https://eu.posthog.com/
 
 #### CO2 emissions (online)
-https://ecograder.com/
+See: https://ifieldnotes.org/admin/sustainability.html
 
 #### Robots
 /robots.txt
@@ -57,7 +64,13 @@ See: meta data for robots for read fieldnotes page
 /sitemap.xml
 See: https://www.sitemaps.org/
 
+#### Carbon emissions
+/carbon.txt
+See: https://carbontxt.org/
+
 #### Human readable HTML map
 See: https://www.semrush.com/blog/html-sitemap/
+
+#### Site health
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9c06d7f9-7099-4196-b685-81166934bfe0/deploy-status)](https://app.netlify.com/sites/keen-crepe-cdae84/deploys)
