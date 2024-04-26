@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Security-Policy" 
     content="
-      script-src 'self' https://*.withcabin.com;
+      script-src 'self' https://*.withcabin.com https://unpkg.com;
       img-src https://* http://localhost:1234/;
       child-src 'none'; 
-      connect-src 'self' https://*.withcabin.com https://*.googleapis.com https://*.inaturalist.org;
+      connect-src 'self' https://*.withcabin.com https://*.googleapis.com https://*.inaturalist.org https://*.thegreenwebfoundation.org https://unpkg.com https://*.websitecarbon.com;
     "
   />
     <title>Paths through the forest are without number</title>
@@ -19,30 +19,41 @@
   <body class="m">
     <header>
       <menu>
-        <li>Sustainability</li>
+        <li><h1>Sustainability</h1></li>
       </menu>
     </header>
-    <aside>
-      <fieldset class="mt">
-        <legend>Checks</legend>        
-      </fieldset>
-    </aside>
     <main>
       <section>
-        <div id="is-hosted-sustainably"></div>
-        <div id="swd-emissions"></div>
-        <div id="one-byte-emissions"></div>
+        <fieldset class="mt flex-row">
+          <div id="is-hosted-sustainably"></div>
+          <div id="swd-emissions"></div>
+          <div id="one-byte-emissions"></div>
+        </fieldset>
+      </section>      
+      <section>
+        <fieldset class="mt flex-row">
+          <div>
+            <img class="object-fit-none" src="https://app.greenweb.org/api/v3/greencheckimage/ifieldnotes.org?nocache=true" alt="This website runs on green hosting - verified by thegreenwebfoundation.org" width="200px" height="95px">
+          </div>
+        </fieldset>
       </section>
       <section>
-        <img src="https://app.greenweb.org/api/v3/greencheckimage/ifieldnotes.org?nocache=true" alt="This website runs on green hosting - verified by thegreenwebfoundation.org" width="200px" height="95px">
+        <fieldset class="mt flex-row">
+          <div>
+            <a href="https://www.websitecarbon.com/website/ifieldnotes-org/">Website carbon - A+ carbon rating</a>
+          </div>
+          <div>
+            <a href="https://digitalbeacon.co/report/ifieldnotes-org">Digital Beacon - A+ carbon footprint rating </a>
+          </div>          
+          <div id="wcb" class="carbonbadge mt2 mb2"></div>
+          <script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>          
+        </fieldset>
       </section>
       <section>
-        <div>
-          <a href="https://www.websitecarbon.com/website/ifieldnotes-org/">Website carbon - A+ carbon rating</a>
-        </div>
-        <div>
-          <a href="https://digitalbeacon.co/report/ifieldnotes-org">Digital Beacon - A+ carbon footprint rating </a>
-        </div>
+        <fieldset class="mt flex-row">
+          <legend>ecograder report</legend>
+          <a href="https://ecograder.com/report/5MoaYsaR1UxleYMFc06dGtp7" alt="ecograder report">Ecograder report</a>
+        </fieldset>
       </section>
     </main>
   </body>

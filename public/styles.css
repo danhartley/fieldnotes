@@ -547,6 +547,10 @@ img {
   width: max-content;
 }
 
+.object-fit-none {
+  object-fit: none;
+}
+
 /* SELECTOR RULES */
 
 .non-grid {
