@@ -47,7 +47,10 @@ describe('validateSlug', () => {
 describe('createSlug', () => {
   it('should return a valid slug', () => {
     const author = 'danielhartley'
-    const location = 'lisbon, portugal'
+    const location = {
+        location: '38.5295111111,-8.9828722222'
+      , place_guess: 'lisbon, portugal'
+    }
     const date = new Date('2024-02-28')
     const slug = 'danielhartley-lisbon-portugal-wed-feb-28-2024'
     expect(createSlug({author, location, date})).toBe(slug)

@@ -248,7 +248,7 @@ export const validateSlug = ({
 
 export const createSlug = ({author, location, date}) => {
   const _author = author
-  const _location = location.replace(',', '').replace(' ', '-')
+  const _location = location.place_guess.replace(',', '').replace(' ', '-')
   const _date = date.toDateString().toLowerCase().replaceAll(' ', '-')
   return (`${_author}-${_location}-${_date}`)
 }

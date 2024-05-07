@@ -54,15 +54,15 @@ import {
 } from './ui-actions.js'
 
 import {
-      ButtonComponent
-    , CheckBoxComponent
+    ButtonComponent
+  , CheckBoxComponent
 } from './ui-components.js'
 
 import {
-    logger
-  , saveJson
+    appLocalStorage 
   , createSlug
   , getURL
+  , saveJson
 } from './utils.js'
 
 const init = () => {
@@ -268,7 +268,7 @@ const init = () => {
         const slug = createSlug({
             author
           , location
-          , date
+          , date: new Date(date)
         })
   
         titleInputText.value = title
