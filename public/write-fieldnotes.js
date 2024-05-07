@@ -1088,13 +1088,14 @@ const init = () => {
           , observations_count: globalWrite.fieldnotes.user.observations_count
           , species_count: globalWrite.fieldnotes.user.species_count
         }
+        , slug: globalWrite.fieldnotes.slug.trim()
         , d1: globalWrite.fieldnotes.d1
         , d2: globalWrite.fieldnotes.d2
         , location: globalWrite.fieldnotes.location
         , language: globalWrite.fieldnotes.language
         , taxa: globalWrite.fieldnotes.taxa
         , sections: globalWrite.fieldnotes.sections
-        , sectionOrder: globalWrite.fieldnotes.sections.map(section => section.sectionIndex)
+        , sectionOrder: globalWrite.fieldnotes.sections.map(section => section.sectionIndex)        
       })
 
       const hasDuplicateTitle = !isFieldnotesTitleUnique({

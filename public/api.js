@@ -370,6 +370,7 @@ export const addFieldnotes = async ({fieldnotes, status = 'private', user}) => {
         , status
         , created: Date.now()
         , uid: user.uid
+        , slug: fieldnotes.slug
       }
       await setDoc(fieldNotesStubRef, data)
 

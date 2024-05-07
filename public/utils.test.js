@@ -49,7 +49,7 @@ describe('createSlug', () => {
     const author = 'danielhartley'
     const location = {
         location: '38.5295111111,-8.9828722222'
-      , place_guess: 'lisbon, portugal'
+      , place_guess: 'Lisbon, Portugal'
     }
     const date = new Date('2024-02-28')
     const slug = 'danielhartley-lisbon-portugal-wed-feb-28-2024'

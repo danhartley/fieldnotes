@@ -250,7 +250,7 @@ export const createSlug = ({author, location, date}) => {
   const _author = author
   const _location = location.place_guess.replace(',', '').replace(' ', '-')
   const _date = date.toDateString().toLowerCase().replaceAll(' ', '-')
-  return (`${_author}-${_location}-${_date}`)
+  return (`${_author}-${_location}-${_date}`).toLowerCase()
 }
 
 export const getURL = ({location, slug}) => {
