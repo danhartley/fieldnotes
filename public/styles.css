@@ -1029,13 +1029,9 @@ fieldset.species-list {
   }
 }
 
-@media screen and (width >= 458){
+@media screen and (width >= 458px){
   .non-grid {
     max-width: 60ch;
-  }
-
-  figure {
-    margin: 0;
   }
 
   img {
@@ -1047,7 +1043,7 @@ fieldset.species-list {
   }
 }
 
-@media screen and (width < 458px){
+@media screen and (width <= 458px){
     figcaption {
     background-color: var(--content-bg) !important;
   }
