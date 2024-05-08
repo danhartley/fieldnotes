@@ -23,23 +23,22 @@ test('sortBy', () => {
 
 describe('validateSlug', () => {
   let pathname = '/danielhartley-lisbon-portugal-wed-feb-28-2024'
-  let author = 'danielhartley'
+  let slugs = [
+    'danielhartley-lisbon-portugal-wed-feb-28-2024/'
+  ]
 
-  it('should return a valid slug', () => {
-    expect(validateSlug({pathname, author})).toStrictEqual({
+  it.only('should return a valid slug', () => {
+    expect(validateSlug({pathname, slugs})).toStrictEqual({    
         isValid: true
       , slug: 'danielhartley-lisbon-portugal-wed-feb-28-2024/'
-      , author
     })
   })
 
   it('should return an invalid slug when no match for author', () => {
     pathname = '/author-invalid-slug'
-    author = 'unknown'
-    expect(validateSlug({pathname, author})).toStrictEqual({
+    expect(validateSlug({pathname})).toStrictEqual({
         isValid: false
       , slug: ''
-      , author
     })
   })
 })

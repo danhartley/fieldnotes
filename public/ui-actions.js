@@ -1172,8 +1172,8 @@ export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnot
         // Check for slug        
         const { isValid, slug, author } = validateSlug({
               pathname: window.location.pathname
-            , slugs: []
-            , author: 'danielhartley'
+            , slugs: global.fieldnotesStubsCollection.map(fieldnotes => fieldnotes.slug)
+            // , authors: global.fieldnotesStubsCollection.map(fieldnotes => fieldnotes.author)
         })
 
         const stubs = global.fieldnotesStubsCollection

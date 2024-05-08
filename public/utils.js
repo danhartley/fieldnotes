@@ -213,7 +213,6 @@ export const sortBy = ({arr, prop, dir = 'asc'}) => {
 export const validateSlug = ({
     pathname = '',
     slugs = [],
-    author = '',
   }) => {
 
   let validSlugs, slug
@@ -232,17 +231,15 @@ export const validateSlug = ({
   slug = slug.toLowerCase()
 
   // Add valid ifieldnotes slugs to incoming slugs
-  slugs.concat(validSlugs)
+  slugs = slugs.concat(validSlugs)
 
   let isValid = true
 
-  isValid = isValid + slugs.includes(slug)
-  isValid = isValid && slug.includes(author)
-  
+  isValid = isValid && slugs.includes(slug)
+
   return {
       isValid      
     , slug: isValid ? slug : ''
-    , author
   }
 }
 
@@ -250,7 +247,7 @@ export const createSlug = ({author, location, date}) => {
   const _author = author
   const _location = location.place_guess.replace(',', '').replace(' ', '-')
   const _date = date.toDateString().toLowerCase().replaceAll(' ', '-')
-  return (`${_author}-${_location}-${_date}`).toLowerCase()
+  return (`${_author}-${_location}-${_date}/`).toLowerCase()
 }
 
 export const getURL = ({location, slug}) => {
