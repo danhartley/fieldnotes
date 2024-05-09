@@ -4,15 +4,22 @@ import {
 
 export class ButtonComponent {
   constructor({parent = document, elementSelector, clickHandler}) {
-    this.buttonElement = parent.querySelector(`#${elementSelector}`)
+    try {
+      this.buttonElement = parent.querySelector(`#${elementSelector}`)
 
-    if (!this.buttonElement) {
-      return
-    }
+      if (!this.buttonElement) {
+        return
+      }
 
-    if(clickHandler) {
-      this.buttonElement.addEventListener('click', clickHandler)
-    }
+      if(clickHandler) {
+        this.buttonElement.addEventListener('click', clickHandler)
+      }
+    } catch (e) {
+      logger({
+          message: e.message
+        , type: 'error'
+      })
+  }
   }
 
   disable() {

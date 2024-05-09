@@ -694,7 +694,7 @@ export const dropHandler = async ({e, globalWrite, draggableSections, apiCallbac
 }
 
 // Notifications (toast)
-export const showNotificationsDialog = ({message, type = 'success', displayDuration = 3500}) => {
+export const showNotificationsDialog = ({message, type = 'success', displayDuration = 3500, stack}) => {
     const dialog = d.getElementById('state-notifications')
     const div1 = dialog.querySelector('div > div:nth-child(1)')
 
@@ -723,6 +723,7 @@ export const showNotificationsDialog = ({message, type = 'success', displayDurat
     logger({
         message
       , type
+      , stack
     })
 }
 

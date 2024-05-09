@@ -174,16 +174,19 @@ export const isValidDate = ({date}) => {
   return date.length > 0 && !isNaN(Date.parse(new Date(date)))
 }
 
-export const logger = ({message, type =''}) => {
+export const logger = ({message, type ='', stack}) => {
   const log = process.env.LOG
 
   if(log === 'true') {
     switch(type) {
       case 'success':
-        console.log(message)
+        console.log('message: ', message)
         break
       case 'error':
-        console.warn(message)
+        console.log('message: ', message)
+        if(stack) {
+          console.warn('stack: ', stack)
+        }
         break
       default:
         console.log(message)
