@@ -127,6 +127,12 @@ nav li {
   cursor: pointer;
 }
 
+nav ul {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
 li.small {
   margin: var(--d) 0;
 }
