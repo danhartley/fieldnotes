@@ -293,6 +293,13 @@ const init = async () => {
             lessonFieldsetLegend.innerText = globalRead.template.name
         
             if(globalRead.species) article.innerHTML = ''
+
+            // Add fieldnotes title to article 
+            let h1 = d.createElement('h1')
+            h1.innerText = globalRead.fieldnotes.title
+            h1.classList.add('non-grid')
+
+            article.appendChild(h1)
         
             // Iterate the sections updating content according to type
             switch(globalRead.template.templateId) {
