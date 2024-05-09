@@ -3,12 +3,17 @@ import {
 } from './utils.js'
 
 export class ButtonComponent {
-  constructor({parent = document, elementSelector, clickHandler}) {
+  constructor({parent = document, elementSelector, clickHandler, isDisabled = false}) {
     try {
       this.buttonElement = parent.querySelector(`#${elementSelector}`)
 
       if (!this.buttonElement) {
         return
+      }
+
+      // Disable buttons by default
+      if(isDisabled) {
+        this.buttonElement.setAttribute('disabled', '')
       }
 
       if(clickHandler) {
@@ -24,10 +29,14 @@ export class ButtonComponent {
 
   disable() {
     this.buttonElement.classList.add('disabled')
+    // this.buttonElement.setAttribute('disabled', '')
+    return this.buttonElement
   }
 
   enable() {
     this.buttonElement.classList.remove('disabled')
+    // this.buttonElement.removeAttribute('disabled')
+    return this.buttonElement
   }
 
   focus() {

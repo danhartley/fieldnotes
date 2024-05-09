@@ -1287,7 +1287,7 @@ export const fieldnotesAutocomplete = async ({inputText, dataList, global, field
         if(match) {
             global.fieldnotesStubs = stubs.find(option => option.title === match)
             fetchFieldnotesBtn.enable() 
-            fetchFieldnotesBtn.focus()            
+            fetchFieldnotesBtn.focus()      
         }
     })
 

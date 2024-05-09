@@ -212,7 +212,7 @@ const init = () => {
 
   // Create copy URL button
   const createUrlBtn = new ButtonComponent({
-      elementSelector: 'copy-url-btn'
+        elementSelector: 'copy-url-btn'
   })
 
   // Create fieldnotes
@@ -324,7 +324,7 @@ const init = () => {
         fnAutocompleteTitleInputText.value = globalWrite.fieldnotesStubs.title
 
         // Enable fetch 
-        fetchFieldnotesBtn.enable()
+        // fetchFieldnotesBtn.enable()
   
         // Save inat user
         if(rememberInatUserCheckbox.checked) {
@@ -1151,7 +1151,7 @@ const init = () => {
   }
 
   const saveFieldNotesBtn = new ButtonComponent({
-      elementSelector: 'save-fieldnotes-btn'
+        elementSelector: 'save-fieldnotes-btn'
       , clickHandler: () => saveFieldnotes({
         status: 'private'
       })
@@ -1565,7 +1565,7 @@ const init = () => {
 
   // Clear input so that user can select new title
   fnAutocompleteTitleInputText.addEventListener('focus', e => {
-    if(fnAutocompleteTitleDatalist.innerHTML !== '' && titleInputText.value.length > 0) {
+      if(fnAutocompleteTitleDatalist.innerHTML !== '') {
         fnAutocompleteTitleInputText.value = ''
         fieldnotesAutocomplete({ 
             inputText: fnAutocompleteTitleInputText
