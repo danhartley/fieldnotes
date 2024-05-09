@@ -25,7 +25,7 @@
     </header>
 
     <aside>
-      <div class="inat-preferences-section m0">
+      <section class="inat-preferences-section m0">
         <form id="authentication-form">
           <div class="centred-block logged-out hidden">
             <label for="firebase-email" class="mw8">Email</label>
@@ -47,12 +47,12 @@
           <label for="firebase-sign-up-checkbox" class="initial-text">First time user (sign up)</label>
         </div>
       </form>
-      </div>
+      </section>
     </aside>
 
     <main id="main">
       <article>
-        <div class="is-authenticated disabled">
+        <section class="is-authenticated disabled">
           <fieldset id="edit-field-notes" class="border-solid">
             <legend>Edit fieldnotes</legend>
             <button id="show-hide-edit-fieldnotes-btn" data-view="edit" class="view-btn btn-secondary btn-absolute">Hide</button>
@@ -71,9 +71,9 @@
               <p class="mt2 small"><em>These fieldnotes will be updated each time you add, edit, delete or move a section.</em></p>
             </div>
           </fieldset>
-        </div>
+        </section>
 
-        <div class="is-authenticated disabled">
+        <section class="is-authenticated disabled">
           <fieldset>
             <legend>Create fieldnotes</legend>
             <button id="show-hide-create-fieldnotes-btn" data-view="create" class="view-btn btn-secondary btn-absolute">Show</button>
@@ -100,9 +100,9 @@
               </div>
             </div>
           </fieldset>
-        </div>
+        </section>
   
-        <div id="meta-data-section" class="has-fieldnotes disabled">
+        <section id="meta-data-section" class="has-fieldnotes disabled">
           <fieldset id="field-trip">
             <legend>Field trip</legend>
             <p class="mt0 small">If your field trip is supported by iNaturalist observations, an iNaturalist search will populate these fields for you.</p>            
@@ -145,9 +145,9 @@
             </div>
             <p class="small"><em>A <strong>title</strong>, <strong>author</strong>, <strong>date</strong> and <strong>place</strong> are all required to create, or edit, fieldnotes.</em></p>
           </fieldset>
-        </div>
+        </section>
 
-        <div id="select-section-type-section" class="has-fieldnotes disabled">
+        <section id="select-section-type-section" class="has-fieldnotes disabled">
           <fieldset>
             <legend>Field journal sections</legend>
             <button id="h3-write" type="button" value="h3-write-template">Header</button>
@@ -164,11 +164,11 @@
             <button id="species" type="button" value="species-write-template" class="mt disabled">Species</button>
             <div class="mt2 small"><em>You can create multiple sections of each type, and change their order.</em></div>
           </fieldset>
-        </div>
+        </section>
 
         <div id="draggable-sections"></div>
 
-        <div id="save-fieldnotes-section" class="fieldnotes-view disabled hidden">
+        <section id="save-fieldnotes-section" class="fieldnotes-view disabled hidden">
           <fieldset>
             <legend>Save fieldnotes</legend>
             <p class="mt0 small">If you choose to publish your fieldnotes, you will be able to revert to a private draft.</p>
@@ -178,9 +178,9 @@
             </div>
             <p class="mt2 small"><em>You will be able to edit your fieldnotes whether you choose to save them as a private draft or to publish them.</em></p>            
           </fieldset>
-        </div>
+        </section>
 
-        <div id="fieldnotes-state-section" class="has-fieldnotes disabled">
+        <section id="fieldnotes-state-section" class="has-fieldnotes disabled">
           <fieldset>
             <legend>Fieldnotes status (public/private)</legend>
             <p class="mt0 small">Your fieldnotes are currently: <strong><em id="update-fieldnotes-current-status-text"></em></strong></p>
@@ -190,9 +190,9 @@
             </div>
             <p class="small">You can read and write private and public fieldnotes when you are logged in.</p>
           </fieldset>
-        </div>
+        </section>
         
-        <div id="export-fieldnotes-options" class="has-fieldnotes fieldnotes-view disabled">
+        <section id="export-fieldnotes-options" class="has-fieldnotes fieldnotes-view disabled">
           <fieldset>
             <legend>Export fieldnotes</legend>
             <p class="mt0 small">Export your fieldnotes to file in the JSON format.</p>
@@ -205,16 +205,16 @@
               <input id="export-fieldnotes-input-check" type="checkbox">
             </div>
           </fieldset>
-        </div>
+        </section>
 
-        <div id="delete-fieldnotes-section" class="has-fieldnotes disabled">
+        <section id="delete-fieldnotes-section" class="has-fieldnotes disabled">
           <fieldset class="alert">
             <legend>Delete fieldnotes</legend>
             <p class="mt0 small">When you delete fieldnotes, you will no longer have access to them.</p>
             <button id="delete-fieldnotes-btn" class="btn-alert">Delete fieldnotes</button>
             <p class="small">If you wish to recover them, please contact the site owner at <a href="mailto:dbmhartley@protonmail.com?subject=Recover%20deleted%20fieldnotes">Recover deleted fieldnotes</a>.</p>
           </fieldset>
-        </div>
+        </section>
       </article>
 
       <dialog id="state-notifications">
@@ -235,7 +235,7 @@
     </template>
 
     <template id="section-parent-template">
-      <div draggable="true" class="draggable">
+      <section draggable="true" class="draggable">
         <fieldset class="mt2">
           <legend></legend>
           <div class="content-container disabled"></div>
@@ -245,11 +245,11 @@
           <button id="cancel-action-btn" class="small btn-secondary-action mt2 cancel hidden">Cancel action</button>
           <p class="mt2 small"><em>Your fieldnotes are automatically saved when you add, edit or delete sections in the journal.</em></p>
         </fieldset>
-      </div>
+      </section>
     </template>
 
     <template id="section-with-species-parent-template">
-      <div draggable="true" class="draggable">
+      <section draggable="true" class="draggable">
         <fieldset class="mt2 species-list">
           <legend></legend>
           <button id="toggle-species-include-all-top-btn" class="toggle-species-include-all-btns btn-secondary btn-absolute">Show only included</button>          
@@ -260,7 +260,7 @@
           <button id="delete-section-btn" class="small mt2 btn-delete-action edit">Delete section</button>
           <button id="cancel-action-btn" class="small mt2 btn-secondary-action cancel hidden">Cancel action</button>
         </fieldset>
-      </div>
+      </section>
     </template>
 
     <template id="h3-write-template">

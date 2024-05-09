@@ -388,294 +388,427 @@ const init = () => {
   
   // Create new fieldnotes section
   const createSection = ({writeTemplateId, typeText, sectionTemplate, sectionIndex}) => {
-    const sectionClone = sectionTemplate.content.cloneNode(true)
-    const draggableSection = sectionClone.querySelector('section.draggable')
-    const contentContainer = sectionClone.querySelector('.content-container')
-    const fieldset = sectionClone.querySelector('fieldset')
-    const legend = sectionClone.querySelector('legend')
-    const parentContainer = sectionClone.querySelector('div')
-    
-    const toggleSpeciesListTopBtn = new ButtonComponent({
-        parent: sectionClone
-      , elementSelector: 'toggle-species-include-all-top-btn'
-    })
-    const toggleSpeciesListBottomBtn = new ButtonComponent({
-        parent: sectionClone
-      , elementSelector: 'toggle-species-include-all-bottom-btn'
-    })
-    const addOrUpdateSectionBtn = new ButtonComponent({
-        parent: sectionClone
-      , elementSelector: 'add-or-update-section-btn'
-    })
-    const editSectionBtn = new ButtonComponent({
-        parent: sectionClone
-      , elementSelector: 'edit-section-btn'
-    })
-    const deleteSectionBtn = new ButtonComponent({
-        parent: sectionClone
-      , elementSelector: 'delete-section-btn'
-    })
-    const cancelActionBtn = new ButtonComponent({
-        parent: sectionClone
-      , elementSelector: 'cancel-action-btn'
-    })
-    
-    const typeTemplate = d.getElementById(writeTemplateId)
-    const typeClone = typeTemplate.content.cloneNode(true)
+    try {
+      const sectionClone = sectionTemplate.content.cloneNode(true)
+      const draggableSection = sectionClone.querySelector('section.draggable')
+      const contentContainer = sectionClone.querySelector('.content-container')
+      const fieldset = sectionClone.querySelector('fieldset')
+      const legend = sectionClone.querySelector('legend')
+      const parentContainer = sectionClone.querySelector('div')
+      
+      const toggleSpeciesListTopBtn = new ButtonComponent({
+          parent: sectionClone
+        , elementSelector: 'toggle-species-include-all-top-btn'
+      })
+      const toggleSpeciesListBottomBtn = new ButtonComponent({
+          parent: sectionClone
+        , elementSelector: 'toggle-species-include-all-bottom-btn'
+      })
+      const addOrUpdateSectionBtn = new ButtonComponent({
+          parent: sectionClone
+        , elementSelector: 'add-or-update-section-btn'
+      })
+      const editSectionBtn = new ButtonComponent({
+          parent: sectionClone
+        , elementSelector: 'edit-section-btn'
+      })
+      const deleteSectionBtn = new ButtonComponent({
+          parent: sectionClone
+        , elementSelector: 'delete-section-btn'
+      })
+      const cancelActionBtn = new ButtonComponent({
+          parent: sectionClone
+        , elementSelector: 'cancel-action-btn'
+      })
+      
+      const typeTemplate = d.getElementById(writeTemplateId)
+      const typeClone = typeTemplate.content.cloneNode(true)
 
-    draggableSection.setAttribute('id', sectionIndex)
-    draggableSection.addEventListener('dragstart', dragstartHandler)    
-    
-    let input, label, textarea, datalist, previewContainer, images, cbParent, observer = null
+      draggableSection.setAttribute('id', sectionIndex)
+      draggableSection.addEventListener('dragstart', dragstartHandler)    
+      
+      let input, label, textarea, datalist, previewContainer, images, cbParent, observer = null
 
-    legend.innerText = typeText
+      legend.innerText = typeText
 
-    previewContainer = typeClone.querySelector('.edit')
+      previewContainer = typeClone.querySelector('.edit')
 
-    // Create the section
-    switch(writeTemplateId) {
-      case 'h3-write-template':
-      case 'h4-write-template':
-      case 'xenocanto-write-template':
-        input = typeClone.querySelector('input')
-        input.id = `input-${sectionIndex}`
-        input.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
-        label = typeClone.querySelector('label')
-        label.htmlFor = input.id
-        addOrUpdateSectionBtn.addClickHandler({
-          clickHandler: e => addOrUpdateSection({
-              parent: e.target.parentElement
-            , writeTemplateId
-            , typeValue: input.value
-            , previewContainer
-            , sectionIndex
-            , cancelActionBtn
-          })
-        })
-        break
-      case 'textarea-write-template':    
-        textarea = typeClone.querySelector('textarea')
-        textarea.id = `textarea-${sectionIndex}`
-        textarea.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
-        label = typeClone.querySelector('label')
-        label.htmlFor = textarea.id
-        addOrUpdateSectionBtn.addClickHandler({
-          clickHandler: e => addOrUpdateSection({
-              parent: e.target.parentElement
-            , writeTemplateId
-            , typeValue: textarea.value
-            , previewContainer
-            , sectionIndex
-            , cancelActionBtn
-          })
-        })
-        break
-      case 'observations-write-template':
-      case 'species-write-template':       
-        cloneImages({
-            globalWrite
-          , parent: typeClone.querySelector('div')
-          , writeTemplateId
-          , sectionIndex
-        })
-        addOrUpdateSectionBtn.addClickHandler({
-          clickHandler: e => addOrUpdateSection({
-              parent: e.target.parentElement
-            , writeTemplateId
-            , typeValue: null
-            , previewContainer
-            , sectionIndex
-            , cancelActionBtn
-          })
-        })
-        // Observe changes to the species list
-        observer = new MutationObserver(() => {
-          const section = globalWrite.fieldnotes.sections.find(s => s.sectionIndex === sectionIndex)
-          const speciesCount = section?.species?.length || 0
-          if(speciesCount > 0) {
-            addOrUpdateSectionBtn.enable()
-            addOrUpdateSectionBtn.setText({
-              text: 'Save changes' 
-            })
-          } else {
-            addOrUpdateSectionBtn.setText({
-              text: 'Add section' 
-            })
-            addOrUpdateSectionBtn.disable()
-          }
-        })
-        observer.observe(draggableSection.querySelector('.content-container'), {
-              subtree: true
-            , childList: true
-        })
-        break
-      case 'terms-write-template':
-        datalist = typeClone.querySelector('datalist')
-        datalist.id = `${sectionIndex}-dl-list`
-        input = typeClone.querySelector('input')
-        input.id = `${sectionIndex}-dl-input-text`
-        input.setAttribute('list', datalist.id)        
-        label = typeClone.querySelector('label')
-        label.htmlFor = input.id                  
-        addOrUpdateSectionBtn.addClickHandler({
-          clickHandler: e => addOrUpdateSection({
-              parent: e.target.parentElement
-            , writeTemplateId
-            , typeValue: null
-            , previewContainer
-            , sectionIndex
-            , cancelActionBtn
-          })
-        })
-        // Observe changes to the terms list
-        observer = new MutationObserver(() => {
-          const section = globalWrite.fieldnotes.sections.find(s => s.sectionIndex === sectionIndex)
-          const termsCount = section?.terms?.length || 0
-          if(termsCount > 0) {
-            addOrUpdateSectionBtn.enable()
-            addOrUpdateSectionBtn.setText({
-              text: 'Save changes' 
-            })
-          } else {
-            addOrUpdateSectionBtn.setText({
-              text: 'Add section' 
-            })
-            addOrUpdateSectionBtn.disable()
-          }
-        })
-        observer.observe(draggableSection.querySelector('.content-container'), {
-              subtree: true
-            , childList: true
-        })
-        break
-      case 'images-write-template':
-        const sectionContainer = typeClone.getElementById('section-id')
-        sectionContainer.id = `${sectionContainer.id}-${sectionIndex}`
-        const url1 = typeClone.getElementById('image-url-input-0')
-        const title1 = typeClone.getElementById('image-title-input-0')
-        url1.addEventListener('input', () => handleImageInputChangeEvent({
-            addOrUpdateSectionBtn
-          , url1
-          , title1
-        }), true)
-        title1.addEventListener('input', () => handleImageInputChangeEvent({
-            addOrUpdateSectionBtn
-          , url1
-          , title1
-        }), true)
-        addOrUpdateSectionBtn.addClickHandler({
-          clickHandler: e => addOrUpdateSection({
-              parent: e.target.parentElement
-            , writeTemplateId
-            , typeValue: null
-            , previewContainer
-            , sectionIndex
-            , cancelActionBtn
-          })
-        })
-        break
-      case 'inat-lookup-write-template':
-        datalist = typeClone.querySelector('datalist')
-        datalist.id = `${sectionIndex}-dl-list`
-        input = typeClone.querySelector('input')
-        input.id = `${sectionIndex}-dl-input-text`
-        input.setAttribute('list', datalist.id)
-        label = typeClone.querySelector('label')
-        label.htmlFor = input.id
-        cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
-        cbParent.id = `inat-lookup-parent-${sectionIndex}`
-        addOrUpdateSectionBtn.addClickHandler({
+      // Create the section
+      switch(writeTemplateId) {
+        case 'h3-write-template':
+        case 'h4-write-template':
+        case 'xenocanto-write-template':
+          input = typeClone.querySelector('input')
+          input.id = `input-${sectionIndex}`
+          input.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
+          label = typeClone.querySelector('label')
+          label.htmlFor = input.id
+          addOrUpdateSectionBtn.addClickHandler({
             clickHandler: e => addOrUpdateSection({
-              parent: e.target.parentElement
-            , writeTemplateId
-            , typeValue: null
-            , previewContainer
-            , sectionIndex
-            , cancelActionBtn
+                parent: e.target.parentElement
+              , writeTemplateId
+              , typeValue: input.value
+              , previewContainer
+              , sectionIndex
+              , cancelActionBtn
+            })
           })
-        })
-        // Observe changes to the species list
-        observer = new MutationObserver(e => {
-          const section = globalWrite.fieldnotes.sections.find(s => s.sectionIndex === sectionIndex)
-          const speciesCount = section?.species?.length || 0
-          if(speciesCount > 0) {
-            addOrUpdateSectionBtn.enable()
-            addOrUpdateSectionBtn.setText({
-              text: 'Save changes' 
+          break
+        case 'textarea-write-template':    
+          textarea = typeClone.querySelector('textarea')
+          textarea.id = `textarea-${sectionIndex}`
+          textarea.addEventListener('input', e => handleInputChangeEvent(e, addOrUpdateSectionBtn), true)
+          label = typeClone.querySelector('label')
+          label.htmlFor = textarea.id
+          addOrUpdateSectionBtn.addClickHandler({
+            clickHandler: e => addOrUpdateSection({
+                parent: e.target.parentElement
+              , writeTemplateId
+              , typeValue: textarea.value
+              , previewContainer
+              , sectionIndex
+              , cancelActionBtn
             })
-          } else {
-            addOrUpdateSectionBtn.setText({
-              text: 'Add section' 
+          })
+          break
+        case 'observations-write-template':
+        case 'species-write-template':       
+          cloneImages({
+              globalWrite
+            , parent: typeClone.querySelector('div')
+            , writeTemplateId
+            , sectionIndex
+          })
+          addOrUpdateSectionBtn.addClickHandler({
+            clickHandler: e => addOrUpdateSection({
+                parent: e.target.parentElement
+              , writeTemplateId
+              , typeValue: null
+              , previewContainer
+              , sectionIndex
+              , cancelActionBtn
             })
-            addOrUpdateSectionBtn.disable()
-          }
-        })
-        observer.observe(draggableSection.querySelector('.content-container'), {
-              subtree: true
-            , childList: true
-        })
-        break
-    }
-    editSectionBtn.addClickHandler({
-      clickHandler: e => editSection({
-          e
-        , addOrUpdateSectionBtn
-        , editSectionBtn
-        , cancelActionBtn
-        , contentContainer
-      })
-    })
-
-    // Add the child to its parent container
-    parentContainer.appendChild(typeClone)
-
-    // Add the parent container (the HTML cloned fragment) to the DOM
-    draggableSections.appendChild(sectionClone)
-
-    // Listen for drag events
-    Array.from(draggableSections.getElementsByTagName('section')).forEach(section => {
-      section.addEventListener('dragenter', dragenterHandler)
-      section.addEventListener('dragenter', dragleaveHandler)
-    })
-
-    draggableSections.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })
-    
-    deleteSectionBtn.addClickHandler({
-      clickHandler: () => deleteSection({
-          sectionIndex
-        , globalWrite
-      })
-    })
-
-    cancelActionBtn.addClickHandler({
-      clickHandler: e => {
-        cancelActionBtn.hide()
-        addOrUpdateSectionBtn.hide()
-        editSectionBtn.show()
-        deleteSectionBtn.show()
-        contentContainer.classList.toggle('disabled')
-
-        // Show the preview section and hide the edit section
-        Array.from(contentContainer.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
-        Array.from(contentContainer.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
+          })
+          // Observe changes to the species list
+          observer = new MutationObserver(() => {
+            const section = globalWrite.fieldnotes.sections.find(s => s.sectionIndex === sectionIndex)
+            const speciesCount = section?.species?.length || 0
+            if(speciesCount > 0) {
+              addOrUpdateSectionBtn.enable()
+              addOrUpdateSectionBtn.setText({
+                text: 'Save changes' 
+              })
+            } else {
+              addOrUpdateSectionBtn.setText({
+                text: 'Add section' 
+              })
+              addOrUpdateSectionBtn.disable()
+            }
+          })
+          observer.observe(draggableSection.querySelector('.content-container'), {
+                subtree: true
+              , childList: true
+          })
+          break
+        case 'terms-write-template':
+          datalist = typeClone.querySelector('datalist')
+          datalist.id = `${sectionIndex}-dl-list`
+          input = typeClone.querySelector('input')
+          input.id = `${sectionIndex}-dl-input-text`
+          input.setAttribute('list', datalist.id)        
+          label = typeClone.querySelector('label')
+          label.htmlFor = input.id                  
+          addOrUpdateSectionBtn.addClickHandler({
+            clickHandler: e => addOrUpdateSection({
+                parent: e.target.parentElement
+              , writeTemplateId
+              , typeValue: null
+              , previewContainer
+              , sectionIndex
+              , cancelActionBtn
+            })
+          })
+          // Observe changes to the terms list
+          observer = new MutationObserver(() => {
+            const section = globalWrite.fieldnotes.sections.find(s => s.sectionIndex === sectionIndex)
+            const termsCount = section?.terms?.length || 0
+            if(termsCount > 0) {
+              addOrUpdateSectionBtn.enable()
+              addOrUpdateSectionBtn.setText({
+                text: 'Save changes' 
+              })
+            } else {
+              addOrUpdateSectionBtn.setText({
+                text: 'Add section' 
+              })
+              addOrUpdateSectionBtn.disable()
+            }
+          })
+          observer.observe(draggableSection.querySelector('.content-container'), {
+                subtree: true
+              , childList: true
+          })
+          break
+        case 'images-write-template':
+          const sectionContainer = typeClone.getElementById('section-id')
+          sectionContainer.id = `${sectionContainer.id}-${sectionIndex}`
+          const url1 = typeClone.getElementById('image-url-input-0')
+          const title1 = typeClone.getElementById('image-title-input-0')
+          url1.addEventListener('input', () => handleImageInputChangeEvent({
+              addOrUpdateSectionBtn
+            , url1
+            , title1
+          }), true)
+          title1.addEventListener('input', () => handleImageInputChangeEvent({
+              addOrUpdateSectionBtn
+            , url1
+            , title1
+          }), true)
+          addOrUpdateSectionBtn.addClickHandler({
+            clickHandler: e => addOrUpdateSection({
+                parent: e.target.parentElement
+              , writeTemplateId
+              , typeValue: null
+              , previewContainer
+              , sectionIndex
+              , cancelActionBtn
+            })
+          })
+          break
+        case 'inat-lookup-write-template':
+          datalist = typeClone.querySelector('datalist')
+          datalist.id = `${sectionIndex}-dl-list`
+          input = typeClone.querySelector('input')
+          input.id = `${sectionIndex}-dl-input-text`
+          input.setAttribute('list', datalist.id)
+          label = typeClone.querySelector('label')
+          label.htmlFor = input.id
+          cbParent = typeClone.querySelector('#inat-lookup-callback-parent')
+          cbParent.id = `inat-lookup-parent-${sectionIndex}`
+          addOrUpdateSectionBtn.addClickHandler({
+              clickHandler: e => addOrUpdateSection({
+                parent: e.target.parentElement
+              , writeTemplateId
+              , typeValue: null
+              , previewContainer
+              , sectionIndex
+              , cancelActionBtn
+            })
+          })
+          // Observe changes to the species list
+          observer = new MutationObserver(e => {
+            const section = globalWrite.fieldnotes.sections.find(s => s.sectionIndex === sectionIndex)
+            const speciesCount = section?.species?.length || 0
+            if(speciesCount > 0) {
+              addOrUpdateSectionBtn.enable()
+              addOrUpdateSectionBtn.setText({
+                text: 'Save changes' 
+              })
+            } else {
+              addOrUpdateSectionBtn.setText({
+                text: 'Add section' 
+              })
+              addOrUpdateSectionBtn.disable()
+            }
+          })
+          observer.observe(draggableSection.querySelector('.content-container'), {
+                subtree: true
+              , childList: true
+          })
+          break
       }
-    })
+      editSectionBtn.addClickHandler({
+        clickHandler: e => editSection({
+            e
+          , addOrUpdateSectionBtn
+          , editSectionBtn
+          , cancelActionBtn
+          , contentContainer
+        })
+      })
 
-    const section = globalWrite.fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
+      // Add the child to its parent container
+      parentContainer.appendChild(typeClone)
 
-    if(!section) {
-      contentContainer.classList.toggle('disabled')
-    }
+      // Add the parent container (the HTML cloned fragment) to the DOM
+      draggableSections.appendChild(sectionClone)
 
-    // Add additional functionality once the DOM has been updated
-    switch(writeTemplateId) {
-      case 'h3-write-template':
-      case 'h4-write-template':
-      case 'xenocanto-write-template':
-        Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
-        break
-      case 'species-write-template':
-      case 'observations-write-template':
+      // Listen for drag events
+      Array.from(draggableSections.getElementsByTagName('section')).forEach(section => {
+        section.addEventListener('dragenter', dragenterHandler)
+        section.addEventListener('dragenter', dragleaveHandler)
+      })
+
+      draggableSections.scrollIntoView({ behavior: "smooth", block: "end", inline: "end" })
+      
+      deleteSectionBtn.addClickHandler({
+        clickHandler: () => deleteSection({
+            sectionIndex
+          , globalWrite
+        })
+      })
+
+      cancelActionBtn.addClickHandler({
+        clickHandler: e => {
+          cancelActionBtn.hide()
+          addOrUpdateSectionBtn.hide()
+          editSectionBtn.show()
+          deleteSectionBtn.show()
+          contentContainer.classList.toggle('disabled')
+
+          // Show the preview section and hide the edit section
+          Array.from(contentContainer.querySelectorAll('.edit')).forEach(el => el.classList.remove('hidden'))
+          Array.from(contentContainer.querySelectorAll('.add:not(.edit)')).forEach(el => el.classList.add('hidden'))
+        }
+      })
+
+      const section = globalWrite.fieldnotes.sections.find(section => section.sectionIndex === sectionIndex)
+
+      if(!section) {
+        contentContainer.classList.toggle('disabled')
+      }
+
+      // Add additional functionality once the DOM has been updated
+      switch(writeTemplateId) {
+        case 'h3-write-template':
+        case 'h4-write-template':
+        case 'xenocanto-write-template':
+          Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
+          break
+        case 'species-write-template':
+        case 'observations-write-template':
+            toggleSpeciesListTopBtn.addClickHandler({
+              clickHandler: () => toggleSpeciesList({
+                  btn: toggleSpeciesListTopBtn
+                , btnPair: toggleSpeciesListBottomBtn
+                , fieldset
+              })
+            }) 
+            toggleSpeciesListBottomBtn.addClickHandler({
+              clickHandler: () => toggleSpeciesList({
+                  btn: toggleSpeciesListBottomBtn
+                , btnPair: toggleSpeciesListTopBtn
+                , fieldset
+              })
+            }) 
+          break
+        case 'textarea-write-template':
+          fieldset.querySelector('textarea:not(.hidden)')?.focus()
+          break
+        case 'terms-write-template':
+          const parent = fieldset.querySelector('#selected-term')
+          const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
+          const addNewTermBtn = new ButtonComponent({
+            elementSelector: 'add-new-term-btn'
+          })
+
+          const selectedTerms = []
+          const handleOnClickAddSelectedTermBtn = ({terms, selectedTerm}) => {
+            const selectedItemsListElement = fieldset.querySelector('#selected-terms-list')
+            addTermToList({
+                selectedTerms
+              , selectedTerm
+              , selectedItemsListElement
+              , globalWrite
+              , sectionIndex
+            })
+            addSelectedTermBtn.classList.add('disabled')
+            addOrUpdateSectionBtn.enable()
+            input.value = ''
+            selectedTerms.push(selectedTerm)
+          }
+          input.focus()
+          handleTermAutocomplete({ 
+              selectedTerms
+            , inputText: input
+            , dataList: datalist
+            , globalWrite
+            , data: getTerms()
+            , parent
+            , addSelectedTermBtn
+            , handleOnClickAddSelectedTermBtn
+          })
+          
+          // Create a new term
+          const dt = fieldset.querySelector('#input-dt')
+          const dd = fieldset.querySelector('#input-dd')
+          const ds = fieldset.querySelector('#input-ds')
+          const da = fieldset.querySelector('#input-da')
+          const dx = fieldset.querySelector('#input-dx')
+
+          // Update the term ids so that they are unique in the DOM
+          dt.id = `${sectionIndex}-input-dt`
+          d.querySelector('label[for="input-dt"]').htmlFor = dt.id
+          dd.id = `${sectionIndex}-input-dd`
+          d.querySelector('label[for="input-dd"]').htmlFor = dd.id
+          ds.id = `${sectionIndex}-input-ds`
+          d.querySelector('label[for="input-ds"]').htmlFor = ds.id
+          da.id = `${sectionIndex}-input-da`
+          d.querySelector('label[for="input-da"]').htmlFor = da.id
+          dx.id = `${sectionIndex}-input-dx`
+          d.querySelector('label[for="input-dx"]').htmlFor = dx.id
+          
+          dt.addEventListener('change', e => {
+            e.target.value.length > 0
+              ? addNewTermBtn.enable()
+              : addNewTermBtn.disable()
+          })
+          
+          addNewTermBtn.addClickHandler({
+            clickHandler: async () => {
+              const newTerm = Object.assign({}, {
+                dt: dt.value
+              , dd: dd.value
+              , ds: ds.value
+              , da: da.value
+              , dx: dx.value
+            })
+
+            const terms = await getTerms()
+
+            saveNewTerm({
+                terms
+              , term: newTerm
+            })
+                      
+            handleOnClickAddSelectedTermBtn({
+                selectedTerms
+              , selectedTerm: newTerm
+            })}
+          })
+          break
+        case 'images-write-template':
+          const url1 = fieldset.querySelector('#image-url-input-0')
+          const title1 = fieldset.querySelector('#image-title-input-0')
+          const url2 = fieldset.querySelector('#image-url-input-1')
+          const title2 = fieldset.querySelector('#image-title-input-1')
+          const url3 = fieldset.querySelector('#image-url-input-2')
+          const title3 = fieldset.querySelector('#image-title-input-2')      
+          
+          images = section?.images || []
+          
+          if(images.length === 0) {
+            for (let i = 0; i < 3; i++) {
+              images.push({
+                  src:''
+                , alt:''
+              })  
+            }
+          }
+          
+          [url1, title1, url2, title2, url3, title3].forEach((input, index) => {
+            input.addEventListener('input', e => handleImageTextChange({
+                globalWrite
+              , sectionIndex
+              , imageSrcs: images
+              , strValue:e.target.value
+              , index: calcImageIndex(index)
+              , property:input.dataset.key
+            }), true)
+          })
+          Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
+          break
+        case 'inat-lookup-write-template':
           toggleSpeciesListTopBtn.addClickHandler({
             clickHandler: () => toggleSpeciesList({
                 btn: toggleSpeciesListTopBtn
@@ -690,156 +823,31 @@ const init = () => {
               , fieldset
             })
           }) 
-         break
-      case 'textarea-write-template':
-        fieldset.querySelector('textarea:not(.hidden)')?.focus()
-        break
-      case 'terms-write-template':
-        const parent = fieldset.querySelector('#selected-term')
-        const addSelectedTermBtn = fieldset.querySelector('#add-selected-term-btn')
-        const addNewTermBtn = new ButtonComponent({
-          elementSelector: 'add-new-term-btn'
-        })
+          Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
 
-        const selectedTerms = []
-        const handleOnClickAddSelectedTermBtn = ({terms, selectedTerm}) => {
-          const selectedItemsListElement = fieldset.querySelector('#selected-terms-list')
-          addTermToList({
-              selectedTerms
-            , selectedTerm
-            , selectedItemsListElement
+          globalWrite.inatAutocomplete = globalWrite.inatAutocompleteOptions.find(option => option.id === 'taxa')
+
+          handleInatAutocomplete({ 
+              inputText: input
+            , dataList: datalist
             , globalWrite
+            , id: globalWrite.inatAutocomplete.id
+            , prop: globalWrite.inatAutocomplete.prop
+            , callback: createInatLookups
+            , cbParent
+            , writeTemplateId
             , sectionIndex
           })
-          addSelectedTermBtn.classList.add('disabled')
-          addOrUpdateSectionBtn.enable()
-          input.value = ''
-          selectedTerms.push(selectedTerm)
-        }
-        input.focus()
-        handleTermAutocomplete({ 
-            selectedTerms
-          , inputText: input
-          , dataList: datalist
-          , globalWrite
-          , data: getTerms()
-          , parent
-          , addSelectedTermBtn
-          , handleOnClickAddSelectedTermBtn
-        })
-        
-        // Create a new term
-        const dt = fieldset.querySelector('#input-dt')
-        const dd = fieldset.querySelector('#input-dd')
-        const ds = fieldset.querySelector('#input-ds')
-        const da = fieldset.querySelector('#input-da')
-        const dx = fieldset.querySelector('#input-dx')
-
-        // Update the term ids so that they are unique in the DOM
-        dt.id = `${sectionIndex}-input-dt`
-        d.querySelector('label[for="input-dt"]').htmlFor = dt.id
-        dd.id = `${sectionIndex}-input-dd`
-        d.querySelector('label[for="input-dd"]').htmlFor = dd.id
-        ds.id = `${sectionIndex}-input-ds`
-        d.querySelector('label[for="input-ds"]').htmlFor = ds.id
-        da.id = `${sectionIndex}-input-da`
-        d.querySelector('label[for="input-da"]').htmlFor = da.id
-        dx.id = `${sectionIndex}-input-dx`
-        d.querySelector('label[for="input-dx"]').htmlFor = dx.id
-        
-        dt.addEventListener('change', e => {
-          e.target.value.length > 0
-            ? addNewTermBtn.enable()
-            : addNewTermBtn.disable()
-        })
-        
-        addNewTermBtn.addClickHandler({
-          clickHandler: async () => {
-            const newTerm = Object.assign({}, {
-              dt: dt.value
-            , dd: dd.value
-            , ds: ds.value
-            , da: da.value
-            , dx: dx.value
-          })
-
-          const terms = await getTerms()
-
-          saveNewTerm({
-              terms
-            , term: newTerm
-          })
-                    
-          handleOnClickAddSelectedTermBtn({
-              selectedTerms
-            , selectedTerm: newTerm
-          })}
-        })
         break
-      case 'images-write-template':
-        const url1 = fieldset.querySelector('#image-url-input-0')
-        const title1 = fieldset.querySelector('#image-title-input-0')
-        const url2 = fieldset.querySelector('#image-url-input-1')
-        const title2 = fieldset.querySelector('#image-title-input-1')
-        const url3 = fieldset.querySelector('#image-url-input-2')
-        const title3 = fieldset.querySelector('#image-title-input-2')      
-        
-        images = section?.images || []
-        
-        if(images.length === 0) {
-          for (let i = 0; i < 3; i++) {
-            images.push({
-                src:''
-              , alt:''
-            })  
-          }
-        }
-        
-        [url1, title1, url2, title2, url3, title3].forEach((input, index) => {
-          input.addEventListener('input', e => handleImageTextChange({
-              globalWrite
-            , sectionIndex
-            , imageSrcs: images
-            , strValue:e.target.value
-            , index: calcImageIndex(index)
-            , property:input.dataset.key
-          }), true)
+      }
+      return draggableSection
+    } catch (e) {
+        showNotificationsDialog({
+            message: e.message
+          , type: 'error'
+          ,stackTrace: e.stack
         })
-        Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
-        break
-      case 'inat-lookup-write-template':
-        toggleSpeciesListTopBtn.addClickHandler({
-          clickHandler: () => toggleSpeciesList({
-              btn: toggleSpeciesListTopBtn
-            , btnPair: toggleSpeciesListBottomBtn
-            , fieldset
-          })
-        }) 
-        toggleSpeciesListBottomBtn.addClickHandler({
-          clickHandler: () => toggleSpeciesList({
-              btn: toggleSpeciesListBottomBtn
-            , btnPair: toggleSpeciesListTopBtn
-            , fieldset
-          })
-        }) 
-        Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
-
-        globalWrite.inatAutocomplete = globalWrite.inatAutocompleteOptions.find(option => option.id === 'taxa')
-
-        handleInatAutocomplete({ 
-            inputText: input
-          , dataList: datalist
-          , globalWrite
-          , id: globalWrite.inatAutocomplete.id
-          , prop: globalWrite.inatAutocomplete.prop
-          , callback: createInatLookups
-          , cbParent
-          , writeTemplateId
-          , sectionIndex
-        })
-      break
     }
-    return draggableSection
   }
 
   selectionTypeBtns.forEach(btn => btn.addEventListener('click', e => { 
@@ -1137,6 +1145,7 @@ const init = () => {
       showNotificationsDialog({
           message: e.message
         , type: 'error'
+        , stack: e.stack
       })
     }
   }
@@ -1393,6 +1402,7 @@ const init = () => {
       showNotificationsDialog({
           message: e.message
         , type: 'error'
+        , stack: e.stack
       })
     }
   }
