@@ -30,7 +30,7 @@
     </header>
 
     <main id="main">
-      <section class="mt2">
+      <div class="mt2">
         <div>
           <fieldset>
             <legend>iNaturalist search</legend>
@@ -93,7 +93,7 @@
             <fieldset id="languages" class="fieldset-reset">
               <legend class="as-p">The language you choose will determine the preferred common name for species and taxa.</legend>
               <div id="language-group-container">
-                <div class="grid"> <div class="flex-row"> <input type="radio" name="language" id="Deutsche" value="de"> <label for="Deutsche" position="absolute">Deutsche</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="English" value="en" checked="true"> <label for="English" position="absolute">English</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Español" value="es"> <label for="Español" position="absolute">Español</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Français" value="fr"> <label for="Français" position="absolute">Français</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Italiano" value="it"> <label for="Italiano" position="absolute">Italiano</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Português" value="pt"> <label for="Português" position="absolute">Português</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Slovenščina" value="sl"> <label for="Slovenščina" position="absolute">Slovenščina</label> </div> </div>
+                <div class="grid"> <div class="flex-row"> <input type="radio" name="language" id="Deutsche" value="de"> <label for="Deutsche" >Deutsche</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="English" value="en" checked="true"> <label for="English" >English</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Español" value="es"> <label for="Español" >Español</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Français" value="fr"> <label for="Français" >Français</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Italiano" value="it"> <label for="Italiano" >Italiano</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Português" value="pt"> <label for="Português" >Português</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Slovenščina" value="sl"> <label for="Slovenščina" >Slovenščina</label> </div> </div>
                 <div class="centred-block mt2">
                   <input id="remember-language-checkbox" type="checkbox" />
                   <label for="remember-language-checkbox" class="initial-text">Remember language</label>
@@ -108,9 +108,9 @@
             </div>
           </fieldset>
         </div>
-      </section>
+      </div>
       
-      <section class="section-with-header">
+      <div class="section-with-header">
         <div id="display-fieldset" class="fieldset-reset">        
           <fieldset class="flex-row">
             <legend>Select view</legend>
@@ -122,9 +122,9 @@
             <div id="target-group-container" class="grid"></div>
           </fieldset>
         </div>
-      </section>
+      </div>
 
-      <section class="section-with-header">
+      <div class="section-with-header">
         <fieldset id="lesson-fieldset">
           <legend>Fieldnotes</legend>
           <button id="show-test-btn" class="btn-secondary btn-absolute hidden">Show tests</button>
@@ -137,9 +137,9 @@
             Check answers
           </button>
         </fieldset>
-      </section>
+      </div>
 
-      <section class="progress-view hidden">
+      <div class="progress-view hidden">
         <fieldset id="progress-fieldset">
           <legend>Score</legend>
           <table>
@@ -165,7 +165,7 @@
             </tbody>
           </table>
         </fieldset>
-      </section>
+      </div>
 
       <dialog id="state-notifications">
         <div class="flex-columns small">

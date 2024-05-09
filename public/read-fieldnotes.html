@@ -32,7 +32,7 @@
     </header>
 
     <main id="main">
-      <section class="mt2 print-ignore">
+      <div class="mt2 print-ignore">
         <fieldset class="border-solid">
           <legend>Fieldnotes search</legend>
           <p class="mt0 small">Search for fieldnotes by title.</p>
@@ -51,9 +51,9 @@
           </div>
           <p class="small mb0">Fetching fieldnotes will return the author's field journal and photos.</p>
         </fieldset>
-      </section>
+      </div>
       
-      <section class="section-with-header print-ignore hidden">
+      <div class="section-with-header print-ignore hidden">
         <div id="display-fieldset" class="fieldset-reset">        
           <fieldset class="flex-row">
             <legend>Select view</legend>
@@ -65,9 +65,9 @@
             <div id="target-group-container" class="grid"></div>
           </fieldset>
         </div>
-      </section>
+      </div>
 
-      <section class="section-with-header hidden">
+      <div class="section-with-header hidden">
         <fieldset id="lesson-fieldset">
           <legend class="print-ignore">Fieldnotes</legend>
           <button id="show-test-btn" class="btn-secondary btn-absolute hidden">Show test</button>
@@ -80,9 +80,9 @@
             Check answers
           </button>
         </fieldset>
-      </section>
+      </div>
 
-      <section class="progress-view hidden">
+      <div class="progress-view hidden">
         <fieldset id="progress-fieldset">
           <legend>Score</legend>
           <table>
@@ -108,9 +108,9 @@
             </tbody>
           </table>
         </fieldset>
-      </section>
+      </div>
 
-      <section id="export-fieldnotes-options" class="section-with-header print-ignore hidden">
+      <div id="export-fieldnotes-options" class="section-with-header print-ignore hidden">
         <fieldset>
           <legend>Keep a record of fieldnotes that interest you</legend>
           <p class="mt0 small">Print these fieldnotes as a PDF.</p>
@@ -118,20 +118,20 @@
           <p class="small">Print with page breaks before photos.</p>
           <button id="print-fieldnotes-with-page-breaks-btn" class="btn-secondary-action">Print fieldnotes with page breaks</button>
         </fieldset>
-      </section>
+      </div>
 
-      <section id="language-group-container" class="mt print-ignore">
+      <div id="language-group-container" class="mt print-ignore">
         <fieldset>
           <legend>Preferences</legend>
           <p class="mt0 small">The language you choose will determine the preferred common name for species and taxa.</p>
-          <div class="grid"> <div class="flex-row"> <input type="radio" name="language" id="Deutsche" value="de"> <label for="Deutsche" position="absolute">Deutsche</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="English" value="en" checked="true"> <label for="English" position="absolute">English</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Español" value="es"> <label for="Español" position="absolute">Español</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Français" value="fr"> <label for="Français" position="absolute">Français</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Italiano" value="it"> <label for="Italiano" position="absolute">Italiano</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Português" value="pt"> <label for="Português" position="absolute">Português</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Slovenščina" value="sl"> <label for="Slovenščina" position="absolute">Slovenščina</label> </div> </div>
+          <div class="grid"> <div class="flex-row"> <input type="radio" name="language" id="Deutsche" value="de"> <label for="Deutsche" >Deutsche</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="English" value="en" checked="true"> <label for="English" >English</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Español" value="es"> <label for="Español" >Español</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Français" value="fr"> <label for="Français" >Français</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Italiano" value="it"> <label for="Italiano" >Italiano</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Português" value="pt"> <label for="Português" >Português</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Slovenščina" value="sl"> <label for="Slovenščina" >Slovenščina</label> </div> </div>
           <div class="centred-block mt2">
             <input id="remember-language-checkbox" name="remember-language-checkbox" type="checkbox" />
             <label for="remember-language-checkbox" class="initial-text">Remember language</label>
           </div>
           <p class="small"><em>Your preferred language applies only to photo captions. It does not apply to the names given to species by the author.</em></p>
         </fieldset>
-      </section>
+      </div>
     </article>
 
       <dialog id="state-notifications" class="print-ignore">
@@ -194,8 +194,8 @@
         <figcaption>
           <span></span>
           <span></span>
-        </figcaptiontransparent !important;ansparent !important;ansparent !important;
-    </figure>
+        </figcaption>
+      </figure>
     </template>
 
     <template id="species-detail-template">

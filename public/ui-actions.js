@@ -1348,7 +1348,7 @@ export const updateHistoryAndTitle = ({window, slug, title}) => {
     // Once the newly selected fieldnotes have loaded, update the browser history
     if(slug) {
         window.history.pushState({}, title, `/${slug}`)
-        window.document.title = `Fieldnotes | ${title}`
+        window.document.title = `iFieldnotes | ${title}`
     } else {
         window.history.pushState({}, title, '/')
     }

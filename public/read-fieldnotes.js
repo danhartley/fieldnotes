@@ -536,7 +536,7 @@ const init = async () => {
                                         } else {
                                             clone.removeChild(div1)
                                         }
-                                        if(def.ds) {
+                                        if(def.ds && def.ds.length > 0) {
                                             const spans = ds.querySelectorAll('span')                                 
                                             spans[0].textContent = def.da || 'Source'
                                             ds.setAttribute('href', def.ds)
