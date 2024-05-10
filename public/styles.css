@@ -360,6 +360,7 @@ fieldset.fieldset-reset {
   background-color: initial;
 }
 
+
 fieldset.fieldset-reset fieldset {
   border-color: var(--c5);
   border-top: none;
@@ -457,6 +458,8 @@ img {
   width: initial;
   min-height: initial;
   max-height: initial;
+  cursor: initial;
+  pointer-events: none;
 }
 
 /* STATES */
@@ -481,6 +484,10 @@ img {
 
 .draggable {
   cursor: pointer;
+
+  & fieldset:active {
+    border-color: var(--accent);
+  }
 }
 
 .drop-before {
@@ -582,7 +589,8 @@ img {
 
   & figure img {
     border-radius: calc(var(--d)* .5) calc(var(--d)* .5) 0 0;
-    cursor: pointer;
+    cursor: initial;
+    pointer-events: none;
   }
   
 
