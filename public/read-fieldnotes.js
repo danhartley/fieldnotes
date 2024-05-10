@@ -517,11 +517,12 @@ const init = async () => {
                                         const clone = templateToClone.content.cloneNode(true)                      
                                         const dt = clone.querySelector('dt')
                                         const dd = clone.querySelector('dd')                        
-                                        const div1 = clone.querySelectorAll('div')[0]
-                                        const div2 = clone.querySelectorAll('div')[1]
-                                        const eg = div1.querySelector('span')
-                                        const dx = div1.querySelector('em')
-                                        const ds = div2.querySelector('a')
+                                        const div1 = clone.querySelectorAll('dd div')[0]
+                                        const div2 = clone.querySelectorAll('dd div')[1]
+                                        const div3 = clone.querySelectorAll('dd div')[2]
+                                        const eg = div2.querySelector('span')
+                                        const dx = div2.querySelector('em')
+                                        const ds = div3.querySelector('a')
                                                 
                                         let def
                                         if(term?.dd) {
@@ -531,7 +532,7 @@ const init = async () => {
                                         }                                        
                                         
                                         dt.textContent = def.dt
-                                        dd.textContent = def.dd
+                                        div1.textContent = def.dd
             
                                         if(def.dx) {                                
                                             eg.textContent = 'e.g. '                          
@@ -541,7 +542,7 @@ const init = async () => {
                                                     : def.dx
                                                 )
                                         } else {
-                                            clone.removeChild(div1)
+                                            dd.removeChild(div2)
                                         }
                                         if(def.ds && def.ds.length > 0) {
                                             const spans = ds.querySelectorAll('span')                                 
@@ -549,7 +550,7 @@ const init = async () => {
                                             ds.setAttribute('href', def.ds)
                                             ds.setAttribute('target', '_blank')
                                         } else {
-                                            clone.removeChild(div2)
+                                            dd.removeChild(div3)
                                         }
             
                                         parent = parentClone.querySelector('dl')
@@ -558,6 +559,7 @@ const init = async () => {
                                         logger({
                                             message: e.message
                                           , type: 'error'
+                                          , stack: e.stack
                                         })
                                     }              
                                 })
@@ -573,6 +575,7 @@ const init = async () => {
             showNotificationsDialog({
                   message: e.message
                 , type: 'error'
+                , stack: e.stack
             })
         }
     }         
