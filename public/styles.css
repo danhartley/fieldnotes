@@ -1061,3 +1061,14 @@ fieldset.species-list {
     background-color: var(--content-bg) !important;
   }
 }
+
+/* Widgets */
+#carbon-neutral-website, #the-green-web-foundation {
+  & a {
+    border: none;
+  }
+
+  & img {
+    object-fit: none;
+  }
+}
