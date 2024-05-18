@@ -1350,6 +1350,10 @@ export const updateHistoryAndTitle = ({window, slug, title}) => {
     if(slug) {
         window.history.pushState({}, title, `/${slug}`)
         window.document.title = `iFieldnotes | ${title}`
+
+        // Add canonical link to self
+        window.document.querySelector("link[rel='canonical']")
+            .setAttribute('href', `https://ifieldnotes.org/${slug}`)
     } else {
         window.history.pushState({}, title, '/')
     }
