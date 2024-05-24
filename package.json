@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "copy-redirects": "cp -vR ./_redirects ./dist",
-    "copy-functions": "cp -vR ./netlify",
+    "copy-functions": "cp -vR ./netlify/functions",
     "start": "parcel --no-cache",
     "build": "parcel build && npm run copy-redirects copy-functions",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
