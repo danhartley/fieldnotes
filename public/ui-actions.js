@@ -1360,19 +1360,19 @@ export const updateHistoryAndTitle = ({window, slug, title}) => {
 }
 
 export const storeFieldnotes = async ({id, article}) => {
-    const url = `${process.env.FUNCTIONS_URL}/.netlify/functions/storeFieldnotes`
-    
     try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/plain',
-        'Context-ID': id
-      },
-      body: article,
-    })
-    const text = await response.text()
-    console.log(text)
+        const url = `${process.env.FUNCTIONS_URL}/.netlify/functions/storeFieldnotes` || 'https://ifieldnotes.org/.netlify/functions/storeFieldnotes'
+        console.log(url)
+        const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'text/plain',
+            'Context-ID': id
+        },
+        body: article,
+        })
+        const text = await response.text()
+        console.log(text)
     } catch (e) {
         logger({
             message: e.message
@@ -1382,18 +1382,17 @@ export const storeFieldnotes = async ({id, article}) => {
     }
 }
 
-export const getFieldnotesFromStore = async ({id}) => {
-    const url = `${process.env.FUNCTIONS_URL}/.netlify/functions/storeFieldnotes`
-
+export const getFieldnotesFromStore = async ({id}) => {    
     try {
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Context-ID': id
-        },
-      })
-      const html = await response.text()
-      console.log(html)
+        const url = `${process.env.FUNCTIONS_URL}/.netlify/functions/storeFieldnotes` || 'https://ifieldnotes.org/.netlify/functions/storeFieldnotes'
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+            'Context-ID': id
+            },
+        })
+        const html = await response.text()
+        console.log(html)
     } catch (e) {
         logger({
             message: e.message
