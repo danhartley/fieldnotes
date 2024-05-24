@@ -1361,6 +1361,8 @@ export const updateHistoryAndTitle = ({window, slug, title}) => {
 
 export const storeFieldnotes = async ({id, article}) => {
     const url = `${process.env.FUNCTIONS_URL}/.netlify/functions/storeFieldnotes`
+    
+    try {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -1371,10 +1373,19 @@ export const storeFieldnotes = async ({id, article}) => {
     })
     const text = await response.text()
     console.log(text)
+    } catch (e) {
+        logger({
+            message: e.message
+          , type: 'error'
+          , stack: e.stack
+        })
+    }
 }
 
 export const getFieldnotesFromStore = async ({id}) => {
     const url = `${process.env.FUNCTIONS_URL}/.netlify/functions/storeFieldnotes`
+
+    try {
     const response = await fetch(url, {
         method: 'GET',
         headers: {
@@ -1383,6 +1394,14 @@ export const getFieldnotesFromStore = async ({id}) => {
       })
       const html = await response.text()
       console.log(html)
-      // Optionally, insert the HTML into the DOM
+    } catch (e) {
+        logger({
+            message: e.message
+          , type: 'error'
+          , stack: e.stack
+        })
+    }
+
+    // Optionally, insert the HTML into the DOM
     //   document.getElementById('html-container').innerHTML = html
   }

@@ -12,5 +12,5 @@
 /robots.txt                         /robots.txt 200
 /sitemap.xml                        /sitemap.xml 200
 /carbon.txt                         /carbon.txt 200
-# /netlify/functions/storeFieldnotes  /netlify/functions/storeFieldnotes 200
+/netlify/functions/storeFieldnotes  /netlify/functions/storeFieldnotes 200
 /*                                  /read-fieldnotes.html 200
