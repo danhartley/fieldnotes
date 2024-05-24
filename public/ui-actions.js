@@ -1366,10 +1366,7 @@ export const storeFieldnotes = async ({id, article}) => {
       method: 'POST',
       headers: {
         'Content-Type': 'text/plain',
-        'Context-ID': id,
-        'Access-Control-Allow-Origin': '*', // Allow all origins or specify a particular origin
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Context-ID': id
       },
       body: article,
     })
@@ -1383,10 +1380,7 @@ export const getFieldnotesFromStore = async ({id}) => {
     const response = await fetch(url, {
         method: 'GET',
         headers: {
-          'Context-ID': id,
-          'Access-Control-Allow-Origin': '*', // Allow all origins or specify a particular origin
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Context-ID': id
         },
       })
       const html = await response.text()

@@ -4,6 +4,17 @@ export default async (request, context) => {
   const store = getStore('ifieldnotes')
   const id = context.id
 
+  const headers = {
+    'Access-Control-Allow-Origin': '*', // Allow all origins or specify a particular origin
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  };
+
+  if (request.method === 'OPTIONS') {
+    // Handle CORS preflight request
+    return new Response(null, { status: 204, headers });
+  }
+
   if (request.method === 'POST') {
     try {
       const body = await request.text()
