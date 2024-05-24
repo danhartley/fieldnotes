@@ -4,17 +4,28 @@ export default async (request, context) => {
   const store = getStore('ifieldnotes')
   const id = context.id
 
+  const headers = {
+    'Access-Control-Allow-Origin': '*', // Allow all origins or specify a particular origin
+    'Access-Control-Allow-Headers': 'Content-Type, Context-ID',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  }
+
+  if (request.method === 'OPTIONS') {
+    // Handle CORS preflight request
+    return new Response(null, { status: 204, headers })
+  }
+
   if (request.method === 'POST') {
     try {
       // Create a Blob from the HTML string
       const blob = new Blob([request.body], { type: 'text/html' })
       console.log(blob)
       console.log(blob.type)
-      await store.set(id, blob)
+      await store.set(id, request.blob())
       return new Response('Article stored', { status: 200 })
     } catch (e) {
       console.log(e)
-      return new Response(JSON.stringify({ e: 'Failed to store article' }), { status: 500 })
+      return new Response(JSON.stringify({ e: 'Failed to store article', stack: e.stack }), { status: 500 })
     }
   } else if (request.method === 'GET') {
     try {
@@ -22,14 +33,14 @@ export default async (request, context) => {
       if (article) {
         return new Response(article, { status: 200, headers: { 'Content-Type': 'text/html' } })
       } else {
-        return new Response(JSON.stringify({ e: 'article not found' }), { status: 404 })
+        return new Response(JSON.stringify({ e: 'article not found', stack: e.stack, body: request.body }), { status: 404 })
       }
     } catch (e) {
       console.log(e)
-      return new Response(JSON.stringify({ e: 'Failed to retrieve article' }), { status: 500 })
+      return new Response(JSON.stringify({ e: 'Failed to retrieve article', stack: e.stack }), { status: 500 })
     }
   } else {
-    return new Response(JSON.stringify({ e: 'Method Not Allowed' }), { status: 405 })
+    return new Response(JSON.stringify({ e: 'Method Not Allowed', stack: e.stack }), { status: 405 })
   }
 }
 

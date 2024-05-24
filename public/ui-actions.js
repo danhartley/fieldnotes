@@ -1359,17 +1359,50 @@ export const updateHistoryAndTitle = ({window, slug, title}) => {
     }
 }
 
+// Function to read a Blob as text
+function readBlobAsText(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+  
+      reader.onload = function(event) {
+        resolve(event.target.result);
+      };
+  
+      reader.onerror = function(event) {
+        reject(event.target.error);
+      };
+  
+      reader.readAsText(blob);
+    });
+  }
+
+// Function to create a Blob from an HTML element
+function createBlobFromHtml(element) {
+    const htmlString = element.outerHTML;
+    const blob = new Blob([htmlString], { type: 'text/html' });
+    return blob;
+  }
+
 export const storeFieldnotes = async ({id, article}) => {
     try {
         const url = `${process.env.FUNCTIONS_URL}/.netlify/functions/storeFieldnotes` || 'https://ifieldnotes.org/.netlify/functions/storeFieldnotes'
         console.log(url)
+        const blob = createBlobFromHtml(article)
+        
+        
+        const _blob = await readBlobAsText(blob)
+        console.log(_blob)
+
+        const formData = new FormData()
+        formData.append('file', blob, 'content.html')
+
         const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'text/html',
             'Context-ID': id
         },
-        body: article,
+        body: blob,
         })
         const text = await response.text()
         console.log(text)
