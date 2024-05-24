@@ -10,7 +10,7 @@ export default async (request, context) => {
       await store.set(id, body)
       return new Response('HTML fragment stored', { status: 200 })
     } catch (e) {
-      console.e(e)
+      console.log(e)
       return new Response(JSON.stringify({ e: 'Failed to store HTML fragment' }), { status: 500 })
     }
   } else if (request.method === 'GET') {
@@ -22,7 +22,7 @@ export default async (request, context) => {
         return new Response(JSON.stringify({ e: 'Fragment not found' }), { status: 404 })
       }
     } catch (e) {
-      console.e(e)
+      console.log(e)
       return new Response(JSON.stringify({ e: 'Failed to retrieve HTML fragment' }), { status: 500 })
     }
   } else {
