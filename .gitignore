@@ -8,3 +8,5 @@ public/tests/read-fieldnotes/screenshots
 lighthouse
 .unlighthouse
 hint-report/
+# Local Netlify folder
+.netlify
