@@ -17,7 +17,7 @@ export default async (request, context) => {
 
   if (request.method === 'POST') {
     try {
-      await store.set(id, request.blob())
+      await store.set(id, request)
       return new Response('Article stored', { status: 200 })
     } catch (e) {
       console.log(e)
