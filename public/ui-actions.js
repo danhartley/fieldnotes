@@ -1366,7 +1366,7 @@ export const storeFieldnotes = async ({id, article}) => {
         const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'text/plain',
+            'Content-Type': 'text/html',
             'Context-ID': id
         },
         body: article,
