@@ -1360,8 +1360,7 @@ export const updateHistoryAndTitle = ({window, slug, title}) => {
 }
 
 export const storeFieldnotes = async ({id, article}) => {
-    // const url = './netlify/functions/storeFieldnotes'
-    const url = `${process.env.FUNCTIONS_URL}/netlify/functions/storeFieldnotes`
+    const url = `${process.env.FUNCTIONS_URL}/.netlify/functions/storeFieldnotes`
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -1375,8 +1374,7 @@ export const storeFieldnotes = async ({id, article}) => {
 }
 
 export const getFieldnotesFromStore = async ({id}) => {
-    // const url = './netlify/functions/storeFieldnotes'
-    const url = `${process.env.FUNCTIONS_URL}/netlify/functions/storeFieldnotes`
+    const url = `${process.env.FUNCTIONS_URL}/.netlify/functions/storeFieldnotes`
     const response = await fetch(url, {
         method: 'GET',
         headers: {

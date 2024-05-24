@@ -575,10 +575,10 @@ const init = async () => {
             addImgClickEventHandlers()
             
             storeFieldnotes({
-                  id: globalRead.fieldnotes.fieldnotesId
+                  id: globalRead.fieldnotes.fnId
                 , article: article.outerHTML
             })
-            // getFieldnotesFromStore({id: globalRead.fieldnotes.fieldnotesId})
+            // getFieldnotesFromStore({id: globalRead.fieldnotes.fnId})
         } catch (e) {
             showNotificationsDialog({
                   message: e.message
