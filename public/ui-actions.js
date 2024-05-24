@@ -1360,12 +1360,14 @@ export const updateHistoryAndTitle = ({window, slug, title}) => {
 }
 
 export const storeFieldnotes = async ({id, article}) => {
+    // const url = './netlify/functions/storeFieldnotes'
     const url = `${process.env.FUNCTIONS_URL}/netlify/functions/storeFieldnotes`
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'text/plain',
-        'Context-ID': id
+        'Context-ID': id,
+        'Access-Control-Allow-Origin': '*',
       },
       body: article,
     })
@@ -1374,11 +1376,13 @@ export const storeFieldnotes = async ({id, article}) => {
 }
 
 export const getFieldnotesFromStore = async ({id}) => {
+    // const url = './netlify/functions/storeFieldnotes'
     const url = `${process.env.FUNCTIONS_URL}/netlify/functions/storeFieldnotes`
     const response = await fetch(url, {
         method: 'GET',
         headers: {
-          'Context-ID': id
+          'Context-ID': id,
+          'Access-Control-Allow-Origin': '*',
         },
       })
       const html = await response.text()
