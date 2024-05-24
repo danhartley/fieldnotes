@@ -1358,3 +1358,31 @@ export const updateHistoryAndTitle = ({window, slug, title}) => {
         window.history.pushState({}, title, '/')
     }
 }
+
+export const storeFieldnotes = async ({id, article}) => {
+    const url = `${process.env.URL}/netlify/functions/storeFieldnotes`
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain',
+        'Context-ID': id
+      },
+      body: article,
+    })
+    const text = await response.text()
+    console.log(text)
+}
+
+export const getFieldnotesFromStore = async ({id}) => {
+    const url = `${process.env.URL}/netlify/functions/storeFieldnotes`
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Context-ID': id
+        },
+      })
+      const html = await response.text()
+      console.log(html)
+      // Optionally, insert the HTML into the DOM
+    //   document.getElementById('html-container').innerHTML = html
+  }

@@ -12,8 +12,9 @@
   ],
   "scripts": {
     "copy-redirects": "cp -vR ./_redirects ./dist",
+    "copy-functions": "cp -vR ./netlify",
     "start": "parcel --no-cache",
-    "build": "parcel build && npm run copy-redirects",
+    "build": "parcel build && npm run copy-redirects copy-functions",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": [],
@@ -31,6 +32,7 @@
     "stylelint-config-standard": "^36.0.0"
   },
   "dependencies": {
+    "@netlify/blobs": "^7.3.0",
     "@tgwf/co2": "^0.14.4",
     "firebase": "^10.7.1",
     "firebaseui": "^6.1.0",

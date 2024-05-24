@@ -18,10 +18,12 @@ import {
     , cloneSpeciesCardFromTemplate
     , fetchFieldnotesStubs
     , fieldnotesAutocomplete
+    , getFieldnotesFromStore    
     , getTaxonGroupColour
     , handleLanguagePreference
     , mapTaxon
     , scoreLesson
+    , storeFieldnotes
     , showNotificationsDialog
     , updateHistoryAndTitle
 } from './ui-actions.js'
@@ -571,6 +573,12 @@ const init = async () => {
             }
             
             addImgClickEventHandlers()
+            
+            storeFieldnotes({
+                  id: globalRead.fieldnotes.fieldnotesId
+                , article: article.outerHTML
+            })
+            // getFieldnotesFromStore({id: globalRead.fieldnotes.fieldnotesId})
         } catch (e) {
             showNotificationsDialog({
                   message: e.message
