@@ -1362,25 +1362,25 @@ export const updateHistoryAndTitle = ({window, slug, title}) => {
 // Function to read a Blob as text
 function readBlobAsText(blob) {
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
+      const reader = new FileReader()
   
       reader.onload = function(event) {
-        resolve(event.target.result);
-      };
+        resolve(event.target.result)
+      }
   
       reader.onerror = function(event) {
-        reject(event.target.error);
-      };
+        reject(event.target.error)
+      }
   
-      reader.readAsText(blob);
-    });
+      reader.readAsText(blob)
+    })
   }
 
 // Function to create a Blob from an HTML element
 function createBlobFromHtml(element) {
-    const htmlString = element.outerHTML;
-    const blob = new Blob([htmlString], { type: 'text/html' });
-    return blob;
+    const htmlString = element.outerHTML
+    const blob = new Blob([htmlString], { type: 'text/html' })
+    return blob
   }
 
 export const storeFieldnotes = async ({id, article}) => {
@@ -1389,9 +1389,27 @@ export const storeFieldnotes = async ({id, article}) => {
         console.log(url)
         const blob = createBlobFromHtml(article)
         
-        
-        const _blob = await readBlobAsText(blob)
-        console.log(_blob)
+
+        // Create a Blob with HTML content
+        const htmlContent = "<p>Hello</p>";
+        const _blob = new Blob([article], { type: 'text/html' });
+
+        // Create a FileReader object to read the Blob
+        const reader = new FileReader();
+
+        // Define what to do when reading is done
+        reader.onload = function(event) {
+        // Display the content of the Blob
+        const content = event.target.result;
+        console.log('content', content);
+        };
+
+        // Start reading the Blob
+        reader.readAsText(_blob);
+                
+        // const _blob = await readBlobAsText(blob)
+       const blobtext = await blob.text()
+       console.log(blobtext)
 
         const formData = new FormData()
         formData.append('file', blob, 'content.html')
@@ -1402,7 +1420,7 @@ export const storeFieldnotes = async ({id, article}) => {
             'Content-Type': 'text/html',
             'Context-ID': id
         },
-        body: blob,
+        body: _blob,
         })
         const text = await response.text()
         console.log(text)

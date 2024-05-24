@@ -7,7 +7,7 @@ export default async (request, context) => {
   const headers = {
     'Access-Control-Allow-Origin': '*', // Allow all origins or specify a particular origin
     'Access-Control-Allow-Headers': 'Content-Type, Context-ID',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
   }
 
   if (request.method === 'OPTIONS') {
@@ -17,10 +17,6 @@ export default async (request, context) => {
 
   if (request.method === 'POST') {
     try {
-      // Create a Blob from the HTML string
-      const blob = new Blob([request.body], { type: 'text/html' })
-      console.log(blob)
-      console.log(blob.type)
       await store.set(id, request.blob())
       return new Response('Article stored', { status: 200 })
     } catch (e) {
