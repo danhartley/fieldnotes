@@ -11,10 +11,9 @@
     "public/inaturalist-authentication.html"
   ],
   "scripts": {
-    "copy-redirects": "cp -vR ./_redirects ./dist",
-    "copy-functions": "cp -vR ./netlify/functions ./dist",
+    "copy-redirects": "cp -vR ./_redirects ./dist",    
     "start": "parcel --no-cache",
-    "build": "parcel build && npm run copy-redirects && npm run copy-functions",
+    "build": "parcel build && npm run copy-redirects",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": [],
