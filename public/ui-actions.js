@@ -1156,7 +1156,7 @@ export const handleInputChangeEvent = (e, addBtn) => {
     })
 }
 
-export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnotesBtn, readonly = false, fnAutocompleteTitleInputText}) => {
+export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnotesBtn, readonly = false, fnAutocompleteTitleInputText, window}) => {
     return async ({user}) => {
         const fieldnotesStubs = user 
             ? await getFieldnotesStubs({
@@ -1174,7 +1174,6 @@ export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnot
         const { isValid, slug, author } = validateSlug({
               pathname: window.location.pathname
             , slugs: global.fieldnotesStubsCollection.map(fieldnotes => fieldnotes.slug)
-            // , authors: global.fieldnotesStubsCollection.map(fieldnotes => fieldnotes.author)
         })
 
         const stubs = global.fieldnotesStubsCollection
@@ -1183,6 +1182,14 @@ export const fetchFieldnotesStubs = ({inputText, dataList, global, fetchFieldnot
         if(fieldnotesFromSlug) {
             fnAutocompleteTitleInputText.value = fieldnotesFromSlug?.title
             fetchFieldnotesBtn.focus()
+
+            if(window){
+                updateHistoryAndTitle({
+                    window
+                , slug: fieldnotesFromSlug.slug
+                , title: fieldnotesFromSlug.title
+                })
+            }
         }
 
         fieldnotesAutocomplete({ 
