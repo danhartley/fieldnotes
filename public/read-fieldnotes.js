@@ -2,6 +2,10 @@
 
 // posthog.init('phc_PI6IzYtZjRZA1iuKPhUhHM0yy2T979TYAUM7LqwBCop', { api_host: 'https://eu.posthog.com' })
 
+import LogRocket from 'logrocket'
+
+LogRocket.init('xoreyh/ifieldnotesdev')
+
 import { 
       g
     , getFieldnotesById
@@ -760,6 +764,7 @@ const init = async () => {
             , fetchFieldnotesBtn
             , readonly: true
             , fnAutocompleteTitleInputText
+            , window
         })
     })
 
