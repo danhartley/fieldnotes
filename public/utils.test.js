@@ -27,7 +27,7 @@ describe('validateSlug', () => {
     'danielhartley-lisbon-portugal-wed-feb-28-2024/'
   ]
 
-  it.only('should return a valid slug', () => {
+  it('should return a valid slug', () => {
     expect(validateSlug({pathname, slugs})).toStrictEqual({    
         isValid: true
       , slug: 'danielhartley-lisbon-portugal-wed-feb-28-2024/'
@@ -51,7 +51,7 @@ describe('createSlug', () => {
       , place_guess: 'Lisbon, Portugal'
     }
     const date = new Date('2024-02-28')
-    const slug = 'danielhartley-lisbon-portugal-wed-feb-28-2024'
+    const slug = 'danielhartley-lisbon-portugal-wed-feb-28-2024/'
     expect(createSlug({author, location, date})).toBe(slug)
   })
 })

@@ -9,56 +9,45 @@ const FIELDNOTES_BTN_ID = '#fetch-fieldnotes-btn'
 const PRINT_FIELDNOTES_BTN_ID = '#print-fieldnotes-btn'
 const PRINT_FIELDNOTES_WITH_PAGE_BREAKS_BTN_ID = '#print-fieldnotes-with-page-breaks-btn'
 
+const perfTable = []
+
 const logBytes = async ({page, comments}) => {
-  const perfTable = []
 
   const perfEntries = JSON.parse(
     await page.evaluate(() => JSON.stringify(performance.getEntries()))
   )
+
+  console.log(comments.toUpperCase())
   
   perfEntries.forEach(entry => {
     if(entry.transferSize !== undefined && entry.transferSize > 0) {
       perfTable.push({
           entryType: entry.entryType
-        , transferSize: entry.transferSize
+        , transferSize: Number.parseFloat(entry.transferSize).toFixed(0)
         , transferSizeBytes: Math.round(entry.transferSize / 1024)
         , comments
       })
     }
   })
 
-  console.table(perfTable)
-}
-
-const observePerformance = () => {
-  const perfObserver = (list, observer) => {
-    list.getEntries().forEach((entry) => {
-      if (entry.entryType === 'mark') {
-        console.log(`${entry.name}'s startTime: ${entry.startTime}`)
-      }
-      if (entry.entryType === 'measure') {
-        console.log(`${entry.name}'s duration: ${entry.duration}`)
-      }
-    })  
-  }
-  const observer = new PerformanceObserver(perfObserver)
-  observer.observe({ entryTypes: ['measure', 'mark'] })
+  // console.table(perfTable)
 }
 
 const parsePerformanceEntities = () => {
   const entries = performance.getEntries()
   entries.forEach((entry) => {
     if (entry.entryType === "mark") {
-      console.log(`${entry.name}'s startTime: ${entry.startTime}`)
+      console.log(`${entry.name} time: ${Number.parseFloat(entry.startTime).toFixed(2)}`)
     }
     if (entry.entryType === "measure") {
-      console.log(`${entry.name}'s duration: ${entry.duration}`)
+      console.log(`${entry.name}'s duration: ${Number.parseFloat(entry.duration).toFixed(2)}`)
     }
   })
 }
 
 const readFieldnotes = async () => {
   let browser, page = null
+  let totalImageSizesInKiloBytes = 0
   
   try {
     // Launch the browser
@@ -70,13 +59,28 @@ const readFieldnotes = async () => {
     await page.setViewport({ width: 1280, height: 1024 })
 
     // Go to read fieldnotes page
-    await page.goto('http://localhost:1234')
+    const reponse = await page.goto('http://localhost:1234')
 
     await pause({func: () => logBytes({
         page
       , comments: 'Load page'
     })})
-    
+
+    page.on('response', async (response) => {      
+      const methods = ['GET', 'POST']
+      if (methods.includes(response.request().method())) {
+        const srcs = ['inaturalist', 'drive.google']
+        if(srcs.find(src => response.request().url().indexOf(src) > -1 )){
+          const url = response.request().url()
+          if (response.request().resourceType() === 'image' && response.status() === 200) {
+            const buffer = await response.buffer()
+            const sizeInKB = buffer.length / 1024
+            totalImageSizesInKiloBytes += Number.parseFloat(sizeInKB)
+          }
+        }
+      }
+    })
+
     // Abort test if the fetch button is already enabled
     if(isEnabled({
       classList: await page.$eval(FIELDNOTES_BTN_ID, el => el.classList)
@@ -97,13 +101,14 @@ const readFieldnotes = async () => {
           classList: await page.$eval(FIELDNOTES_BTN_ID, el => el.classList)
         })) {
           await page.click(FIELDNOTES_BTN_ID)
+
+          await pause({func: () => logBytes({
+              page
+            , comments: 'Fetch fieldnotes'
+          }), delay: 5000})
         } else {
           await page.screenshot({path: './public/tests/read-fieldnotes/screenshots/fetch button not ready.png', fullPage: true})
         }              
-        await pause({func: () => logBytes({
-            page
-          , comments: 'Fetch fieldnotes'
-        }), delay: 500})
       }
     })
     
@@ -129,8 +134,6 @@ const readFieldnotes = async () => {
       }, delay: 0
     })
 
-    observePerformance()
-
     parsePerformanceEntities()
 
   } catch (error) { 
@@ -140,8 +143,15 @@ const readFieldnotes = async () => {
 
   } finally {
       setTimeout(async() => {
-        // await browser.close()
+        await browser.close()
       } , DELAY_FOR_TITLES + 2000)
+      perfTable.push({
+          entryType: 'imgeas'
+        , transferSize: (totalImageSizesInKiloBytes * 1024).toFixed(2)
+        , transferSizeBytes: Math.round(totalImageSizesInKiloBytes)
+        , comments: 'Request images'
+      })
+      console.table(perfTable)
   }
 }
 
