@@ -9,78 +9,24 @@ const FIELDNOTES_BTN_ID = '#fetch-fieldnotes-btn'
 const PRINT_FIELDNOTES_BTN_ID = '#print-fieldnotes-btn'
 const PRINT_FIELDNOTES_WITH_PAGE_BREAKS_BTN_ID = '#print-fieldnotes-with-page-breaks-btn'
 
-const perfTable = []
-
-const logBytes = async ({page, comments}) => {
-
-  const perfEntries = JSON.parse(
-    await page.evaluate(() => JSON.stringify(performance.getEntries()))
-  )
-
-  console.log(comments.toUpperCase())
-  
-  perfEntries.forEach(entry => {
-    if(entry.transferSize !== undefined && entry.transferSize > 0) {
-      perfTable.push({
-          entryType: entry.entryType
-        , transferSize: Number.parseFloat(entry.transferSize).toFixed(0)
-        , transferSizeBytes: Math.round(entry.transferSize / 1024)
-        , comments
-      })
-    }
-  })
-
-  // console.table(perfTable)
-}
-
-const parsePerformanceEntities = () => {
-  const entries = performance.getEntries()
-  entries.forEach((entry) => {
-    if (entry.entryType === "mark") {
-      console.log(`${entry.name} time: ${Number.parseFloat(entry.startTime).toFixed(2)}`)
-    }
-    if (entry.entryType === "measure") {
-      console.log(`${entry.name}'s duration: ${Number.parseFloat(entry.duration).toFixed(2)}`)
-    }
-  })
-}
+import { PerfTracker } from '../test-utils.js'
 
 const readFieldnotes = async () => {
-  let browser, page = null
-  let totalImageSizesInKiloBytes = 0
+  // Launch the browser
+  const browser = await puppeteer.launch({headless: false})
+  // Create a page
+  const page = await browser.newPage()
+
+  // Set the viewport dimensions
+  await page.setViewport({ width: 1280, height: 1024 })
+
+  // Go to read fieldnotes page
+  const reponse = await page.goto('http://localhost:1234')
+
+  // Create tracker instance
+  const perfTracker = new PerfTracker(page)
   
   try {
-    // Launch the browser
-    browser = await puppeteer.launch({headless: false})
-    // Create a page
-    page = await browser.newPage()
-
-    // Set the viewport dimensions
-    await page.setViewport({ width: 1280, height: 1024 })
-
-    // Go to read fieldnotes page
-    const reponse = await page.goto('http://localhost:1234')
-
-    await pause({func: () => logBytes({
-        page
-      , comments: 'Load page'
-    })})
-
-    page.on('response', async (response) => {      
-      const methods = ['GET', 'POST']
-      if (methods.includes(response.request().method())) {
-        const srcs = ['inaturalist', 'drive.google']
-        if(srcs.find(src => response.request().url().indexOf(src) > -1 )){
-          const url = response.request().url()
-          if (response.request().resourceType() === 'image' && response.status() === 200) {
-            const buffer = await response.buffer()
-            const sizeInKB = buffer.length / 1024
-            totalImageSizesInKiloBytes += Number.parseFloat(sizeInKB)
-          }
-        }
-      }
-    })
-
     // Abort test if the fetch button is already enabled
     if(isEnabled({
       classList: await page.$eval(FIELDNOTES_BTN_ID, el => el.classList)
@@ -102,10 +48,11 @@ const readFieldnotes = async () => {
         })) {
           await page.click(FIELDNOTES_BTN_ID)
 
-          await pause({func: () => logBytes({
-              page
-            , comments: 'Fetch fieldnotes'
-          }), delay: 5000})
+          // Track cross domain image weights
+          await perfTracker.logImageBytes({srcs: ['inaturalist', 'drive.google', 'googleusercontent']})
+          // Track domain all domains assets
+          await pause({func: () => perfTracker.logBytes({comments: 'Fetch fieldnotes'}), delay: 5000})
+          
         } else {
           await page.screenshot({path: './public/tests/read-fieldnotes/screenshots/fetch button not ready.png', fullPage: true})
         }              
@@ -118,40 +65,25 @@ const readFieldnotes = async () => {
         const start = performance.mark('fetch-field-notes: start')
         const end = performance.mark('fetch-field-notes: end')
 
-        const timeToRender = performance.measure(
+        perfTracker.timeToRender = performance.measure(
           'time-to-render',
           'fetch-field-notes: start',
           'fetch-field-notes: end'
         )
-        await pause({
-          func: () => {
-            console.log({
-                name: timeToRender.name
-              , duration: timeToRender.duration.toFixed(2)
-            })
-          }, delay: 0
-        })
       }, delay: 0
     })
-
-    parsePerformanceEntities()
-
   } catch (error) { 
     await scroll({page})
     await page.screenshot({path: `./public/tests/read-fieldnotes/screenshots/error${Date().now}.png`, fullPage: true})
     console.log(error) 
-
   } finally {
       setTimeout(async() => {
         await browser.close()
-      } , DELAY_FOR_TITLES + 2000)
-      perfTable.push({
-          entryType: 'imgeas'
-        , transferSize: (totalImageSizesInKiloBytes * 1024).toFixed(2)
-        , transferSizeBytes: Math.round(totalImageSizesInKiloBytes)
-        , comments: 'Request images'
-      })
-      console.table(perfTable)
+      } , DELAY_FOR_TITLES)
+
+      // perfTracker.logEmissions()
+      perfTracker.printSummary({printTranserSizes: true})
+      perfTracker.printPerformanceEntries()
   }
 }
 
