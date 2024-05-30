@@ -48,14 +48,14 @@ export class PerformanceTracker {
     this.#estimatedCO2 = CO2
   }
 
-  async logBytes({comments}) {
-
+  async logEntries({comments}) {
     const perfEntries = JSON.parse(
       await this.page.evaluate(() => JSON.stringify(performance.getEntries()))
     )
   
+    // Log entries with transfer size (that is greater than zero)
     perfEntries.forEach(entry => {
-      if(entry.transferSize !== undefined && entry.transferSize > 0) {
+      if(entry.transferSize > 0) {
         this.transferSizeData.push({
             entryType: entry.entryType
           , transferSize: Number.parseFloat(entry.transferSize).toFixed(0)
@@ -66,35 +66,32 @@ export class PerformanceTracker {
     })
   }
 
-  async logImageBytes({methods = ['GET', 'POST'], srcs = []}) {
+  async logResources({methods = ['GET', 'POST'], srcs = [], logTypes = ['image'], logStatuses = [200]}) {
     this.page.on('response', async (response) => {
-      if (methods.includes(response.request().method())) {
-        const url = response.request().url()
-        const type = response.request().resourceType()
-        console.log('type: ', type)
-        if(srcs.find(src => url.indexOf(src) > -1 )){
-          if (type === 'image' && response.status() === 200) {
-            const buffer = await response.buffer()
-            this.transferSizeData.push({
-              entryType: type
+
+      const url = response.request().url()
+      const resourceType = response.request().resourceType()
+
+      // Check resource is one we want to measure
+      const isValidMethod = methods.includes(response.request().method())
+      const isValidSrc = srcs.length ? srcs.some(src => url.includes(src)) : true
+      const isValidStatus = logStatuses.length ? logStatuses.includes(response.status()) : true
+      const isValidType = logTypes.length ? logTypes.includes(resourceType) : true
+      const isValidResource = isValidMethod && isValidSrc && isValidType && isValidStatus
+
+      if(!isValidResource) return
+
+      switch(resourceType) {
+        case 'image':
+          const buffer = await response.buffer()
+          this.transferSizeData.push({
+              entryType: resourceType
             , transferSize: (buffer.length).toFixed(2)
             , transferSizeInKiloBytes: buffer.length / 1000
             , comments: url
-          })
-          }
-        }
-      }
-    })
-  }
-
-  printPerformanceEntries() {
-    performance.getEntries().forEach((entry) => {
-      if (entry.entryType === "mark") {
-        console.log(`${entry.name} time: ${Number.parseFloat(entry.startTime).toFixed(2)}`)
-      }
-      if (entry.entryType === "measure") {
-        console.log(`${entry.name}'s duration: ${Number.parseFloat(entry.duration).toFixed(2)}`)
-      }
+        })
+        break
+      }   
     })
   }
 
@@ -103,7 +100,7 @@ export class PerformanceTracker {
     this.estimatedCO2 = Math.round(co2Emission.perByte(totalBytes * 1000, true) * 100) / 100
   }
 
-  printSummary({printTranserSizes = false}) {
+  printSummary({printTranserSizes = false, markStart, markEnd}) {
     const totalBytes = this.transferSizeData.reduce((accumulator, currentValue) => accumulator + Math.round(currentValue.transferSizeInKiloBytes), 0)
     
     this.summaryData.push({
@@ -117,6 +114,17 @@ export class PerformanceTracker {
         metric: 'Carbon emitted per page load in mg'
       , value: this.estimatedCO2
     })
+
+    if(markStart.length && markEnd.length) {
+        performance.mark('fetch-field-notes: start')
+        performance.mark('fetch-field-notes: end')
+
+        this.timeToRender = performance.measure(
+          'time-to-render',
+          markStart,
+          markEnd
+        )
+    }
 
     this.summaryData.push({
         metric: 'Time to render in seconds'

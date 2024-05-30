@@ -13,29 +13,22 @@ import { PerformanceTracker } from '../performance-tracker.js'
 
 const readFieldnotes = async () => {
 
-  let mode = 'dev'
-
-  process.argv.forEach((val, index, array) => {
-    const deploy = array.find(item => item.includes('deploy'))
-    if(deploy) {
-      mode = deploy.split('=')[1]
-    }
-  })
-  
   // Launch the browser
   const browser = await puppeteer.launch({headless: false})
+  
   // Create a page
   const page = await browser.newPage()
 
   // Set the viewport dimensions
   await page.setViewport({ width: 1280, height: 1024 })
 
-  // Go to read fieldnotes page
-  const reponse = mode === 'prod' 
+  // Go to read fieldnotes page (in dev or prod depending on node args in the command line)
+  const deploy = process.argv.find(arg => arg.includes('deploy'))?.split('=')[1] || 'dev'
+  deploy === 'prod' 
     ? await page.goto('http://ifieldnotes.org')
-    : await await page.goto('http://localhost:1234')
+    : await page.goto('http://localhost:1234')
 
-  // Create tracker instance
+  // Create performance tracker instance
   const perfTracker = new PerformanceTracker(page)
   
   try {
@@ -51,40 +44,23 @@ const readFieldnotes = async () => {
 
     await pause({
       func: async () => {
-        await perfTracker.logImageBytes({srcs: ['inaturalist', 'drive.google', 'googleusercontent']})
         // Trigger selection of the entered fieldnotes
-        await page.keyboard.press('Enter')
-        
+        await page.keyboard.press('Enter')        
         // Fetch fieldnotes if the fetch button is enabled
         if(isEnabled({
           classList: await page.$eval(FIELDNOTES_BTN_ID, el => el.classList)
         })) {
+          // Fetch fieldnotes
           await page.click(FIELDNOTES_BTN_ID)
-
-          // Track cross domain image weights
-          // await perfTracker.logImageBytes({srcs: ['inaturalist', 'drive.google', 'googleusercontent']})
-          // Track domain all domains assets
-          await pause({func: () => perfTracker.logBytes({comments: 'Fetch fieldnotes'}), delay: 5000})
-          
+          // Log cross domain images
+          await perfTracker.logResources({srcs: ['inaturalist', 'drive.google', 'googleusercontent']})
+          // Log domains entities. Wait 5 seconds for images to download before calling.
+          await pause({func: () => perfTracker.logEntries({comments: 'Fetch fieldnotes'}), delay: 5000})          
         } else {
           await page.screenshot({path: './public/tests/read-fieldnotes/screenshots/fetch button not ready.png', fullPage: true})
         }              
       }
-    })
-    
-    await pause({
-      func: async () => {
-        // Without the next 2 lines the function fails. I don't know why.
-        const start = performance.mark('fetch-field-notes: start')
-        const end = performance.mark('fetch-field-notes: end')
-
-        perfTracker.timeToRender = performance.measure(
-          'time-to-render',
-          'fetch-field-notes: start',
-          'fetch-field-notes: end'
-        )
-      }, delay: 0
-    })
+    })    
   } catch (error) { 
     await scroll({page})
     await page.screenshot({path: `./public/tests/read-fieldnotes/screenshots/error${Date().now}.png`, fullPage: true})
@@ -93,19 +69,13 @@ const readFieldnotes = async () => {
       setTimeout(async() => {
         await browser.close()
       } , DELAY_FOR_TITLES)
-
-      // perfTracker.logEmissions()
-      perfTracker.printSummary({printTranserSizes: true})
-      perfTracker.printPerformanceEntries()
+      // Print tracker results
+      perfTracker.printSummary({
+          printTranserSizes: true
+        , markStart: 'fetch-field-notes: start'
+        , markEnd: 'fetch-field-notes: end'
+      })
   }
 }
 
 readFieldnotes()
-
-/**
- * helper classes
- * logger
- * suite of tests (how comprehensive?), how to run?
- * reset the database i.e. when creating entires such as user and field notes
- * blog: what testing and why useful
- */
