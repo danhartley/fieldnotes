@@ -9,9 +9,19 @@ const FIELDNOTES_BTN_ID = '#fetch-fieldnotes-btn'
 const PRINT_FIELDNOTES_BTN_ID = '#print-fieldnotes-btn'
 const PRINT_FIELDNOTES_WITH_PAGE_BREAKS_BTN_ID = '#print-fieldnotes-with-page-breaks-btn'
 
-import { PerfTracker } from '../test-utils.js'
+import { PerformanceTracker } from '../performance-tracker.js'
 
 const readFieldnotes = async () => {
+
+  let mode = 'dev'
+
+  process.argv.forEach((val, index, array) => {
+    const deploy = array.find(item => item.includes('deploy'))
+    if(deploy) {
+      mode = deploy.split('=')[1]
+    }
+  })
+  
   // Launch the browser
   const browser = await puppeteer.launch({headless: false})
   // Create a page
@@ -21,10 +31,12 @@ const readFieldnotes = async () => {
   await page.setViewport({ width: 1280, height: 1024 })
 
   // Go to read fieldnotes page
-  const reponse = await page.goto('http://localhost:1234')
+  const reponse = mode === 'prod' 
+    ? await page.goto('http://ifieldnotes.org')
+    : await await page.goto('http://localhost:1234')
 
   // Create tracker instance
-  const perfTracker = new PerfTracker(page)
+  const perfTracker = new PerformanceTracker(page)
   
   try {
     // Abort test if the fetch button is already enabled
@@ -39,6 +51,7 @@ const readFieldnotes = async () => {
 
     await pause({
       func: async () => {
+        await perfTracker.logImageBytes({srcs: ['inaturalist', 'drive.google', 'googleusercontent']})
         // Trigger selection of the entered fieldnotes
         await page.keyboard.press('Enter')
         
@@ -49,7 +62,7 @@ const readFieldnotes = async () => {
           await page.click(FIELDNOTES_BTN_ID)
 
           // Track cross domain image weights
-          await perfTracker.logImageBytes({srcs: ['inaturalist', 'drive.google', 'googleusercontent']})
+          // await perfTracker.logImageBytes({srcs: ['inaturalist', 'drive.google', 'googleusercontent']})
           // Track domain all domains assets
           await pause({func: () => perfTracker.logBytes({comments: 'Fetch fieldnotes'}), delay: 5000})
           

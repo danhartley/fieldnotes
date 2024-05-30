@@ -1,6 +1,6 @@
 import { hosting, co2 } from "@tgwf/co2"
 
-export class PerfTracker {
+export class PerformanceTracker {
   #page = null
   #transferSizeData = []
   #summaryData = []
@@ -70,11 +70,13 @@ export class PerfTracker {
     this.page.on('response', async (response) => {
       if (methods.includes(response.request().method())) {
         const url = response.request().url()
+        const type = response.request().resourceType()
+        console.log('type: ', type)
         if(srcs.find(src => url.indexOf(src) > -1 )){
-          if (response.request().resourceType() === 'image' && response.status() === 200) {
+          if (type === 'image' && response.status() === 200) {
             const buffer = await response.buffer()
             this.transferSizeData.push({
-              entryType: 'images'
+              entryType: type
             , transferSize: (buffer.length).toFixed(2)
             , transferSizeInKiloBytes: buffer.length / 1000
             , comments: url
