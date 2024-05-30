@@ -76,6 +76,10 @@ See: https://www.sitemaps.org/
 /carbon.txt
 See: https://carbontxt.org/
 
+##### Green hosting
+See: https://developers.thegreenwebfoundation.org/co2js/tutorials/getting-started-node/
+Comment: Used in integration tests
+
 #### Changelog
 /CHANGELOG.md
 See: https://keepachangelog.com/en/1.1.0/

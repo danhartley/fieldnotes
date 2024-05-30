@@ -7,6 +7,7 @@ export class PerformanceTracker {
   #transferSizeInKiloBytes = 0
   #timeToRender = {}    
   #estimatedCO2 = 0
+  #hosting = {}
   
   constructor(page) {
     this.#page = page
@@ -46,6 +47,14 @@ export class PerformanceTracker {
 
   set estimatedCO2(CO2) {
     this.#estimatedCO2 = CO2
+  }
+
+  get hosting() {
+    return this.#hosting
+  }
+
+  set hosting(hosting) {
+    this.#hosting = hosting
   }
 
   async logEntries({comments}) {
@@ -100,7 +109,16 @@ export class PerformanceTracker {
     this.estimatedCO2 = Math.round(co2Emission.perByte(totalBytes * 1000, true) * 100) / 100
   }
 
-  printSummary({printTranserSizes = false, markStart, markEnd}) {
+  async checkHosting({domain = '', identifier = ''}) {
+    if(!domain.length) return { hosted_by: 'unknown', green: false }
+    const options = {
+      verbose: true,
+      userAgentIdentifier: identifier,
+    }
+    this.hosting = await hosting.check(domain, options)
+  }
+
+  async printSummary({printTranserSizes = false, markStart, markEnd, domain, reportGreenHosting = false}) {
     const totalBytes = this.transferSizeData.reduce((accumulator, currentValue) => accumulator + Math.round(currentValue.transferSizeInKiloBytes), 0)
     
     this.summaryData.push({
@@ -130,6 +148,23 @@ export class PerformanceTracker {
         metric: 'Time to render in seconds'
       , value: Number(this.timeToRender.duration.toFixed(2))
     })
+
+    if(domain) {
+      await this.checkHosting({ 
+          domain
+        , identifier: domain 
+      })
+
+      this.summaryData.push({
+          metric: 'Green hosting'
+        , value: this.hosting.green
+      })
+      
+      if(reportGreenHosting) {
+        delete this.hosting.supporting_documents
+        console.table(this.hosting)
+      }
+    }
     
     if(printTranserSizes) console.table(this.transferSizeData)
 

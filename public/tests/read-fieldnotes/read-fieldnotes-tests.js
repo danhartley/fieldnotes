@@ -22,11 +22,14 @@ const readFieldnotes = async () => {
   // Set the viewport dimensions
   await page.setViewport({ width: 1280, height: 1024 })
 
-  // Go to read fieldnotes page (in dev or prod depending on node args in the command line)
+  // Establish domain from deploy flag (dev or prod depending on the node argument in the command line)
   const deploy = process.argv.find(arg => arg.includes('deploy'))?.split('=')[1] || 'dev'
-  deploy === 'prod' 
-    ? await page.goto('http://ifieldnotes.org')
-    : await page.goto('http://localhost:1234')
+  const domain = deploy === 'prod'
+    ? 'ifieldnotes.org'
+    : 'localhost:1234'
+
+  // Go to read fieldnotes page
+  await page.goto(`http://${domain}`)
 
   // Create performance tracker instance
   const perfTracker = new PerformanceTracker(page)
@@ -74,6 +77,8 @@ const readFieldnotes = async () => {
           printTranserSizes: true
         , markStart: 'fetch-field-notes: start'
         , markEnd: 'fetch-field-notes: end'
+        , domain
+        , reportGreenHosting: true
       })
   }
 }
