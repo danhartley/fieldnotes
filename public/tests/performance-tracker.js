@@ -131,12 +131,14 @@ export class PerformanceTracker {
     }
   }
 
-  async checkHosting({domain = '', identifier = ''}) {
+  async checkHosting({domain = '', verbose = true, identifier = ''}) {
     if(!domain.length) return { hosted_by: 'unknown', green: false }
+
     const options = {
-      verbose: true,
-      userAgentIdentifier: identifier,
+        verbose
+      , userAgentIdentifier: identifier,
     }
+
     this.hosting = await hosting.check(domain, options)
   }
 
