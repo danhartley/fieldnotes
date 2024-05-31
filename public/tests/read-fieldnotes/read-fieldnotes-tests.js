@@ -11,7 +11,7 @@ const PRINT_FIELDNOTES_WITH_PAGE_BREAKS_BTN_ID = '#print-fieldnotes-with-page-br
 
 import { PerformanceTracker } from '../performance-tracker.js'
 
-const readFieldnotes = async () => {
+const readFieldnotes = async ({byteOptions, visitOptions}) => {
 
   // Launch the browser
   const browser = await puppeteer.launch({headless: false})
@@ -33,13 +33,15 @@ const readFieldnotes = async () => {
 
   // Create instance of performance tracker 
   const perfTracker = new PerformanceTracker({
-      page
-    , options: {
-          domain
-        , markStart: 'fetch-field-notes: start'
-        , markEnd: 'fetch-field-notes: end'
-        , reportGreenHosting: true
-      }
+        page
+      , options: {
+            domain
+          , markStart: 'fetch-field-notes: start'
+          , markEnd: 'fetch-field-notes: end'
+          , reportGreenHosting: true
+        }
+      , byteOptions
+      , visitOptions
   })
   
   try {
@@ -78,7 +80,7 @@ const readFieldnotes = async () => {
     console.log(error) 
   } finally {
       setTimeout(async() => {
-        await browser.close()
+        // await browser.close()
       } , DELAY_FOR_TITLES)
       
       perfTracker.printSummary({
@@ -87,19 +89,28 @@ const readFieldnotes = async () => {
   }
 }
 
-readFieldnotes()
-
-// Custom settings
-let options
-
-// Use perByteTrace
-options = {
-
+// Use logPerByteTrace
+const byteOptions = {
+  dataReloadRatio: 0.6,
+  firstVisitPercentage: 0.9,
+  returnVisitPercentage: 0.1,
+  gridIntensity: {
+    device: 565.629,
+    dataCenter: { country: "TWN" },
+    network: 442,
+  },
 }
-// readFieldnotes(options)
 
-// Use perVisitTrace
-options = {
-
+// Use logPerVisitTrace
+const visitOptions = {
+  dataReloadRatio: 0.6,
+  firstVisitPercentage: 0.9,
+  returnVisitPercentage: 0.1,
+  gridIntensity: {
+    device: 565.629,
+    dataCenter: { country: "TWN" },
+    network: 442,
+  },
 }
-// readFieldnotes(options)
+
+readFieldnotes({byteOptions, visitOptions})

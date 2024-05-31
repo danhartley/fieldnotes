@@ -37,7 +37,7 @@ node {path} e.g. node public/tests/write-fieldnotes/write-fieldnotes-tests.js
 
 NB Optional flag deploy e.g deploy=prod or deploy=dev (default)
 
-To debug in VS code select 'Run and Debug' and use default Node environment
+To debug in VS code select e.g. 'JavaScript Debug Terminal'
 
 To compare figures filter network requests in Chrome DevTools  
 e.g. /axe|sentry|a11y-engine-core.min.js|firestore|logr-ingest.com/ and toggle the invert flag

@@ -3,16 +3,23 @@ import { hosting, co2 } from "@tgwf/co2"
 export class PerformanceTracker {
   #page = null
   #options = {}
+  #byteOptions = {}
+  #visitOptions = {}
   #transferSizeData = []
   #summaryData = []
   #transferSizeInKiloBytes = 0
   #timeToRender = {}    
-  #estimatedCO2 = 0
+  #emissionsPerByte = null
+  #emissionsPerVisit = null
+  #byteTrace = null
+  #visitTrace = null
   #hosting = {}
   
-  constructor({page, options}) {
+  constructor({page, options, byteOptions, visitOptions}) {
     this.#page = page
     this.#options = options
+    this.#byteOptions = byteOptions
+    this.#visitOptions = visitOptions
   }
 
   get page() {
@@ -21,6 +28,22 @@ export class PerformanceTracker {
 
   get options() {
     return this.#options
+  }
+
+  get byteOptions() {
+    return this.#byteOptions
+  }
+
+  set byteOptions(options) {
+    this.#byteOptions = options
+  }
+
+  get visitOptions() {
+    return this.#visitOptions
+  }
+
+  set visitOptions(options) {
+    this.#visitOptions = options
   }
 
   get domain() {
@@ -51,12 +74,36 @@ export class PerformanceTracker {
     this.#timeToRender = time
   }
 
-  get estimatedCO2() {
-    return this.#estimatedCO2
+  get emissionsPerByte() {
+    return this.#emissionsPerByte
+  }
+  
+  set emissionsPerByte(emissions) {
+    this.#emissionsPerByte = emissions
   }
 
-  set estimatedCO2(CO2) {
-    this.#estimatedCO2 = CO2
+  get emissionsPerVisit() {
+    return this.#emissionsPerVisit
+  }
+  
+  set emissionsPerVisit(emissions) {
+    this.#emissionsPerVisit = emissions
+  }
+
+  get byteTrace() {
+    return this.#byteTrace
+  }
+
+  set byteTrace(emissions) {
+    this.#byteTrace = emissions
+  }
+
+  get visitTrace() {
+    return this.#visitTrace
+  }
+
+  set visitTrace(emissions) {
+    this.#visitTrace = emissions
   }
 
   get hosting() {
@@ -114,20 +161,27 @@ export class PerformanceTracker {
     })
   }
 
-  logEmissions({totalBytes}) {
-    const co2Emission = new co2()
-    this.estimatedCO2 = Math.round(co2Emission.perByte(totalBytes * 1000, true) * 100) / 100
+  logPerByte({totalBytes, bySegment = false}) {
+    const co2Emission = bySegment ? new co2({ results: "segment" }) : new co2()
+    this.emissionsPerByte = co2Emission.perByte(totalBytes * 1000, true)
   }
 
-  perByteTrace({bytes, green = false, options}) {
-    if(bytes) {
+  logPerVisit({totalBytes, bySegment = false}) {
+    const co2Emission = bySegment ? new co2({ results: "segment" }) : new co2()
+    this.emissionsPerVisit = co2Emission.perVisit(totalBytes * 1000, true)
+  }
 
+  logPerByteTrace({bytes, green = false, options}) {
+    if(bytes) {
+      const co2Emission = new co2()
+      this.byteTrace = co2Emission.perByteTrace(bytes, green, options)
     }
   }
 
-  perVisitTrace({bytes, green = false, options}) {
+  logPerVisitTrace({bytes, green = false, options}) {
     if(bytes) {
-        
+      const co2Emission = new co2()
+      this.visitTrace = co2Emission.perVisitTrace(bytes, green, options)
     }
   }
 
@@ -150,12 +204,45 @@ export class PerformanceTracker {
     , value: totalBytes
     })
 
-    this.logEmissions({totalBytes})
+    this.logPerByte({totalBytes})
 
     this.summaryData.push({
         metric: 'Carbon emitted per page load in mg'
-      , value: this.estimatedCO2
+      , value: this.emissionsPerByte
     })
+
+    this.logPerByte({totalBytes, bySegment: true})
+    console.table(this.emissionsPerByte)
+
+    this.logPerVisit({totalBytes})
+
+    this.summaryData.push({
+        metric: 'Carbon emitted per page load in mg by segment'
+      , value: this.emissionsPerVisit
+    })
+
+    this.logPerVisit({totalBytes, bySegment: true})
+    console.table(this.emissionsPerVisit)
+
+    if(this.byteOptions) {
+      this.logPerByteTrace({
+          bytes: totalBytes
+        , green: true
+        , options: this.byteOptions
+      })
+
+      console.table(this.byteTrace)      
+    }
+
+    if(this.visitOptions) {
+      this.logPerVisitTrace({
+          bytes: totalBytes
+        , green: true
+        , options: this.visitOptions
+      })
+
+      console.log('this.visitTrace: ', this.visitTrace)
+    }
 
     if(this?.options?.markStart.length && this?.options?.markEnd.length) {
         performance.mark(this.options.markStart)

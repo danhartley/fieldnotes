@@ -628,7 +628,7 @@ const init = async () => {
                 ? await globalRead.fieldnotesStubs
                 : await getFieldnotesById({id: globalRead.fieldnotesStubs.fieldnotesId})
 
-            importFieldNotesNotificationText.innerText = 'Fetching iNaturalist species…'
+            importFieldNotesNotificationText.innerText = 'Fetching species…'
 
             setTimeout(() => {
                 importFieldNotesNotificationText.classList.add('hidden')
