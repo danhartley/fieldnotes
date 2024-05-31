@@ -31,8 +31,16 @@ const readFieldnotes = async () => {
   // Go to read fieldnotes page
   await page.goto(`http://${domain}`)
 
-  // Create performance tracker instance
-  const perfTracker = new PerformanceTracker(page)
+  // Create instance of performance tracker 
+  const perfTracker = new PerformanceTracker({
+      page
+    , options: {
+          domain
+        , markStart: 'fetch-field-notes: start'
+        , markEnd: 'fetch-field-notes: end'
+        , reportGreenHosting: true
+      }
+  })
   
   try {
     // Abort test if the fetch button is already enabled
@@ -72,15 +80,26 @@ const readFieldnotes = async () => {
       setTimeout(async() => {
         await browser.close()
       } , DELAY_FOR_TITLES)
-      // Print tracker results
+      
       perfTracker.printSummary({
-          printTranserSizes: true
-        , markStart: 'fetch-field-notes: start'
-        , markEnd: 'fetch-field-notes: end'
-        , domain
-        , reportGreenHosting: true
+          printTransferSizes: true
       })
   }
 }
 
 readFieldnotes()
+
+// Custom settings
+let options
+
+// Use perByteTrace
+options = {
+
+}
+// readFieldnotes(options)
+
+// Use perVisitTrace
+options = {
+
+}
+// readFieldnotes(options)

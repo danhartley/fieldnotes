@@ -2,6 +2,7 @@ import { hosting, co2 } from "@tgwf/co2"
 
 export class PerformanceTracker {
   #page = null
+  #options = {}
   #transferSizeData = []
   #summaryData = []
   #transferSizeInKiloBytes = 0
@@ -9,12 +10,21 @@ export class PerformanceTracker {
   #estimatedCO2 = 0
   #hosting = {}
   
-  constructor(page) {
+  constructor({page, options}) {
     this.#page = page
+    this.#options = options
   }
 
   get page() {
     return this.#page
+  }
+
+  get options() {
+    return this.#options
+  }
+
+  get domain() {
+    return this.#options.domain
   }
 
   get transferSizeData() {
@@ -109,6 +119,18 @@ export class PerformanceTracker {
     this.estimatedCO2 = Math.round(co2Emission.perByte(totalBytes * 1000, true) * 100) / 100
   }
 
+  perByteTrace({bytes, green = false, options}) {
+    if(bytes) {
+
+    }
+  }
+
+  perVisitTrace({bytes, green = false, options}) {
+    if(bytes) {
+        
+    }
+  }
+
   async checkHosting({domain = '', identifier = ''}) {
     if(!domain.length) return { hosted_by: 'unknown', green: false }
     const options = {
@@ -118,7 +140,7 @@ export class PerformanceTracker {
     this.hosting = await hosting.check(domain, options)
   }
 
-  async printSummary({printTranserSizes = false, markStart, markEnd, domain, reportGreenHosting = false}) {
+  async printSummary({printTransferSizes = false}) {
     const totalBytes = this.transferSizeData.reduce((accumulator, currentValue) => accumulator + Math.round(currentValue.transferSizeInKiloBytes), 0)
     
     this.summaryData.push({
@@ -133,14 +155,14 @@ export class PerformanceTracker {
       , value: this.estimatedCO2
     })
 
-    if(markStart.length && markEnd.length) {
-        performance.mark('fetch-field-notes: start')
-        performance.mark('fetch-field-notes: end')
+    if(this?.options?.markStart.length && this?.options?.markEnd.length) {
+        performance.mark(this.options.markStart)
+        performance.mark(this.options.markEnd)
 
         this.timeToRender = performance.measure(
           'time-to-render',
-          markStart,
-          markEnd
+          this.options.markStart,
+          this.options.markEnd
         )
     }
 
@@ -149,10 +171,10 @@ export class PerformanceTracker {
       , value: Number(this.timeToRender.duration.toFixed(2))
     })
 
-    if(domain) {
+    if(this.domain) {
       await this.checkHosting({ 
-          domain
-        , identifier: domain 
+          domain: this.domain
+        , identifier: this.domain
       })
 
       this.summaryData.push({
@@ -160,13 +182,13 @@ export class PerformanceTracker {
         , value: this.hosting.green
       })
       
-      if(reportGreenHosting) {
+      if(this.options?.reportGreenHosting) {
         delete this.hosting.supporting_documents
         console.table(this.hosting)
       }
     }
     
-    if(printTranserSizes) console.table(this.transferSizeData)
+    if(printTransferSizes) console.table(this.transferSizeData)
 
     console.table(this.summaryData)
   }
