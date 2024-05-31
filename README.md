@@ -39,19 +39,20 @@ NB Optional flag deploy e.g deploy=prod or deploy=dev (default)
 
 To debug in VS code select 'Run and Debug' and use default Node environment
 
-To compare figures filter network requests e.g. /axe|sentry|a11y-engine-core.min.js|firestore|logr-ingest.com/ and toggle the invert flag
+To compare figures filter network requests in Chrome DevTools  
+e.g. /axe|sentry|a11y-engine-core.min.js|firestore|logr-ingest.com/ and toggle the invert flag
 
 #### Routing
 Routing on the production site is handled by Netlify.
 See the _redirects file for configuration details
 
-No routing is set up in the development environment. Use full paths e.g.
-http://localhost:1234/read-fieldnotes.html
-http://localhost:1234/write-fieldnotes-create.html
-http://localhost:1234/write-fieldnotes-edit.html
-http://localhost:1234/read-inaturalist.html
-
-See package.json for the complete list
+No routing is set up in the development environment. Use full paths e.g.  
+http://localhost:1234/read-fieldnotes.html  
+http://localhost:1234/write-fieldnotes-create.html  
+http://localhost:1234/write-fieldnotes-edit.html  
+http://localhost:1234/read-inaturalist.html  
+  
+See package.json for the complete list  
 
 #### Cabin analytics
 Analytics is only running on the read fieldnotes page
@@ -77,11 +78,11 @@ See: https://www.sitemaps.org/
 See: https://carbontxt.org/
 
 ##### Green hosting
-See: https://developers.thegreenwebfoundation.org/co2js/tutorials/getting-started-node/
+See: https://developers.thegreenwebfoundation.org/co2js/tutorials/getting-started-node/  
 Comment: Used in integration tests
 
 #### Changelog
-/CHANGELOG.md
+/CHANGELOG.md  
 See: https://keepachangelog.com/en/1.1.0/
 
 #### Human readable HTML map
