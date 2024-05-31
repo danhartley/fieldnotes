@@ -1,4 +1,6 @@
-import { hosting, co2 } from "@tgwf/co2"
+import { hosting, co2, averageIntensity } from "@tgwf/co2"
+
+// See https://sustainablewebdesign.org/estimating-digital-emissions/ for @tgwf/co2
 
 export class PerformanceTracker {
   #page = null
@@ -204,6 +206,19 @@ export class PerformanceTracker {
     , value: totalBytes
     })
 
+    // Get country specific grid intensity
+    const { data, type, year } = averageIntensity
+    
+    this.byteOptions.gridIntensity = this.visitOptions.gridIntensity = data[this.options.countryCode]
+    this.log({
+        title: 'Grid intensity'
+      , data: [{
+            coutryCode: this.options.countryCode
+          , gridIntensity: this.byteOptions.gridIntensity
+        }]
+      , logger: this.options.logger
+    })
+
     this.logPerByte({totalBytes})
 
     this.summaryData.push({
@@ -212,7 +227,12 @@ export class PerformanceTracker {
     })
 
     this.logPerByte({totalBytes, bySegment: true})
-    console.table(this.emissionsPerByte)
+
+    this.log({
+        title: 'Emissions per byte'
+      , data: this.emissionsPerByte
+      , logger: this.options.logger
+    })
 
     this.logPerVisit({totalBytes})
 
@@ -222,7 +242,11 @@ export class PerformanceTracker {
     })
 
     this.logPerVisit({totalBytes, bySegment: true})
-    console.table(this.emissionsPerVisit)
+    this.log({
+        title: 'Emissions per visit'
+      , data: this.emissionsPerVisit
+      , logger: this.options.logger
+    })
 
     if(this.byteOptions) {
       this.logPerByteTrace({
@@ -231,7 +255,11 @@ export class PerformanceTracker {
         , options: this.byteOptions
       })
 
-      console.table(this.byteTrace)      
+      this.log({
+          title: 'Byte trace: grid intensity'
+        , data: this.byteTrace.variables.gridIntensity
+        , logger: this.options.logger
+      })
     }
 
     if(this.visitOptions) {
@@ -241,7 +269,11 @@ export class PerformanceTracker {
         , options: this.visitOptions
       })
 
-      console.log('this.visitTrace: ', this.visitTrace)
+      this.log({
+          title: 'Visit trace: grid intensity'
+        , data: this.visitTrace.variables.gridIntensity
+        , logger: this.options.logger
+      })
     }
 
     if(this?.options?.markStart.length && this?.options?.markEnd.length) {
@@ -273,12 +305,36 @@ export class PerformanceTracker {
       
       if(this.options?.reportGreenHosting) {
         delete this.hosting.supporting_documents
-        console.table(this.hosting)
+        this.log({
+            title: 'Green reporting'
+          , data: this.hosting
+          , logger: this.options.logger
+        })
       }
     }
     
-    if(printTransferSizes) console.table(this.transferSizeData)
+    if(printTransferSizes) {
+      this.log({
+          title: 'Transfer size by item'
+        , data: this.transferSizeData
+        , logger: this.options.logger
+      })
+    }
 
-    console.table(this.summaryData)
+    this.log({
+        title: 'Summary data'
+      , data: this.summaryData
+      , logger: this.options.logger
+    })
+  }
+
+  log({title, data, logger}) {
+    console.log('\n')
+    console.warn(title)
+    console.table(data)
+
+    if(logger) {
+      // …
+    }
   }
 }

@@ -39,6 +39,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
           , markStart: 'fetch-field-notes: start'
           , markEnd: 'fetch-field-notes: end'
           , reportGreenHosting: true
+          , countryCode: 'PRT'
         }
       , byteOptions
       , visitOptions
@@ -95,9 +96,9 @@ const byteOptions = {
   firstVisitPercentage: 0.9,
   returnVisitPercentage: 0.1,
   gridIntensity: {
-    device: 565.629,
-    dataCenter: { country: "TWN" },
-    network: 442,
+    device: 66,
+    dataCenter: { country: "PRT" },
+    network: 66,
   },
 }
 
@@ -107,10 +108,12 @@ const visitOptions = {
   firstVisitPercentage: 0.9,
   returnVisitPercentage: 0.1,
   gridIntensity: {
-    device: 565.629,
-    dataCenter: { country: "TWN" },
-    network: 442,
+    device: 66,
+    dataCenter: { country: "PRT" },
+    network: 66,
   },
 }
 
 readFieldnotes({byteOptions, visitOptions})
+
+// Potugal 66
