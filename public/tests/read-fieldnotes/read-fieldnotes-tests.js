@@ -115,5 +115,3 @@ const visitOptions = {
 }
 
 readFieldnotes({byteOptions, visitOptions})
-
-// Potugal 66

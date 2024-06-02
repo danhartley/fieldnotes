@@ -56,7 +56,7 @@ const editFieldnotes = async () => {
     console.log(error) 
 
   } finally {
-      // await browser.close()
+      await browser.close()
   }
 }
 

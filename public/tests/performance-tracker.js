@@ -1,4 +1,4 @@
-import { hosting, co2, averageIntensity } from "@tgwf/co2"
+import { hosting, co2, averageIntensity, marginalIntensity } from "@tgwf/co2"
 
 // See https://sustainablewebdesign.org/estimating-digital-emissions/ for @tgwf/co2
 
@@ -208,6 +208,7 @@ export class PerformanceTracker {
 
     // Get country specific grid intensity
     const { data, type, year } = averageIntensity
+    const { data: miData, type: miType, year: miYear } = marginalIntensity
     
     this.byteOptions.gridIntensity = this.visitOptions.gridIntensity = data[this.options.countryCode]
     this.log({
