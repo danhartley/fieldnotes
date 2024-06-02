@@ -35,12 +35,12 @@ Open site in browser e.g. npm run dev
 node {path} e.g. node public/tests/write-fieldnotes/write-fieldnotes-tests.js
 ````
 
-NB Optional flag deploy e.g deploy=prod or deploy=dev (default)
-
-To debug in VS code select e.g. 'JavaScript Debug Terminal'
+NB Optional flag deploy e.g deploy=prod or deploy=dev (default)  
+To debug in VS code select e.g. 'JavaScript Debug Terminal'  
+Then run the integration test in the JS debug terminal (will see 'Debugger attacheed' in terminal)
 
 To compare figures filter network requests in Chrome DevTools  
-e.g. /axe|sentry|a11y-engine-core.min.js|firestore|logr-ingest.com/ and toggle the invert flag
+e.g. /axe|sentry|a11y-engine-core.min.js|firestore|logr-ingest.com/ and toggle the invert flag  
 
 #### Routing
 Routing on the production site is handled by Netlify.

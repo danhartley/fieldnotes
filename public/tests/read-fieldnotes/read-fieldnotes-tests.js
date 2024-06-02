@@ -40,6 +40,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
           , markEnd: 'fetch-field-notes: end'
           , reportGreenHosting: true
           , countryCode: 'PRT'
+          , includeThirdPartyResources: false
         }
       , byteOptions
       , visitOptions
@@ -81,7 +82,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
     console.log(error) 
   } finally {
       setTimeout(async() => {
-        // await browser.close()
+        await browser.close()
       } , DELAY_FOR_TITLES)
       
       perfTracker.printSummary({
@@ -96,9 +97,9 @@ const byteOptions = {
   firstVisitPercentage: 0.9,
   returnVisitPercentage: 0.1,
   gridIntensity: {
-    device: 66,
+    device: { country: "PRT" },
     dataCenter: { country: "PRT" },
-    network: 66,
+    network: { country: "PRT" },
   },
 }
 
@@ -108,9 +109,9 @@ const visitOptions = {
   firstVisitPercentage: 0.9,
   returnVisitPercentage: 0.1,
   gridIntensity: {
-    device: 66,
+    device: { country: "PRT" },
     dataCenter: { country: "PRT" },
-    network: 66,
+    network: { country: "PRT" },
   },
 }
 

@@ -706,15 +706,15 @@ const init = async () => {
                 , slug: globalRead.fieldnotesStubs.slug
                 , title: globalRead.fieldnotesStubs.title
             })
-            
-            // Use marks and measure to display timings e.g. in Chrome DevTools (Performance tab)
-            performance.mark('fetch-field-notes: end')
-            performance.measure('fetch-field-notes', 'fetch-field-notes: start', 'fetch-field-notes: end')            
         } catch (e) {
             logger({
                   message: e.message
                 , type: 'error'
             })
+        } finally {
+            // Use marks and measure to display timings e.g. in Chrome DevTools (Performance tab)
+            performance.mark('fetch-field-notes: end')
+            performance.measure('fetch-field-notes', 'fetch-field-notes: start', 'fetch-field-notes: end')
         }
     }
 
