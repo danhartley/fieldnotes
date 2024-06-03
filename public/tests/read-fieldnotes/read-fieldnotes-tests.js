@@ -68,7 +68,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
           // Fetch fieldnotes
           await page.click(FIELDNOTES_BTN_ID)
           // Log cross domain images
-          await perfTracker.logResources({srcs: ['inaturalist', 'drive.google', 'googleusercontent']})
+          await perfTracker.logResources({srcs: ['inaturalist', 'drive.google', 'googleusercontent', 'r.logr-ingest.com']})
           // Log domains entities. Wait 5 seconds for images to download before calling.
           await pause({func: () => perfTracker.logPerformanceEntries({comments: 'Fetch fieldnotes'}), delay: 5000})          
         } else {
@@ -76,10 +76,10 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
         }              
       }
     })    
-  } catch (error) { 
+  } catch (e) { 
     await scroll({page})
     await page.screenshot({path: `./public/tests/read-fieldnotes/screenshots/error${Date().now}.png`, fullPage: true})
-    console.log(error) 
+    console.log(e)
   } finally {
       setTimeout(async() => {
         await browser.close()
