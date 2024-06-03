@@ -22,12 +22,12 @@ import {
     , cloneSpeciesCardFromTemplate
     , fetchFieldnotesStubs
     , fieldnotesAutocomplete
-    , getFieldnotesFromStore    
+    // , getFieldnotesFromStore    
     , getTaxonGroupColour
     , handleLanguagePreference
     , mapTaxon
     , scoreLesson
-    , storeFieldnotes
+    // , storeFieldnotes
     , showNotificationsDialog
     , updateHistoryAndTitle
 } from './ui-actions.js'

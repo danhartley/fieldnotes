@@ -1366,62 +1366,62 @@ export const updateHistoryAndTitle = ({window, slug, title}) => {
     }
 }
 
-export const storeFieldnotes = async ({id, article}) => {
-    try {
-        const url = `${process.env.FUNCTIONS_URL}/.netlify/functions/storeFieldnotes` || 'https://ifieldnotes.org/.netlify/functions/storeFieldnotes'
+// export const storeFieldnotes = async ({id, article}) => {
+//     try {
+//         const url = `${process.env.FUNCTIONS_URL}/.netlify/functions/storeFieldnotes` || 'https://ifieldnotes.org/.netlify/functions/storeFieldnotes'
 
-        // Create a Blob with HTML content
-        const blob = new Blob([article], { type: 'text/html' })
+//         // Create a Blob with HTML content
+//         const blob = new Blob([article], { type: 'text/html' })
 
-        // Create a FileReader object to read the Blob
-        const reader = new FileReader()
+//         // Create a FileReader object to read the Blob
+//         const reader = new FileReader()
 
-        reader.onload = function(event) {
-            const content = event.target.result
-            console.log('content', content)
-        }
+//         reader.onload = function(event) {
+//             const content = event.target.result
+//             console.log('content', content)
+//         }
 
-        // Start reading the Blob
-        reader.readAsText(blob)
+//         // Start reading the Blob
+//         reader.readAsText(blob)
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'text/html',
-                'Context-ID': id
-            },
-            body: blob,
-        })
-        const text = await response.text()
-        console.log(text)
-    } catch (e) {
-        logger({
-            message: e.message
-          , type: 'error'
-          , stack: e.stack
-        })
-    }
-}
+//         const response = await fetch(url, {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'text/html',
+//                 'Context-ID': id
+//             },
+//             body: blob,
+//         })
+//         const text = await response.text()
+//         console.log(text)
+//     } catch (e) {
+//         logger({
+//             message: e.message
+//           , type: 'error'
+//           , stack: e.stack
+//         })
+//     }
+// }
 
-export const getFieldnotesFromStore = async ({id}) => {    
-    try {
-        const url = `${process.env.FUNCTIONS_URL}/.netlify/functions/storeFieldnotes` || 'https://ifieldnotes.org/.netlify/functions/storeFieldnotes'
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-            'Context-ID': id
-            },
-        })
-        const html = await response.text()
-        console.log(html)
-    } catch (e) {
-        logger({
-            message: e.message
-          , type: 'error'
-          , stack: e.stack
-        })
-    }
+// export const getFieldnotesFromStore = async ({id}) => {    
+//     try {
+//         const url = `${process.env.FUNCTIONS_URL}/.netlify/functions/storeFieldnotes` || 'https://ifieldnotes.org/.netlify/functions/storeFieldnotes'
+//         const response = await fetch(url, {
+//             method: 'GET',
+//             headers: {
+//             'Context-ID': id
+//             },
+//         })
+//         const html = await response.text()
+//         console.log(html)
+//     } catch (e) {
+//         logger({
+//             message: e.message
+//           , type: 'error'
+//           , stack: e.stack
+//         })
+//     }
 
-    // Optionally, insert the HTML into the DOM
-    //   document.getElementById('html-container').innerHTML = html
-  }
+//     // Optionally, insert the HTML into the DOM
+//     //   document.getElementById('html-container').innerHTML = html
+// }
