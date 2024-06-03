@@ -11,13 +11,12 @@ export class PerformanceTracker {
   #transferSizeItems = []
   #summary = []
   #timeToRender = {}    
-  #startTime = 0
-  #endTime = 0
   #emissionsPerByte = null
   #emissionsPerVisit = null
   #byteTrace = null
   #visitTrace = null
   #hosting = {}
+  #perfEntries
   
   constructor({page, options, byteOptions, visitOptions}) {
     this.#page = page
@@ -115,6 +114,7 @@ export class PerformanceTracker {
             , entryType: entry.entryType
             , initiatorType: entry.initiatorType
             , transferSizeInBytes: entry.transferSize
+            , duration: entry.duration
             , comments
           })
         } else {
@@ -126,6 +126,15 @@ export class PerformanceTracker {
           })
         }
       }
+    })
+
+    this.#perfEntries = perfEntries
+
+    // Calculate page load time
+    const load = Number((perfEntries.findLast(e => e.entryType === 'resource').responseEnd / 1000).toFixed(2))
+    this.#summary.push({
+        metric: 'Page load time in seconds'
+      , value: load
     })
   }
 
@@ -336,10 +345,10 @@ export class PerformanceTracker {
     , value: kBs
     })
 
-    // Calculate time to render
+    // Calculate time to fetch data
     if(this.#options.markStart?.length && this.#options.markEnd?.length) {
-        this.#startTime = performance.mark(this.#options.markStart)?.startTime || 0
-        this.#endTime = performance.mark(this.#options.markEnd)?.startTime || 0
+        performance.mark(this.#options.markStart)?.startTime || 0
+        performance.mark(this.#options.markEnd)?.startTime || 0
 
         this.#timeToRender = performance.measure(
           'time-to-render',
@@ -347,23 +356,49 @@ export class PerformanceTracker {
           this.#options.markEnd
         )
 
-        // Save start render
+        // Save time to fetch
         this.#summary.push({
-            metric: 'Start render'
-          , value: this.#startTime
-        })
-
-        // Save end render
-        this.#summary.push({
-            metric: 'End render'
-          , value: this.#endTime
-        })
-
-        // Save time to render
-        this.#summary.push({
-            metric: 'Time to render in seconds'
+            metric: 'Time to fetch data in seconds'
           , value: Number(this.#timeToRender.duration.toFixed(3))
         })
+    }
+
+    if(this.#options.markDOMLoaded?.length) {
+      const timeToLoad = (performance.mark(this.#options.markDOMLoaded)?.startTime || 0) / 1000
+        // Save time to load (recorded manually)
+        this.#summary.push({
+          metric: 'Time to load in seconds (manual)'
+        , value: Number(timeToLoad.toFixed(3))
+      })
+    }
+
+    // Calculate page timings from location
+    const locations = [
+        `https://www.${this.#options.domain}/`
+      , `https://${this.#options.domain}/`
+    ]
+    const pageTiming = this.#perfEntries.find(e => locations.includes(e.name))
+    
+    if(pageTiming) {
+      const pageDownload = pageTiming.duration / 1000
+      const pageDomReady = pageTiming.domContentLoadedEventStart / 1000
+      const pageFullyReady = pageTiming.loadEventEnd / 1000
+  
+      // Save page timings
+      this.#summary.push({
+          metric: 'Page download time'
+        , value: Number(pageDownload.toFixed(3))
+      })
+  
+      this.#summary.push({
+          metric: 'Time to DOM ready'
+        , value: Number(pageDomReady.toFixed(3))
+      })
+  
+      this.#summary.push({
+          metric: 'Time to page fully ready'
+        , value: Number(pageFullyReady.toFixed(3))
+      })
     }
     
     // Print bytes per request
@@ -375,6 +410,7 @@ export class PerformanceTracker {
             , dir: this.#options.sort.direction
         }) 
         : this.#transferSizeItems
+
       this.#log({
           title: 'Transfer size by item'
         , data

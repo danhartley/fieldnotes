@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer'
 
-import { scroll, isEnabled, pause } from '../test-utils.js'
+import { scroll, isEnabled, pause, sortBy } from '../test-utils.js'
 
 const DELAY_FOR_TITLES = 1000
 const FIELDNOTES_TITLE = 'Streets of Lisbon, Portugal, Wed Feb 28 2024'
@@ -35,12 +35,17 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
   const perfTracker = new PerformanceTracker({
         page
       , options: {
-            domain
-          , markStart: 'fetch-field-notes: start'
-          , markEnd: 'fetch-field-notes: end'
-          , reportGreenHosting: true
-          , countryCode: 'PRT'
-          , includeThirdPartyResources: false
+              domain
+            , reportGreenHosting: true
+            , countryCode: 'PRT'
+            , includeThirdPartyResources: true
+            , sort: {
+                sortBy
+                , direction: 'desc'
+              }
+            , markDOMLoaded: 'DOM loaded'
+            , markStart: 'fetch-field-notes: start'
+            , markEnd: 'fetch-field-notes: end'
         }
       , byteOptions
       , visitOptions

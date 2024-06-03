@@ -6,6 +6,7 @@
 
 // LogRocket.init('xoreyh/ifieldnotesdev')
 
+// import { log } from 'logrocket'
 import { 
       g
     , getFieldnotesById
@@ -120,7 +121,6 @@ const init = async () => {
         const speciesImages = d.querySelectorAll('img')
     
         const showSpeciesDetails = ({e, img}) => { 
-            console.log(e)
             const container = img.parentElement            
             const grid = container.parentElement
             const speciesPanel = grid.querySelector('.species-panel')
@@ -149,7 +149,7 @@ const init = async () => {
             if(!endOfRowCard) {
                 const cardCount = grid.querySelectorAll('div > img').length
                 const cardDiff = endOfRowIndex - cardCount
-                for(let j = 1; j <= cardDiff; j++) {
+                for(let j = 1 j <= cardDiff j++) {
                     const div = d.createElement('div')
                     div.setAttribute('data-i', cardCount + j)
                     grid.appendChild(div)
@@ -797,6 +797,23 @@ const init = async () => {
     titlesObserver.observe(fnAutocompleteTitleDatalist, {
           subtree: true
         , childList: true
+    })
+
+    // Get the current timestamp before the DOM starts loading
+    const startTime = window.performance.now()
+
+    // Wait for the DOM to be fully loaded
+    window.addEventListener('load', () => {
+        // Get the current timestamp after the DOM is fully loaded
+        const endTime = window.performance.now()
+
+        // Calculate the time it took to load the DOM
+        const loadTime = endTime - startTime
+
+        logger({
+            message: `DOM loaded in ${loadTime} milliseconds`
+        })
+        performance.mark('DOM loaded')
     })
 }
 

@@ -40,6 +40,7 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
             sortBy
           , direction: 'desc'
         }
+        , markDOMLoaded: 'DOM loaded'
       }
       , byteOptions
       , visitOptions
@@ -51,7 +52,7 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
   } catch(e) {
     console.log(e)
   } finally {
-    // await browser.close()
+    await browser.close()
     perfTracker.printSummary({printTransferSizes: true})
   }
 }
