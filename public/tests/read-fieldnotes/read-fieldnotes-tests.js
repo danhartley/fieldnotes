@@ -70,7 +70,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
           // Log cross domain images
           await perfTracker.logResources({srcs: ['inaturalist', 'drive.google', 'googleusercontent']})
           // Log domains entities. Wait 5 seconds for images to download before calling.
-          await pause({func: () => perfTracker.logEntries({comments: 'Fetch fieldnotes'}), delay: 5000})          
+          await pause({func: () => perfTracker.logPerformanceEntries({comments: 'Fetch fieldnotes'}), delay: 5000})          
         } else {
           await page.screenshot({path: './public/tests/read-fieldnotes/screenshots/fetch button not ready.png', fullPage: true})
         }              
