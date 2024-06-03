@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@netlify/blobs": "^7.3.0",
+    "@parcel/watcher": "^2.4.1",
     "@tgwf/co2": "^0.15.0",
     "firebase": "^10.7.1",
     "firebaseui": "^6.1.0",
