@@ -183,8 +183,7 @@ export class PerformanceTracker {
 
       // Check resource is one we want to measure
       const isValidMethod = methods.includes(response.request().method())
-      const isValidSrc = url.indexOf(this.#options.domain) === -1
-      // const isValidSrc = srcs.length ? srcs.some(src => url.includes(src)) : true
+      const isValidSrc = srcs.length ? srcs.some(src => url.includes(src)) : true
       const isValidStatus = logStatuses.length ? logStatuses.includes(response.status()) : true
       const isValidType = logTypes.length ? logTypes.includes(resourceType) : true
       const isValidResource = isValidMethod && isValidSrc && isValidType && isValidStatus

@@ -50,7 +50,7 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
       // Navigate to site
       await page.goto(`https://${domain}`)
       
-      await pause({func: () => perfTracker.logResources({srcs, logTypes:['image', 'xhr', 'script', 'stylesheet', 'fetch']}), delay})    
+      page.evaluateOnNewDocument(perfTracker.logResources({srcs, logTypes:['image', 'xhr', 'script', 'stylesheet', 'fetch']}))
       await pause({func: () => perfTracker.logPerformanceEntries(), delay: 5000})
   } catch(e) {
     console.log(e)
