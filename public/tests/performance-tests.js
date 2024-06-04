@@ -12,10 +12,6 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
 
   if(!domain) return
 
-  // Check node argument in the command line for third party resources
-  const resources = process.argv.find(arg => arg.includes('resources'))?.split('=')[1]
-  srcs = resources?.split(',')
-
   // Launch the browser
   const browser = await puppeteer.launch({
       headless: false,
@@ -50,12 +46,12 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
       // Navigate to site
       await page.goto(`https://${domain}`)
       
-      page.evaluateOnNewDocument(perfTracker.logResources({srcs, logTypes:['image', 'xhr', 'script', 'stylesheet', 'fetch']}))
-      await pause({func: () => perfTracker.logPerformanceEntries(), delay: 5000})
+      page.evaluateOnNewDocument(perfTracker.logResources({logTypes:['image', 'xhr', 'script', 'stylesheet', 'fetch']}))
+      await perfTracker.logPerformanceEntries()
   } catch(e) {
     console.log(e)
   } finally {
-    // await browser.close()
+    await browser.close()
     if(perfTracker) {
       await perfTracker.printSummary()
       const { summary, details } = perfTracker.getReport()

@@ -1,4 +1,4 @@
-import { pause } from './test-utils.js'
+import { pause, getDomainFromURL } from './test-utils.js'
 
 describe('pause function', () => {
 
@@ -36,4 +36,10 @@ describe('pause function', () => {
     await expect(pauses[1]).toEqual('pause 2')
     await expect(pauses[2]).toEqual('pause 3')
   })
+})
+
+describe('getDomainFromURL function', () => {
+  let url = 'https://ifieldnotes.org/sustainability?qs=qsvalue'
+  let domain = getDomainFromURL({url})
+  expect(domain).toEqual('ifieldnotes.org')
 })

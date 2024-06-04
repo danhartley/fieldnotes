@@ -1,4 +1,5 @@
 import { hosting, co2, averageIntensity, marginalIntensity } from "@tgwf/co2"
+import { getDomainFromURL } from './test-utils.js'
 
 // See https://sustainablewebdesign.org/estimating-digital-emissions/ for @tgwf/co2
 // See https://github.com/addyosmani/puppeteer-webperf
@@ -173,7 +174,7 @@ export class PerformanceTracker {
     }
   }
 
-  async logResources({methods = ['GET', 'POST'], srcs = [], logTypes = ['image', 'xhr', 'script'], logStatuses = [200]}) {
+  async logResources({methods = ['GET', 'POST'], logTypes = ['image', 'xhr', 'script'], logStatuses = [200]}) {
     if(!this.#options.includeThirdPartyResources) return // exclude third party resources
     
     this.#page.on('response', async (response) => {
@@ -183,7 +184,7 @@ export class PerformanceTracker {
 
       // Check resource is one we want to measure
       const isValidMethod = methods.includes(response.request().method())
-      const isValidSrc = srcs.length ? srcs.some(src => url.includes(src)) : true
+      const isValidSrc = getDomainFromURL({url}) !== this.#options.domain
       const isValidStatus = logStatuses.length ? logStatuses.includes(response.status()) : true
       const isValidType = logTypes.length ? logTypes.includes(resourceType) : true
       const isValidResource = isValidMethod && isValidSrc && isValidType && isValidStatus

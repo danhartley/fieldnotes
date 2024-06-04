@@ -71,3 +71,8 @@ export const sortBy = ({arr, prop, dir = 'asc'}) => {
         return y - x
       })
 }
+
+export const getDomainFromURL = ({url}) => {
+  const domain = url.match(/^(?:https?:\/\/)?([\w-]+(\.[\w-]+)+)/)[1]
+  return domain
+}
