@@ -46,6 +46,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
             // , markDOMLoaded: 'DOM loaded'
             , markStart: 'fetch-field-notes: start'
             , markEnd: 'fetch-field-notes: end'
+            , verbose: true
         }
       , byteOptions
       , visitOptions

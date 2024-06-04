@@ -1,6 +1,7 @@
 import { hosting, co2, averageIntensity, marginalIntensity } from "@tgwf/co2"
 
 // See https://sustainablewebdesign.org/estimating-digital-emissions/ for @tgwf/co2
+// See https://github.com/addyosmani/puppeteer-webperf
 
 export class PerformanceTracker {
   // Private fields
@@ -159,17 +160,31 @@ export class PerformanceTracker {
     })
   }
 
+  async logPerformanceEntriesObserved() {
+   return () => {
+      new PerformanceObserver(async(list) => {
+        list.getEntries().forEach((item) => {
+          console.log(item)
+        })
+        this.#perfEntries = JSON.parse(
+          await this.#page.evaluate(() => JSON.stringify(list.getEntries()))
+        )
+      }).observe({type: 'resource', buffered: true})
+    }
+  }
+
   async logResources({methods = ['GET', 'POST'], srcs = [], logTypes = ['image', 'xhr', 'script'], logStatuses = [200]}) {
     if(!this.#options.includeThirdPartyResources) return // exclude third party resources
-    console.log(srcs)
+    
     this.#page.on('response', async (response) => {
-      console.log('response', response)
+      
       const url = response.request().url()
       const resourceType = response.request().resourceType()
 
       // Check resource is one we want to measure
       const isValidMethod = methods.includes(response.request().method())
-      const isValidSrc = srcs.length ? srcs.some(src => url.includes(src)) : true
+      const isValidSrc = url.indexOf(this.#options.domain) === -1
+      // const isValidSrc = srcs.length ? srcs.some(src => url.includes(src)) : true
       const isValidStatus = logStatuses.length ? logStatuses.includes(response.status()) : true
       const isValidType = logTypes.length ? logTypes.includes(resourceType) : true
       const isValidResource = isValidMethod && isValidSrc && isValidType && isValidStatus
