@@ -43,8 +43,14 @@ export class PerformanceTracker {
   static parseName(name) {
     const qs = name.indexOf('?')
     return qs > -1 
-      ? name.slice(0,qs + 1) // remove querystring parameters
+      ? name.slice(0,qs) // remove querystring parameters
       : name
+  }
+
+  static logOut({title, data}) {
+    console.log('\n')
+    console.warn(title)
+    console.table(data)
   }
   
   constructor({page, options, byteOptions, visitOptions}) {
@@ -77,17 +83,7 @@ export class PerformanceTracker {
       const co2Emission = new co2()
       this.#visitTrace = co2Emission.perVisitTrace(bytes, green, options)
     }
-  }
-
-  #log({title, data, logger}) {
-    console.log('\n')
-    console.warn(title)
-    console.table(data)
-
-    if(logger) {
-      // …
-    }
-  }
+  }  
 
   async #checkHosting({domain = '', verbose = true, identifier = ''}) {
     try {
@@ -116,15 +112,14 @@ export class PerformanceTracker {
     // Log entries with transfer size (that is greater than zero)
     const entryTypesProfiled = ['navigation', 'resource']
     const entryTypesNotProfiled = PerformanceTracker.entryTypes().filter(e => !entryTypesProfiled.includes(e))
-
     const entryNotProfiled = this.#perfEntries.filter(e => entryTypesNotProfiled.includes(e.entryType))
 
-    this.#log({
+    PerformanceTracker.logOut({
         title: 'Excluded entry types'
       , data: entryNotProfiled.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType } })
     })
 
-    this.#log({
+    PerformanceTracker.logOut({
         title: 'All'
       , data: this.#perfEntries.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType, initiatorType: e.initiatorType, entryType: e.entryType, transferSize: e.transferSize } })
     })
@@ -197,10 +192,9 @@ export class PerformanceTracker {
         if(this.#options?.reportGreenHosting) {
           delete this.#hosting.supporting_documents
           // Log green hosting
-          this.#log({
+          PerformanceTracker.logOut({
               title: 'Green reporting'
             , data: this.#hosting
-            , logger: this.#options.logger
           })
         }
       }
@@ -217,13 +211,12 @@ export class PerformanceTracker {
     const { data: miData, type: miType, year: miYear } = marginalIntensity
     
     // Log grid intensity
-    this.#log({
+    PerformanceTracker.logOut({
         title: 'Grid intensity in gCO2e per kWh'
       , data: [{
             coutryCode: this.#options.countryCode
           , gridIntensity: data[this.#options.countryCode]
         }]
-      , logger: this.#options.logger
     })
 
     // Calculate total emissions per byte 
@@ -232,13 +225,12 @@ export class PerformanceTracker {
     const emissionsPerByte = this.#emissionsPerByte * 1000// convert emissions to milligrams
 
     // Log per emissions per byte
-    this.#log({
+    PerformanceTracker.logOut({
         title: `Emissions per byte for ${kBs} kilobytes (Kbs)`
       , data: [{
             unit: 'mg/CO2'
           , emissions: Number(emissionsPerByte.toFixed(3))
         }]
-      , logger: this.#options.logger
     })
 
     // Save emissions per byte
@@ -258,10 +250,9 @@ export class PerformanceTracker {
     }) 
 
     // Log emissions per byte per sector
-    this.#log({
+    PerformanceTracker.logOut({
         title: `Emissions per byte per segment for ${kBs} kilobytes (kBs)`
       , data: perByteData
-      , logger: this.#options.logger
     })
 
     // Calculate emissions per visit
@@ -270,13 +261,12 @@ export class PerformanceTracker {
     const emissionsPerVisit = this.#emissionsPerVisit * 1000 // convert emissions to milligrams
 
     // Log emissions per visit
-    this.#log({
+    PerformanceTracker.logOut({
         title: `Emissions per visit in mg/CO2 for ${kBs} kilobytes (kBs)`
       , data: [{
             unit: 'mg/CO2'
           , emissions: Number(emissionsPerVisit.toFixed(3))
         }]
-      , logger: this.#options.logger
     })
 
     // Save emissions per visit
@@ -296,10 +286,9 @@ export class PerformanceTracker {
       }
     }) 
 
-    this.#log({
+    PerformanceTracker.logOut({
         title: `Emissions per visit per segment for ${kBs} kilobytes (kBs)`
       , data: perVisitData
-      , logger: this.#options.logger
     })
 
     // Calculate emissions per byte trace
@@ -312,10 +301,9 @@ export class PerformanceTracker {
       })
 
       // Log emissions per byte trace
-      this.#log({
+      PerformanceTracker.logOut({
           title: 'Byte trace: grid intensity in g/kWh'
         , data: this.#byteTrace.variables.gridIntensity
-        , logger: this.#options.logger
       })
     }
 
@@ -329,10 +317,9 @@ export class PerformanceTracker {
       })
 
       // Log emissions per visit trace
-      this.#log({
+      PerformanceTracker.logOut({
           title: 'Visit trace: grid intensity in g/kWh'
         , data: this.#visitTrace.variables.gridIntensity
-        , logger: this.#options.logger
       })
     }
     
@@ -421,18 +408,16 @@ export class PerformanceTracker {
         }) 
         : this.#transferSizeItems
 
-      this.#log({
+      PerformanceTracker.logOut({
           title: 'Transfer size by item'
         , data
-        , logger: this.#options.logger
       })
     }
 
     // Log utility
-    this.#log({
+    PerformanceTracker.logOut({
         title: 'Summary'
       , data: this.#summary
-      , logger: this.#options.logger
     })
   }
 }

@@ -41,23 +41,6 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
           , direction: 'desc'
         }
         , markDOMLoaded: 'DOM loaded'
-        , display: {
-              entryTypesToProfile: ['navigation', 'resource']
-            , displayRules: [
-              {
-                  type: 'excludedEntryTypes'
-                , title: 'Excluded performance entry types'
-                , log: false
-                , show: false
-              },
-              {
-                  type: 'excludedEntryTypes'
-                , title: 'Excluded performance entry types'
-                , log: false
-                , show: false
-              },
-            ]
-        }        
       }
       , byteOptions
       , visitOptions
