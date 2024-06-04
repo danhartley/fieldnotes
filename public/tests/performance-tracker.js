@@ -174,46 +174,50 @@ export class PerformanceTracker {
     }
   }
 
-  async logResources({methods = ['GET', 'POST'], logTypes = ['image', 'xhr', 'script'], logStatuses = [200]}) {
-    if(!this.#options.includeThirdPartyResources) return // exclude third party resources
-    
-    this.#page.on('response', async (response) => {
+  async logResources() {
+    if(this.#options.includeThirdPartyResources) {
+      const methods = ['GET', 'POST']
+      const logTypes = ['image', 'xhr', 'script']
+      const logStatuses = [200]
       
-      const url = response.request().url()
-      const resourceType = response.request().resourceType()
+      this.#page.on('response', async (response) => {
+        
+        const url = response.request().url()
+        const resourceType = response.request().resourceType()
 
-      // Check resource is one we want to measure
-      const isValidMethod = methods.includes(response.request().method())
-      const isValidSrc = getDomainFromURL({url}) !== this.#options.domain
-      const isValidStatus = logStatuses.length ? logStatuses.includes(response.status()) : true
-      const isValidType = logTypes.length ? logTypes.includes(resourceType) : true
-      const isValidResource = isValidMethod && isValidSrc && isValidType && isValidStatus
+        // Check resource is one we want to measure
+        const isValidMethod = methods.includes(response.request().method())
+        const isValidSrc = getDomainFromURL({url}) !== this.#options.domain
+        const isValidStatus = logStatuses.length ? logStatuses.includes(response.status()) : true
+        const isValidType = logTypes.length ? logTypes.includes(resourceType) : true
+        const isValidResource = isValidMethod && isValidSrc && isValidType && isValidStatus
 
-      if(!isValidResource) return
+        if(!isValidResource) return
 
-      switch(resourceType) {
-        case 'image':
-        case 'xhr':
-        case 'script':
-          try {
-            const buffer = await response.buffer()
-            console.log({
-                name: url
-              , entryType: resourceType
-              , transferSizeInBytes: buffer.length
-            })
-            this.#transferSizeItems.push({
-                name: url
-              , entryType: resourceType
-              , transferSizeInBytes: buffer.length
-            })
-          } catch (e) {
-            console.log(e)
-            console.log('resourceType: ', resourceType)
-          }
-        break
-      }   
-    })
+        switch(resourceType) {
+          case 'image':
+          case 'xhr':
+          case 'script':
+            try {
+              const buffer = await response.buffer()
+              console.log({
+                  name: url
+                , entryType: resourceType
+                , transferSizeInBytes: buffer.length
+              })
+              this.#transferSizeItems.push({
+                  name: url
+                , entryType: resourceType
+                , transferSizeInBytes: buffer.length
+              })
+            } catch (e) {
+              console.log(e)
+              console.log('resourceType: ', resourceType)
+            }
+          break
+        }   
+      })
+    }
   }
 
   async printSummary() {
@@ -491,7 +495,10 @@ export class PerformanceTracker {
     })
   }
 
-  getReport() {
+  async getReport() {
+    await this.#page.evaluateOnNewDocument(this.logResources())
+    await this.logPerformanceEntries()
+    await this.printSummary()
     return {
         summary: this.#summary
       , details: this.#details

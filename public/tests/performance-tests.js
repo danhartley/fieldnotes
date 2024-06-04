@@ -36,8 +36,7 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
                 sortBy
               , direction: 'desc'
             }
-            // , markDOMLoaded: 'DOM loaded'
-            , verbose: true
+            , verbose: false
           }
           , byteOptions
           , visitOptions
@@ -46,18 +45,12 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
       // Navigate to site
       await page.goto(`https://${domain}`)
       
-      page.evaluateOnNewDocument(perfTracker.logResources({logTypes:['image', 'xhr', 'script', 'stylesheet', 'fetch']}))
-      await perfTracker.logPerformanceEntries()
+      const { summary, details } = await perfTracker.getReport()      
+      console.log('summary', summary)
   } catch(e) {
     console.log(e)
   } finally {
     await browser.close()
-    if(perfTracker) {
-      await perfTracker.printSummary()
-      const { summary, details } = perfTracker.getReport()
-      // console.log('summary', summary)
-      // console.log('details', details)
-    }
   }
 }
 
