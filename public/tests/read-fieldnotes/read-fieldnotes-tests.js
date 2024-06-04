@@ -43,7 +43,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
                 sortBy
                 , direction: 'desc'
               }
-            , markDOMLoaded: 'DOM loaded'
+            // , markDOMLoaded: 'DOM loaded'
             , markStart: 'fetch-field-notes: start'
             , markEnd: 'fetch-field-notes: end'
         }
@@ -90,9 +90,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
         await browser.close()
       } , DELAY_FOR_TITLES)
       
-      perfTracker.printSummary({
-          printTransferSizes: true
-      })
+      perfTracker.printSummary()
   }
 }
 

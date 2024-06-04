@@ -5,7 +5,7 @@ import { PerformanceTracker } from './performance-tracker.js'
 
 const testSite = async ({byteOptions = null, visitOptions = null}) => {
 
-  let srcs
+  let perfTracker, srcs, delay = 5000
 
   // Check node argument in the command line for domain
   const domain = process.argv.find(arg => arg.includes('domain'))?.split('=')[1]
@@ -24,36 +24,49 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
 
   // Set the viewport dimensions
   await page.setViewport({ width: 1280, height: 1024 })
-
-  // Navigate to site
-  await page.goto(`https://${domain}`)
-
-  // Create instance of performance tracker 
-  const perfTracker = new PerformanceTracker({
-      page
-    , options: {
-          domain
-        , reportGreenHosting: true
-        , countryCode: 'PRT'
-        , includeThirdPartyResources: true
-        , sort: {
-            sortBy
-          , direction: 'desc'
+  
+  try {
+    // Navigate to site
+    await page.goto(`https://${domain}`)
+  
+    // Create instance of performance tracker 
+    perfTracker = new PerformanceTracker({
+        page
+      , options: {
+            domain
+          , reportGreenHosting: true
+          , countryCode: 'PRT'
+          , includeThirdPartyResources: true
+          , sort: {
+              sortBy
+            , direction: 'desc'
+          }
+          // , markDOMLoaded: 'DOM loaded'
+          , verbose: true
         }
-        , markDOMLoaded: 'DOM loaded'
-      }
-      , byteOptions
-      , visitOptions
-  })
+        , byteOptions
+        , visitOptions
+    })
+
+  } catch(e) {
+    console.log('Please check the domain name you supplied as an argument. Tip: you don\'t need to provide the (http/s) protocol.')
+  }
 
   try {
-    await perfTracker.logResources({srcs, logTypes:['image', 'xhr', 'script', 'stylesheet', 'fetch']})
-    await pause({func: () => perfTracker.logPerformanceEntries(), delay: 5000})
+    if(perfTracker) {
+      await perfTracker.logResources({srcs, logTypes:['image', 'xhr', 'script', 'stylesheet', 'fetch']})
+      await pause({func: () => perfTracker.logPerformanceEntries(), delay})
+    }
   } catch(e) {
     console.log(e)
   } finally {
     await browser.close()
-    perfTracker.printSummary({printTransferSizes: true})
+    if(perfTracker) {
+      await perfTracker.printSummary()
+      const { summary, details } = perfTracker.getReport()
+      // console.log('summary', summary)
+      // console.log('details', details)
+    }
   }
 }
 

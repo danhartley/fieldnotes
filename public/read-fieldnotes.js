@@ -149,7 +149,7 @@ const init = async () => {
             if(!endOfRowCard) {
                 const cardCount = grid.querySelectorAll('div > img').length
                 const cardDiff = endOfRowIndex - cardCount
-                for(let j = 1 j <= cardDiff j++) {
+                for(let j = 1; j <= cardDiff; j++) {
                     const div = d.createElement('div')
                     div.setAttribute('data-i', cardCount + j)
                     grid.appendChild(div)

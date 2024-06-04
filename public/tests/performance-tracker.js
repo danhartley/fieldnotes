@@ -9,7 +9,6 @@ export class PerformanceTracker {
   #byteOptions = {}
   #visitOptions = {}
   #transferSizeItems = []
-  #summary = []
   #timeToRender = {}    
   #emissionsPerByte = null
   #emissionsPerVisit = null
@@ -17,6 +16,8 @@ export class PerformanceTracker {
   #visitTrace = null
   #hosting = {}
   #perfEntries
+  #summary = []
+  #details = []
 
   // Static fields
   static #entryTypes = [
@@ -35,15 +36,28 @@ export class PerformanceTracker {
     "visibility-state" 
   ]
 
+  static #entryTypesProfiled = ['navigation', 'resource']
+
   // Static methods
   static entryTypes() {
     return PerformanceTracker.#entryTypes
+  }
+
+  static entryTypesProfiled() {
+    return PerformanceTracker.#entryTypesProfiled
   }
 
   static parseName(name) {
     const qs = name.indexOf('?')
     return qs > -1 
       ? name.slice(0,qs) // remove querystring parameters
+      : name
+  }
+
+  static parseDomain(name) {
+    const pretty = name.indexOf('/')
+    return pretty > -1 
+      ? name.slice(0,pretty) // remove pretty parameters
       : name
   }
 
@@ -109,20 +123,23 @@ export class PerformanceTracker {
       await this.#page.evaluate(() => JSON.stringify(performance.getEntries()))
     )
   
-    // Log entries with transfer size (that is greater than zero)
-    const entryTypesProfiled = ['navigation', 'resource']
-    const entryTypesNotProfiled = PerformanceTracker.entryTypes().filter(e => !entryTypesProfiled.includes(e))
+    // Log entries with transfer size (that is greater than zero)    
+    const entryTypesNotProfiled = PerformanceTracker.entryTypes().filter(e => !PerformanceTracker.entryTypesProfiled().includes(e))
     const entryNotProfiled = this.#perfEntries.filter(e => entryTypesNotProfiled.includes(e.entryType))
 
-    PerformanceTracker.logOut({
-        title: 'Excluded entry types'
-      , data: entryNotProfiled.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType } })
-    })
+    if(this.#options.verbose) {
+      PerformanceTracker.logOut({
+          title: 'Excluded performance entry types'
+        , data: entryNotProfiled.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType } })
+      })
+    }
 
-    PerformanceTracker.logOut({
-        title: 'All'
-      , data: this.#perfEntries.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType, initiatorType: e.initiatorType, entryType: e.entryType, transferSize: e.transferSize } })
-    })
+    if(this.#options.verbose) {
+      PerformanceTracker.logOut({
+          title: 'Performance entries'
+        , data: this.#perfEntries.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType, initiatorType: e.initiatorType, entryType: e.entryType, transferSize: e.transferSize } })
+      })
+    }
 
     this.#perfEntries.forEach(entry => {
       if(entry.transferSize > 0) {
@@ -134,13 +151,19 @@ export class PerformanceTracker {
           })
       }
     })
+
+    // Save number of requests
+    this.#summary.push({
+        metric: 'Number of requests: of type navigation or resource'
+      , value: this.#perfEntries.filter(e => PerformanceTracker.entryTypesProfiled().includes(e.entryType)).length
+    })
   }
 
-  async logResources({methods = ['GET', 'POST'], srcs = [], logTypes = ['image'], logStatuses = [200]}) {
+  async logResources({methods = ['GET', 'POST'], srcs = [], logTypes = ['image', 'xhr', 'script'], logStatuses = [200]}) {
     if(!this.#options.includeThirdPartyResources) return // exclude third party resources
-
+    console.log(srcs)
     this.#page.on('response', async (response) => {
-
+      console.log('response', response)
       const url = response.request().url()
       const resourceType = response.request().resourceType()
 
@@ -158,8 +181,13 @@ export class PerformanceTracker {
         case 'xhr':
         case 'script':
           try {
-          const buffer = await response.buffer()
-          this.#transferSizeItems.push({
+            const buffer = await response.buffer()
+            console.log({
+                name: url
+              , entryType: resourceType
+              , transferSizeInBytes: buffer.length
+            })
+            this.#transferSizeItems.push({
                 name: url
               , entryType: resourceType
               , transferSizeInBytes: buffer.length
@@ -173,13 +201,13 @@ export class PerformanceTracker {
     })
   }
 
-  async printSummary({printTransferSizes = false}) {
+  async printSummary() {
 
     // Calculate green hosting
     try {
       if(this.#options.domain) {
         await this.#checkHosting({ 
-            domain: this.#options.domain
+            domain: PerformanceTracker.parseDomain(this.#options.domain)
           , identifier: this.#options.domain
         })
 
@@ -191,11 +219,19 @@ export class PerformanceTracker {
         
         if(this.#options?.reportGreenHosting) {
           delete this.#hosting.supporting_documents
-          // Log green hosting
-          PerformanceTracker.logOut({
+          
+          const data = {
               title: 'Green reporting'
             , data: this.#hosting
-          })
+          }
+
+          if(this.#options.verbose) {
+            // Log green hosting
+            PerformanceTracker.logOut(data)
+          }
+
+          // Save green hosting details
+          this.#details.push(data)
         }
       }
     } catch(e) {
@@ -209,34 +245,52 @@ export class PerformanceTracker {
     // Get country specific grid intensities
     const { data, type, year } = averageIntensity
     const { data: miData, type: miType, year: miYear } = marginalIntensity
-    
-    // Log grid intensity
-    PerformanceTracker.logOut({
+
+    const gridData = {
         title: 'Grid intensity in gCO2e per kWh'
       , data: [{
-            coutryCode: this.#options.countryCode
-          , gridIntensity: data[this.#options.countryCode]
-        }]
+          coutryCode: this.#options.countryCode
+        , gridIntensity: data[this.#options.countryCode]
+      }]
+    }    
+
+    if(this.#options.verbose) {
+      // Log grid intensity
+      PerformanceTracker.logOut(gridData)
+    }
+
+    // Save grid intensity for country code
+    this.#details.push(gridData)
+
+    // Save grid intensity
+    this.#summary.push({
+        metric: 'Grid intensity in gCO2e per kWh'
+      , value: gridData.data[0].gridIntensity
     })
 
     // Calculate total emissions per byte 
     this.#logPerByte({bytes, bySegment: false})
 
-    const emissionsPerByte = this.#emissionsPerByte * 1000// convert emissions to milligrams
-
-    // Log per emissions per byte
-    PerformanceTracker.logOut({
-        title: `Emissions per byte for ${kBs} kilobytes (Kbs)`
-      , data: [{
-            unit: 'mg/CO2'
-          , emissions: Number(emissionsPerByte.toFixed(3))
-        }]
-    })
+    if(this.#options.verbose) {
+      // Log per emissions per byte
+      PerformanceTracker.logOut({
+          title: `Emissions per byte for ${kBs} kilobytes (Kbs)`
+        , data: [{
+              unit: 'mg/CO2'
+            , emissions: Number((this.#emissionsPerByte * 1000).toFixed(3))
+          }]
+      })
+    }
 
     // Save emissions per byte
     this.#summary.push({
         metric: 'Emissions per byte in mg/CO2'
-      , value: Number(emissionsPerByte.toFixed(3))
+      , value: Number((this.#emissionsPerByte * 1000).toFixed(3))
+    })
+
+    this.#summary.push({
+        metric: 'Emissions per byte in g/CO2'
+      , value: Number(this.#emissionsPerByte.toFixed(3))
     })
 
     // Calculate per emissions per byte per sector
@@ -249,30 +303,42 @@ export class PerformanceTracker {
       }
     }) 
 
-    // Log emissions per byte per sector
-    PerformanceTracker.logOut({
+    const byteData = {
         title: `Emissions per byte per segment for ${kBs} kilobytes (kBs)`
       , data: perByteData
-    })
+    }
+
+    if(this.#options.verbose) {
+      // Log emissions per byte per sector
+      PerformanceTracker.logOut(byteData)
+    }
+
+    // Save emissions per byte per sector
+    this.#details.push(byteData)
 
     // Calculate emissions per visit
     this.#logPerVisit({bytes, bySegment: false})
 
-    const emissionsPerVisit = this.#emissionsPerVisit * 1000 // convert emissions to milligrams
-
-    // Log emissions per visit
-    PerformanceTracker.logOut({
-        title: `Emissions per visit in mg/CO2 for ${kBs} kilobytes (kBs)`
-      , data: [{
-            unit: 'mg/CO2'
-          , emissions: Number(emissionsPerVisit.toFixed(3))
-        }]
-    })
-
+    if(this.#options.verbose) {
+      // Log emissions per visit
+      PerformanceTracker.logOut({
+          title: `Emissions per visit in mg/CO2 for ${kBs} kilobytes (kBs)`
+        , data: [{
+              unit: 'mg/CO2'
+            , emissions: Number((this.#emissionsPerVisit * 1000).toFixed(3))
+          }]
+      })
+    }
+    
     // Save emissions per visit
     this.#summary.push({
         metric: 'Emissions per visit in mg/CO2'
-      , value: Number(emissionsPerVisit.toFixed(3))
+      , value: Number((this.#emissionsPerVisit * 1000).toFixed(3))
+    })
+
+    this.#summary.push({
+        metric: 'Emissions per visit in g/CO2'
+      , value: Number((this.#emissionsPerVisit).toFixed(3))
     })
 
     // Calculate emissions per visit per sector
@@ -286,10 +352,18 @@ export class PerformanceTracker {
       }
     }) 
 
-    PerformanceTracker.logOut({
+    const visitData = {
         title: `Emissions per visit per segment for ${kBs} kilobytes (kBs)`
       , data: perVisitData
-    })
+    }
+
+    if(this.#options.verbose) {
+      //Log emissions per visit per sector
+      PerformanceTracker.logOut(visitData)
+    }
+
+    // Save emissions per visit per sector
+    this.#details.push(visitData)
 
     // Calculate emissions per byte trace
     if(this.#byteOptions) {
@@ -322,16 +396,10 @@ export class PerformanceTracker {
         , data: this.#visitTrace.variables.gridIntensity
       })
     }
-    
-    // Save include third party resources
-    this.#summary.push({
-      metric: 'Include third party resources'
-    , value: this.#options.includeThirdPartyResources
-    })
 
     // Save total bytes transferred
     this.#summary.push({
-      metric: 'Total transfer size in kilobytes (kBs)'
+      metric: 'Kbs transferred'
     , value: kBs
     })
 
@@ -353,22 +421,6 @@ export class PerformanceTracker {
         })
     }
 
-    // Calculate page load time
-    const load = Number((this.#perfEntries.findLast(e => e.entryType === 'resource').responseEnd / 1000).toFixed(2))
-    this.#summary.push({
-        metric: 'Time till final resource is ready (s)'
-      , value: load
-    })
-
-    if(this.#options.markDOMLoaded?.length) {
-      const timeToLoad = (performance.mark(this.#options.markDOMLoaded)?.startTime || 0) / 1000
-        // Save time to load (recorded via mark set manually)
-        this.#summary.push({
-          metric: 'Time till DOM loaded mark (s)'
-        , value: Number(timeToLoad.toFixed(3))
-      })
-    }
-
     // Calculate page timings from location
     const locations = [
         `https://www.${this.#options.domain}/`
@@ -377,29 +429,32 @@ export class PerformanceTracker {
     const pageTiming = this.#perfEntries.find(e => locations.includes(e.name))
     
     if(pageTiming) {
-      const pageDownload = pageTiming.duration / 1000
-      const pageDomReady = pageTiming.domContentLoadedEventStart / 1000
-      const pageInteractive = pageTiming.loadEventEnd / 1000
+      const pageTimingName = pageTiming.name
+      const pageDOMContentLoadedEventEnd = pageTiming.domContentLoadedEventEnd 
+      const pageTimingDuration = pageTiming.duration
   
       // Save page timings
       this.#summary.push({
-          metric: 'Page time to download (s)'
-        , value: Number(pageDownload.toFixed(3))
+          metric: 'Website name'
+        , value: pageTimingName
       })
-  
+
       this.#summary.push({
-          metric: 'Page time till DOM ready (s)'
-        , value: Number(pageDomReady.toFixed(3))
+          metric: 'DOMContentLoaded in ms'
+        , value: Math.round(pageDOMContentLoadedEventEnd)
       })
-  
+
       this.#summary.push({
-          metric: 'Page time till page interactive (s)'
-        , value: Number(pageInteractive.toFixed(3))
+          metric: 'Load: duration in ms'
+        , value: Math.round(pageTimingDuration)
       })
+    } else {
+      console.log('\n')
+      console.log('** Please check the domain name you supplied as an argument. **')
     }
     
-    // Print bytes per request
-    if(printTransferSizes) {
+    if(this.#options.verbose) {
+      // Print bytes per request
       const data = this.#options?.sort?.sortBy
         ? this.#options.sort.sortBy({
               arr: this.#transferSizeItems
@@ -412,12 +467,19 @@ export class PerformanceTracker {
           title: 'Transfer size by item'
         , data
       })
-    }
+    }    
 
     // Log utility
     PerformanceTracker.logOut({
         title: 'Summary'
       , data: this.#summary
     })
+  }
+
+  getReport() {
+    return {
+        summary: this.#summary
+      , details: this.#details
+    }
   }
 }
