@@ -35,15 +35,23 @@ export class PerformanceTracker {
     "visibility-state" 
   ]
 
+  // Static methods
   static entryTypes() {
     return PerformanceTracker.#entryTypes
+  }
+
+  static parseName(name) {
+    const qs = name.indexOf('?')
+    return qs > -1 
+      ? name.slice(0,qs + 1) // remove querystring parameters
+      : name
   }
   
   constructor({page, options, byteOptions, visitOptions}) {
     this.#page = page
     this.#options = options
     this.#byteOptions = byteOptions
-    this.#visitOptions = visitOptions
+    this.#visitOptions = visitOptions    
   }
 
   // Private methods
@@ -100,57 +108,37 @@ export class PerformanceTracker {
   }
 
   // Public methods
-  async logPerformanceEntries({comments}) {
-    const perfEntries = JSON.parse(
+  async logPerformanceEntries() {
+    this.#perfEntries = JSON.parse(
       await this.#page.evaluate(() => JSON.stringify(performance.getEntries()))
     )
-
-    const parseName = name => {
-      const qs = name.indexOf('?')
-      return qs > -1 
-        ? name.slice(0,qs + 1) // remove querystring parameters
-        : name
-    }
   
     // Log entries with transfer size (that is greater than zero)
     const entryTypesProfiled = ['navigation', 'resource']
     const entryTypesNotProfiled = PerformanceTracker.entryTypes().filter(e => !entryTypesProfiled.includes(e))
 
-    const entryNotProfiled = perfEntries.filter(e => entryTypesNotProfiled.includes(e.entryType))
+    const entryNotProfiled = this.#perfEntries.filter(e => entryTypesNotProfiled.includes(e.entryType))
 
     this.#log({
         title: 'Excluded entry types'
-      , data: entryNotProfiled.map(e => { return { name: parseName(e.name), entryType: e.entryType } })
+      , data: entryNotProfiled.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType } })
     })
 
     this.#log({
         title: 'All'
-      , data: perfEntries.map(e => { return { name: parseName(e.name), entryType: e.entryType, initiatorType: e.initiatorType, entryType: e.entryType, transferSize: e.transferSize } })
+      , data: this.#perfEntries.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType, initiatorType: e.initiatorType, entryType: e.entryType, transferSize: e.transferSize } })
     })
 
-    perfEntries.forEach(entry => {
+    this.#perfEntries.forEach(entry => {
       if(entry.transferSize > 0) {
-        if(comments) {
           this.#transferSizeItems.push({
-              name: parseName(entry.name)
-            , entryType: entry.entryType
-            , initiatorType: entry.initiatorType
-            , transferSizeInBytes: entry.transferSize
-            , duration: entry.duration
-            , comments
-          })
-        } else {
-          this.#transferSizeItems.push({
-              name: parseName(entry.name)
+              name: PerformanceTracker.parseName(entry.name)
             , entryType: entry.entryType
             , initiatorType: entry.initiatorType
             , transferSizeInBytes: entry.transferSize
           })
-        }
       }
     })
-
-    this.#perfEntries = perfEntries
   }
 
   async logResources({methods = ['GET', 'POST'], srcs = [], logTypes = ['image'], logStatuses = [200]}) {

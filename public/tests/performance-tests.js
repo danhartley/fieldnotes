@@ -65,7 +65,7 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
 
   try {
     await perfTracker.logResources({srcs, logTypes:['image', 'xhr', 'script', 'stylesheet', 'fetch']})
-    await pause({func: () => perfTracker.logPerformanceEntries({comments: null}), delay: 5000})
+    await pause({func: () => perfTracker.logPerformanceEntries(), delay: 5000})
   } catch(e) {
     console.log(e)
   } finally {
