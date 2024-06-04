@@ -17,6 +17,27 @@ export class PerformanceTracker {
   #visitTrace = null
   #hosting = {}
   #perfEntries
+
+  // Static fields
+  static #entryTypes = [
+    "element",
+    "event",
+    "first-input",
+    "largest-contentful-paint",
+    "layout-shift",
+    "long-animation-frame",
+    "longtask",
+    "mark",
+    "measure",
+    "navigation",
+    "paint",
+    "resource",
+    "visibility-state" 
+  ]
+
+  static entryTypes() {
+    return PerformanceTracker.#entryTypes
+  }
   
   constructor({page, options, byteOptions, visitOptions}) {
     this.#page = page
@@ -92,13 +113,14 @@ export class PerformanceTracker {
     }
   
     // Log entries with transfer size (that is greater than zero)
-    const exclude = ['element', 'event', 'first-input', 'largest-contentful-paint', 'layout-shift', 'long-animation-frame', 'longtask', 'mark', 'measure', 'paint', 'taskattribution', 'visibility-state']
-    const include = ['navigation', 'resource']
-    const excluddEntryTypes = perfEntries.filter(e => exclude.includes(e.entryType))
+    const entryTypesProfiled = ['navigation', 'resource']
+    const entryTypesNotProfiled = PerformanceTracker.entryTypes().filter(e => !entryTypesProfiled.includes(e))
+
+    const entryNotProfiled = perfEntries.filter(e => entryTypesNotProfiled.includes(e.entryType))
 
     this.#log({
         title: 'Excluded entry types'
-      , data: excluddEntryTypes.map(e => { return { name: parseName(e.name), entryType: e.entryType } })
+      , data: entryNotProfiled.map(e => { return { name: parseName(e.name), entryType: e.entryType } })
     })
 
     this.#log({
@@ -129,13 +151,6 @@ export class PerformanceTracker {
     })
 
     this.#perfEntries = perfEntries
-
-    // Calculate page load time
-    const load = Number((perfEntries.findLast(e => e.entryType === 'resource').responseEnd / 1000).toFixed(2))
-    this.#summary.push({
-        metric: 'Page load time in seconds'
-      , value: load
-    })
   }
 
   async logResources({methods = ['GET', 'POST'], srcs = [], logTypes = ['image'], logStatuses = [200]}) {
@@ -363,11 +378,18 @@ export class PerformanceTracker {
         })
     }
 
+    // Calculate page load time
+    const load = Number((this.#perfEntries.findLast(e => e.entryType === 'resource').responseEnd / 1000).toFixed(2))
+    this.#summary.push({
+        metric: 'Time till final resource is ready (s)'
+      , value: load
+    })
+
     if(this.#options.markDOMLoaded?.length) {
       const timeToLoad = (performance.mark(this.#options.markDOMLoaded)?.startTime || 0) / 1000
-        // Save time to load (recorded manually)
+        // Save time to load (recorded via mark set manually)
         this.#summary.push({
-          metric: 'Time to load in seconds (manual)'
+          metric: 'Time till DOM loaded mark (s)'
         , value: Number(timeToLoad.toFixed(3))
       })
     }
@@ -382,22 +404,22 @@ export class PerformanceTracker {
     if(pageTiming) {
       const pageDownload = pageTiming.duration / 1000
       const pageDomReady = pageTiming.domContentLoadedEventStart / 1000
-      const pageFullyReady = pageTiming.loadEventEnd / 1000
+      const pageInteractive = pageTiming.loadEventEnd / 1000
   
       // Save page timings
       this.#summary.push({
-          metric: 'Page download time'
+          metric: 'Page time to download (s)'
         , value: Number(pageDownload.toFixed(3))
       })
   
       this.#summary.push({
-          metric: 'Time to DOM ready'
+          metric: 'Page time till DOM ready (s)'
         , value: Number(pageDomReady.toFixed(3))
       })
   
       this.#summary.push({
-          metric: 'Time to page fully ready'
-        , value: Number(pageFullyReady.toFixed(3))
+          metric: 'Page time till page interactive (s)'
+        , value: Number(pageInteractive.toFixed(3))
       })
     }
     
