@@ -5,28 +5,27 @@ import { PerformanceTracker } from './performance-tracker.js'
 
 const testSite = async ({byteOptions = null, visitOptions = null}) => {
 
-  let perfTracker, wait = 0, domain, verbose = false
+  let perfTracker, url, domain, verbose = false
 
   const verboseArgs = ['-v', '--verbose']
-  const domainArgs = ['-d', '--domain']
+  const urlArgs = ['-u', '--url']
 
   process.argv.forEach((val, index) => { 
       if(verboseArgs.includes(val)) verbose = true
-      if(domainArgs.includes(val)) {
+      if(urlArgs.includes(val)) {
         const nextArg = index + 1
         if(nextArg < process.argv.length) {
-          domain = getDomainFromURL({
-            url: process.argv[nextArg]
-          })
+          url = process.argv[nextArg]
+          domain = getDomainFromURL({url})
         }
       }
   })
 
   if(!domain) {
     console.log('Please check your command line flags:')
-    console.log('Correct: -d {domain} {domain name} -v {verbose}')
-    console.log('Correct: --domain {domain} {domain name} --verbose {verbose}')
-    console.log('Incorrect: -domain {domain} {domain name} --v {verbose}')
+    console.log('Correct: -u {url value} -v {verbose}')
+    console.log('Correct: --url {url value} --verbose {verbose}')
+    console.log('Incorrect: -url {url value} --v {verbose}')
     return
   }
 
@@ -61,7 +60,7 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
       })
 
       // Navigate to site
-      await page.goto(`https://${domain}`)
+      await page.goto(url)
       
       // Get performance report
       await pause({
