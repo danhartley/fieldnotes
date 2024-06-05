@@ -299,6 +299,7 @@ const init = () => {
           , dataList: fnAutocompleteTitleDatalist
           , global: globalWrite
           , fetchFieldnotesBtn
+          , window
         })({ user: globalWrite.user })
 
         // Immediately hide save options
@@ -1479,6 +1480,7 @@ const init = () => {
         , dataList: fnAutocompleteTitleDatalist
         , global: globalWrite
         , fetchFieldnotesBtn
+        , window
       })    
     , isAuthenticatedSections: d.querySelectorAll('.is-authenticated')
   })

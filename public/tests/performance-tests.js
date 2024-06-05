@@ -1,17 +1,22 @@
 import puppeteer from 'puppeteer'
 
-import { getDomainFromURL, sortBy, pause } from './test-utils.js'
+import { getDomainFromURL, sortBy, pause, getLighthouseReport } from './test-utils.js'
 import { PerformanceTracker } from './performance-tracker.js'
+
+import lighthouse from 'lighthouse'
+import * as chromeLauncher from 'chrome-launcher'
 
 const testSite = async ({byteOptions = null, visitOptions = null}) => {
 
-  let perfTracker, url, domain, verbose = false
+  let perfTracker, url, domain, verbose = false, report, summary, runLighthouse = false
 
   const verboseArgs = ['-v', '--verbose']
   const urlArgs = ['-u', '--url']
+  const lighthouseArgs = ['-lh', '--lighthouse']
 
   process.argv.forEach((val, index) => { 
       if(verboseArgs.includes(val)) verbose = true
+      if(lighthouseArgs.includes(val)) runLighthouse = true
       if(urlArgs.includes(val)) {
         const nextArg = index + 1
         if(nextArg < process.argv.length) {
@@ -27,6 +32,17 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
     console.log('Correct: --url {url value} --verbose {verbose}')
     console.log('Incorrect: -url {url value} --v {verbose}')
     return
+  }
+
+  if(runLighthouse) {
+    const lhReport = await getLighthouseReport({
+        lighthouse
+      , chromeLauncher
+      , url
+    })
+
+    report = lhReport.report
+    summary = lhReport.summary
   }
 
   // Launch the browser
@@ -54,6 +70,7 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
               , direction: 'desc'
             }
             , verbose
+            , lighthouse: { log: runLighthouse, report, summary }          
           }
           , byteOptions
           , visitOptions
@@ -71,7 +88,7 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
   } catch(e) {
     console.log(e)
   } finally {
-    await browser.close()
+    // await browser.close()
   }
 }
 

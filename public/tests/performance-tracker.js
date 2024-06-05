@@ -138,16 +138,15 @@ export class PerformanceTracker {
     if(this.#options.verbose) {
       PerformanceTracker.logOut({
           title: 'Performance entries'
-        // , data: this.#perfEntries.map(e => { return { domain: getDomainFromURL({url:e.name}), entryType: e.entryType, initiatorType: e.initiatorType, entryType: e.entryType, transferSize: e.transferSize } })
         , data: this.#perfEntries.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType, initiatorType: e.initiatorType, entryType: e.entryType, transferSize: e.transferSize } })
       })
     }
 
     this.#perfEntries.forEach(entry => {
       if(PerformanceTracker.entryTypesProfiled().includes(entry.entryType)) {
+          console.log('call from perf entries')
           this.#entries.push({
               name: PerformanceTracker.parseName(entry.name)
-              // domain: getDomainFromURL({url:entry.name})
             , entryType: entry.entryType
             , initiatorType: entry.initiatorType
             , transferSizeInBytes: entry.transferSize
@@ -172,6 +171,7 @@ export class PerformanceTracker {
    return () => {
       new PerformanceObserver(async(list) => {
         list.getEntries().forEach((item) => {
+          console.log('call from observer')
           console.log(item)
         })
         this.#perfEntries = JSON.parse(
@@ -214,7 +214,6 @@ export class PerformanceTracker {
               })
               this.#entries.push({
                   name: url
-                  // domain: getDomainFromURL({url})
                 , entryType: resourceType
                 , transferSizeInBytes: buffer.length
               })
@@ -426,8 +425,8 @@ export class PerformanceTracker {
 
     // Save total bytes transferred
     this.#summary.push({
-      metric: 'Kbs transferred'
-    , value: kBs
+        metric: 'Resources transferred in kBs'
+      , value: kBs
     })
 
     // Calculate time to fetch data
@@ -490,20 +489,50 @@ export class PerformanceTracker {
           title: 'Transfer size by entry'
         , data
       })
-    }    
+    }
 
-    // Log utility
+    if(this.#options.lighthouse.log) {
+      this.#summary.push({
+          metric: 'Lighthouse total resource transfer size in kBs'
+        , value: Number((this.#options.lighthouse.summary.totalResourceTransferSize / 1000).toFixed(1))
+      })
+
+      this.#summary.push({
+          metric: 'Lighthouse DOM count'
+        , value: this.#options.lighthouse.summary.DOMSize
+      })
+    }
+
+    // Print summary
     PerformanceTracker.logOut({
         title: 'Summary'
       , data: this.#summary
     })
   }
 
+  async #printLighthouseSummary() {
+    if(this.#options.lighthouse.log)
+      PerformanceTracker.logOut({
+        title: 'Lighthouse summary report'
+      , data: [
+        {
+            DOMSize: this.#options.lighthouse.summary.DOMSize
+          , domContentLoaded: this.#options.lighthouse.summary.domContentLoaded
+          , totalThirdPartyResourceTransferSize: Number((this.#options.lighthouse.summary.thirdPartySummary.totalTransferSize / 1000).toFixed(1))
+          , totalResourceTransferSize: Number((this.#options.lighthouse.summary.totalResourceTransferSize / 1000).toFixed(1))
+          , totalByteWeight: Number((this.#options.lighthouse.summary.totalByteWeight / 1000).toFixed(1))
+        },
+      ]
+    })
+  }
+
   // Public methods
   async getReport() {
     await this.#page.evaluateOnNewDocument(this.#logResources())
+    await this.#page.evaluateOnNewDocument(this.#logPerformanceEntriesObserved())
     await this.#logPerformanceEntries()
     await this.#printSummary()
+    await this.#printLighthouseSummary()
     return {
         summary: this.#summary
       , details: this.#details
