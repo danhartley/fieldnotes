@@ -118,9 +118,8 @@ export class PerformanceTracker {
       console.log(e)
     }
   }
-
-  // Public methods
-  async logPerformanceEntries() {
+  
+  async #logPerformanceEntries() {
     this.#perfEntries = JSON.parse(
       await this.#page.evaluate(() => JSON.stringify(performance.getEntries()))
     )
@@ -161,7 +160,7 @@ export class PerformanceTracker {
     })
   }
 
-  async logPerformanceEntriesObserved() {
+  async #logPerformanceEntriesObserved() {
    return () => {
       new PerformanceObserver(async(list) => {
         list.getEntries().forEach((item) => {
@@ -174,7 +173,7 @@ export class PerformanceTracker {
     }
   }
 
-  async logResources() {
+  async #logResources() {
     if(this.#options.includeThirdPartyResources) {
       const methods = ['GET', 'POST']
       const logTypes = ['image', 'xhr', 'script']
@@ -220,7 +219,7 @@ export class PerformanceTracker {
     }
   }
 
-  async printSummary() {
+  async #printSummary() {
 
     // Calculate green hosting
     try {
@@ -491,10 +490,11 @@ export class PerformanceTracker {
     })
   }
 
+  // Public methods
   async getReport() {
-    await this.#page.evaluateOnNewDocument(this.logResources())
-    await this.logPerformanceEntries()
-    await this.printSummary()
+    await this.#page.evaluateOnNewDocument(this.#logResources())
+    await this.#logPerformanceEntries()
+    await this.#printSummary()
     return {
         summary: this.#summary
       , details: this.#details

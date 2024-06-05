@@ -41,7 +41,7 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
           , byteOptions
           , visitOptions
       })
-      
+
       // Navigate to site
       await page.goto(`https://${domain}`)
       
