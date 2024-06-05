@@ -45,8 +45,8 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
       // Navigate to site
       await page.goto(`https://${domain}`)
       
-      const { summary, details } = await perfTracker.getReport()      
-      console.log('summary', summary)
+      // Get performance report
+      await perfTracker.getReport()
   } catch(e) {
     console.log(e)
   } finally {

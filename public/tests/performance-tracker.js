@@ -440,12 +440,8 @@ export class PerformanceTracker {
         })
     }
 
-    // Calculate page timings from location
-    const locations = [
-        `https://www.${this.#options.domain}/`
-      , `https://${this.#options.domain}/`
-    ]
-    const pageTiming = this.#perfEntries.find(e => locations.includes(e.name))
+    // Calculate page timings from page
+    const pageTiming = this.#perfEntries.find(e => e.entryType === 'navigation')
     
     if(pageTiming) {
       const pageTimingName = pageTiming.name
