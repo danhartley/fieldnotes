@@ -39,7 +39,13 @@ describe('pause function', () => {
 })
 
 describe('getDomainFromURL function', () => {
-  let url = 'https://ifieldnotes.org/sustainability?qs=qsvalue'
-  let domain = getDomainFromURL({url})
-  expect(domain).toEqual('ifieldnotes.org')
+  let url1 = 'https://ifieldnotes.org/sustainability?qs=qsvalue'
+  let domain1 = getDomainFromURL({url:url1})
+  expect(domain1).toEqual('ifieldnotes.org')
+  let url2 = 'https://smth.uk/'
+  let domain2 = getDomainFromURL({url:url2})
+  expect(domain2).toEqual('smth.uk')
+  let url3 = 'bbcorp.fr  '
+  let domain3 = getDomainFromURL({url:url3})
+  expect(domain3).toEqual('bbcorp.fr')
 })

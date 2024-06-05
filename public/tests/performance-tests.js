@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer'
 
-import { pause, sortBy } from './test-utils.js'
+import { getDomainFromURL, sortBy } from './test-utils.js'
 import { PerformanceTracker } from './performance-tracker.js'
 
 const testSite = async ({byteOptions = null, visitOptions = null}) => {
@@ -8,7 +8,9 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
   let perfTracker, srcs, delay = 2000
 
   // Check node argument in the command line for domain
-  const domain = process.argv.find(arg => arg.includes('domain'))?.split('=')[1]
+  const domain = getDomainFromURL({
+    url: process.argv.find(arg => arg.includes('domain'))?.split('=')[1]
+  })
 
   if(!domain) return
 
