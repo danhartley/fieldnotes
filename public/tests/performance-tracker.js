@@ -10,7 +10,7 @@ export class PerformanceTracker {
   #options = {}
   #byteOptions = {}
   #visitOptions = {}
-  #transferSizeItems = []
+  #entries = []
   #timeToRender = {}    
   #emissionsPerByte = null
   #emissionsPerVisit = null
@@ -130,7 +130,7 @@ export class PerformanceTracker {
 
     if(this.#options.verbose) {
       PerformanceTracker.logOut({
-          title: 'Excluded performance entry types'
+          title: 'Excluded performance entries'
         , data: entryNotProfiled.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType } })
       })
     }
@@ -138,14 +138,16 @@ export class PerformanceTracker {
     if(this.#options.verbose) {
       PerformanceTracker.logOut({
           title: 'Performance entries'
+        // , data: this.#perfEntries.map(e => { return { domain: getDomainFromURL({url:e.name}), entryType: e.entryType, initiatorType: e.initiatorType, entryType: e.entryType, transferSize: e.transferSize } })
         , data: this.#perfEntries.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType, initiatorType: e.initiatorType, entryType: e.entryType, transferSize: e.transferSize } })
       })
     }
 
     this.#perfEntries.forEach(entry => {
-      if(entry.transferSize > 0) {
-          this.#transferSizeItems.push({
+      if(PerformanceTracker.entryTypesProfiled().includes(entry.entryType)) {
+          this.#entries.push({
               name: PerformanceTracker.parseName(entry.name)
+              // domain: getDomainFromURL({url:entry.name})
             , entryType: entry.entryType
             , initiatorType: entry.initiatorType
             , transferSizeInBytes: entry.transferSize
@@ -153,9 +155,15 @@ export class PerformanceTracker {
       }
     })
 
-    // Save number of requests
+    // Save number of total requests
     this.#summary.push({
-        metric: 'Number of requests: of type navigation or resource'
+        metric: 'Number of requests'
+      , value: this.#perfEntries.length
+    })
+
+    // Save number of navigation and resource requests
+    this.#summary.push({
+        metric: 'Number of type navigation or resource requests'
       , value: this.#perfEntries.filter(e => PerformanceTracker.entryTypesProfiled().includes(e.entryType)).length
     })
   }
@@ -204,8 +212,9 @@ export class PerformanceTracker {
                 , entryType: resourceType
                 , transferSizeInBytes: buffer.length
               })
-              this.#transferSizeItems.push({
+              this.#entries.push({
                   name: url
+                  // domain: getDomainFromURL({url})
                 , entryType: resourceType
                 , transferSizeInBytes: buffer.length
               })
@@ -257,7 +266,7 @@ export class PerformanceTracker {
     }
 
     // Calculate total bytes transferred
-    const bytes = this.#transferSizeItems.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
+    const bytes = this.#entries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
     const kBs = Number((bytes / 1000).toFixed(1)) // convert bytes to kbs
     
     // Get country specific grid intensities
@@ -471,14 +480,14 @@ export class PerformanceTracker {
       // Print bytes per request
       const data = this.#options?.sort?.sortBy
         ? this.#options.sort.sortBy({
-              arr: this.#transferSizeItems
+              arr: this.#entries
             , prop: 'transferSizeInBytes'
             , dir: this.#options.sort.direction
         }) 
-        : this.#transferSizeItems
+        : this.#entries
 
       PerformanceTracker.logOut({
-          title: 'Transfer size by item'
+          title: 'Transfer size by entry'
         , data
       })
     }    
