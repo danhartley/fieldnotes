@@ -128,25 +128,6 @@ export class PerformanceTracker {
       await this.#page.evaluate(() => JSON.stringify(performance.getEntries()))
     )
   
-    // Log entries with transfer size (that is greater than zero)    
-    // const entryTypesNotProfiled = PerformanceTracker.entryTypes().filter(e => !PerformanceTracker.entryTypesProfiled().includes(e))
-    // const entryNotProfiled = this.#perfEntries.filter(e => entryTypesNotProfiled.includes(e.entryType))
-    // const entryProfiled = this.#perfEntries.filter(e => PerformanceTracker.entryTypesProfiled.includes(e.entryType))
-
-    // if(this.#options.verbose) {
-    //   PerformanceTracker.logOut({
-    //       title: 'Excluded performance entries'
-    //     , data: entryNotProfiled.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType } })
-    //   })
-    // }
-
-    // if(this.#options.verbose) {
-    //   PerformanceTracker.logOut({
-    //       title: 'Performance entries'
-    //     , data: entryProfiled.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType, initiatorType: e.initiatorType, entryType: e.entryType, transferSize: e.transferSize } })
-    //   })
-    // }
-
     this.#perfEntries.forEach(entry => {
       if(PerformanceTracker.entryTypesProfiled().includes(entry.entryType)) {
           this.#entries.push({
@@ -171,24 +152,10 @@ export class PerformanceTracker {
     })
   }
 
-  async #logPerformanceEntriesObserved() {
-   return () => {
-      new PerformanceObserver(async(list) => {
-        list.getEntries().forEach((item) => {
-          console.log('call from observer')
-          console.log(item)
-        })
-        this.#perfEntries = JSON.parse(
-          await this.#page.evaluate(() => JSON.stringify(list.getEntries()))
-        )
-      }).observe({type: 'resource', buffered: true})
-    }
-  }
-
   async #logResources() {
     if(this.#options.includeThirdPartyResources) {
       const methods = ['GET', 'POST']
-      const logTypes = ['image', 'xhr', 'script']
+      const logTypes = ['image', 'xhr', 'script', 'document', 'stylesheet', 'other', 'fetch', 'ping']
       const logStatuses = [200]
       
       this.#page.on('response', async (response) => {
@@ -218,7 +185,7 @@ export class PerformanceTracker {
           : this.#thirdPartyEntries
 
         target.push({
-            name: url
+            name: PerformanceTracker.parseName(url)
           , entryType: resourceType
           , transferSizeInBytes: transferSize
         })
