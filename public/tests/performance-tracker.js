@@ -1,5 +1,5 @@
 import { hosting, co2, averageIntensity, marginalIntensity } from "@tgwf/co2"
-import { getDomainFromURL } from './test-utils.js'
+import { getDomainFromURL, pause } from './test-utils.js'
 
 // See https://sustainablewebdesign.org/estimating-digital-emissions/ for @tgwf/co2
 // See https://github.com/addyosmani/puppeteer-webperf
@@ -157,6 +157,8 @@ export class PerformanceTracker {
       const methods = ['GET', 'POST']
       const logTypes = ['image', 'xhr', 'script', 'document', 'stylesheet', 'other', 'fetch', 'ping']
       const logStatuses = [200]
+
+      let totalBytes = 0
       
       this.#page.on('response', async (response) => {
         
@@ -189,6 +191,29 @@ export class PerformanceTracker {
           , entryType: resourceType
           , transferSizeInBytes: transferSize
         })
+
+        // Calculate cumulative bytes and emissions
+        const co2Emission = new co2()
+        const sobytes = this.#sameOrigenEntries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
+        const tpbytes = this.#thirdPartyEntries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
+        const bytes = sobytes + tpbytes
+        
+          await pause({
+            func: async () => {
+              if(totalBytes === bytes) {
+                const emissions = co2Emission.perByte(bytes, true)              
+                PerformanceTracker.logOut({
+                  title: 'Calculate cumulative bytes and emissions'
+                    , data: [{
+                        bytes
+                      , emissions
+                    }]
+                })              
+              }
+            }
+          }, 5000)
+
+          totalBytes = bytes         
       })
     }
   }
@@ -234,10 +259,7 @@ export class PerformanceTracker {
     const bytes = this.#entries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
     const sobytes = this.#sameOrigenEntries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
     const tpbytes = this.#thirdPartyEntries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
-    console.log('bytes: ', bytes)
-    console.log('sobytes: ', sobytes)
-    console.log('tpbytes: ', tpbytes)
-    const kBs = Number((bytes / 1000).toFixed(1)) // convert bytes to kbs
+    const kBs = Number(((bytes + sobytes) / 1000).toFixed(1)) // convert bytes to kbs
     
     // Get country specific grid intensities
     const { data, type, year } = averageIntensity
@@ -450,7 +472,7 @@ export class PerformanceTracker {
       // Print bytes per request from performance entities
       let data = this.#options?.sort?.sortBy
         ? this.#options.sort.sortBy({
-              arr: this.#entries
+              arr: this.#entries.filter(e => e.transferSizeInBytes > 0)
             , prop: 'transferSizeInBytes'
             , dir: this.#options.sort.direction
         }) 
