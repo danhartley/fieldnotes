@@ -70,7 +70,10 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
               , direction: 'desc'
             }
             , verbose
-            , lighthouse: { log: runLighthouse, report, summary }          
+            , lighthouse: { log: runLighthouse, report, summary }    
+            , markDOMLoaded: 'DOM loaded'
+            , markStart: 'fetch-field-notes: start'
+            , markEnd: 'fetch-field-notes: end'      
           }
           , byteOptions
           , visitOptions

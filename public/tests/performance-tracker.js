@@ -11,6 +11,8 @@ export class PerformanceTracker {
   #byteOptions = {}
   #visitOptions = {}
   #entries = []
+  #sameOrigenEntries = []
+  #thirdPartyEntries = []
   #timeToRender = {}    
   #emissionsPerByte = null
   #emissionsPerVisit = null
@@ -74,6 +76,8 @@ export class PerformanceTracker {
     this.#options = options
     this.#byteOptions = byteOptions
     this.#visitOptions = visitOptions    
+
+    this.#logResources()
   }
 
   // Private methods
@@ -125,26 +129,26 @@ export class PerformanceTracker {
     )
   
     // Log entries with transfer size (that is greater than zero)    
-    const entryTypesNotProfiled = PerformanceTracker.entryTypes().filter(e => !PerformanceTracker.entryTypesProfiled().includes(e))
-    const entryNotProfiled = this.#perfEntries.filter(e => entryTypesNotProfiled.includes(e.entryType))
+    // const entryTypesNotProfiled = PerformanceTracker.entryTypes().filter(e => !PerformanceTracker.entryTypesProfiled().includes(e))
+    // const entryNotProfiled = this.#perfEntries.filter(e => entryTypesNotProfiled.includes(e.entryType))
+    // const entryProfiled = this.#perfEntries.filter(e => PerformanceTracker.entryTypesProfiled.includes(e.entryType))
 
-    if(this.#options.verbose) {
-      PerformanceTracker.logOut({
-          title: 'Excluded performance entries'
-        , data: entryNotProfiled.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType } })
-      })
-    }
+    // if(this.#options.verbose) {
+    //   PerformanceTracker.logOut({
+    //       title: 'Excluded performance entries'
+    //     , data: entryNotProfiled.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType } })
+    //   })
+    // }
 
-    if(this.#options.verbose) {
-      PerformanceTracker.logOut({
-          title: 'Performance entries'
-        , data: this.#perfEntries.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType, initiatorType: e.initiatorType, entryType: e.entryType, transferSize: e.transferSize } })
-      })
-    }
+    // if(this.#options.verbose) {
+    //   PerformanceTracker.logOut({
+    //       title: 'Performance entries'
+    //     , data: entryProfiled.map(e => { return { name: PerformanceTracker.parseName(e.name), entryType: e.entryType, initiatorType: e.initiatorType, entryType: e.entryType, transferSize: e.transferSize } })
+    //   })
+    // }
 
     this.#perfEntries.forEach(entry => {
       if(PerformanceTracker.entryTypesProfiled().includes(entry.entryType)) {
-          console.log('call from perf entries')
           this.#entries.push({
               name: PerformanceTracker.parseName(entry.name)
             , entryType: entry.entryType
@@ -194,35 +198,30 @@ export class PerformanceTracker {
 
         // Check resource is one we want to measure
         const isValidMethod = methods.includes(response.request().method())
-        const isValidSrc = getDomainFromURL({url}) !== this.#options.domain
+        const isSameOrigen = getDomainFromURL({url}) === this.#options.domain
         const isValidStatus = logStatuses.length ? logStatuses.includes(response.status()) : true
         const isValidType = logTypes.length ? logTypes.includes(resourceType) : true
-        const isValidResource = isValidMethod && isValidSrc && isValidType && isValidStatus
+        const isValidResource = isValidMethod && isValidType && isValidStatus
 
         if(!isValidResource) return
 
-        switch(resourceType) {
-          case 'image':
-          case 'xhr':
-          case 'script':
-            try {
-              const buffer = await response.buffer()
-              console.log({
-                  name: url
-                , entryType: resourceType
-                , transferSizeInBytes: buffer.length
-              })
-              this.#entries.push({
-                  name: url
-                , entryType: resourceType
-                , transferSizeInBytes: buffer.length
-              })
-            } catch (e) {
-              console.log(e)
-              console.log('resourceType: ', resourceType)
-            }
-          break
-        }   
+        const headers = response.headers()
+
+        let transferSize = 0
+
+        if (headers['content-length']) {
+          transferSize = parseInt(headers['content-length'], 10)
+        }
+
+        const target = isSameOrigen
+          ? this.#sameOrigenEntries
+          : this.#thirdPartyEntries
+
+        target.push({
+            name: url
+          , entryType: resourceType
+          , transferSizeInBytes: transferSize
+        })
       })
     }
   }
@@ -266,6 +265,11 @@ export class PerformanceTracker {
 
     // Calculate total bytes transferred
     const bytes = this.#entries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
+    const sobytes = this.#sameOrigenEntries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
+    const tpbytes = this.#thirdPartyEntries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
+    console.log('bytes: ', bytes)
+    console.log('sobytes: ', sobytes)
+    console.log('tpbytes: ', tpbytes)
     const kBs = Number((bytes / 1000).toFixed(1)) // convert bytes to kbs
     
     // Get country specific grid intensities
@@ -476,8 +480,8 @@ export class PerformanceTracker {
     }
     
     if(this.#options.verbose) {
-      // Print bytes per request
-      const data = this.#options?.sort?.sortBy
+      // Print bytes per request from performance entities
+      let data = this.#options?.sort?.sortBy
         ? this.#options.sort.sortBy({
               arr: this.#entries
             , prop: 'transferSizeInBytes'
@@ -487,6 +491,34 @@ export class PerformanceTracker {
 
       PerformanceTracker.logOut({
           title: 'Transfer size by entry'
+        , data
+      })
+
+      // Print bytes per request from response
+      data = this.#options?.sort?.sortBy
+        ? this.#options.sort.sortBy({
+              arr: this.#sameOrigenEntries
+            , prop: 'transferSizeInBytes'
+            , dir: this.#options.sort.direction
+        }) 
+        : this.#entries
+
+      PerformanceTracker.logOut({
+          title: 'Transfer size for same origin requests'
+        , data
+      })
+
+      // Print bytes per request from response
+      data = this.#options?.sort?.sortBy
+        ? this.#options.sort.sortBy({
+              arr: this.#thirdPartyEntries
+            , prop: 'transferSizeInBytes'
+            , dir: this.#options.sort.direction
+        }) 
+        : this.#entries
+
+      PerformanceTracker.logOut({
+          title: 'Transfer size for third party requests'
         , data
       })
     }
@@ -528,8 +560,8 @@ export class PerformanceTracker {
 
   // Public methods
   async getReport() {
-    await this.#page.evaluateOnNewDocument(this.#logResources())
-    await this.#page.evaluateOnNewDocument(this.#logPerformanceEntriesObserved())
+    // await this.#page.evaluateOnNewDocument(this.#logResources())
+    // await this.#page.evaluateOnNewDocument(this.#logPerformanceEntriesObserved())
     await this.#logPerformanceEntries()
     await this.#printSummary()
     await this.#printLighthouseSummary()
