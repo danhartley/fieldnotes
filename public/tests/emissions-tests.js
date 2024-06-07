@@ -55,11 +55,7 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
 
   // Set the viewport dimensions
   await page.setViewport({ width: 1280, height: 1024 })
-  await page.setRequestInterception(true)
-  page.on('request', (request) => {
-    request.continue()
-  })
-  
+
   try {
       // Create instance of emissions tracker 
       emissionsTracker = new EmissionsTracker({
