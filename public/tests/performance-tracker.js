@@ -465,7 +465,7 @@ export class PerformanceTracker {
       })
     } else {
       console.log('\n')
-      console.log('** Please check the domain name you supplied as an argument. **')
+      console.log('** Please check the website address you supplied as an argument. **')
     }
     
     if(this.#options.verbose) {
