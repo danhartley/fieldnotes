@@ -5,6 +5,7 @@ dist/
 .parcel-cache
 node_modules
 public/tests/read-fieldnotes/screenshots
+public/tests/write-fieldnotes/screenshots
 lighthouse
 .unlighthouse
 hint-report/
