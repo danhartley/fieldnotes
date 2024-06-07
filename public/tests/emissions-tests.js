@@ -85,7 +85,7 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
       // Get performance report
       await pause({
         func: async () => {
-          await emissionsTracker.getReport()
+          const { summary, details } = await emissionsTracker.getReport()
         }
       }, 0)
   } catch(e) {
