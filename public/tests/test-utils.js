@@ -1,3 +1,5 @@
+import { URL } from 'url'
+
 export const scroll = async ({page}) => {
   return await page.evaluate(async () => {
       return await new Promise((resolve, reject) => {
@@ -72,9 +74,9 @@ export const sortBy = ({arr, prop, dir = 'asc'}) => {
       })
 }
 
-export const getDomainFromURL = ({url}) => {
-  var result
-  var match
+const getDomainByPatternMatching = ({url}) => {
+  let result
+  let match
   if (match = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
       result = match[1]
       if (match = result.match(/^[^\.]+\.(.+\..+)$/)) {
@@ -83,6 +85,23 @@ export const getDomainFromURL = ({url}) => {
   }
   return result
 }
+
+export const getDomainFromURL = ({url}) => {
+  try {
+    const parsedURL = new URL(url)
+    let hostname = parsedURL.hostname
+
+    if (hostname.startsWith('www.')) {
+      hostname = hostname.substring(4);
+    }
+
+    return hostname }
+  catch (e) {
+    // If the built in parser fails, as it will for e.g. bbcorp.fr, use pattern matching
+    return getDomainByPatternMatching({url})
+  }
+}
+
 
 export const getLighthouseReport = async ({lighthouse, chromeLauncher, url}) => {    
     const chrome = await chromeLauncher.launch({chromeFlags: ['--headless']})

@@ -13,6 +13,7 @@ export class PerformanceTracker {
   #entries = []
   #sameOrigenEntries = []
   #thirdPartyEntries = []
+  #cumulativeBytes = 0
   #timeToRender = {}    
   #emissionsPerByte = null
   #emissionsPerVisit = null
@@ -158,8 +159,8 @@ export class PerformanceTracker {
       const logTypes = ['image', 'xhr', 'script', 'document', 'stylesheet', 'other', 'fetch', 'ping']
       const logStatuses = [200]
 
-      let totalBytes = 0
-      
+      const co2Emission = new co2()
+
       this.#page.on('response', async (response) => {
         
         const url = response.request().url()
@@ -190,31 +191,30 @@ export class PerformanceTracker {
             name: PerformanceTracker.parseName(url)
           , entryType: resourceType
           , transferSizeInBytes: transferSize
-        })
+        })      
 
         // Calculate cumulative bytes and emissions
-        const co2Emission = new co2()
         const sobytes = this.#sameOrigenEntries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
         const tpbytes = this.#thirdPartyEntries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
-        const bytes = sobytes + tpbytes
-        
-          await pause({
-            func: async () => {
-              if(totalBytes === bytes) {
-                const emissions = co2Emission.perByte(bytes, true)              
-                PerformanceTracker.logOut({
-                  title: 'Calculate cumulative bytes and emissions'
-                    , data: [{
-                        bytes
-                      , emissions
-                    }]
-                })              
-              }
-            }
-          }, 5000)
-
-          totalBytes = bytes         
+        this.#cumulativeBytes = sobytes + tpbytes 
       })
+
+      let recordedBytes = 0
+
+      const logAggregate = ({bytes = 0}) => {        
+        if(recordedBytes === bytes) return
+        const emissions = co2Emission.perByte(bytes, true)
+        PerformanceTracker.logOut({
+          title: 'Cumulative bytes in kBs and emissions in mg/CO2. Polled every 5 seconds.'
+            , data: [{
+                kBs: Number((bytes / 1000).toFixed(1))
+              , emissions: Number((emissions * 1000).toFixed(3))
+            }]
+        })
+        recordedBytes = bytes       
+      }
+
+      setInterval(() => logAggregate({bytes: this.#cumulativeBytes}), 5000)
     }
   }
 
@@ -259,7 +259,7 @@ export class PerformanceTracker {
     const bytes = this.#entries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
     const sobytes = this.#sameOrigenEntries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
     const tpbytes = this.#thirdPartyEntries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
-    const kBs = Number(((bytes + sobytes) / 1000).toFixed(1)) // convert bytes to kbs
+    const kBs = Number(((bytes + sobytes) / 1000).toFixed(1))
     
     // Get country specific grid intensities
     const { data, type, year } = averageIntensity

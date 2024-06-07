@@ -51,4 +51,7 @@ describe('getDomainFromURL function', () => {
   let url4 = 'https://www.understood.org/'
   let domain4 = getDomainFromURL({url:url4})
   expect(domain4).toEqual('understood.org')
+  let url5 = 'https://www.bbc.co.uk'
+  let domain5 = getDomainFromURL({url:url5})
+  expect(domain5).toEqual('bbc.co.uk')
 })
