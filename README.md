@@ -77,7 +77,7 @@ See: https://www.sitemaps.org/
 /carbon.txt
 See: https://carbontxt.org/  
 See also: https://developers.thegreenwebfoundation.org/  
-NB: PerformanceTracker uses APIs provided by The Green Web Foundation  
+NB: EmissionsTracker uses APIs provided by The Green Web Foundation  
 
 ##### Green hosting
 See: https://developers.thegreenwebfoundation.org/co2js/tutorials/getting-started-node/  

@@ -9,7 +9,7 @@ const FIELDNOTES_BTN_ID = '#fetch-fieldnotes-btn'
 const PRINT_FIELDNOTES_BTN_ID = '#print-fieldnotes-btn'
 const PRINT_FIELDNOTES_WITH_PAGE_BREAKS_BTN_ID = '#print-fieldnotes-with-page-breaks-btn'
 
-import { PerformanceTracker } from '../performance-tracker.js'
+import { EmissionsTracker } from '../emissions-tracker.js'
 
 const readFieldnotes = async ({byteOptions, visitOptions}) => {
 
@@ -31,22 +31,22 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
   // Go to read fieldnotes page
   await page.goto(`http://${domain}`)
 
-  // Create instance of performance tracker 
-  const perfTracker = new PerformanceTracker({
+  // Create instance of emissions tracker 
+  const emissionsTracker = new EmissionsTracker({
         page
       , options: {
-              domain
-            , reportGreenHosting: true
-            , countryCode: 'PRT'
-            , includeThirdPartyResources: true
-            , sort: {
-                sortBy
-                , direction: 'desc'
-              }
-            // , markDOMLoaded: 'DOM loaded'
-            , markStart: 'fetch-field-notes: start'
-            , markEnd: 'fetch-field-notes: end'
-            , verbose: true
+          domain
+        , reportGreenHosting: true
+        , countryCode: 'PRT'
+        , includeThirdPartyResources: true
+        , sort: {
+            sortBy
+            , direction: 'desc'
+          }
+        // , markDOMLoaded: 'DOM loaded'
+        , markStart: 'fetch-field-notes: start'
+        , markEnd: 'fetch-field-notes: end'
+        , verbose: true
         }
       , byteOptions
       , visitOptions
@@ -74,9 +74,9 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
           // Fetch fieldnotes
           await page.click(FIELDNOTES_BTN_ID)
           // Log cross domain images
-          await perfTracker.logResources({srcs: ['inaturalist', 'drive.google', 'googleusercontent', 'r.logr-ingest.com']})
+          await emissionsTracker.logResources({srcs: ['inaturalist', 'drive.google', 'googleusercontent', 'r.logr-ingest.com']})
           // Log domains entities. Wait 5 seconds for images to download before calling.
-          await pause({func: () => perfTracker.logPerformanceEntries(), delay: 5000})          
+          await pause({func: () => emissionsTracker.logPerformanceEntries(), delay: 5000})          
         } else {
           await page.screenshot({path: './public/tests/read-fieldnotes/screenshots/fetch button not ready.png', fullPage: true})
         }              
@@ -91,7 +91,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
         await browser.close()
       } , DELAY_FOR_TITLES)
       
-      perfTracker.printSummary()
+      emissionsTracker.printSummary()
   }
 }
 

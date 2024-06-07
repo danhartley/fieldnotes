@@ -4,7 +4,7 @@ import { getDomainFromURL, pause } from './test-utils.js'
 // See https://sustainablewebdesign.org/estimating-digital-emissions/ for @tgwf/co2
 // See https://github.com/addyosmani/puppeteer-webperf
 
-export class PerformanceTracker {
+export class EmissionsTracker {
   // Private fields
   #page = null
   #options = {}
@@ -45,11 +45,11 @@ export class PerformanceTracker {
 
   // Static methods
   static entryTypes() {
-    return PerformanceTracker.#entryTypes
+    return EmissionsTracker.#entryTypes
   }
 
   static entryTypesProfiled() {
-    return PerformanceTracker.#entryTypesProfiled
+    return EmissionsTracker.#entryTypesProfiled
   }
 
   static parseName(name) {
@@ -130,9 +130,9 @@ export class PerformanceTracker {
     )
   
     this.#perfEntries.forEach(entry => {
-      if(PerformanceTracker.entryTypesProfiled().includes(entry.entryType)) {
+      if(EmissionsTracker.entryTypesProfiled().includes(entry.entryType)) {
           this.#entries.push({
-              name: PerformanceTracker.parseName(entry.name)
+              name: EmissionsTracker.parseName(entry.name)
             , entryType: entry.entryType
             , initiatorType: entry.initiatorType
             , transferSizeInBytes: entry.transferSize
@@ -149,7 +149,7 @@ export class PerformanceTracker {
     // Save number of navigation and resource requests
     this.#summary.push({
         metric: 'Number of type navigation or resource requests'
-      , value: this.#perfEntries.filter(e => PerformanceTracker.entryTypesProfiled().includes(e.entryType)).length
+      , value: this.#perfEntries.filter(e => EmissionsTracker.entryTypesProfiled().includes(e.entryType)).length
     })
   }
 
@@ -188,7 +188,7 @@ export class PerformanceTracker {
           : this.#thirdPartyEntries
 
         target.push({
-            name: PerformanceTracker.parseName(url)
+            name: EmissionsTracker.parseName(url)
           , entryType: resourceType
           , transferSizeInBytes: transferSize
         })      
@@ -204,7 +204,7 @@ export class PerformanceTracker {
       const logAggregate = ({bytes = 0}) => {        
         if(recordedBytes === bytes) return
         const emissions = co2Emission.perByte(bytes, true)
-        PerformanceTracker.logOut({
+        EmissionsTracker.logOut({
           title: 'Cumulative bytes in kBs and emissions in mg/CO2. Polled every 5 seconds.'
             , data: [{
                 kBs: Number((bytes / 1000).toFixed(1))
@@ -224,7 +224,7 @@ export class PerformanceTracker {
     try {
       if(this.#options.domain) {
         await this.#checkHosting({ 
-            domain: PerformanceTracker.parseDomain(this.#options.domain)
+            domain: EmissionsTracker.parseDomain(this.#options.domain)
           , identifier: this.#options.domain
         })
 
@@ -244,7 +244,7 @@ export class PerformanceTracker {
 
           if(this.#options.verbose) {
             // Log green hosting
-            PerformanceTracker.logOut(data)
+            EmissionsTracker.logOut(data)
           }
 
           // Save green hosting details
@@ -275,7 +275,7 @@ export class PerformanceTracker {
 
     if(this.#options.verbose) {
       // Log grid intensity
-      PerformanceTracker.logOut(gridData)
+      EmissionsTracker.logOut(gridData)
     }
 
     // Save grid intensity for country code
@@ -292,7 +292,7 @@ export class PerformanceTracker {
 
     if(this.#options.verbose) {
       // Log per emissions per byte
-      PerformanceTracker.logOut({
+      EmissionsTracker.logOut({
           title: `Emissions per byte for ${kBs} kilobytes (Kbs)`
         , data: [{
               unit: 'mg/CO2'
@@ -329,7 +329,7 @@ export class PerformanceTracker {
 
     if(this.#options.verbose) {
       // Log emissions per byte per sector
-      PerformanceTracker.logOut(byteData)
+      EmissionsTracker.logOut(byteData)
     }
 
     // Save emissions per byte per sector
@@ -340,7 +340,7 @@ export class PerformanceTracker {
 
     if(this.#options.verbose) {
       // Log emissions per visit
-      PerformanceTracker.logOut({
+      EmissionsTracker.logOut({
           title: `Emissions per visit in mg/CO2 for ${kBs} kilobytes (kBs)`
         , data: [{
               unit: 'mg/CO2'
@@ -378,7 +378,7 @@ export class PerformanceTracker {
 
     if(this.#options.verbose) {
       //Log emissions per visit per sector
-      PerformanceTracker.logOut(visitData)
+      EmissionsTracker.logOut(visitData)
     }
 
     // Save emissions per visit per sector
@@ -394,7 +394,7 @@ export class PerformanceTracker {
       })
 
       // Log emissions per byte trace
-      PerformanceTracker.logOut({
+      EmissionsTracker.logOut({
           title: 'Byte trace: grid intensity in g/kWh'
         , data: this.#byteTrace.variables.gridIntensity
       })
@@ -410,7 +410,7 @@ export class PerformanceTracker {
       })
 
       // Log emissions per visit trace
-      PerformanceTracker.logOut({
+      EmissionsTracker.logOut({
           title: 'Visit trace: grid intensity in g/kWh'
         , data: this.#visitTrace.variables.gridIntensity
       })
@@ -478,7 +478,7 @@ export class PerformanceTracker {
         }) 
         : this.#entries
 
-      PerformanceTracker.logOut({
+      EmissionsTracker.logOut({
           title: 'Transfer size by entry'
         , data
       })
@@ -492,7 +492,7 @@ export class PerformanceTracker {
         }) 
         : this.#entries
 
-      PerformanceTracker.logOut({
+      EmissionsTracker.logOut({
           title: 'Transfer size for same origin requests'
         , data
       })
@@ -506,7 +506,7 @@ export class PerformanceTracker {
         }) 
         : this.#entries
 
-      PerformanceTracker.logOut({
+      EmissionsTracker.logOut({
           title: 'Transfer size for third party requests'
         , data
       })
@@ -525,7 +525,7 @@ export class PerformanceTracker {
     }
 
     // Print summary
-    PerformanceTracker.logOut({
+    EmissionsTracker.logOut({
         title: 'Summary'
       , data: this.#summary
     })
@@ -533,7 +533,7 @@ export class PerformanceTracker {
 
   async #printLighthouseSummary() {
     if(this.#options.lighthouse.log)
-      PerformanceTracker.logOut({
+      EmissionsTracker.logOut({
         title: 'Lighthouse summary report'
       , data: [
         {

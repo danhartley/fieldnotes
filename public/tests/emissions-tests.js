@@ -1,14 +1,14 @@
 import puppeteer from 'puppeteer'
 
 import { getDomainFromURL, sortBy, pause, getLighthouseReport } from './test-utils.js'
-import { PerformanceTracker } from './performance-tracker.js'
+import { EmissionsTracker } from './emissions-tracker.js'
 
 import lighthouse from 'lighthouse'
 import * as chromeLauncher from 'chrome-launcher'
 
 const testSite = async ({byteOptions = null, visitOptions = null}) => {
 
-  let perfTracker, url, domain, verbose = false, report, summary, runLighthouse = false
+  let emissionsTracker, url, domain, verbose = false, report, summary, runLighthouse = false
 
   const verboseArgs = ['-v', '--verbose']
   const urlArgs = ['-u', '--url']
@@ -61,26 +61,26 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
   })
   
   try {
-      // Create instance of performance tracker 
-      perfTracker = new PerformanceTracker({
+      // Create instance of emissions tracker 
+      emissionsTracker = new EmissionsTracker({
         page
       , options: {
-              domain
-            , reportGreenHosting: true
-            , countryCode: 'PRT'
-            , includeThirdPartyResources: true
-            , sort: {
-                sortBy
-              , direction: 'desc'
-            }
-            , verbose
-            , lighthouse: { log: runLighthouse, report, summary }    
-            , markDOMLoaded: 'DOM loaded'
-            , markStart: 'fetch-field-notes: start'
-            , markEnd: 'fetch-field-notes: end'      
+            domain
+          , reportGreenHosting: true
+          , countryCode: 'PRT'
+          , includeThirdPartyResources: true
+          , sort: {
+              sortBy
+            , direction: 'desc'
           }
-          , byteOptions
-          , visitOptions
+          , verbose
+          , lighthouse: { log: runLighthouse, report, summary }    
+          , markDOMLoaded: 'DOM loaded'
+          , markStart: 'fetch-field-notes: start'
+          , markEnd: 'fetch-field-notes: end'      
+        }
+        , byteOptions
+        , visitOptions
       })
 
       // Navigate to site
@@ -89,7 +89,7 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
       // Get performance report
       await pause({
         func: async () => {
-          await perfTracker.getReport()
+          await emissionsTracker.getReport()
         }
       }, 0)
   } catch(e) {
