@@ -82,9 +82,10 @@ aside div {
 }
 
 h1 {
+  margin-bottom: calc(var(--d) * 4);
   max-width: 100ch;
   text-align: center;
-  font-size: var(--s3);
+  font-size: var(--s6);
   font-weight: 400;
 }
 
@@ -617,7 +618,7 @@ img {
     padding: calc(var(--d) * 1.5) var(--d);
     border: 1px dotted var(--c2);
     border-radius: calc(var(--d)* .5);
-    background-color: var(--c1);
+    background-color: var(--body-bg);
   }
   
   & div > div, & figure > figcaption  {
@@ -892,6 +893,10 @@ fieldset.species-list {
   margin-right: var(--d);
 }
 
+.mr2 {
+  margin-left: calc(var(--d) * 2);
+}
+
 .mb0 {
   margin-bottom: 0;
 }
@@ -916,6 +921,10 @@ fieldset.species-list {
   margin-left: var(--d);
 }
 
+.ml2 {
+  margin-left: calc(var(--d) * 2);
+}
+
 .ml4 {
   margin-left: calc(var(--d) * 4);
 }
@@ -934,6 +943,10 @@ fieldset.species-list {
 
 .p {
   padding: var(--d);
+}
+
+.pt0 {
+  padding-top: 0;
 }
 
 .pt {
@@ -1009,6 +1022,10 @@ fieldset.species-list {
 @media (orientation: landscape) {
   header {
     margin: 0 10vw;
+  }
+
+  #article {
+    margin-top: calc(var(--d) * 4);
   }
 
   #header span {

@@ -49,26 +49,22 @@
       </div>
       
       <div class="section-with-header print-ignore hidden">
-        <div id="display-fieldset" class="fieldset-reset">        
-          <fieldset class="flex-row">
-            <legend>Select view</legend>
-            <div id="species-display-container" class="grid"></div>
-          </fieldset>
-  
-          <fieldset id="targets-fieldset" class="hidden flex-row">
-            <legend>Test for</legend>
-            <div id="target-group-container" class="grid"></div>
-          </fieldset>
-        </div>
-      </div>
+        <fieldset id="lesson-fieldset" class="pt2">
 
-      <div class="section-with-header hidden">
-        <fieldset id="lesson-fieldset">
-          <legend class="print-ignore">Fieldnotes</legend>
-          <button type="button" id="show-test-btn" class="btn-secondary btn-absolute hidden">Show test</button>
+          <h1 id="article-header">Article header</h1>
+
+          <div id="display-fieldset" class="fieldset-reset">        
+            <div id="species-display-container" class="grid ml2 mr2"></div>    
+            <div id="targets-fieldset" class="hidden flex-row">
+              <div id="target-group-container" class="grid ml2 mr2"></div>
+            </div>
+          </div>
+          
           <article id="article">
-            <h1>Article header</h1>
+            
           </article>
+
+          <button type="button" id="show-test-btn" class="btn-secondary btn-absolute hidden">Show test</button>
           <button type="button" id="test-submit-btn" class="mb hidden">
             Check answers
           </button>

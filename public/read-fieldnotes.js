@@ -69,6 +69,7 @@ const init = async () => {
     const sectionsWithHeader = d.querySelectorAll('.section-with-header')
     const lessonFieldsetLegend = d.querySelector('#lesson-fieldset > legend')
     const article = d.getElementById('article')
+    const articleHeader = d.getElementById('article-header')
     const rbTemplate = d.getElementById('radio-button-template')
     const languageGroupContainer = d.getElementById('language-group-container')
     const targetGroupContainer = d.getElementById('target-group-container')
@@ -296,17 +297,13 @@ const init = async () => {
 
             sectionsWithHeader.forEach(sh => sh.classList.remove('hidden'))
                 
-            lessonFieldsetLegend.innerText = globalRead.template.name
+            // lessonFieldsetLegend.innerText = globalRead.template.name
         
             if(globalRead.species) article.innerHTML = ''
 
             // Add fieldnotes title to article 
-            let h1 = d.createElement('h1')
-            h1.innerText = globalRead.fieldnotes.title
-            h1.classList.add('non-grid')
+            articleHeader.innerText = globalRead.fieldnotes.title
 
-            article.appendChild(h1)
-        
             // Iterate the sections updating content according to type
             switch(globalRead.template.templateId) {
                 case 'species-template':
