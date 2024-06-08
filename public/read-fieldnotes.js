@@ -296,8 +296,6 @@ const init = async () => {
             let parent = null
 
             sectionsWithHeader.forEach(sh => sh.classList.remove('hidden'))
-                
-            // lessonFieldsetLegend.innerText = globalRead.template.name
         
             if(globalRead.species) article.innerHTML = ''
 
