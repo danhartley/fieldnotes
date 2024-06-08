@@ -585,12 +585,13 @@ img {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, auto));
   gap: var(--d);
-  margin: 0 auto calc(var(--d)) auto;
+  margin: 0 auto calc(var(--d));
 
   & figure img {
     border-radius: calc(var(--d)* .5) calc(var(--d)* .5) 0 0;
     cursor: initial;
     pointer-events: none;
+    width: 200px;
   }
   
 
@@ -1047,18 +1048,22 @@ fieldset.species-list {
     max-width: 60ch;
   }
 
-  img {
+  & figure img {
     aspect-ratio: 1/1;
     min-height: var(--img-min-height);
     max-height: var(--img-min-height);
     margin: 0;
-    object-fit: cover;
+    object-fit: cover;    
   }
 }
 
 @media screen and (width <= 458px){
-    figcaption {
+  figcaption {
     background-color: var(--content-bg) !important;
+  }
+
+  .grid figure img {
+    width: 240px;
   }
 }
 
