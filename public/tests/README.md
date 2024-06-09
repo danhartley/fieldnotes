@@ -88,3 +88,9 @@ import * as chromeLauncher from 'chrome-launcher'
   })
   ```
 
+## References
+
+[Estimating Digital Emissions | Sustainable Web Design](https://sustainablewebdesign.org/estimating-digital-emissions/)
+
+[Web Performance Recipes With Puppeteer | Addy Osmani
+](https://addyosmani.com/blog/puppeteer-recipes/)

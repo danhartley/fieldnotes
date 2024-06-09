@@ -1,9 +1,6 @@
 import { hosting, co2, averageIntensity, marginalIntensity } from "@tgwf/co2"
 import { getDomainFromURL, pause } from './test-utils.js'
 
-// See https://sustainablewebdesign.org/estimating-digital-emissions/ for @tgwf/co2
-// See https://github.com/addyosmani/puppeteer-webperf
-
 export class EmissionsTracker {
   // Private fields
   #page = null
@@ -82,14 +79,14 @@ export class EmissionsTracker {
   }
 
   // Private methods
-  #logPerByte({bytes, bySegment = false}) {
+  #logPerByte({bytes, green = false, bySegment = false}) {
     const co2Emission = bySegment ? new co2({ results: "segment" }) : new co2()
-    this.#emissionsPerByte = co2Emission.perByte(bytes, true)
+    this.#emissionsPerByte = co2Emission.perByte(bytes, green)
   }
 
-  #logPerVisit({bytes, bySegment = false}) {
+  #logPerVisit({bytes, green = false, bySegment = false}) {
     const co2Emission = bySegment ? new co2({ results: "segment" }) : new co2()
-    this.#emissionsPerVisit = co2Emission.perVisit(bytes, true)
+    this.#emissionsPerVisit = co2Emission.perVisit(bytes, green)
   }
 
   #logPerByteTrace({bytes, green = false, options}) {
@@ -288,7 +285,11 @@ export class EmissionsTracker {
     })
 
     // Calculate total emissions per byte 
-    this.#logPerByte({bytes, bySegment: false})
+    this.#logPerByte({
+        bytes
+      , green: this.#hosting?.green
+      , bySegment: false
+    })
 
     if(this.#options.verbose) {
       // Log per emissions per byte
@@ -313,7 +314,11 @@ export class EmissionsTracker {
     })
 
     // Calculate per emissions per byte per sector
-    this.#logPerByte({bytes, bySegment: true})
+    this.#logPerByte({
+        bytes
+      , green: this.#hosting?.green
+      , bySegment: true
+    })
 
     const perByteData = Object.keys(this.#emissionsPerByte).map(sector => { 
       return {
@@ -336,7 +341,11 @@ export class EmissionsTracker {
     this.#details.push(byteData)
 
     // Calculate emissions per visit
-    this.#logPerVisit({bytes, bySegment: false})
+    this.#logPerVisit({
+        bytes
+      , green: this.#hosting?.green
+      , bySegment: false
+    })
 
     if(this.#options.verbose) {
       // Log emissions per visit
@@ -361,7 +370,11 @@ export class EmissionsTracker {
     })
 
     // Calculate emissions per visit per sector
-    this.#logPerVisit({bytes, bySegment: true})
+    this.#logPerVisit({
+        bytes
+      , green: this.#hosting?.green
+      , bySegment: true
+    })
 
     // Log emissions per visit per sector
     const perVisitData = Object.keys(this.#emissionsPerVisit).map(sector => { 
