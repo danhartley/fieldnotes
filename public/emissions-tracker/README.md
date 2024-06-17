@@ -94,3 +94,7 @@ import * as chromeLauncher from 'chrome-launcher'
 
 [Web Performance Recipes With Puppeteer | Addy Osmani
 ](https://addyosmani.com/blog/puppeteer-recipes/)
+
+// curl -X 'GET' \
+//  'https://api.thegreenwebfoundation.org/api/v3/greencheck/bbc.co.uk' \
+//  -H 'accept: application/json'

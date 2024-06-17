@@ -1,6 +1,7 @@
 import puppeteer from 'puppeteer'
 
-import { getDomainFromURL, sortBy, pause, getLighthouseReport } from './test-utils.js'
+import { sortBy, pause } from '../tests/test-utils.js'
+import { getDomainFromURL, getLighthouseReport } from './emissions-tracker-utils.js'
 import { EmissionsTracker } from './emissions-tracker.js'
 
 import lighthouse from 'lighthouse'
@@ -20,7 +21,7 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
       if(urlArgs.includes(val)) {
         const nextArg = index + 1
         if(nextArg < process.argv.length) {
-          url = process.argv[nextArg]
+          url = process.argv[nextArg].includes('http') ? process.argv[nextArg] : `https://${process.argv[nextArg]}`
           domain = getDomainFromURL({url})
         }
       }
@@ -45,16 +46,19 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
     summary = lhReport.summary
   }
 
-  // Launch the browser
+  // Launch the browser in headless mode with support for Chrome DevTools
+  // The viewport default is overridden so that we can scroll to the bottom of the page
   const browser = await puppeteer.launch({
-      headless: false,
+        headless: false
+      , devtools: true
+      , defaultViewport: null
   })
 
   // Create a page
   const page = await browser.newPage()
 
   // Set the viewport dimensions
-  await page.setViewport({ width: 1280, height: 1024 })
+  // await page.setViewport({ width: 1280, height: 1024 })
 
   try {
       // Create instance of emissions tracker 
@@ -82,6 +86,9 @@ const testSite = async ({byteOptions = null, visitOptions = null}) => {
       // Navigate to site
       await page.goto(url)
       
+      const footer = await page.$('footer')      
+      await footer.scrollIntoView({behavior: 'smooth'})
+
       // Get performance report
       await pause({
         func: async () => {

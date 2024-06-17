@@ -1,5 +1,5 @@
 import { hosting, co2, averageIntensity, marginalIntensity } from "@tgwf/co2"
-import { getDomainFromURL, pause } from './test-utils.js'
+import { getDomainFromURL } from './emissions-tracker-utils.js'
 
 export class EmissionsTracker {
   // Private fields
@@ -256,11 +256,35 @@ export class EmissionsTracker {
     const bytes = this.#entries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
     const sobytes = this.#sameOrigenEntries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
     const tpbytes = this.#thirdPartyEntries.reduce((accumulator, currentValue) => accumulator + currentValue.transferSizeInBytes, 0)
-    const kBs = Number(((bytes + sobytes) / 1000).toFixed(1))
+    const kBs = Number(((sobytes + tpbytes) / 1000).toFixed(1))
     
     // Get country specific grid intensities
     const { data, type, year } = averageIntensity
     const { data: miData, type: miType, year: miYear } = marginalIntensity
+
+    const byteDataBySource = {
+        title: 'Comparision of bytes transferred by source'
+      , data: [
+        {
+            source: 'Performance API: third party excluded'
+          , bytes: Number((bytes / 1000).toFixed(1))
+        },
+        {
+            source: 'Reponse object: same origen'
+          , bytes: Number((sobytes / 1000).toFixed(1))
+        },
+        {
+            source: 'Reponse object: third party origen'
+          , bytes: Number((tpbytes / 1000).toFixed(1))
+        },
+        {
+            source: 'Reponse object: total'
+          , bytes: Number(((sobytes + tpbytes) / 1000).toFixed(1))
+        },
+      ]
+    }
+
+    EmissionsTracker.logOut(byteDataBySource)
 
     const gridData = {
         title: 'Grid intensity in gCO2e per kWh'
@@ -294,7 +318,7 @@ export class EmissionsTracker {
     if(this.#options.verbose) {
       // Log per emissions per byte
       EmissionsTracker.logOut({
-          title: `Emissions per byte for ${kBs} kilobytes (Kbs)`
+          title: `Page emissions per byte for ${kBs} kilobytes (Kbs)`
         , data: [{
               unit: 'mg/CO2'
             , emissions: Number((this.#emissionsPerByte * 1000).toFixed(3))
@@ -304,12 +328,12 @@ export class EmissionsTracker {
 
     // Save emissions per byte
     this.#summary.push({
-        metric: 'Emissions per byte in mg/CO2'
+        metric: 'Page emissions per byte in mg/CO2'
       , value: Number((this.#emissionsPerByte * 1000).toFixed(3))
     })
 
     this.#summary.push({
-        metric: 'Emissions per byte in g/CO2'
+        metric: 'Page emissions per byte in g/CO2'
       , value: Number(this.#emissionsPerByte.toFixed(3))
     })
 
@@ -328,7 +352,7 @@ export class EmissionsTracker {
     }) 
 
     const byteData = {
-        title: `Emissions per byte per segment for ${kBs} kilobytes (kBs)`
+        title: `Page emissions per byte per segment for ${kBs} kilobytes (kBs)`
       , data: perByteData
     }
 
@@ -350,7 +374,7 @@ export class EmissionsTracker {
     if(this.#options.verbose) {
       // Log emissions per visit
       EmissionsTracker.logOut({
-          title: `Emissions per visit in mg/CO2 for ${kBs} kilobytes (kBs)`
+          title: `Page emissions per visit in mg/CO2 for ${kBs} kilobytes (kBs)`
         , data: [{
               unit: 'mg/CO2'
             , emissions: Number((this.#emissionsPerVisit * 1000).toFixed(3))
@@ -360,12 +384,12 @@ export class EmissionsTracker {
     
     // Save emissions per visit
     this.#summary.push({
-        metric: 'Emissions per visit in mg/CO2'
+        metric: 'Page emissions per visit in mg/CO2'
       , value: Number((this.#emissionsPerVisit * 1000).toFixed(3))
     })
 
     this.#summary.push({
-        metric: 'Emissions per visit in g/CO2'
+        metric: 'Page emissions per visit in g/CO2'
       , value: Number((this.#emissionsPerVisit).toFixed(3))
     })
 
@@ -385,7 +409,7 @@ export class EmissionsTracker {
     }) 
 
     const visitData = {
-        title: `Emissions per visit per segment for ${kBs} kilobytes (kBs)`
+        title: `Page emissions per visit per segment for ${kBs} kilobytes (kBs)`
       , data: perVisitData
     }
 
@@ -492,7 +516,7 @@ export class EmissionsTracker {
         : this.#entries
 
       EmissionsTracker.logOut({
-          title: 'Transfer size by entry'
+          title: 'Performance API: transfer size by entry'
         , data
       })
 
@@ -506,7 +530,7 @@ export class EmissionsTracker {
         : this.#entries
 
       EmissionsTracker.logOut({
-          title: 'Transfer size for same origin requests'
+          title: 'Response object: transfer size for same origin requests'
         , data
       })
 
@@ -520,7 +544,7 @@ export class EmissionsTracker {
         : this.#entries
 
       EmissionsTracker.logOut({
-          title: 'Transfer size for third party requests'
+          title: 'Response object: transfer size for third party requests'
         , data
       })
     }
@@ -539,7 +563,7 @@ export class EmissionsTracker {
 
     // Print summary
     EmissionsTracker.logOut({
-        title: 'Summary'
+        title: 'Page summary'
       , data: this.#summary
     })
   }
