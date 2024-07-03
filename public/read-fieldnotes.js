@@ -1,5 +1,3 @@
-import { helloCalculator, registerServiceWorker, getNetworkTraffic} from '@danhartley/emissions'
-
 import { 
       g
     , getFieldnotesById
@@ -35,6 +33,7 @@ import {
     , logger
 } from './utils.js'
 
+import { getEmissions } from './emissions.js'
 
 const init = async () => {    
     const initGlobalRead = () => {
@@ -807,14 +806,7 @@ const init = async () => {
         performance.mark('DOM loaded')
     })
 
-    registerServiceWorker()
-    helloCalculator()
-
-    const records = await getNetworkTraffic()
-    if(records.length) {
-        let bytes = records.reduce((acc, curr) => acc + curr.responseBytes, 0)
-        console.log('bytes: ', bytes / 1000)
-    }
+    getEmissions()
 }
 
 init()

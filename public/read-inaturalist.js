@@ -22,6 +22,8 @@ import {
 
 import { appLocalStorage } from './utils.js'
 
+import { getEmissions } from './emissions.js'
+
 const init = async () => {    
     const initGlobalRead = () => {
         const globalRead = {}
@@ -596,6 +598,8 @@ const init = async () => {
     if(language) {
         globalRead.language = language
     }
+
+    getEmissions()
 }
 
 init()
