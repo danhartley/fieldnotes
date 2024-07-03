@@ -1,12 +1,5 @@
-// import posthog from 'posthog-js'
+import { helloCalculator, registerServiceWorker, getNetworkTraffic} from '@danhartley/emissions'
 
-// posthog.init('phc_PI6IzYtZjRZA1iuKPhUhHM0yy2T979TYAUM7LqwBCop', { api_host: 'https://eu.posthog.com' })
-
-// import LogRocket from 'logrocket'
-
-// LogRocket.init('xoreyh/ifieldnotesdev')
-
-// import { log } from 'logrocket'
 import { 
       g
     , getFieldnotesById
@@ -41,6 +34,7 @@ import {
       appLocalStorage 
     , logger
 } from './utils.js'
+
 
 const init = async () => {    
     const initGlobalRead = () => {
@@ -788,7 +782,6 @@ const init = async () => {
         const auth = getFirebaseAuth()
         if(auth?.currentUser?.email) {
             firebaseAuthDisplay.innerText = 'You can view your private and all published fieldnotes.'
-            // firebaseAuthDisplay.innerText = `Your are logged in as ${auth.currentUser.email}. You can view your private and all public fieldnotes.`
         }    
     })
 
@@ -813,6 +806,15 @@ const init = async () => {
         })
         performance.mark('DOM loaded')
     })
+
+    registerServiceWorker()
+    helloCalculator()
+
+    const records = await getNetworkTraffic()
+    if(records.length) {
+        let bytes = records.reduce((acc, curr) => acc + curr.responseBytes, 0)
+        console.log('bytes: ', bytes / 1000)
+    }
 }
 
 init()
