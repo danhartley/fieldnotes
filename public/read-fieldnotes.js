@@ -33,7 +33,7 @@ import {
     , logger
 } from './utils.js'
 
-import { getEmissions } from './emissions.js'
+import { getSiteEmissions } from './emissions.js'
 
 const init = async () => {    
     const initGlobalRead = () => {
@@ -806,7 +806,7 @@ const init = async () => {
         performance.mark('DOM loaded')
     })
 
-    getEmissions()
+    getSiteEmissions()
 }
 
 init()
