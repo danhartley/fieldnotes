@@ -32,7 +32,8 @@ npm run test
 Open site in browser e.g. npm run start
 
 ```bash
-node {path} e.g. node public/tests/write-fieldnotes/write-fieldnotes-tests.js
+node {path} e.g. node public/tests/write-fieldnotes/write-fieldnotes-tests.js  
+node public/tests/read-fieldnotes/read-fieldnotes-tests.js
 ````
 
 NB Optional flag deploy e.g deploy=prod or deploy=dev (default)  

@@ -1,8 +1,9 @@
 import puppeteer from 'puppeteer'
+import lighthouse from 'lighthouse'
+import * as chromeLauncher from 'chrome-launcher'
 
-import { node, EmissionsTracker } from '@danhartley/emissions'
-
-import { scroll, isEnabled, pause, sortBy, logEmissions } from '../test-utils.js'
+import { reports } from '@danhartley/emissions'
+import { scroll, isEnabled, pause } from '../test-utils.js'
 
 const DELAY_FOR_TITLES = 1000
 const FIELDNOTES_TITLE = 'Streets of Lisbon, Portugal, Wed Feb 28 2024'
@@ -13,18 +14,7 @@ const FIELDNOTES_BTN_ID = '#fetch-fieldnotes-btn'
 const PRINT_FIELDNOTES_BTN_ID = '#print-fieldnotes-btn'
 const PRINT_FIELDNOTES_WITH_PAGE_BREAKS_BTN_ID = '#print-fieldnotes-with-page-breaks-btn'
 
-const parseEmissions = async (page, url) => {
-  const { pageWeight, count, emissions, greenHosting, data, domain } = await node.getPageEmissions(
-    page
-  , url
-)
-
-logEmissions({url, pageWeight, count, emissions, greenHosting, data, domain})
-}
-
-const readFieldnotes = async ({byteOptions, visitOptions}) => {
-
-  let tracker
+const readFieldnotes = async () => {
 
   const browser = await puppeteer.launch({
       headless: false
@@ -42,32 +32,12 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
 
   // await parseEmissions(page, url)
 
-  try {
-    
-    tracker = new EmissionsTracker({
-      page
-    , options: {
-          url
-        , domain: 'localhost:3000'
-        , reportGreenHosting: true
-        , countryCode: 'PRT'
-        , sort: {
-            sortBy
-          , direction: 'desc'
-        }
-      }
-    })
-
+  try {    
     // Navigate to site
     await page.goto(url)
 
-    // parseEmissions(page, url)
-
-    await pause({
-      func: async() => {
-        await tracker.getReport()
-      }, delay: 5000
-    })
+    const { report } = await reports.lighthouse(url, lighthouse, chromeLauncher)
+    console.log(report)
 
     // Abort test if the fetch button is already enabled
     if(isEnabled({
@@ -95,11 +65,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
       }, delay: 500
     })
 
-    await pause({
-      func: async() => {
-        await tracker.getReport()
-      }, delay: 5000
-    })
+    // here
 
     await pause({
       func: async () => {
@@ -108,11 +74,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
       }, delay: 5000
     })
 
-    await pause({
-      func: async() => {
-        await tracker.getReport()
-      }, delay: 5000
-    })
+    // here
 
     await pause({
       func: async () => {
@@ -121,12 +83,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
       }, delay: 5000
     })
 
-    await pause({
-      func: async() => {
-        const { std } = await tracker.getReport()
-        console.log(std)
-      }, delay: 5000
-    })
+    // here
     
   } catch (e) { 
     await scroll({page})
@@ -139,28 +96,4 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
   }
 }
 
-// Use logPerByteTrace
-const byteOptions = {
-  dataReloadRatio: 0.6,
-  firstVisitPercentage: 0.9,
-  returnVisitPercentage: 0.1,
-  gridIntensity: {
-    device: { country: "PRT" },
-    dataCenter: { country: "PRT" },
-    network: { country: "PRT" },
-  },
-}
-
-// Use logPerVisitTrace
-const visitOptions = {
-  dataReloadRatio: 0.6,
-  firstVisitPercentage: 0.9,
-  returnVisitPercentage: 0.1,
-  gridIntensity: {
-    device: { country: "PRT" },
-    dataCenter: { country: "PRT" },
-    network: { country: "PRT" },
-  },
-}
-
-readFieldnotes({byteOptions, visitOptions})
+readFieldnotes()
