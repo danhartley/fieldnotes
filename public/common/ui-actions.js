@@ -12,7 +12,7 @@ import {
     , updateElementFromArray
     , updateFieldnoteProperty
     , updateFieldnotesTitle    
-} from './api.js'
+} from '../data/api.js'
 
 import { 
       species

@@ -6,7 +6,7 @@ import {
     , getTerms
     , onUserLoggedIn
     , snapSpeciesTraits
-} from './api.js'
+} from './data/api.js'
 
 import {
       addImageBlockCaption
@@ -22,18 +22,18 @@ import {
     // , storeFieldnotes
     , showNotificationsDialog
     , updateHistoryAndTitle
-} from './ui-actions.js'
+} from './common/ui-actions.js'
 
 import {
       ButtonComponent
-} from './ui-components.js'
+} from './common/ui-components.js'
 
 import { 
       appLocalStorage 
     , logger
-} from './utils.js'
+} from './common/utils.js'
 
-// import { getSiteEmissions } from './emissions.js'
+// import { getPageLoadEmissions } from './emissions/emissions.js'
 
 const init = async () => {    
     const initGlobalRead = () => {
@@ -806,7 +806,7 @@ const init = async () => {
         performance.mark('DOM loaded')
     })
 
-    // getSiteEmissions()
+    // getPageLoadEmissions()
 }
 
 init()

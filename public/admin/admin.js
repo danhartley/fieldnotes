@@ -3,16 +3,16 @@ import {
   , getAdminFieldnotesStubs
   , getFirebaseAuth
   , onAdminFirebaseAuthStateChange
-} from '.././api.js'
+} from '../data/api.js'
 
 import {
   ButtonComponent
 , CheckBoxComponent
-} from '.././ui-components.js'
+} from '../common/ui-components.js'
 
 import { 
   showNotificationsDialog
-} from '.././ui-actions.js'
+} from '../common/ui-actions.js'
 
 const init = async () => {
   const d = document

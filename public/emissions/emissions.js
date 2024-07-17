@@ -1,6 +1,6 @@
 import { browser } from '@danhartley/emissions'
 
-export const getSiteEmissions = () => {
+export const getPageLoadEmissions = () => {
   (async () => {
     await browser.registerServiceWorker()
   

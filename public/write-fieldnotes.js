@@ -9,12 +9,12 @@ import {
 , onFirebaseAuthStateChange
 , updateFieldNotes
 , updateFieldnoteStubProperty
-} from './api.js'
+} from './data/api.js'
 
 import { 
   previewTemplates
 , writeTemplates
-} from './templates.js'
+} from './common/templates.js'
 
 import { 
     addContentToPreviewContainer
@@ -51,19 +51,19 @@ import {
   , toggleSpeciesList
   , updateFieldnotesStateSection
   , updateMetadataFields
-} from './ui-actions.js'
+} from './common/ui-actions.js'
 
 import {
     ButtonComponent
   , CheckBoxComponent
-} from './ui-components.js'
+} from './common/ui-components.js'
 
 import {
     appLocalStorage 
   , createSlug
   , getURL
   , saveJson
-} from './utils.js'
+} from './common/utils.js'
 
 const init = () => {
 

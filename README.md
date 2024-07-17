@@ -93,7 +93,7 @@ See: https://www.semrush.com/blog/html-sitemap/
 
 #### Lighthouse
 ```bash
-lighthouse https://ifieldnotes.org --budget-path=public/budget.json --output-path=./lighthouse/lighthouse-results.html 
+lighthouse https://ifieldnotes.org --budget-path=public/budgets/budget.json --output-path=./lighthouse/lighthouse-results.html 
 ````
 
 #### Site health

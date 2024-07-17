@@ -4,11 +4,11 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWith
 import { initializeApp } from 'firebase/app'
 import { setLogLevel, getFirestore, collection, query, and, where, or, doc, getDocs, getDoc, setDoc,deleteDoc, addDoc, updateDoc, deleteField, arrayUnion, arrayRemove } from 'firebase/firestore'
 
-import { templates } from './templates.js'
+import { templates } from '../common/templates.js'
 import {
     logger
   , sortBy
-} from './utils.js'
+} from '../common/utils.js'
 
 setLogLevel('silent')
 
