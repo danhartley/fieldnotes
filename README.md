@@ -29,7 +29,7 @@ npm run test
 
 #### Running integration tests
 
-Open site in browser e.g. npm run dev
+Open site in browser e.g. npm run start
 
 ```bash
 node {path} e.g. node public/tests/write-fieldnotes/write-fieldnotes-tests.js

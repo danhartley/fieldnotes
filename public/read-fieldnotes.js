@@ -801,7 +801,7 @@ const init = async () => {
         const loadTime = endTime - startTime
 
         logger({
-            message: `DOM loaded in ${loadTime} milliseconds`
+            // message: `DOM loaded in ${loadTime} milliseconds`
         })
         performance.mark('DOM loaded')
     })

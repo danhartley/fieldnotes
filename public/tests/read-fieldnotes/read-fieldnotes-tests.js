@@ -1,58 +1,74 @@
 import puppeteer from 'puppeteer'
 
-import { scroll, isEnabled, pause, sortBy } from '../test-utils.js'
+import { node, EmissionsTracker } from '@danhartley/emissions'
+
+import { scroll, isEnabled, pause, sortBy, logEmissions } from '../test-utils.js'
 
 const DELAY_FOR_TITLES = 1000
 const FIELDNOTES_TITLE = 'Streets of Lisbon, Portugal, Wed Feb 28 2024'
+const FIELDNOTES_TITLE_2 = 'Benenden, UK, Saturday Feb 03 2024'
+const FIELDNOTES_TITLE_3 = 'Barreiro, Portugal, Thu Apr 18 2024'
 const FIELDNOTES_TITLE_ID = '#fn-autocomplete-title-input-text'
 const FIELDNOTES_BTN_ID = '#fetch-fieldnotes-btn'
 const PRINT_FIELDNOTES_BTN_ID = '#print-fieldnotes-btn'
 const PRINT_FIELDNOTES_WITH_PAGE_BREAKS_BTN_ID = '#print-fieldnotes-with-page-breaks-btn'
 
-import { EmissionsTracker } from '../emissions-tracker.js'
+const parseEmissions = async (page, url) => {
+  const { pageWeight, count, emissions, greenHosting, data, domain } = await node.getPageEmissions(
+    page
+  , url
+)
+
+logEmissions({url, pageWeight, count, emissions, greenHosting, data, domain})
+}
 
 const readFieldnotes = async ({byteOptions, visitOptions}) => {
 
-  // Launch the browser
-  const browser = await puppeteer.launch({headless: false})
-  
-  // Create a page
-  const page = await browser.newPage()
+  let tracker
 
-  // Set the viewport dimensions
-  await page.setViewport({ width: 1280, height: 1024 })
+  const browser = await puppeteer.launch({
+      headless: false
+    , devtools: true
+    , defaultViewport: null
+  })
+
+  const page = await browser.newPage()
 
   // Establish domain from deploy flag (dev or prod depending on the node argument in the command line)
   const deploy = process.argv.find(arg => arg.includes('deploy'))?.split('=')[1] || 'dev'
-  const domain = deploy === 'prod'
-    ? 'ifieldnotes.org'
-    : 'localhost:1234'
+  const url = deploy === 'prod'
+    ? 'https://www.ifieldnotes.org'
+    : 'http://localhost:3000'
 
-  // Go to read fieldnotes page
-  await page.goto(`http://${domain}`)
+  // await parseEmissions(page, url)
 
-  // Create instance of emissions tracker 
-  const emissionsTracker = new EmissionsTracker({
-        page
-      , options: {
-          domain
+  try {
+    
+    tracker = new EmissionsTracker({
+      page
+    , options: {
+          url
+        , domain: 'localhost:3000'
         , reportGreenHosting: true
         , countryCode: 'PRT'
-        , includeThirdPartyResources: true
         , sort: {
             sortBy
-            , direction: 'desc'
-          }
-        // , markDOMLoaded: 'DOM loaded'
-        , markStart: 'fetch-field-notes: start'
-        , markEnd: 'fetch-field-notes: end'
-        , verbose: true
+          , direction: 'desc'
         }
-      , byteOptions
-      , visitOptions
-  })
-  
-  try {
+      }
+    })
+
+    // Navigate to site
+    await page.goto(url)
+
+    // parseEmissions(page, url)
+
+    await pause({
+      func: async() => {
+        await tracker.getReport()
+      }, delay: 5000
+    })
+
     // Abort test if the fetch button is already enabled
     if(isEnabled({
       classList: await page.$eval(FIELDNOTES_BTN_ID, el => el.classList)
@@ -72,16 +88,46 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
           classList: await page.$eval(FIELDNOTES_BTN_ID, el => el.classList)
         })) {
           // Fetch fieldnotes
-          await page.click(FIELDNOTES_BTN_ID)
-          // Log cross domain images
-          await emissionsTracker.logResources({srcs: ['inaturalist', 'drive.google', 'googleusercontent', 'r.logr-ingest.com']})
-          // Log domains entities. Wait 5 seconds for images to download before calling.
-          await pause({func: () => emissionsTracker.logPerformanceEntries(), delay: 5000})          
+          await page.click(FIELDNOTES_BTN_ID)          
         } else {
           await page.screenshot({path: './public/tests/read-fieldnotes/screenshots/fetch button not ready.png', fullPage: true})
         }              
-      }
-    })    
+      }, delay: 500
+    })
+
+    await pause({
+      func: async() => {
+        await tracker.getReport()
+      }, delay: 5000
+    })
+
+    await pause({
+      func: async () => {
+        await page.locator(FIELDNOTES_TITLE_ID).fill(FIELDNOTES_TITLE_2)
+        await page.click(FIELDNOTES_BTN_ID)        
+      }, delay: 5000
+    })
+
+    await pause({
+      func: async() => {
+        await tracker.getReport()
+      }, delay: 5000
+    })
+
+    await pause({
+      func: async () => {
+        await page.locator(FIELDNOTES_TITLE_ID).fill(FIELDNOTES_TITLE_3)
+        await page.click(FIELDNOTES_BTN_ID)        
+      }, delay: 5000
+    })
+
+    await pause({
+      func: async() => {
+        const { std } = await tracker.getReport()
+        console.log(std)
+      }, delay: 5000
+    })
+    
   } catch (e) { 
     await scroll({page})
     await page.screenshot({path: `./public/tests/read-fieldnotes/screenshots/error${Date().now}.png`, fullPage: true})
@@ -89,9 +135,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
   } finally {
       setTimeout(async() => {
         await browser.close()
-      } , DELAY_FOR_TITLES)
-      
-      emissionsTracker.printSummary()
+      } , DELAY_FOR_TITLES)   
   }
 }
 

@@ -1,5 +1,3 @@
-import { URL } from 'url'
-
 export const scroll = async ({page}) => {
   return await page.evaluate(async () => {
       return await new Promise((resolve, reject) => {
@@ -72,4 +70,23 @@ export const sortBy = ({arr, prop, dir = 'asc'}) => {
         const y = b[prop]
         return y - x
       })
+}
+
+export const format = number => {
+  return (number).toLocaleString('en-GB', {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 2
+  })
+}
+
+export const logEmissions = ({url, pageWeight, count, emissions, greenHosting, data, domain}) => {
+  console.log(`Report for ${url}`)
+  console.log('Page weight: ', `${format(pageWeight / 1000)} Kbs`)
+  console.log('Requests ', count)  
+  console.log('Emissions: ', `${format(emissions * 1000)} mg of CO2`)
+  console.log(greenHosting ? 'Hosting: green hosting' : 'Hosting: not green hosting')
+
+  console.log(data?.groupedByType)
+  console.log(data?.totalUncachedBytes)
+  console.log(data?.groupedByTypeBytes)
 }

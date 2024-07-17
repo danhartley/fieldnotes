@@ -9,7 +9,7 @@ describe('pause function', () => {
     func: async () => {
         return 'pause 1'
       },
-      delay: 3000
+      delay: 300
     })
 
     pauses.push(pause1)
@@ -31,9 +31,11 @@ describe('pause function', () => {
     })
 
     pauses.push(pause3)
+    pauses.push('pause 4')
 
     await expect(pauses[0]).toEqual('pause 1')
     await expect(pauses[1]).toEqual('pause 2')
     await expect(pauses[2]).toEqual('pause 3')
+    await expect(pauses[3]).toEqual('pause 4')
   })
 })
