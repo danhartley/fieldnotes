@@ -28,7 +28,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
   const deploy = process.argv.find(arg => arg.includes('deploy'))?.split('=')[1] || 'dev'
   const url = deploy === 'prod'
     ? 'https://www.ifieldnotes.org'
-    : 'http://localhost:3000'
+    : 'http://localhost:3002'
 
   // await parseEmissions(page, url)
 
@@ -37,7 +37,7 @@ const readFieldnotes = async ({byteOptions, visitOptions}) => {
       page
     , options: {
           url
-        , domain: 'localhost:3000'
+        , domain: 'localhost:3002'
         , reportGreenHosting: true
         , countryCode: 'PRT'
         , sort: {

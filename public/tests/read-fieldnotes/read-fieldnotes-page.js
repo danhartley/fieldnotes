@@ -7,7 +7,8 @@ const parseEmissions = async (page, url) => {
   const options = {
     hostingOptions: {
       verbose: false,
-    }
+      forceGreen: true,
+    },
   }
 
   const { pageWeight, count, emissions, greenHosting, data, domain, responses } = await node.getPageEmissions(
@@ -30,7 +31,7 @@ const parseEmissions = async (page, url) => {
   const page = await browser.newPage()
   page.setCacheEnabled(false)
 
-  const url = 'http://localhost:3000'
+  const url = 'http://localhost:3002'
 
   await parseEmissions(page, url)
   // await browser.close()
