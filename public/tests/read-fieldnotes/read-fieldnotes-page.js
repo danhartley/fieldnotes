@@ -26,5 +26,5 @@ const parseEmissions = async (page, url) => {
   const url = 'http://localhost:3000'
 
   await parseEmissions(page, url)
-  // await browser.close()
+  await browser.close()
 })()
