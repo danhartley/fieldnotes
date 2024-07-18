@@ -33,7 +33,7 @@ import {
     , logger
 } from './common/utils.js'
 
-import { getPageLoadEmissions } from './emissions/emissions.js'
+import { getPageEmissions } from './emissions/emissions.js'
 
 const init = async () => {    
     const initGlobalRead = () => {
@@ -806,7 +806,7 @@ const init = async () => {
         performance.mark('DOM loaded')
     })
 
-    getPageLoadEmissions()    
+    getPageEmissions()
 }
 
 init()

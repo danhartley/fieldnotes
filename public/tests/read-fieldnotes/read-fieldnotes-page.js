@@ -1,12 +1,19 @@
 import puppeteer from 'puppeteer'
 
 import { node } from '@danhartley/emissions'
-import { scroll, isEnabled, pause, logEmissions } from '../test-utils.js'
+import { logEmissions } from '../test-utils.js'
 
 const parseEmissions = async (page, url) => {
+  const options = {
+    hostingOptions: {
+      verbose: false,
+    }
+  }
+
   const { pageWeight, count, emissions, greenHosting, data, domain, responses } = await node.getPageEmissions(
       page
     , url
+    , options
   )
 
   logEmissions({url, pageWeight, count, emissions, greenHosting, data, domain, responses})
@@ -26,5 +33,5 @@ const parseEmissions = async (page, url) => {
   const url = 'http://localhost:3000'
 
   await parseEmissions(page, url)
-  await browser.close()
+  // await browser.close()
 })()

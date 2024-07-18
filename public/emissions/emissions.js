@@ -1,15 +1,15 @@
 import { browser } from '@danhartley/emissions'
 
-export const getPageLoadEmissions = () => {
+export const getPageEmissions = () => {
   (async () => {
     await browser.registerServiceWorker()
   
     const url = window.location.origin
-      const options = {
-        hostingOptions: {
-          verbose: true,
-        }
+    const options = {
+      hostingOptions: {
+        verbose: true,
       }
+    }
 
     const { pageWeight, count, greenHosting, emissions, mgCO2 } = await browser.getPageEmissions(url, options)
     
