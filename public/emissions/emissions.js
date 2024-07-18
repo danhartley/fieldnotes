@@ -13,5 +13,7 @@ export const getPageLoadEmissions = () => {
     console.log('Emissions: ', `${mgCO2} mg of CO2`)
     console.log(greenHosting ? 'Hosting: green hosting' : 'Hosting: not green hosting')
 
+    await browser.clearPageEmissions()
+
   })() 
 }
