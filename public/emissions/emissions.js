@@ -8,6 +8,7 @@ export const getPageEmissions = () => {
     const options = {
       hostingOptions: {
         verbose: true,
+        forceGreen: true,
       }
     }
 
