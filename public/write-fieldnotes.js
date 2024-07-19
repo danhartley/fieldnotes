@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import {
   addFieldnotes,
   g,
@@ -621,7 +622,7 @@ const init = () => {
           )
           break
         case 'images-write-template':
-          const sectionContainer = typeClone.getElementById('section-id')
+          { const sectionContainer = typeClone.getElementById('section-id')
           sectionContainer.id = `${sectionContainer.id}-${sectionIndex}`
           const url1 = typeClone.getElementById('image-url-input-0')
           const title1 = typeClone.getElementById('image-title-input-0')
@@ -656,7 +657,7 @@ const init = () => {
                 cancelActionBtn,
               }),
           })
-          break
+          break }
         case 'inat-lookup-write-template':
           datalist = typeClone.querySelector('datalist')
           datalist.id = `${sectionIndex}-dl-list`
@@ -679,7 +680,7 @@ const init = () => {
               }),
           })
           // Observe changes to the species list
-          observer = new MutationObserver((e) => {
+          observer = new MutationObserver(() => {
             const section = globalWrite.fieldnotes.sections.find(
               (s) => s.sectionIndex === sectionIndex
             )
@@ -745,7 +746,7 @@ const init = () => {
       })
 
       cancelActionBtn.addClickHandler({
-        clickHandler: (e) => {
+        clickHandler: () => {
           cancelActionBtn.hide()
           addOrUpdateSectionBtn.hide()
           editSectionBtn.show()
@@ -800,7 +801,7 @@ const init = () => {
           fieldset.querySelector('textarea:not(.hidden)')?.focus()
           break
         case 'terms-write-template':
-          const parent = fieldset.querySelector('#selected-term')
+          { const parent = fieldset.querySelector('#selected-term')
           const addSelectedTermBtn = fieldset.querySelector(
             '#add-selected-term-btn'
           )
@@ -888,9 +889,9 @@ const init = () => {
               })
             },
           })
-          break
+          break }
         case 'images-write-template':
-          const url1 = fieldset.querySelector('#image-url-input-0')
+          { const url1 = fieldset.querySelector('#image-url-input-0')
           const title1 = fieldset.querySelector('#image-title-input-0')
           const url2 = fieldset.querySelector('#image-url-input-1')
           const title2 = fieldset.querySelector('#image-title-input-1')
@@ -926,7 +927,7 @@ const init = () => {
             }
           )
           Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
-          break
+          break }
         case 'inat-lookup-write-template':
           toggleSpeciesListTopBtn.addClickHandler({
             clickHandler: () =>
@@ -1043,7 +1044,7 @@ const init = () => {
         })
         break
       case 'textarea-write-template':
-        const ps = typeValue.split('\n').filter((p) => p.length > 0)
+        { const ps = typeValue.split('\n').filter((p) => p.length > 0)
         const paras = ps.map((p) => {
           return {
             p,
@@ -1058,7 +1059,7 @@ const init = () => {
             previewContainer,
           })
         )
-        break
+        break }
       case 'observations-write-template':
       case 'species-write-template':
       case 'inat-lookup-write-template':
@@ -1384,7 +1385,7 @@ const init = () => {
 
       // Add onclick handler to copy URL button
       createUrlBtn.addClickHandler({
-        clickHandler: async (e) => {
+        clickHandler: async () => {
           const url = getURL({
             location: window.location,
             slug,
@@ -1538,7 +1539,7 @@ const init = () => {
             ).innerText = 'show all'
             break
           case 'inat-lookup-preview-template':
-            let parent = null
+            { let parent = null
             section.species.forEach((species, index) => {
               parent = draggableSection.querySelector(
                 `#inat-lookup-parent-${section.sectionIndex}`
@@ -1560,7 +1561,7 @@ const init = () => {
               checkbox.setAttribute('checked', true)
               checkbox.nextElementSibling.innerText = 'Included'
             })
-            break
+            break }
           case 'images-preview-template':
             section.images.forEach((img, i) => {
               if (img.src.length > 0) {
@@ -1574,7 +1575,7 @@ const init = () => {
             })
             break
           case 'terms-preview-template':
-            const selectedItemsListElement = draggableSection.querySelector(
+            { const selectedItemsListElement = draggableSection.querySelector(
               '#selected-terms-list'
             )
             const selectedTerms = []
@@ -1587,7 +1588,7 @@ const init = () => {
                 sectionIndex: section.sectionIndex,
               })
               selectedTerms.push(term)
-            })
+            }) }
         }
         setOriginalTypeValues({
           globalWrite,
@@ -1642,7 +1643,7 @@ const init = () => {
   // User action: log in or log out
   const authenticateBtn = new ButtonComponent({
     elementSelector: 'authenticate-btn',
-    clickHandler: (e) =>
+    clickHandler: () =>
       authenticateUserEmailAndPassword({
         global: globalWrite,
         user: globalWrite.user,
@@ -1658,7 +1659,7 @@ const init = () => {
   })
 
   signUpBtn.addClickHandler({
-    clickHandler: (e) =>
+    clickHandler: () =>
       authenticateNewUserEmailAndPassword({
         email: d.getElementById('firebase-email'),
         password: d.getElementById('firebase-password'),
@@ -1798,7 +1799,7 @@ const init = () => {
   })
 
   // Clear input so that user can select new title
-  fnAutocompleteTitleInputText.addEventListener('focus', (e) => {
+  fnAutocompleteTitleInputText.addEventListener('focus', () => {
     if (fnAutocompleteTitleDatalist.innerHTML !== '') {
       fnAutocompleteTitleInputText.value = ''
       fieldnotesAutocomplete({

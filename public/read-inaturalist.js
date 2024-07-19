@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { g, getInatObservations, snapSpeciesTraits } from './data/api.js'
 
 import {
@@ -634,7 +635,7 @@ const init = async () => {
   })
 
   // Check that document has loaded
-  d.addEventListener('DOMContentLoaded', (event) => {
+  d.addEventListener('DOMContentLoaded', () => {
     rbInatAutocompleteGroup.forEach((rb) => {
       rb.addEventListener('change', (e) => {
         globalRead.inatAutocomplete = globalRead.inatAutocompleteOptions.find(
