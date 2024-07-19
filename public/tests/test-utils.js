@@ -104,5 +104,5 @@ export const logEmissions = ({
   console.log('groupedByTypeBytes')
   console.log(data?.groupedByTypeBytes)
   console.log('Responses')
-  console.log(responses)
+  console.log(responses || 'Not provided')
 }

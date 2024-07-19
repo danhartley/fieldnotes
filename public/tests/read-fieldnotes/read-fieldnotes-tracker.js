@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer'
 
 import { EmissionsTracker } from '@danhartley/emissions'
-import { scroll, isEnabled, pause, sortBy } from '../test-utils.js'
+import { scroll, isEnabled, pause, sortBy, logEmissions } from '../test-utils.js'
 
 const DELAY_FOR_TITLES = 1000
 const FIELDNOTES_TITLE = 'Streets of Lisbon, Portugal, Wed Feb 28 2024'
@@ -124,7 +124,24 @@ const readFieldnotes = async () => {
     await pause({
       func: async () => {
         const { std } = await tracker.getReport()
-        console.log(std)
+        const {
+          pageWeight,
+          count,
+          emissions,
+          greenHosting,
+          data,
+          domain,
+        } = std
+
+        logEmissions({
+          url,
+          pageWeight,
+          count,
+          emissions,
+          greenHosting,
+          data,
+          domain,
+        })
       },
       delay: 5000,
     })
