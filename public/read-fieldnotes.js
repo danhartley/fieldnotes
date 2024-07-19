@@ -47,6 +47,7 @@ const init = async () => {
 
   const globalRead = initGlobalRead()
 
+  // eslint-disable-next-line no-undef
   const d = document
 
   // Select title
@@ -119,7 +120,7 @@ const init = async () => {
   const addImgClickEventHandlers = () => {
     const speciesImages = d.querySelectorAll('img')
 
-    const showSpeciesDetails = ({ e, img }) => {
+    const showSpeciesDetails = ({ img }) => {
       const container = img.parentElement
       const grid = container.parentElement
       const speciesPanel = grid.querySelector('.species-panel')
