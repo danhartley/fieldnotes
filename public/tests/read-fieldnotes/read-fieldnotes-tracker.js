@@ -9,11 +9,8 @@ const FIELDNOTES_TITLE_2 = 'Benenden, UK, Saturday Feb 03 2024'
 const FIELDNOTES_TITLE_3 = 'Barreiro, Portugal, Thu Apr 18 2024'
 const FIELDNOTES_TITLE_ID = '#fn-autocomplete-title-input-text'
 const FIELDNOTES_BTN_ID = '#fetch-fieldnotes-btn'
-const PRINT_FIELDNOTES_BTN_ID = '#print-fieldnotes-btn'
-const PRINT_FIELDNOTES_WITH_PAGE_BREAKS_BTN_ID =
-  '#print-fieldnotes-with-page-breaks-btn'
 
-const readFieldnotes = async ({ byteOptions, visitOptions }) => {
+const readFieldnotes = async () => {
   let tracker
 
   const browser = await puppeteer.launch({
@@ -30,22 +27,22 @@ const readFieldnotes = async ({ byteOptions, visitOptions }) => {
   const url =
     deploy === 'prod' ? 'https://www.ifieldnotes.org' : 'http://localhost:3003'
 
-  // await parseEmissions(page, url)
+  const options = {
+    url,
+    domain: 'localhost:3003',
+    reportGreenHosting: true,
+    countryCode: 'PRT',
+    sort: {
+      sortBy,
+      direction: 'desc',
+    },
+  }
 
   try {
-    tracker = new EmissionsTracker({
+    tracker = new EmissionsTracker(
       page,
-      options: {
-        url,
-        domain: 'localhost:3003',
-        reportGreenHosting: true,
-        countryCode: 'PRT',
-        sort: {
-          sortBy,
-          direction: 'desc',
-        },
-      },
-    })
+      options
+    )
 
     // Navigate to site
     await page.goto(url)
@@ -145,28 +142,4 @@ const readFieldnotes = async ({ byteOptions, visitOptions }) => {
   }
 }
 
-// Use logPerByteTrace
-const byteOptions = {
-  dataReloadRatio: 0.6,
-  firstVisitPercentage: 0.9,
-  returnVisitPercentage: 0.1,
-  gridIntensity: {
-    device: { country: 'PRT' },
-    dataCenter: { country: 'PRT' },
-    network: { country: 'PRT' },
-  },
-}
-
-// Use logPerVisitTrace
-const visitOptions = {
-  dataReloadRatio: 0.6,
-  firstVisitPercentage: 0.9,
-  returnVisitPercentage: 0.1,
-  gridIntensity: {
-    device: { country: 'PRT' },
-    dataCenter: { country: 'PRT' },
-    network: { country: 'PRT' },
-  },
-}
-
-readFieldnotes({ byteOptions, visitOptions })
+readFieldnotes()
