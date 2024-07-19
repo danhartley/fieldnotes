@@ -4,6 +4,7 @@ export const getPageEmissions = () => {
   ;(async () => {
     await browser.registerServiceWorker()
 
+    // eslint-disable-next-line no-undef
     const url = window.location.origin
     const options = {
       hostingOptions: {
@@ -12,7 +13,7 @@ export const getPageEmissions = () => {
       },
     }
 
-    const { pageWeight, count, greenHosting, emissions, mgCO2 } =
+    const { pageWeight, count, greenHosting, mgCO2 } =
       await browser.getPageEmissions(url, options)
 
     console.log(`Report for ${url}`)

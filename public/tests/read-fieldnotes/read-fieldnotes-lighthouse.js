@@ -11,9 +11,6 @@ const FIELDNOTES_TITLE_2 = 'Benenden, UK, Saturday Feb 03 2024'
 const FIELDNOTES_TITLE_3 = 'Barreiro, Portugal, Thu Apr 18 2024'
 const FIELDNOTES_TITLE_ID = '#fn-autocomplete-title-input-text'
 const FIELDNOTES_BTN_ID = '#fetch-fieldnotes-btn'
-const PRINT_FIELDNOTES_BTN_ID = '#print-fieldnotes-btn'
-const PRINT_FIELDNOTES_WITH_PAGE_BREAKS_BTN_ID =
-  '#print-fieldnotes-with-page-breaks-btn'
 
 const readFieldnotes = async () => {
   const browser = await puppeteer.launch({
