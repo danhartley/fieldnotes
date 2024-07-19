@@ -2,7 +2,6 @@
 import { g, getInatObservations, snapSpeciesTraits } from './data/api.js'
 
 import {
-  checkForLocalisedCommonSpeciesNames,
   cloneSpeciesCardFromTemplate,
   getTaxonGroupColour,
   handleInatAutocomplete,
@@ -14,7 +13,6 @@ import {
 
 import {
   ButtonComponent,
-  ButtonHideShowComponent,
 } from './common/ui-components.js'
 
 import { appLocalStorage } from './common/utils.js'

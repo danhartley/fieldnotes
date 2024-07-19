@@ -810,7 +810,7 @@ const init = () => {
           })
 
           const selectedTerms = []
-          const handleOnClickAddSelectedTermBtn = ({ terms, selectedTerm }) => {
+          const handleOnClickAddSelectedTermBtn = ({ selectedTerm }) => {
             const selectedItemsListElement = fieldset.querySelector(
               '#selected-terms-list'
             )
@@ -1327,7 +1327,7 @@ const init = () => {
     }
   }
 
-  const saveFieldNotesBtn = new ButtonComponent({
+  new ButtonComponent({
     elementSelector: 'save-fieldnotes-btn',
     clickHandler: () =>
       saveFieldnotes({
@@ -1753,7 +1753,7 @@ const init = () => {
   })
 
   // User action: delete fieldnotes
-  const deleteFieldnotesBtn = new ButtonComponent({
+  new ButtonComponent({
     elementSelector: 'delete-fieldnotes-btn',
     clickHandler: async () => {
       // This is a soft delete, and simply updates the status to deleted
@@ -1778,7 +1778,7 @@ const init = () => {
   })
 
   // User action: save fieldnotes to file (export)
-  const exportFieldnotesToFileBtn = new ButtonComponent({
+  new ButtonComponent({
     elementSelector: 'export-fieldnotes-to-file-btn',
     clickHandler: () => {
       saveJson({

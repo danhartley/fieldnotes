@@ -655,11 +655,9 @@ const init = async () => {
     try {
       importFieldNotesNotificationText.classList.remove('hidden')
 
-      const response = false
-        ? await globalRead.fieldnotesStubs
-        : await getFieldnotesById({
-            id: globalRead.fieldnotesStubs.fieldnotesId,
-          })
+      const response = await getFieldnotesById({
+        id: globalRead.fieldnotesStubs.fieldnotesId,
+      })
 
       importFieldNotesNotificationText.innerText = 'Fetching species…'
 
@@ -796,7 +794,7 @@ const init = async () => {
     (template) => template.templateId === 'fieldnotes-template'
   )
 
-  const printFieldnotesBtn = new ButtonComponent({
+  new ButtonComponent({
     elementSelector: 'print-fieldnotes-btn',
     clickHandler: () => {
       Array.from(d.querySelectorAll('.grid')).forEach((grid) =>
@@ -807,7 +805,7 @@ const init = async () => {
     },
   })
 
-  const printFieldnotesWithPageBreaksBtn = new ButtonComponent({
+  new ButtonComponent({
     elementSelector: 'print-fieldnotes-with-page-breaks-btn',
     clickHandler: () => {
       Array.from(d.querySelectorAll('.grid')).forEach((grid) =>
@@ -884,7 +882,7 @@ const init = async () => {
     const loadTime = endTime - startTime
 
     logger({
-      // message: `DOM loaded in ${loadTime} milliseconds`
+      message: `DOM loaded in ${loadTime} milliseconds`
     })
     performance.mark('DOM loaded')
   })
