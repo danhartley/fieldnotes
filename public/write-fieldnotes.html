@@ -1,26 +1,41 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Write field notes for a field trip using iNaturalist observations and taxa data. Supplement notes with photos, definitions, and bird song recordings.">
-    <meta http-equiv="Content-Security-Policy"content="script-src 'self' https://*.withcabin.com; img-src https://* http://localhost:1234/; child-src 'none'; connect-src 'self' https://*.withcabin.com https://*.googleapis.com https://apis.google.com https://*.inaturalist.org;" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Write field notes for a field trip using iNaturalist observations and taxa data. Supplement notes with photos, definitions, and bird song recordings."
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' https://*.withcabin.com; img-src https://* http://localhost:1234/; child-src 'none'; connect-src 'self' https://*.withcabin.com https://*.googleapis.com https://apis.google.com https://*.inaturalist.org;"
+    />
     <title>Write fieldnotes based on iNaturalist observations</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles.css" />
     <link rel="icon" href="./favicon.ico" />
     <link rel="canonical" href="https://ifieldnotes.org/write" />
     <script type="module" src="./write-fieldnotes.js" type="module"></script>
   </head>
 
-  <body>  
+  <body>
     <header>
       <a href="#main" class="skip-link">Skip to main content</a>
       <nav>
         <ul>
-          <li><a data-view="fieldnotes-search-view" href="/">Read fieldnotes</a></li>
-          <li><a data-view="write-fieldnotes-view" href="/write" class="selected">Write fieldnotes</a></li>
-          <li><a data-view="inaturalist-search-view" href="/inaturalist">Search iNaturalist</a></li>
+          <li>
+            <a data-view="fieldnotes-search-view" href="/">Read fieldnotes</a>
+          </li>
+          <li>
+            <a data-view="write-fieldnotes-view" href="/write" class="selected"
+              >Write fieldnotes</a
+            >
+          </li>
+          <li>
+            <a data-view="inaturalist-search-view" href="/inaturalist"
+              >Search iNaturalist</a
+            >
+          </li>
         </ul>
       </nav>
     </header>
@@ -30,24 +45,54 @@
         <form id="authentication-form">
           <div class="centred-block logged-out hidden">
             <label for="firebase-email" class="mw8">Email</label>
-            <input id="firebase-email" name="firebase-email" type="email" required pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" placeholder="A valid email is required" class="p">
+            <input
+              id="firebase-email"
+              name="firebase-email"
+              type="email"
+              required
+              pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
+              placeholder="A valid email is required"
+              class="p"
+            />
           </div>
           <div class="centred-block logged-out hidden">
             <label for="firebase-password" class="mw8">Password</label>
-            <input id="firebase-password" name="firebase-password" type="password" required minlength="6" placeholder="Password must be at least 6 characters" autocomplete="true" current-password="true" class="p">
-          </div>        
-        <div class="double-centred-block mt mb">
-          <div>
-            <span id="authenticate-state-text" class="mr">Logged in state unknown.</span>
+            <input
+              id="firebase-password"
+              name="firebase-password"
+              type="password"
+              required
+              minlength="6"
+              placeholder="Password must be at least 6 characters"
+              autocomplete="true"
+              current-password="true"
+              class="p"
+            />
           </div>
-          <button type="button" id="authenticate-btn" class="btn-secondary-action">Checking…</button>
-          <button type="button" id="sign-up-btn" class="hidden">Sign up</button>
-        </div>
-        <div class="centred-block mt2 mb2 ml8 logged-out hidden">
-          <input id="firebase-sign-up-checkbox" type="checkbox" />
-          <label for="firebase-sign-up-checkbox" class="initial-text">First time user (sign up)</label>
-        </div>
-      </form>
+          <div class="double-centred-block mt mb">
+            <div>
+              <span id="authenticate-state-text" class="mr"
+                >Logged in state unknown.</span
+              >
+            </div>
+            <button
+              type="button"
+              id="authenticate-btn"
+              class="btn-secondary-action"
+            >
+              Checking…
+            </button>
+            <button type="button" id="sign-up-btn" class="hidden">
+              Sign up
+            </button>
+          </div>
+          <div class="centred-block mt2 mb2 ml8 logged-out hidden">
+            <input id="firebase-sign-up-checkbox" type="checkbox" />
+            <label for="firebase-sign-up-checkbox" class="initial-text"
+              >First time user (sign up)</label
+            >
+          </div>
+        </form>
       </section>
     </aside>
 
@@ -56,20 +101,48 @@
         <section class="is-authenticated disabled">
           <fieldset id="edit-field-notes" class="border-solid">
             <legend>Edit fieldnotes</legend>
-            <button id="show-hide-edit-fieldnotes-btn" data-view="edit" class="view-btn btn-secondary btn-absolute">Hide</button>
+            <button
+              id="show-hide-edit-fieldnotes-btn"
+              data-view="edit"
+              class="view-btn btn-secondary btn-absolute"
+            >
+              Hide
+            </button>
             <div class="fieldnotes-view">
-              <p class="mt0 small">Find and edit previous fieldnotes by title.</p>
+              <p class="mt0 small">
+                Find and edit previous fieldnotes by title.
+              </p>
               <div class="centred-block">
-                  <label for="fn-autocomplete-title-input-text">Title</label>
-                  <input id="fn-autocomplete-title-input-text" list="fn-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing or click on a title to select it…">
-                  <datalist id="fn-autocomplete-title-data-list"></datalist>
+                <label for="fn-autocomplete-title-input-text">Title</label>
+                <input
+                  id="fn-autocomplete-title-input-text"
+                  list="fn-autocomplete-title-data-list"
+                  type="text"
+                  class="p"
+                  autocomplete="off"
+                  spellcheck="false"
+                  placeholder="Start typing or click on a title to select it…"
+                />
+                <datalist id="fn-autocomplete-title-data-list"></datalist>
               </div>
               <div id="field-notes-lookup-callback-parent" class="mt2"></div>
               <div class="centred-block mt">
-                <button id="fetch-fieldnotes-btn" class="ml7 mr disabled">Fetch fieldnotes to edit</button>
-                <div id="fetching-fieldnotes-notification-text" class="small hidden">Fetching fieldnotes…</div>
+                <button id="fetch-fieldnotes-btn" class="ml7 mr disabled">
+                  Fetch fieldnotes to edit
+                </button>
+                <div
+                  id="fetching-fieldnotes-notification-text"
+                  class="small hidden"
+                >
+                  Fetching fieldnotes…
+                </div>
               </div>
-              <p class="mt2 small"><em>These fieldnotes will be updated each time you add, edit, delete or move a section.</em></p>
+              <p class="mt2 small">
+                <em
+                  >These fieldnotes will be updated each time you add, edit,
+                  delete or move a section.</em
+                >
+              </p>
             </div>
           </fieldset>
         </section>
@@ -77,133 +150,337 @@
         <section class="is-authenticated disabled">
           <fieldset>
             <legend>Create fieldnotes</legend>
-            <button id="show-hide-create-fieldnotes-btn" data-view="create" class="view-btn btn-secondary btn-absolute">Show</button>
+            <button
+              id="show-hide-create-fieldnotes-btn"
+              data-view="create"
+              class="view-btn btn-secondary btn-absolute"
+            >
+              Show
+            </button>
             <div class="fieldnotes-view hidden">
-              <p class="mt0 small">Filter iNaturalist to search for observations by user and date.</p>
+              <p class="mt0 small">
+                Filter iNaturalist to search for observations by user and date.
+              </p>
               <div class="centred-block">
-                  <label for="inat-autocomplete-input-text">User</label>
-                  <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing a username or user ID…">
-                  <datalist id="inat-autocomplete-data-list"></datalist>
+                <label for="inat-autocomplete-input-text">User</label>
+                <input
+                  id="inat-autocomplete-input-text"
+                  list="inat-autocomplete-data-list"
+                  type="text"
+                  class="p"
+                  autocomplete="off"
+                  spellcheck="false"
+                  placeholder="Start typing a username or user ID…"
+                />
+                <datalist id="inat-autocomplete-data-list"></datalist>
               </div>
               <p class="small">The date of your field trip.</p>
               <div class="centred-block mt2">
                 <label for="single-observations-input-date">Date</label>
-                <input type="date" id="single-observations-input-date" name="single-observations-input-date" class="mr" />
+                <input
+                  type="date"
+                  id="single-observations-input-date"
+                  name="single-observations-input-date"
+                  class="mr"
+                />
               </div>
-              <p class="small">If your trip lasted more than a day, create separate entries.</p>
+              <p class="small">
+                If your trip lasted more than a day, create separate entries.
+              </p>
               <div class="centred-block mt2">
-                <button id="search-inat-observations-btn" class="ml7 mr submit disabled">Search iNaturalist</button>
-                <div id="search-inat-observations-notification-text" class="small hidden">Connecting…</div>
+                <button
+                  id="search-inat-observations-btn"
+                  class="ml7 mr submit disabled"
+                >
+                  Search iNaturalist
+                </button>
+                <div
+                  id="search-inat-observations-notification-text"
+                  class="small hidden"
+                >
+                  Connecting…
+                </div>
               </div>
               <div class="centred-block mt2 ml7">
                 <input id="remember-inat-user-checkbox" type="checkbox" />
-                <label for="remember-inat-user-checkbox" class="initial-text">Remember inat user</label>
+                <label for="remember-inat-user-checkbox" class="initial-text"
+                  >Remember inat user</label
+                >
               </div>
             </div>
           </fieldset>
         </section>
-  
+
         <section id="meta-data-section" class="has-fieldnotes disabled">
           <fieldset id="field-trip">
             <legend>Field trip</legend>
-            <p class="mt0 small">If your field trip is supported by iNaturalist observations, an iNaturalist search will populate these fields for you.</p>            
+            <p class="mt0 small">
+              If your field trip is supported by iNaturalist observations, an
+              iNaturalist search will populate these fields for you.
+            </p>
             <div class="centred-block">
-              <label for="title-input-text">Title</label>      
-              <input id="title-input-text" type="text" class="p" autocomplete="off" minlength="3" placeholder="e.g. Simien Mountains January 27 2020">
+              <label for="title-input-text">Title</label>
+              <input
+                id="title-input-text"
+                type="text"
+                class="p"
+                autocomplete="off"
+                minlength="3"
+                placeholder="e.g. Simien Mountains January 27 2020"
+              />
             </div>
             <div class="centred-block mt2">
-              <label for="author-input-text">Author</label>      
-              <input id="author-input-text" type="text" class="p" autocomplete="off" minlength="3" placeholder="Minimum length 3 characters">
+              <label for="author-input-text">Author</label>
+              <input
+                id="author-input-text"
+                type="text"
+                class="p"
+                autocomplete="off"
+                minlength="3"
+                placeholder="Minimum length 3 characters"
+              />
             </div>
             <div class="centred-block mt2">
-              <label for="date-input-text">Date</label>      
-              <input id="date-input-text" type="date" autocomplete="off">
+              <label for="date-input-text">Date</label>
+              <input id="date-input-text" type="date" autocomplete="off" />
             </div>
             <div class="centred-block mt2">
-              <label for="time-start-input-text">Start</label>      
-              <input id="time-start-input-text" type="time" autocomplete="off" placeholder="Optional">
-              <label for="time-end-input-text" class="ml initial-width mr">End</label>
-              <input id="time-end-input-text" type="time" autocomplete="off"><span class="ml small">(Optional)</span>
+              <label for="time-start-input-text">Start</label>
+              <input
+                id="time-start-input-text"
+                type="time"
+                autocomplete="off"
+                placeholder="Optional"
+              />
+              <label for="time-end-input-text" class="ml initial-width mr"
+                >End</label
+              >
+              <input
+                id="time-end-input-text"
+                type="time"
+                autocomplete="off"
+              /><span class="ml small">(Optional)</span>
             </div>
             <div class="centred-block mt2">
-              <label for="place-input-text">Place</label>      
-              <input id="place-input-text" type="text" class="p" autocomplete="off" minlength="3" placeholder="Minimum length 3 characters">
+              <label for="place-input-text">Place</label>
+              <input
+                id="place-input-text"
+                type="text"
+                class="p"
+                autocomplete="off"
+                minlength="3"
+                placeholder="Minimum length 3 characters"
+              />
             </div>
             <div class="centred-block mt2">
-              <label for="weather-input-text">Weather</label>      
-              <input id="weather-input-text" type="text" class="p" autocomplete="off" placeholder="(Optional) e.g. High 27, low 10, wind 12 mph, sunny">
+              <label for="weather-input-text">Weather</label>
+              <input
+                id="weather-input-text"
+                type="text"
+                class="p"
+                autocomplete="off"
+                placeholder="(Optional) e.g. High 27, low 10, wind 12 mph, sunny"
+              />
             </div>
             <div class="centred-block mt2">
-              <label for="habitat-input-text">Habitat</label>      
-              <input id="habitat-input-text" type="text" class="p" autocomplete="off" placeholder="(Optional) e.g. Northern hardwood forest">
+              <label for="habitat-input-text">Habitat</label>
+              <input
+                id="habitat-input-text"
+                type="text"
+                class="p"
+                autocomplete="off"
+                placeholder="(Optional) e.g. Northern hardwood forest"
+              />
             </div>
             <div class="centred-block mt2">
               <div class="as-label">Slug</div>
               <div class="justified-space-between-block">
                 <div id="slug-text" class="small">--</div>
-                <button id="copy-url-btn" class="btn-secondary">Copy URL</button>
+                <button id="copy-url-btn" class="btn-secondary">
+                  Copy URL
+                </button>
               </div>
             </div>
-            <p class="small"><em>A <strong>title</strong>, <strong>author</strong>, <strong>date</strong> and <strong>place</strong> are all required to create, or edit, fieldnotes.</em></p>
+            <p class="small">
+              <em
+                >A <strong>title</strong>, <strong>author</strong>,
+                <strong>date</strong> and <strong>place</strong> are all
+                required to create, or edit, fieldnotes.</em
+              >
+            </p>
           </fieldset>
         </section>
 
-        <section id="select-section-type-section" class="has-fieldnotes disabled">
+        <section
+          id="select-section-type-section"
+          class="has-fieldnotes disabled"
+        >
           <fieldset>
             <legend>Field journal sections</legend>
-            <button id="h3-write" type="button" value="h3-write-template">Header</button>
-            <button id="h4-write" type="button" value="h4-write-template" class="mt">Subheader</button>
-            <button id="textarea" type="button" value="textarea-write-template" class="mt">Text block</button>
-            <button id="inat-lookup" type="button" value="inat-lookup-write-template" class="mt">iNat species</button>
-            <button id="images" type="button" value="images-write-template" class="mt">Field trip photos</button>
-            <button id="terms" type="button" value="terms-write-template" class="mt">Terms</button>
-            <button id="xenocanto-write" type="button" value="xenocanto-write-template" class="mt">Birdsong</button>
-            
-            <div class="mt2 small">To add observations and species photos, you must first run an iNaturalist search.</div>
+            <button id="h3-write" type="button" value="h3-write-template">
+              Header
+            </button>
+            <button
+              id="h4-write"
+              type="button"
+              value="h4-write-template"
+              class="mt"
+            >
+              Subheader
+            </button>
+            <button
+              id="textarea"
+              type="button"
+              value="textarea-write-template"
+              class="mt"
+            >
+              Text block
+            </button>
+            <button
+              id="inat-lookup"
+              type="button"
+              value="inat-lookup-write-template"
+              class="mt"
+            >
+              iNat species
+            </button>
+            <button
+              id="images"
+              type="button"
+              value="images-write-template"
+              class="mt"
+            >
+              Field trip photos
+            </button>
+            <button
+              id="terms"
+              type="button"
+              value="terms-write-template"
+              class="mt"
+            >
+              Terms
+            </button>
+            <button
+              id="xenocanto-write"
+              type="button"
+              value="xenocanto-write-template"
+              class="mt"
+            >
+              Birdsong
+            </button>
 
-            <button id="observations" type="button" value="observations-write-template" class="disabled">Observations</button>
-            <button id="species" type="button" value="species-write-template" class="mt disabled">Species</button>
-            <div class="mt2 small"><em>You can create multiple sections of each type, and change their order.</em></div>
+            <div class="mt2 small">
+              To add observations and species photos, you must first run an
+              iNaturalist search.
+            </div>
+
+            <button
+              id="observations"
+              type="button"
+              value="observations-write-template"
+              class="disabled"
+            >
+              Observations
+            </button>
+            <button
+              id="species"
+              type="button"
+              value="species-write-template"
+              class="mt disabled"
+            >
+              Species
+            </button>
+            <div class="mt2 small">
+              <em
+                >You can create multiple sections of each type, and change their
+                order.</em
+              >
+            </div>
           </fieldset>
         </section>
 
         <div id="draggable-sections"></div>
 
-        <section id="save-fieldnotes-section" class="fieldnotes-view disabled hidden">
+        <section
+          id="save-fieldnotes-section"
+          class="fieldnotes-view disabled hidden"
+        >
           <fieldset>
             <legend>Save fieldnotes</legend>
-            <p class="mt0 small">If you choose to publish your fieldnotes, you will be able to revert to a private draft.</p>
+            <p class="mt0 small">
+              If you choose to publish your fieldnotes, you will be able to
+              revert to a private draft.
+            </p>
             <div>
-              <button id="save-fieldnotes-btn" class="p btn-save">Save private draft of your fieldnotes</button>
-              <button id="save-and-publish-fieldnotes-btn" class="mt p btn-save">Save and publish fieldnotes</button>
+              <button id="save-fieldnotes-btn" class="p btn-save">
+                Save private draft of your fieldnotes
+              </button>
+              <button
+                id="save-and-publish-fieldnotes-btn"
+                class="mt p btn-save"
+              >
+                Save and publish fieldnotes
+              </button>
             </div>
-            <p class="mt2 small"><em>You will be able to edit your fieldnotes whether you choose to save them as a private draft or to publish them.</em></p>            
+            <p class="mt2 small">
+              <em
+                >You will be able to edit your fieldnotes whether you choose to
+                save them as a private draft or to publish them.</em
+              >
+            </p>
           </fieldset>
         </section>
 
         <section id="fieldnotes-state-section" class="has-fieldnotes disabled">
           <fieldset>
             <legend>Fieldnotes status (public/private)</legend>
-            <p class="mt0 small">Your fieldnotes are currently: <strong><em id="update-fieldnotes-current-status-text"></em></strong></p>
-            <p id="update-fieldnotes-status-text" class="mt0 small">If you set your fieldnotes to private, they will no longer viewable by others.</p>
+            <p class="mt0 small">
+              Your fieldnotes are currently:
+              <strong
+                ><em id="update-fieldnotes-current-status-text"></em
+              ></strong>
+            </p>
+            <p id="update-fieldnotes-status-text" class="mt0 small">
+              If you set your fieldnotes to private, they will no longer
+              viewable by others.
+            </p>
             <div>
-              <button id="update-fieldnotes-status-btn" class="p">Set your fieldnotes to private</button>
+              <button id="update-fieldnotes-status-btn" class="p">
+                Set your fieldnotes to private
+              </button>
             </div>
-            <p class="small">You can read and write private and public fieldnotes when you are logged in.</p>
+            <p class="small">
+              You can read and write private and public fieldnotes when you are
+              logged in.
+            </p>
           </fieldset>
         </section>
-        
-        <section id="export-fieldnotes-options" class="has-fieldnotes fieldnotes-view disabled">
+
+        <section
+          id="export-fieldnotes-options"
+          class="has-fieldnotes fieldnotes-view disabled"
+        >
           <fieldset>
             <legend>Export fieldnotes</legend>
-            <p class="mt0 small">Export your fieldnotes to file in the JSON format.</p>
+            <p class="mt0 small">
+              Export your fieldnotes to file in the JSON format.
+            </p>
             <div class="centred-block mt2">
-              <button id="export-fieldnotes-to-file-btn" class="btn-save">Export your fieldnotes</button>
-              <div id="export-fieldnotes-notification-text" class="ml small hidden">Exporting…</div>
+              <button id="export-fieldnotes-to-file-btn" class="btn-save">
+                Export your fieldnotes
+              </button>
+              <div
+                id="export-fieldnotes-notification-text"
+                class="ml small hidden"
+              >
+                Exporting…
+              </div>
             </div>
             <div class="centred-block mt2">
-              <label for="export-fieldnotes-input-check" class="mr">iNaturalist post format</label>
-              <input id="export-fieldnotes-input-check" type="checkbox">
+              <label for="export-fieldnotes-input-check" class="mr"
+                >iNaturalist post format</label
+              >
+              <input id="export-fieldnotes-input-check" type="checkbox" />
             </div>
           </fieldset>
         </section>
@@ -211,9 +488,20 @@
         <section id="delete-fieldnotes-section" class="has-fieldnotes disabled">
           <fieldset class="alert">
             <legend>Delete fieldnotes</legend>
-            <p class="mt0 small">When you delete fieldnotes, you will no longer have access to them.</p>
-            <button id="delete-fieldnotes-btn" class="btn-alert">Delete fieldnotes</button>
-            <p class="small">If you wish to recover them, please contact the site owner at <a href="mailto:dbmhartley@protonmail.com?subject=Recover%20deleted%20fieldnotes">Recover deleted fieldnotes</a>.</p>
+            <p class="mt0 small">
+              When you delete fieldnotes, you will no longer have access to
+              them.
+            </p>
+            <button id="delete-fieldnotes-btn" class="btn-alert">
+              Delete fieldnotes
+            </button>
+            <p class="small">
+              If you wish to recover them, please contact the site owner at
+              <a
+                href="mailto:dbmhartley@protonmail.com?subject=Recover%20deleted%20fieldnotes"
+                >Recover deleted fieldnotes</a
+              >.
+            </p>
           </fieldset>
         </section>
       </article>
@@ -229,7 +517,7 @@
     <!-- Write templates -->
 
     <template id="checkbox-template">
-      <div class="flex-row">                  
+      <div class="flex-row">
         <input type="checkbox" id="" />
         <label for=""></label>
       </div>
@@ -240,11 +528,33 @@
         <fieldset class="mt2">
           <legend></legend>
           <div class="content-container disabled"></div>
-          <button id="add-or-update-section-btn" class="small mt2 disabled add">Add section</button>
-          <button id="edit-section-btn" class="small mt2 btn-secondary-action edit hidden">Edit section</button>
-          <button id="delete-section-btn" class="small btn-delete-action mt2 edit">Delete section</button>
-          <button id="cancel-action-btn" class="small btn-secondary-action mt2 cancel hidden">Cancel action</button>
-          <p class="mt2 small"><em>Your fieldnotes are automatically saved when you add, edit or delete sections in the journal.</em></p>
+          <button id="add-or-update-section-btn" class="small mt2 disabled add">
+            Add section
+          </button>
+          <button
+            id="edit-section-btn"
+            class="small mt2 btn-secondary-action edit hidden"
+          >
+            Edit section
+          </button>
+          <button
+            id="delete-section-btn"
+            class="small btn-delete-action mt2 edit"
+          >
+            Delete section
+          </button>
+          <button
+            id="cancel-action-btn"
+            class="small btn-secondary-action mt2 cancel hidden"
+          >
+            Cancel action
+          </button>
+          <p class="mt2 small">
+            <em
+              >Your fieldnotes are automatically saved when you add, edit or
+              delete sections in the journal.</em
+            >
+          </p>
         </fieldset>
       </section>
     </template>
@@ -253,13 +563,40 @@
       <section draggable="true" class="draggable">
         <fieldset class="mt2 species-list">
           <legend></legend>
-          <button id="toggle-species-include-all-top-btn" class="toggle-species-include-all-btns btn-secondary btn-absolute">Show only included</button>          
+          <button
+            id="toggle-species-include-all-top-btn"
+            class="toggle-species-include-all-btns btn-secondary btn-absolute"
+          >
+            Show only included
+          </button>
           <div class="content-container disabled"></div>
-          <button id="toggle-species-include-all-bottom-btn" class="toggle-species-include-all-btns btn-secondary btn-absolute btn-secondary-bottom">Show only included</button>
-          <button id="add-or-update-section-btn" class="small mt2 disabled add">Add section</button>
-          <button id="edit-section-btn" class="small mt2 btn-secondary-action edit hidden">Edit section</button>
-          <button id="delete-section-btn" class="small mt2 btn-delete-action edit">Delete section</button>
-          <button id="cancel-action-btn" class="small mt2 btn-secondary-action cancel hidden">Cancel action</button>
+          <button
+            id="toggle-species-include-all-bottom-btn"
+            class="toggle-species-include-all-btns btn-secondary btn-absolute btn-secondary-bottom"
+          >
+            Show only included
+          </button>
+          <button id="add-or-update-section-btn" class="small mt2 disabled add">
+            Add section
+          </button>
+          <button
+            id="edit-section-btn"
+            class="small mt2 btn-secondary-action edit hidden"
+          >
+            Edit section
+          </button>
+          <button
+            id="delete-section-btn"
+            class="small mt2 btn-delete-action edit"
+          >
+            Delete section
+          </button>
+          <button
+            id="cancel-action-btn"
+            class="small mt2 btn-secondary-action cancel hidden"
+          >
+            Cancel action
+          </button>
         </fieldset>
       </section>
     </template>
@@ -269,7 +606,7 @@
       <input id="" type="text" class="p add" />
       <div class="edit hidden"></div>
     </template>
-    
+
     <template id="h4-write-template">
       <label for="" class="invisible">H4 input</label>
       <input id="" type="text" class="p add" />
@@ -277,22 +614,38 @@
     </template>
 
     <template id="xenocanto-write-template">
-      <div class="small mb2">You can embed recordings from <a href="https://xeno-canto.org/" target="_blank">xeno-canto</a>.</div>
+      <div class="small mb2">
+        You can embed recordings from
+        <a href="https://xeno-canto.org/" target="_blank">xeno-canto</a>.
+      </div>
       <label for="" class="invisible">Xeno-canto input</label>
-      <input id="" type="text" class="p add" placeholder="Enter a xeno-canto recording id e.g. 121910" />
+      <input
+        id=""
+        type="text"
+        class="p add"
+        placeholder="Enter a xeno-canto recording id e.g. 121910"
+      />
       <div class="edit hidden"></div>
     </template>
 
     <template id="inat-lookup-write-template">
       <p class="mt0 small">Look up taxa on iNaturalist.</p>
       <div class="centred-block">
-          <label for="">Taxa</label>
-          <input id="" list="" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start tying the common or scientific name…">
-          <datalist id=""></datalist>
+        <label for="">Taxa</label>
+        <input
+          id=""
+          list=""
+          type="text"
+          class="p"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Start tying the common or scientific name…"
+        />
+        <datalist id=""></datalist>
       </div>
       <div id="inat-lookup-callback-parent" class="mt2"></div>
     </template>
-    
+
     <template id="textarea-write-template">
       <label for="" class="invisible">Text area</label>
       <textarea id="" type="textarea" class="p add" rows="10"></textarea>
@@ -304,8 +657,16 @@
         <div class="box">
           <div class="centred-block mb2">
             <label for="">Term</label>
-            <input name="" id="" spellcheck="false" autocomplete="off" placeholder="Start typing a term…" class="p" type="text" />
-            <datalist id=""></datalist>  
+            <input
+              name=""
+              id=""
+              spellcheck="false"
+              autocomplete="off"
+              placeholder="Start typing a term…"
+              class="p"
+              type="text"
+            />
+            <datalist id=""></datalist>
           </div>
           <div id="selected-term">
             <div class="centred-block double-height">
@@ -325,12 +686,16 @@
             </div>
           </div>
         </div>
-        <button id="add-selected-term-btn" class="small disabled add mt">Add selected term</button>
-        <div class="mt2 mb2 small">Select an exisiting term, <em>or create a new one…</em></div>
+        <button id="add-selected-term-btn" class="small disabled add mt">
+          Add selected term
+        </button>
+        <div class="mt2 mb2 small">
+          Select an exisiting term, <em>or create a new one…</em>
+        </div>
         <div class="box">
           <div class="mt centred-block">
             <label for="input-dt">Term</label>
-            <input id= "input-dt" type="text" class="p">
+            <input id="input-dt" type="text" class="p" />
             <datalist id="autocomplete-term-list"></datalist>
           </div>
           <div class="mt centred-block">
@@ -339,18 +704,20 @@
           </div>
           <div class="mt centred-block">
             <label for="input-ds">Source</label>
-            <input id= "input-ds" type="text" class="p">
+            <input id="input-ds" type="text" class="p" />
           </div>
           <div class="mt centred-block">
             <label for="input-da">Author</label>
-            <input id= "input-da" type="text" class="p">
+            <input id="input-da" type="text" class="p" />
           </div>
           <div class="mt centred-block">
             <label for="input-dx">Examples</label>
-            <input id= "input-dx" type="text" class="p">
+            <input id="input-dx" type="text" class="p" />
           </div>
         </div>
-        <button id="add-new-term-btn" class="small disabled add mt">Add new term</button>
+        <button id="add-new-term-btn" class="small disabled add mt">
+          Add new term
+        </button>
       </div>
       <ul id="selected-terms-list" class="small add edit">
         <li><em>Please select or create a term for this section.</em></li>
@@ -362,37 +729,79 @@
         <div class="small">Add up to 3 photos per section</div>
         <div class="centred-block mt2">
           <label for="image-url-input-0">1 Link</label>
-          <input id="image-url-input-0" placeholder="Insert the link to your photo here" class="p" type="text" data-key="src" />
+          <input
+            id="image-url-input-0"
+            placeholder="Insert the link to your photo here"
+            class="p"
+            type="text"
+            data-key="src"
+          />
         </div>
         <div class="centred-block mt">
           <label for="image-title-input-0">1 Title</label>
-          <input id="image-title-input-0" placeholder="Insert a title for your photo here" class="p" type="text" minlength="2" maxlength="60" data-key="alt" />
+          <input
+            id="image-title-input-0"
+            placeholder="Insert a title for your photo here"
+            class="p"
+            type="text"
+            minlength="2"
+            maxlength="60"
+            data-key="alt"
+          />
         </div>
         <div class="centred-block mt2">
           <label for="image-url-input-1">2 Link</label>
-          <input id="image-url-input-1" placeholder="e.g. https://drive.google.com/thumbnail?id={photo id 2}" class="p" type="text" data-key="src" />
+          <input
+            id="image-url-input-1"
+            placeholder="e.g. https://drive.google.com/thumbnail?id={photo id 2}"
+            class="p"
+            type="text"
+            data-key="src"
+          />
         </div>
         <div class="centred-block mt">
           <label for="image-title-input-1">2 Title</label>
-          <input id="image-title-input-1" placeholder="Minium 2 characters, maximum 60 characters in length" class="p" type="text" minlength="2" maxlength="60" data-key="alt" />
+          <input
+            id="image-title-input-1"
+            placeholder="Minium 2 characters, maximum 60 characters in length"
+            class="p"
+            type="text"
+            minlength="2"
+            maxlength="60"
+            data-key="alt"
+          />
         </div>
         <div class="centred-block mt2">
           <label for="image-url-input-2">3 Link</label>
-          <input id="image-url-input-2" placeholder="e.g. https://drive.google.com/thumbnail?id={photo id 3}" class="p" type="text" data-key="src" />
+          <input
+            id="image-url-input-2"
+            placeholder="e.g. https://drive.google.com/thumbnail?id={photo id 3}"
+            class="p"
+            type="text"
+            data-key="src"
+          />
         </div>
         <div class="centred-block mt">
           <label for="image-title-input-2">3 Title</label>
-          <input id="image-title-input-2" placeholder="e.g. Mount Ras Dashen, Simien Mountains" class="p" type="text" minlength="2" maxlength="60" data-key="alt" />
+          <input
+            id="image-title-input-2"
+            placeholder="e.g. Mount Ras Dashen, Simien Mountains"
+            class="p"
+            type="text"
+            minlength="2"
+            maxlength="60"
+            data-key="alt"
+          />
         </div>
         <div class="edit hidden"></div>
       </div>
     </template>
 
-    <template id="observations-write-template">      
+    <template id="observations-write-template">
       <div></div>
     </template>
 
-    <template id="species-write-template">      
+    <template id="species-write-template">
       <div></div>
     </template>
 
@@ -410,29 +819,35 @@
       <p></p>
     </template>
 
-    <template id="textarea-preview-template">      
+    <template id="textarea-preview-template">
       <p></p>
     </template>
 
-    <template id="observations-preview-template">      
+    <template id="observations-preview-template">
       <div></div>
     </template>
 
-    <template id="species-preview-template">      
+    <template id="species-preview-template">
       <div></div>
     </template>
 
-    <template id="inat-lookup-preview-template">      
+    <template id="inat-lookup-preview-template">
       <div></div>
     </template>
 
-    <template id="terms-preview-template">      
+    <template id="terms-preview-template">
       <div></div>
     </template>
 
     <template id="images-preview-template">
       <figure class="centred-block small">
-        <img src="http://www.placeholder.com/" alt="" width="75px" height="75px" class="mr">
+        <img
+          src="http://www.placeholder.com/"
+          alt=""
+          width="75px"
+          height="75px"
+          class="mr"
+        />
         <div class="flex-columns">
           <span class="text-left mb05"></span>
           <span class="text-left mb05"></span>
@@ -444,5 +859,4 @@
       </figure>
     </template>
   </body>
-
-  </html>
+</html>

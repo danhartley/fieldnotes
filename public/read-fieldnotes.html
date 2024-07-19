@@ -1,15 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">    
-    <meta http-equiv="Content-Security-Policy" content="child-src 'self' blob:; worker-src 'self' blob:; script-src 'self' 'unsafe-eval' https://*.withcabin.com https://cdn.logrocket.io https://cdn.lr-ingest.io https://cdn.lr-in.com https://cdn.lr-in-prod.com https://cdn.lr-ingest.com https://cdn.ingest-lr.com https://cdn.logr-ingest.com; connect-src 'self' https://*.withcabin.com https://*.googleapis.com https://*.inaturalist.org https://*.logrocket.io https://*.lr-ingest.io https://*.logrocket.com https://*.lr-in.com https://*.lr-in-prod.com https://*.lr-ingest.com https://*.lr-ingest.com https://*.ingest-lr.com https://r.logr-ingest.com/ https://api.thegreenwebfoundation.org/greencheck/; img-src https://* http://localhost:*/;" />    
-    <title>Read fieldnotes from authors based on iNaturalist observations</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="child-src 'self' blob:; worker-src 'self' blob:; script-src 'self' 'unsafe-eval' https://*.withcabin.com https://cdn.logrocket.io https://cdn.lr-ingest.io https://cdn.lr-in.com https://cdn.lr-in-prod.com https://cdn.lr-ingest.com https://cdn.ingest-lr.com https://cdn.logr-ingest.com; connect-src 'self' https://*.withcabin.com https://*.googleapis.com https://*.inaturalist.org https://*.logrocket.io https://*.lr-ingest.io https://*.logrocket.com https://*.lr-in.com https://*.lr-in-prod.com https://*.lr-ingest.com https://*.lr-ingest.com https://*.ingest-lr.com https://r.logr-ingest.com/ https://api.thegreenwebfoundation.org/greencheck/; img-src https://* http://localhost:*/;"
+    />
+    <title>
+      Read fieldnotes from authors based on iNaturalist observations
+    </title>
     <script src="./read-fieldnotes.js" type="module"></script>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles.css" />
     <link href="./print.css" media="print" rel="stylesheet" />
-    <meta name="description" content="Read notes recorded on a field trip by a contributor to iNaturalist. May be supplemented by photos of user observations, taxa photos, definitions, and bird song recordings.">
-    <meta name="robots" content="index,follow">
+    <meta
+      name="description"
+      content="Read notes recorded on a field trip by a contributor to iNaturalist. May be supplemented by photos of user observations, taxa photos, definitions, and bird song recordings."
+    />
+    <meta name="robots" content="index,follow" />
     <link rel="canonical" href="https://ifieldnotes.org/" />
     <link rel="icon" href="./favicon.ico" />
   </head>
@@ -18,9 +26,21 @@
       <a href="#main" class="skip-link">Skip to main content</a>
       <nav>
         <ul>
-          <li><a data-view="fieldnotes-search-view" href="/" class="selected">Read fieldnotes</a></li>
-          <li><a data-view="write-fieldnotes-view" href="/write">Write fieldnotes</a></li>
-          <li><a data-view="inaturalist-search-view" href="/inaturalist">Search iNaturalist</a></li>
+          <li>
+            <a data-view="fieldnotes-search-view" href="/" class="selected"
+              >Read fieldnotes</a
+            >
+          </li>
+          <li>
+            <a data-view="write-fieldnotes-view" href="/write"
+              >Write fieldnotes</a
+            >
+          </li>
+          <li>
+            <a data-view="inaturalist-search-view" href="/inaturalist"
+              >Search iNaturalist</a
+            >
+          </li>
         </ul>
       </nav>
     </header>
@@ -35,35 +55,61 @@
           </p>
           <div class="centred-block">
             <label for="fn-autocomplete-title-input-text">Title</label>
-            <input id="fn-autocomplete-title-input-text" name="fn-autocomplete-title-input-text" list="fn-autocomplete-title-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing or click on a title to select it…">
+            <input
+              id="fn-autocomplete-title-input-text"
+              name="fn-autocomplete-title-input-text"
+              list="fn-autocomplete-title-data-list"
+              type="text"
+              class="p"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="Start typing or click on a title to select it…"
+            />
             <datalist id="fn-autocomplete-title-data-list"></datalist>
           </div>
           <div id="field-notes-lookup-callback-parent" class="mt2"></div>
           <div class="centred-block mt">
-            <button type="button" id="fetch-fieldnotes-btn" class="ml7 mr disabled">Fetch fieldnotes</button>
-            <div id="fetching-fieldnotes-notification-text" class="small hidden">Fetching fieldnotes…</div>
+            <button
+              type="button"
+              id="fetch-fieldnotes-btn"
+              class="ml7 mr disabled"
+            >
+              Fetch fieldnotes
+            </button>
+            <div
+              id="fetching-fieldnotes-notification-text"
+              class="small hidden"
+            >
+              Fetching fieldnotes…
+            </div>
           </div>
-          <p class="small mb0">Fetching fieldnotes will return the author's field journal and photos.</p>
+          <p class="small mb0">
+            Fetching fieldnotes will return the author's field journal and
+            photos.
+          </p>
         </fieldset>
       </div>
-      
+
       <div class="section-with-header print-ignore hidden">
         <fieldset id="lesson-fieldset" class="pt2">
-
           <h1 id="article-header">Article header</h1>
 
-          <div id="display-fieldset" class="fieldset-reset">        
-            <div id="species-display-container" class="grid ml2 mr2"></div>    
+          <div id="display-fieldset" class="fieldset-reset">
+            <div id="species-display-container" class="grid ml2 mr2"></div>
             <div id="targets-fieldset" class="hidden flex-row">
               <div id="target-group-container" class="grid ml2 mr2"></div>
             </div>
           </div>
-          
-          <article id="article">
-            
-          </article>
 
-          <button type="button" id="show-test-btn" class="btn-secondary btn-absolute hidden">Show test</button>
+          <article id="article"></article>
+
+          <button
+            type="button"
+            id="show-test-btn"
+            class="btn-secondary btn-absolute hidden"
+          >
+            Show test
+          </button>
           <button type="button" id="test-submit-btn" class="mb hidden">
             Check answers
           </button>
@@ -98,26 +144,90 @@
         </fieldset>
       </div>
 
-      <div id="export-fieldnotes-options" class="section-with-header print-ignore hidden">
+      <div
+        id="export-fieldnotes-options"
+        class="section-with-header print-ignore hidden"
+      >
         <fieldset>
           <legend>Keep a record of fieldnotes that interest you</legend>
           <p class="mt0 small">Print these fieldnotes as a PDF.</p>
-          <button type="button" id="print-fieldnotes-btn" class="btn-secondary-action">Print fieldnotes</button>
+          <button
+            type="button"
+            id="print-fieldnotes-btn"
+            class="btn-secondary-action"
+          >
+            Print fieldnotes
+          </button>
           <p class="small">Print with page breaks before photos.</p>
-          <button type="button" id="print-fieldnotes-with-page-breaks-btn" class="btn-secondary-action">Print fieldnotes with page breaks</button>
+          <button
+            type="button"
+            id="print-fieldnotes-with-page-breaks-btn"
+            class="btn-secondary-action"
+          >
+            Print fieldnotes with page breaks
+          </button>
         </fieldset>
       </div>
 
       <div id="language-group-container" class="mt print-ignore">
         <fieldset>
           <legend>Preferences</legend>
-          <p class="mt0 small">The language you choose will determine the preferred common name for species and taxa.</p>
-          <div class="grid"> <div class="flex-row"> <input type="radio" name="language" id="Deutsche" value="de"> <label for="Deutsche" >Deutsche</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="English" value="en" checked="true"> <label for="English" >English</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Español" value="es"> <label for="Español" >Español</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Français" value="fr"> <label for="Français" >Français</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Italiano" value="it"> <label for="Italiano" >Italiano</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Português" value="pt"> <label for="Português" >Português</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Slovenščina" value="sl"> <label for="Slovenščina" >Slovenščina</label> </div> </div>
-          <div class="centred-block mt2">
-            <input id="remember-language-checkbox" name="remember-language-checkbox" type="checkbox" />
-            <label for="remember-language-checkbox" class="initial-text">Remember language</label>
+          <p class="mt0 small">
+            The language you choose will determine the preferred common name for
+            species and taxa.
+          </p>
+          <div class="grid">
+            <div class="flex-row">
+              <input type="radio" name="language" id="Deutsche" value="de" />
+              <label for="Deutsche">Deutsche</label>
+            </div>
+            <div class="flex-row">
+              <input
+                type="radio"
+                name="language"
+                id="English"
+                value="en"
+                checked="true"
+              />
+              <label for="English">English</label>
+            </div>
+            <div class="flex-row">
+              <input type="radio" name="language" id="Español" value="es" />
+              <label for="Español">Español</label>
+            </div>
+            <div class="flex-row">
+              <input type="radio" name="language" id="Français" value="fr" />
+              <label for="Français">Français</label>
+            </div>
+            <div class="flex-row">
+              <input type="radio" name="language" id="Italiano" value="it" />
+              <label for="Italiano">Italiano</label>
+            </div>
+            <div class="flex-row">
+              <input type="radio" name="language" id="Português" value="pt" />
+              <label for="Português">Português</label>
+            </div>
+            <div class="flex-row">
+              <input type="radio" name="language" id="Slovenščina" value="sl" />
+              <label for="Slovenščina">Slovenščina</label>
+            </div>
           </div>
-          <p class="small"><em>Your preferred language applies only to photo captions. It does not apply to the names given to species by the author.</em></p>
+          <div class="centred-block mt2">
+            <input
+              id="remember-language-checkbox"
+              name="remember-language-checkbox"
+              type="checkbox"
+            />
+            <label for="remember-language-checkbox" class="initial-text"
+              >Remember language</label
+            >
+          </div>
+          <p class="small">
+            <em
+              >Your preferred language applies only to photo captions. It does
+              not apply to the names given to species by the author.</em
+            >
+          </p>
         </fieldset>
       </div>
 
@@ -127,7 +237,7 @@
           <div></div>
         </div>
       </dialog>
-    </main>    
+    </main>
 
     <!-- Read templates -->
 
@@ -135,13 +245,13 @@
       <div class="grid"></div>
       <span class="caption"></span>
     </template>
-    
+
     <template id="non-grid-template">
       <div class="non-grid"></div>
     </template>
 
     <template id="checkbox-template">
-      <div class="flex-row">                  
+      <div class="flex-row">
         <input type="checkbox" id="" name="" />
         <label for=""></label>
       </div>
@@ -154,19 +264,19 @@
       </div>
     </template>
 
-    <template id="observations-template"> 
+    <template id="observations-template">
       <figure>
-        <img src="http://www.placeholder.com/" alt="" tabindex="0">
+        <img src="http://www.placeholder.com/" alt="" tabindex="0" />
         <figcaption>
           <span></span>
           <span></span>
         </figcaption>
-    </figure>
+      </figure>
     </template>
 
     <template id="species-test-template">
       <figure>
-        <img src="http://www.placeholder.com/" alt="" tabindex="0">
+        <img src="http://www.placeholder.com/" alt="" tabindex="0" />
         <figcaption>
           <span></span>
         </figcaption>
@@ -175,9 +285,9 @@
       </figure>
     </template>
 
-    <template id="species-template">      
+    <template id="species-template">
       <figure>
-        <img src="http://www.placeholder.com/" alt="" tabindex="0">
+        <img src="http://www.placeholder.com/" alt="" tabindex="0" />
         <figcaption>
           <span></span>
           <span></span>
@@ -202,7 +312,9 @@
       <ul class="non-grid">
         <li class="capitalise"><strong>Author</strong></li>
         <li><strong>Date</strong></li>
-        <li><strong><a href="/" target="_blank"></a></strong></li>
+        <li>
+          <strong><a href="/" target="_blank"></a></strong>
+        </li>
         <li class="small optional"></li>
         <li class="small optional"></li>
         <li class="small optional"></li>
@@ -217,13 +329,13 @@
       <h4></h4>
     </template>
 
-    <template id="textarea-preview-template">      
+    <template id="textarea-preview-template">
       <p></p>
     </template>
 
     <template id="images-preview-template">
       <figure>
-        <img src="http://www.placeholder.com/" alt="" >
+        <img src="http://www.placeholder.com/" alt="" />
         <figcaption>
           <span></span>
           <span></span>
@@ -233,7 +345,7 @@
 
     <template id="species-preview-template">
       <figure>
-        <img src="http://www.placeholder.com/" alt="" >
+        <img src="http://www.placeholder.com/" alt="" />
         <figcaption>
           <span></span>
           <span></span>
@@ -243,7 +355,7 @@
 
     <template id="observations-preview-template">
       <figure>
-        <img src="http://www.placeholder.com/" alt="" >
+        <img src="http://www.placeholder.com/" alt="" />
         <figcaption>
           <span></span>
           <span></span>
@@ -253,7 +365,7 @@
 
     <template id="inat-lookup-preview-template">
       <figure>
-        <img src="http://www.placeholder.com/" alt="" >
+        <img src="http://www.placeholder.com/" alt="" />
         <figcaption>
           <span></span>
           <span></span>
@@ -268,19 +380,17 @@
     </template>
 
     <template id="terms-preview-template">
-        <dt></dt>
-        <dd>
-          <div></div>
-          <div class="mt mb">
-            <span></span><em></em>
-          </div>
-          <div class="mb2">
-            <a href="/" class="info">
-              <span></span><span>Opens in a new tab</span>
-            </a>
-          </div>
-        </dd>
-    </template>    
+      <dt></dt>
+      <dd>
+        <div></div>
+        <div class="mt mb"><span></span><em></em></div>
+        <div class="mb2">
+          <a href="/" class="info">
+            <span></span><span>Opens in a new tab</span>
+          </a>
+        </div>
+      </dd>
+    </template>
 
     <template id="annotation-template">
       <dt></dt>
@@ -289,10 +399,16 @@
 
     <template id="xenocanto-preview-template" class="print-ignore">
       <div class="double-centred-block">
-        <iframe src='https://xeno-canto.org/121910/embed?simple=1' scrolling='no' frameborder='0' width='340' height='115'></iframe>
+        <iframe
+          src="https://xeno-canto.org/121910/embed?simple=1"
+          scrolling="no"
+          frameborder="0"
+          width="340"
+          height="115"
+        ></iframe>
       </div>
     </template>
-  
+
     <!-- <script async defer src="https://scripts.withcabin.com/hello.js"></script> -->
   </body>
 </html>

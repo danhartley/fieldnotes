@@ -1,26 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src https://* http://localhost:1234/; child-src 'none'; connect-src 'self' https://*.withcabin.com https://*.googleapis.com https://apis.google.com https://*.inaturalist.org;" />
-    <meta name="description" content="Filter iNaturalist observations by user, project or group. Test recall of common and latin names.">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src https://* http://localhost:1234/; child-src 'none'; connect-src 'self' https://*.withcabin.com https://*.googleapis.com https://apis.google.com https://*.inaturalist.org;"
+    />
+    <meta
+      name="description"
+      content="Filter iNaturalist observations by user, project or group. Test recall of common and latin names."
+    />
     <title>Search and filter iNaturalist observations</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles.css" />
     <link rel="icon" href="./favicon.ico" />
     <link rel="canonical" href="https://ifieldnotes.org/inaturalist" />
     <script src="./read-inaturalist.js" type="module"></script>
   </head>
 
-  <body>  
+  <body>
     <header>
       <a href="#main" class="skip-link">Skip to main content</a>
       <nav>
         <ul>
-          <li><a data-view="fieldnotes-search-view" href="/">Read fieldnotes</a></li>
-          <li><a data-view="write-fieldnotes-view" href="/write">Write fieldnotes</a></li>
-          <li><a data-view="inaturalist-search-view" href="/inaturalist" class="selected">Search iNaturalist</a></li>
+          <li>
+            <a data-view="fieldnotes-search-view" href="/">Read fieldnotes</a>
+          </li>
+          <li>
+            <a data-view="write-fieldnotes-view" href="/write"
+              >Write fieldnotes</a
+            >
+          </li>
+          <li>
+            <a
+              data-view="inaturalist-search-view"
+              href="/inaturalist"
+              class="selected"
+              >Search iNaturalist</a
+            >
+          </li>
         </ul>
       </nav>
     </header>
@@ -31,35 +49,69 @@
           <fieldset>
             <legend>iNaturalist search</legend>
             <fieldset class="fieldset-reset">
-              <legend class="as-p mt0">You can filter your iNaturalist search by taxa.</legend>
+              <legend class="as-p mt0">
+                You can filter your iNaturalist search by taxa.
+              </legend>
               <div id="iconic-taxa-container" class="grid"></div>
             </fieldset>
 
             <fieldset class="fieldset-reset">
-              <legend class="as-p pt pb0">You can also limit your search by iNaturalist user, place or project.</legend>
-              <div id="inat-autocomplete-group-container" class="grid mb2"></div>
+              <legend class="as-p pt pb0">
+                You can also limit your search by iNaturalist user, place or
+                project.
+              </legend>
+              <div
+                id="inat-autocomplete-group-container"
+                class="grid mb2"
+              ></div>
 
               <div class="grid">
                 <div class="pr2">
-                    <label for="inat-autocomplete-input-text">User, place or project.</label>
-                    <input id="inat-autocomplete-input-text" list="inat-autocomplete-data-list" type="text" class="p" autocomplete="off" spellcheck="false" placeholder="Start typing a username or user ID…">
-                    <datalist id="inat-autocomplete-data-list"></datalist>
+                  <label for="inat-autocomplete-input-text"
+                    >User, place or project.</label
+                  >
+                  <input
+                    id="inat-autocomplete-input-text"
+                    list="inat-autocomplete-data-list"
+                    type="text"
+                    class="p"
+                    autocomplete="off"
+                    spellcheck="false"
+                    placeholder="Start typing a username or user ID…"
+                  />
+                  <datalist id="inat-autocomplete-data-list"></datalist>
                 </div>
               </div>
             </fieldset>
 
             <fieldset class="fieldset-reset">
-              <legend class="mt0 as-p pb0">Choose how many species you want to review.</legend>
+              <legend class="mt0 as-p pb0">
+                Choose how many species you want to review.
+              </legend>
               <div class="centred-block box mb2">
-                <label for="species-count-input-number" class="mb0 mr">Number of species</label>
-                <input id="species-count-input-number" type="number" value="0" min="1" max="200" class="mr p">
+                <label for="species-count-input-number" class="mb0 mr"
+                  >Number of species</label
+                >
+                <input
+                  id="species-count-input-number"
+                  type="number"
+                  value="0"
+                  min="1"
+                  max="200"
+                  class="mr p"
+                />
                 <div class="small">(up to 200)</div>
-              </div>              
+              </div>
             </fieldset>
 
             <fieldset class="fieldset-reset">
-              <legend class="mt0 as-p pb0">Species photos from iNaturalist or user photos (observations).</legend>
-              <div id="inat-use-observations-or-species-container" class="grid mb2"></div>
+              <legend class="mt0 as-p pb0">
+                Species photos from iNaturalist or user photos (observations).
+              </legend>
+              <div
+                id="inat-use-observations-or-species-container"
+                class="grid mb2"
+              ></div>
             </fieldset>
 
             <fieldset id="observation-dates" class="fieldset-reset">
@@ -67,52 +119,173 @@
               <div class="box mb2">
                 <div class="centred-block mb2">
                   <label for="rbDateRange" class="invisible">Date range</label>
-                  <input id="rbDateRange" type="radio" name="rbDate" value="range" />             
-                  <label for="observations-start-date" class="block">From</label>
-                  <input type="date" id="observations-start-date" name="observations-start-date" class="mr" />
-                  <label for="observations-end-date" class="mr initial-width">To</label>
-                  <input type="date" id="observations-end-date" name="observations-end-date" />
+                  <input
+                    id="rbDateRange"
+                    type="radio"
+                    name="rbDate"
+                    value="range"
+                  />
+                  <label for="observations-start-date" class="block"
+                    >From</label
+                  >
+                  <input
+                    type="date"
+                    id="observations-start-date"
+                    name="observations-start-date"
+                    class="mr"
+                  />
+                  <label for="observations-end-date" class="mr initial-width"
+                    >To</label
+                  >
+                  <input
+                    type="date"
+                    id="observations-end-date"
+                    name="observations-end-date"
+                  />
                 </div>
                 <div class="centred-block mb2">
-                  <label for="rbSingleDate" class="invisible">Single date</label>
-                  <input id="rbSingleDate" type="radio" name="rbDate" value="single" />  
-                  <label for="single-observations-input-date" class="block">Date</label>
-                  <input type="date" id="single-observations-input-date" name="single-observations-input-date" class="mr" />
+                  <label for="rbSingleDate" class="invisible"
+                    >Single date</label
+                  >
+                  <input
+                    id="rbSingleDate"
+                    type="radio"
+                    name="rbDate"
+                    value="single"
+                  />
+                  <label for="single-observations-input-date" class="block"
+                    >Date</label
+                  >
+                  <input
+                    type="date"
+                    id="single-observations-input-date"
+                    name="single-observations-input-date"
+                    class="mr"
+                  />
                 </div>
                 <div class="centred-block mb">
-                  <input id="rbnoDate" type="radio" name="rbDate" value="none" checked />
+                  <input
+                    id="rbnoDate"
+                    type="radio"
+                    name="rbDate"
+                    value="none"
+                    checked
+                  />
                   <label for="rbnoDate">Any time</label>
                 </div>
               </div>
             </fieldset>
 
             <fieldset id="languages" class="fieldset-reset">
-              <legend class="as-p">The language you choose will determine the preferred common name for species and taxa.</legend>
+              <legend class="as-p">
+                The language you choose will determine the preferred common name
+                for species and taxa.
+              </legend>
               <div id="language-group-container">
-                <div class="grid"> <div class="flex-row"> <input type="radio" name="language" id="Deutsche" value="de"> <label for="Deutsche" >Deutsche</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="English" value="en" checked="true"> <label for="English" >English</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Español" value="es"> <label for="Español" >Español</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Français" value="fr"> <label for="Français" >Français</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Italiano" value="it"> <label for="Italiano" >Italiano</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Português" value="pt"> <label for="Português" >Português</label> </div>  <div class="flex-row"> <input type="radio" name="language" id="Slovenščina" value="sl"> <label for="Slovenščina" >Slovenščina</label> </div> </div>
+                <div class="grid">
+                  <div class="flex-row">
+                    <input
+                      type="radio"
+                      name="language"
+                      id="Deutsche"
+                      value="de"
+                    />
+                    <label for="Deutsche">Deutsche</label>
+                  </div>
+                  <div class="flex-row">
+                    <input
+                      type="radio"
+                      name="language"
+                      id="English"
+                      value="en"
+                      checked="true"
+                    />
+                    <label for="English">English</label>
+                  </div>
+                  <div class="flex-row">
+                    <input
+                      type="radio"
+                      name="language"
+                      id="Español"
+                      value="es"
+                    />
+                    <label for="Español">Español</label>
+                  </div>
+                  <div class="flex-row">
+                    <input
+                      type="radio"
+                      name="language"
+                      id="Français"
+                      value="fr"
+                    />
+                    <label for="Français">Français</label>
+                  </div>
+                  <div class="flex-row">
+                    <input
+                      type="radio"
+                      name="language"
+                      id="Italiano"
+                      value="it"
+                    />
+                    <label for="Italiano">Italiano</label>
+                  </div>
+                  <div class="flex-row">
+                    <input
+                      type="radio"
+                      name="language"
+                      id="Português"
+                      value="pt"
+                    />
+                    <label for="Português">Português</label>
+                  </div>
+                  <div class="flex-row">
+                    <input
+                      type="radio"
+                      name="language"
+                      id="Slovenščina"
+                      value="sl"
+                    />
+                    <label for="Slovenščina">Slovenščina</label>
+                  </div>
+                </div>
                 <div class="centred-block mt2">
                   <input id="remember-language-checkbox" type="checkbox" />
-                  <label for="remember-language-checkbox" class="initial-text">Remember language</label>
+                  <label for="remember-language-checkbox" class="initial-text"
+                    >Remember language</label
+                  >
                 </div>
-                <p class="small"><em>Your preferred language applies only to photo captions. It does not apply to the names given to species by the author.</em></p>
+                <p class="small">
+                  <em
+                    >Your preferred language applies only to photo captions. It
+                    does not apply to the names given to species by the
+                    author.</em
+                  >
+                </p>
               </div>
             </fieldset>
 
             <div class="mt2 centred-block">
-              <button id="search-inat-observations-btn" class="submit mr">Search iNaturalist</button>
-              <div id="search-inat-observations-notification-text" class="small hidden">Fetching iNaturalist species…</div>
+              <button id="search-inat-observations-btn" class="submit mr">
+                Search iNaturalist
+              </button>
+              <div
+                id="search-inat-observations-notification-text"
+                class="small hidden"
+              >
+                Fetching iNaturalist species…
+              </div>
             </div>
           </fieldset>
         </div>
       </div>
-      
+
       <div class="section-with-header">
-        <div id="display-fieldset" class="fieldset-reset">        
+        <div id="display-fieldset" class="fieldset-reset">
           <fieldset class="flex-row">
             <legend>Select view</legend>
             <div id="species-display-container" class="grid"></div>
           </fieldset>
-  
+
           <fieldset id="targets-fieldset" class="hidden flex-row">
             <legend>Test for</legend>
             <div id="target-group-container" class="grid"></div>
@@ -123,14 +296,13 @@
       <div class="section-with-header">
         <fieldset id="lesson-fieldset">
           <legend>Fieldnotes</legend>
-          <button id="show-test-btn" class="btn-secondary btn-absolute hidden">Show tests</button>
+          <button id="show-test-btn" class="btn-secondary btn-absolute hidden">
+            Show tests
+          </button>
           <article id="article">
-              <h1 class="invisible">Article header</h1>
+            <h1 class="invisible">Article header</h1>
           </article>
-          <button
-            id="test-submit-btn"
-            class="mt mb hidden"
-          >
+          <button id="test-submit-btn" class="mt mb hidden">
             Check answers
           </button>
         </fieldset>
@@ -170,18 +342,18 @@
           <div></div>
         </div>
       </dialog>
-    </main>    
+    </main>
 
     <template id="grid-template">
       <div class="grid"></div>
     </template>
-    
+
     <template id="non-grid-template">
       <div class="non-grid"></div>
     </template>
 
     <template id="checkbox-template">
-      <div class="flex-row">                  
+      <div class="flex-row">
         <input type="checkbox" id="" name="" />
         <label for=""></label>
       </div>
@@ -200,7 +372,7 @@
 
     <template id="species-test-template">
       <figure>
-        <img src="http://www.placeholder.com/" alt="">
+        <img src="http://www.placeholder.com/" alt="" />
         <figcaption>
           <span></span>
         </figcaption>
@@ -209,9 +381,9 @@
       </figure>
     </template>
 
-    <template id="species-template">      
+    <template id="species-template">
       <figure>
-        <img src="http://www.placeholder.com/" alt="">
+        <img src="http://www.placeholder.com/" alt="" />
         <figcaption>
           <span></span>
           <span></span>
@@ -236,7 +408,9 @@
       <ul class="non-grid">
         <li class="capitalise"><strong>Author</strong></li>
         <li><strong>Date</strong></li>
-        <li><strong><a href="" target="_blank"></a></strong></li>
+        <li>
+          <strong><a href="" target="_blank"></a></strong>
+        </li>
       </ul>
     </template>
 
@@ -248,13 +422,13 @@
       <h4></h4>
     </template>
 
-    <template id="textarea-preview-template">      
+    <template id="textarea-preview-template">
       <p></p>
     </template>
 
     <template id="images-preview-template">
       <figure>
-        <img src="http://www.placeholder.com/" alt="" >
+        <img src="http://www.placeholder.com/" alt="" />
         <figcaption>
           <span></span>
           <span></span>
@@ -264,7 +438,7 @@
 
     <template id="species-preview-template">
       <figure>
-        <img src="http://www.placeholder.com/" alt="" >
+        <img src="http://www.placeholder.com/" alt="" />
         <figcaption>
           <span></span>
           <span></span>
@@ -274,7 +448,7 @@
 
     <template id="observations-preview-template">
       <figure>
-        <img src="http://www.placeholder.com/" alt="" >
+        <img src="http://www.placeholder.com/" alt="" />
         <figcaption>
           <span></span>
           <span></span>
@@ -284,7 +458,7 @@
 
     <template id="inat-lookup-preview-template">
       <figure>
-        <img src="http://www.placeholder.com/" alt="" >
+        <img src="http://www.placeholder.com/" alt="" />
         <figcaption>
           <span></span>
           <span></span>
@@ -305,7 +479,13 @@
 
     <template id="xenocanto-preview-template">
       <div class="double-centred-block">
-        <iframe src='https://xeno-canto.org/121910/embed?simple=1' scrolling='no' frameborder='0' width='340' height='115'></iframe>
+        <iframe
+          src="https://xeno-canto.org/121910/embed?simple=1"
+          scrolling="no"
+          frameborder="0"
+          width="340"
+          height="115"
+        ></iframe>
       </div>
     </template>
   </body>

@@ -1,11 +1,14 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Security-Policy"content="script-src 'self' https://*.withcabin.com; img-src https://* http://localhost:1234/; child-src 'none'; connect-src 'self' https://*.withcabin.com https://*.googleapis.com https://apis.google.com https://*.inaturalist.org;" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' https://*.withcabin.com; img-src https://* http://localhost:1234/; child-src 'none'; connect-src 'self' https://*.withcabin.com https://*.googleapis.com https://apis.google.com https://*.inaturalist.org;"
+    />
     <title>iFieldnotes admin</title>
-    <link rel="stylesheet" href=".././styles.css">
+    <link rel="stylesheet" href=".././styles.css" />
     <link rel="icon" href=".././favicon.ico" />
     <script src="./admin.js" type="module"></script>
   </head>
@@ -21,7 +24,7 @@
       <fieldset class="mt">
         <legend>Filters</legend>
         <div class="centred-block">
-          <input type="checkbox" id="deleted-input-checkbox" data-status="">
+          <input type="checkbox" id="deleted-input-checkbox" data-status="" />
           <label for="deleted-input-checkbox">Show deleted only</label>
         </div>
       </fieldset>
@@ -29,7 +32,7 @@
     <main>
       <fieldset class="mt flex-row">
         <legend>Fieldnotes</legend>
-        <div id="stubs-collection" class="max-content"></div>     
+        <div id="stubs-collection" class="max-content"></div>
       </fieldset>
       <fieldset>
         <legend>Publicly resources</legend>
@@ -56,8 +59,9 @@
   <template id="stubs-template">
     <li>
       <div class="centred-block">
-        <input type="checkbox" id="stubs-input-checkbox">
+        <input type="checkbox" id="stubs-input-checkbox" />
         <label for="stubs-input-checkbox"></label>
       </div>
     </li>
   </template>
+</html>

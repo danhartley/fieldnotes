@@ -1,43 +1,92 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Security-Policy"content="script-src 'self' https://*.withcabin.com; img-src https://* http://localhost:1234/; child-src 'none'; connect-src 'self' https://*.withcabin.com https://*.googleapis.com https://apis.google.com https://*.inaturalist.org;" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' https://*.withcabin.com; img-src https://* http://localhost:1234/; child-src 'none'; connect-src 'self' https://*.withcabin.com https://*.googleapis.com https://apis.google.com https://*.inaturalist.org;"
+    />
     <title>iNaturalist authentication</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./styles.css" />
     <link rel="icon" href="./favicon.ico" />
     <script src="./inaturalist-authentication.js" type="module"></script>
   </head>
-  <body>  
+  <body>
     <header>
       <nav>
         <ul>
-          <li><a data-view="fieldnotes-search-view" href="/">Read fieldnotes</a></li>
-          <li><a data-view="write-fieldnotes-view" href="/write">Write fieldnotes</a></li>
-          <li><a data-view="inaturalist-authentication-view" href="/inaturalist-authentication" class="selected">iNaturalist authentication</a></li>
+          <li>
+            <a data-view="fieldnotes-search-view" href="/">Read fieldnotes</a>
+          </li>
+          <li>
+            <a data-view="write-fieldnotes-view" href="/write"
+              >Write fieldnotes</a
+            >
+          </li>
+          <li>
+            <a
+              data-view="inaturalist-authentication-view"
+              href="/inaturalist-authentication"
+              class="selected"
+              >iNaturalist authentication</a
+            >
+          </li>
         </ul>
       </nav>
     </header>
     <main>
       <article>
         <div class="inaturalist-authentication-section mt2">
-            <p class="small">Why is this necessary? Granting access to your iNaturalist account allows this iFieldnotes to make updates directly.</p>
-            <p class="small">For example, once you have loggged in to iNaturalist, you can save your fieldnotes as a new iNaturalist post.</p>
-            <form id="inaturalist-authentication-form">
-              <div class="centred-block">
-                <label for="inaturalist-authentication-email" class="mw8">Email</label>
-                <input id="inaturalist-authentication-email" name="inaturalist-authentication-email" type="email" required pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" placeholder="A valid email is required" class="p">
-              </div>
-              <div class="centred-block mt">
-                <label for="inaturalist-authentication-password" class="mw8">Password</label>
-                <input id="inaturalist-authentication-password" name="inaturalist-authentication-password" type="password" required minlength="6" placeholder="Password must be at least 6 characters" autocomplete="true" current-password="true" class="p">
-              </div>        
-              <div class="double-centred-block mt mb">
-                <button id="inaturalist-authentication-btn">Grant access to iNaturalist</button>
-              </div>
+          <p class="small">
+            Why is this necessary? Granting access to your iNaturalist account
+            allows this iFieldnotes to make updates directly.
+          </p>
+          <p class="small">
+            For example, once you have loggged in to iNaturalist, you can save
+            your fieldnotes as a new iNaturalist post.
+          </p>
+          <form id="inaturalist-authentication-form">
+            <div class="centred-block">
+              <label for="inaturalist-authentication-email" class="mw8"
+                >Email</label
+              >
+              <input
+                id="inaturalist-authentication-email"
+                name="inaturalist-authentication-email"
+                type="email"
+                required
+                pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
+                placeholder="A valid email is required"
+                class="p"
+              />
+            </div>
+            <div class="centred-block mt">
+              <label for="inaturalist-authentication-password" class="mw8"
+                >Password</label
+              >
+              <input
+                id="inaturalist-authentication-password"
+                name="inaturalist-authentication-password"
+                type="password"
+                required
+                minlength="6"
+                placeholder="Password must be at least 6 characters"
+                autocomplete="true"
+                current-password="true"
+                class="p"
+              />
+            </div>
+            <div class="double-centred-block mt mb">
+              <button id="inaturalist-authentication-btn">
+                Grant access to iNaturalist
+              </button>
+            </div>
           </form>
-          <p class="small">iFieldnotes is an authorised iNaturalist app. Without this athorisation, it would not be possible to log you in.</p>
+          <p class="small">
+            iFieldnotes is an authorised iNaturalist app. Without this
+            athorisation, it would not be possible to log you in.
+          </p>
         </div>
       </article>
     </main>
