@@ -22,7 +22,7 @@ const login = async (page) => {
   await page.click(AUTHENTICATE_BTN)
 }
 
-const editFieldnotes = async () => {
+export const editFieldnotes = async () => {
   let browser,
     page = null
 

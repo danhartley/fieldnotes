@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // FIREBASE
 
 import {
@@ -21,7 +22,6 @@ import {
   getDoc,
   setDoc,
   deleteDoc,
-  addDoc,
   updateDoc,
   deleteField,
   arrayUnion,
@@ -119,8 +119,7 @@ export const firebaseAuthentication = () => {
 export const firebaseLogin = ({ email, password, showNotificationsDialog }) => {
   const auth = getAuth(getApp())
   signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user
+    .then(() => {
       return {
         success: true,
         message: 'Your log in was successful.',
@@ -1046,7 +1045,7 @@ export const snapSpeciesTraits = [
   },
 ]
 
-const keys = [
+export const keys = [
   {
     key: 'mediterranean',
     values: [
@@ -1293,7 +1292,7 @@ export const onAdminFirebaseAuthStateChange = ({ auth, getStubs }) => {
   })
 }
 
-export const getAdminFieldnotesStubs = async ({}) => {
+export const getAdminFieldnotesStubs = async () => {
   try {
     const db = getDb()
     const collectionRef = getFieldnotesStubsCollectionRef({

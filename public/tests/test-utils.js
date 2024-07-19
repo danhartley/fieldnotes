@@ -1,6 +1,7 @@
+/* eslint-disable no-undef */
 export const scroll = async ({ page }) => {
   return await page.evaluate(async () => {
-    return await new Promise((resolve, reject) => {
+    return await new Promise((resolve) => {
       var i = setInterval(() => {
         window.scrollBy(0, window.innerHeight)
         if (
@@ -51,7 +52,7 @@ export const isEnabled = ({ classList }) => {
 
 // Helper function to use aysnc/await with timers
 export const pause = async ({ func, delay = 2000 }) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve(func())
     }, delay)
@@ -86,7 +87,6 @@ export const logEmissions = ({
   emissions,
   greenHosting,
   data,
-  domain,
   responses,
 }) => {
   console.log(`Report for ${url}`)

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { logger } from './utils.js'
 
 export class ButtonComponent {

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import {
   deleteFieldnotesById,
   getAdminFieldnotesStubs,
@@ -5,7 +6,7 @@ import {
   onAdminFirebaseAuthStateChange,
 } from '../data/api.js'
 
-import { ButtonComponent, CheckBoxComponent } from '../common/ui-components.js'
+import { CheckBoxComponent } from '../common/ui-components.js'
 
 import { showNotificationsDialog } from '../common/ui-actions.js'
 
@@ -15,7 +16,7 @@ const init = async () => {
 
   const container = d.getElementById('stubs-collection')
 
-  const getStubs = async ({ user }) => {
+  const getStubs = async () => {
     const stubs = await getAdminFieldnotesStubs({})
 
     globalAdmin.stubs = stubs
@@ -41,7 +42,7 @@ const init = async () => {
     container.appendChild(ul)
     container.appendChild(btn)
 
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', () => {
       try {
         // Find titles checked for deletion
         const checkedTitles = Array.from(
@@ -76,7 +77,7 @@ const init = async () => {
     getStubs,
   })
 
-  const deletedInputCheckbox = new CheckBoxComponent({
+  new CheckBoxComponent({
     selector: '#deleted-input-checkbox',
     clickHandler: (e) => {
       const checkbox = e.target

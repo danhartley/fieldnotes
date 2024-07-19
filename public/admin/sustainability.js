@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { hosting, co2 } from '@tgwf/co2'
 
 const URL = 'www.ifieldnotes.org'

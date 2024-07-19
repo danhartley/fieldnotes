@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import {
   addElementToArray,
   addTerm,
@@ -137,7 +138,7 @@ export const mapUser = ({ user }) => {
   }
 }
 
-export const mapInatSpeciesToRequiredSpecies = ({ species, count, taxa }) => {
+export const mapInatSpeciesToRequiredSpecies = ({ species, taxa }) => {
   return species
     .filter((sp) =>
       taxa.map((t) => t.name).includes(sp.taxon.iconic_taxon_name.toLowerCase())
@@ -219,7 +220,7 @@ export const handleTermAutocomplete = async ({
       addSelectedTermBtn.classList.remove('disabled')
       addSelectedTermBtn.addEventListener(
         'click',
-        (e) =>
+        () =>
           handleOnClickAddSelectedTermBtn({
             terms: termData,
             selectedTerm: term,
@@ -404,7 +405,7 @@ export const cloneImages = ({
       }
       break
     case 'inat-lookup-write-template':
-      const term = globalWrite.name || globalWrite.matched_term
+      { const term = globalWrite.name || globalWrite.matched_term
       if (term) {
         // match.name is the scientific name, match.matched_term is the preferred common name in the given language (default en)
         const match = globalWrite.matches.find(
@@ -432,7 +433,7 @@ export const cloneImages = ({
           })
         }
       }
-      break
+      break }
   }
 }
 
@@ -556,7 +557,6 @@ export const cloneImageTemplate = ({
           break
       }
     } else {
-      const sp = [name]
       label.innerText = 'Included'
       switch (writeTemplateId) {
         case 'species-write-template':
@@ -1038,7 +1038,6 @@ export const updateSectionArray = ({
   globalWrite,
   sectionToUpdate,
   sectionAddedOrUpdated,
-  isBeingAdded,
 }) => {
   addOrUpdateSectionArray({
     globalWrite,
@@ -1353,16 +1352,8 @@ export const cloneSpeciesCardFromTemplate = ({
 
 export const handleLanguagePreference = ({
   globalRead,
-  createRadioBtnGroup,
-  languageGroupContainer,
   rememberLanguageCheckbox,
 }) => {
-  // const rbLanguageGroup = createRadioBtnGroup({
-  //     collection: globalRead.LANGUAGES
-  //     , checked: globalRead.language
-  //     , rbGroup: 'language'
-  //     , parent: languageGroupContainer.querySelector('.grid')
-  // })
 
   const rbLanguageGroup = d.querySelectorAll('input[name="language"]')
 
@@ -1482,7 +1473,7 @@ export const fetchFieldnotesStubs = ({
     global.fieldnotesStubsCollection = await fieldnotesStubs
 
     // Check for slug
-    const { isValid, slug, author } = validateSlug({
+    const { slug } = validateSlug({
       pathname: window.location.pathname,
       slugs: global.fieldnotesStubsCollection.map(
         (fieldnotes) => fieldnotes.slug
@@ -1608,6 +1599,7 @@ export const fieldnotesAutocomplete = async ({
         message: 'You are not logged in.',
         type: 'error',
       })
+      console.log(e)
     }
   }
 

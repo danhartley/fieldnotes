@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const set = ({ key, value }) => {
   localStorage.setItem(key, JSON.stringify(value))
 }
@@ -35,7 +36,7 @@ export const debounce = (func, wait) => {
   }
 }
 
-const encode = (s) => {
+export const encode = (s) => {
   var out = []
   for (var i = 0; i < s.length; i++) {
     out[i] = s.charCodeAt(i)
