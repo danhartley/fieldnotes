@@ -13,7 +13,7 @@
   "scripts": {
     "copy-redirects": "cp -vR ./_redirects ./dist",
     "copy-sw": "cp node_modules/@danhartley/emissions/lib/es6/sw.js public/",
-    "start": "npm run copy-sw && parcel --no-cache -p 3002",
+    "start": "npm run copy-sw && parcel --no-cache -p 3003",
     "build": "parcel build && npm run copy-redirects",
     "tests": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
