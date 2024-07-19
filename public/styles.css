@@ -1,7 +1,7 @@
 /* VARIABLES */
 
 :root {
-  --d: .5rem;
+  --d: 0.5rem;
   --w: 100vw;
   --h: 100vh;
   --c0: #fff;
@@ -13,10 +13,10 @@
   --c6: #323232;
   --c7: #414141;
   --c8: #000;
-  --s1: .6rem;
-  --s2: .7rem;
-  --s3: .8rem;
-  --s4: .9rem;
+  --s1: 0.6rem;
+  --s2: 0.7rem;
+  --s3: 0.8rem;
+  --s4: 0.9rem;
   --s5: 1rem;
   --s6: 1.1rem;
   --s7: 1.2rem;
@@ -28,11 +28,11 @@
   --plantae: #d8dfd2;
   --insecta: #e2dce2;
   --aves: #d7e3f1;
-  --reptilia: #fee2df;  
+  --reptilia: #fee2df;
   --body-bg: #f2ebe2;
   --content-bg: #f8f4f0;
   --primary-btn-bg: #fed05e;
-  --warning-btn-bg: #ead5df;  
+  --warning-btn-bg: #ead5df;
   --secondary-action-btn-bg: #e2e9f1;
   --success-bg: #e2e9f1;
   --accent: #4f3c24;
@@ -44,8 +44,8 @@
 
 /* ELEMENTS */
 
-body {  
-  font-family: Elena, "PT Serif", serif;
+body {
+  font-family: Elena, 'PT Serif', serif;
   background-color: var(--body-bg);
   -webkit-font-smoothing: antialiased;
 }
@@ -56,7 +56,7 @@ header {
   align-items: center;
   height: calc(var(--w) / 30);
   min-height: 50px;
-  border-bottom: 1px dashed var(--c8);  
+  border-bottom: 1px dashed var(--c8);
 }
 
 nav {
@@ -68,9 +68,10 @@ nav {
   font-size: var(--s3);
 }
 
-main, aside {
+main,
+aside {
   margin: auto;
-  max-width: 80ch; 
+  max-width: 80ch;
 }
 
 aside * {
@@ -95,7 +96,7 @@ h2 {
   margin: calc(var(--d) * 2) 0;
   width: 100%;
   font-size: var(--s5);
-  letter-spacing: calc(var(--d) * .025);
+  letter-spacing: calc(var(--d) * 0.025);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -143,12 +144,12 @@ aside nav li {
 
 button {
   margin: 0;
-  line-height: calc(var(--d)* 2);
+  line-height: calc(var(--d) * 2);
   border: 1px solid var(--accent-light);
-  border-radius: calc(var(--d) * .5);
+  border-radius: calc(var(--d) * 0.5);
   padding: calc(var(--d) * 1.25) calc(var(--d) * 2.5);
   font-size: var(--s3);
-  letter-spacing: calc(var(--d) * .015);
+  letter-spacing: calc(var(--d) * 0.015);
   background-color: var(--primary-btn-bg);
   cursor: pointer;
 }
@@ -160,13 +161,15 @@ aside nav li button {
 button.submit:hover {
   border-color: var(--c8);
   background-color: var(--primary-btn-bg);
-  opacity: .8;
+  opacity: 0.8;
 }
 
-button:hover, button:focus-visible, button:focus {
+button:hover,
+button:focus-visible,
+button:focus {
   outline: 1px solid var(--accent);
   border: 1px solid transparent !important;
-  opacity: .8;
+  opacity: 0.8;
 }
 
 .btn-reset {
@@ -175,7 +178,8 @@ button:hover, button:focus-visible, button:focus {
   background-color: initial;
 }
 
-label, .as-label {
+label,
+.as-label {
   font-size: var(--s3);
   -webkit-font-smoothing: antialiased;
   width: inherit;
@@ -187,12 +191,13 @@ label::first-letter {
   text-transform: initial !important;
 }
 
-h2 label {    
+h2 label {
   text-transform: uppercase;
   font-size: var(--s2);
 }
 
-h2 label::first-letter, label.text-initial::first-letter {
+h2 label::first-letter,
+label.text-initial::first-letter {
   text-transform: initial !important;
 }
 
@@ -201,15 +206,16 @@ h2 label::first-letter, label.text-initial::first-letter {
 }
 
 .grid > div > label {
-  margin: 0 0 calc(var(--d) * .75);
+  margin: 0 0 calc(var(--d) * 0.75);
 }
 
 input[type='radio'] + label::first-letter {
   text-transform: uppercase;
 }
 
-input[type='checkbox'], input[type='radio'] {
-  margin: 0 calc(var(--d) * .5) 0 0;
+input[type='checkbox'],
+input[type='radio'] {
+  margin: 0 calc(var(--d) * 0.5) 0 0;
   accent-color: var(--accent); /* Not supported by Samsung */
   cursor: pointer;
 }
@@ -218,13 +224,15 @@ input[type='checkbox']:checked::before {
   transform: scale(1);
 }
 
-input[type='checkbox'] + label, input[type='radio'] + label {
+input[type='checkbox'] + label,
+input[type='radio'] + label {
   margin-bottom: 0;
-  letter-spacing: calc(var(--d) * .025);
+  letter-spacing: calc(var(--d) * 0.025);
   cursor: pointer;
 }
 
-input[type='checkbox'] + label, .flex-row input[type='radio'] + label {
+input[type='checkbox'] + label,
+.flex-row input[type='radio'] + label {
   position: relative;
 }
 
@@ -232,15 +240,18 @@ input[type='checkbox'] {
   flex: none;
 }
 
-input[type='text'], input[type='email'], input[type='password'], textarea {
+input[type='text'],
+input[type='email'],
+input[type='password'],
+textarea {
   width: 100%;
-  border: 1px solid var(--c3);  
-  border-radius: calc(var(--d) * .5);
+  border: 1px solid var(--c3);
+  border-radius: calc(var(--d) * 0.5);
 }
 
 input[type='date'] {
   border: 1px solid var(--c3);
-  border-radius: calc(var(--d) * .5);
+  border-radius: calc(var(--d) * 0.5);
 }
 
 textarea {
@@ -249,7 +260,11 @@ textarea {
 }
 
 @-moz-document url-prefix() {
-  input[type='text'], input[type='email'], input[type='password'], input[type='date'], textarea {
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='date'],
+  textarea {
     width: 100%;
     width: available; /* WebKit-based browsers will ignore this. */
   }
@@ -260,8 +275,8 @@ textarea {
 
   input[type='checkbox'] + label {
     text-transform: capitalize;
-    display: flex; 
-    align-items: center; 
+    display: flex;
+    align-items: center;
   }
 
   h2 input[type='radio'] + label {
@@ -272,9 +287,10 @@ textarea {
     margin: 0 0 var(--d) 0;
   }
 
-  h2 input[type='radio'] + label, .flex-row input[type='radio'] + label {
+  h2 input[type='radio'] + label,
+  .flex-row input[type='radio'] + label {
     top: 1px;
-  }  
+  }
 }
 
 input[type='number'] {
@@ -282,21 +298,22 @@ input[type='number'] {
 }
 
 input[type='date']::-webkit-datetime-edit {
-   padding: var(--d);
+  padding: var(--d);
 }
 
 input[type='date']::-webkit-calendar-picker-indicator {
-   margin: var(--d);
-   cursor: pointer;
+  margin: var(--d);
+  cursor: pointer;
 }
 
 select {
   border: 1px solid var(--c3);
-  padding: calc(var(--d) * .75) 0;
+  padding: calc(var(--d) * 0.75) 0;
   cursor: pointer;
 }
 
-select:focus-visible, select:focus {
+select:focus-visible,
+select:focus {
   border: 1px solid transparent;
   outline: 1px solid var(--c8);
 }
@@ -309,11 +326,12 @@ dl {
 }
 
 dt {
-  margin: 0 0 calc(var(--d) * .5) 0;
+  margin: 0 0 calc(var(--d) * 0.5) 0;
   font-weight: bold;
 }
 
-dd, dl em {
+dd,
+dl em {
   margin: 0 0 var(--d) 0;
 }
 
@@ -323,7 +341,8 @@ dialog div {
   justify-content: center;
 }
 
-dd:empty, div:empty {
+dd:empty,
+div:empty {
   display: none;
 }
 
@@ -331,7 +350,9 @@ dt:has(+ dd:empty) {
   display: none;
 }
 
-dialog, dialog:focus-visible, dialog:focus {
+dialog,
+dialog:focus-visible,
+dialog:focus {
   position: sticky;
   bottom: calc(var(--d) * 2);
   padding: calc(var(--d) * 2);
@@ -345,13 +366,14 @@ fieldset {
   position: relative;
   margin: 0 0 calc(var(--d) * 2) 0;
   border: 1px dashed var(--c4);
-  padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 2) calc(var(--d) * 2);
+  padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 2)
+    calc(var(--d) * 2);
   background-color: var(--content-bg);
 }
 
 main > fieldset {
   display: grid;
-  grid-template-columns: 1fr 1fr;  
+  grid-template-columns: 1fr 1fr;
 }
 
 fieldset.fieldset-reset {
@@ -361,20 +383,19 @@ fieldset.fieldset-reset {
   background-color: initial;
 }
 
-
 fieldset.fieldset-reset fieldset {
   border-color: var(--c5);
   border-top: none;
 }
 
-legend  {
+legend {
   position: absolute;
-  top: calc(var(--d) *.5);
+  top: calc(var(--d) * 0.5);
   left: var(--d);
   padding: calc(var(--d) * 1.5) var(--d);
   font-size: var(--s3);
   font-weight: bold;
-  letter-spacing: calc(var(--d) * .05);
+  letter-spacing: calc(var(--d) * 0.05);
   color: var(--c7);
 }
 
@@ -382,34 +403,41 @@ figure input[type='text'] {
   width: initial;
 }
 
-input[type='text']:focus-visible, input[type='email']:focus-visible, input[type='password']:focus-visible, input[type='date']:focus-visible, textarea:focus-visible {
+input[type='text']:focus-visible,
+input[type='email']:focus-visible,
+input[type='password']:focus-visible,
+input[type='date']:focus-visible,
+textarea:focus-visible {
   border: 1px solid transparent;
   outline: 1px solid var(--c8);
 }
 
 a {
   border-bottom: 1px solid var(--c8);
-  padding-bottom: calc(var(--d) *.25);
+  padding-bottom: calc(var(--d) * 0.25);
   text-decoration: none;
   color: var(--c8);
-  line-height: calc(var(--d)* 4);
+  line-height: calc(var(--d) * 4);
 
-  &.skip-link, &.skip-link:visited {
+  &.skip-link,
+  &.skip-link:visited {
     position: absolute;
     top: calc(var(--d) * -10);
-    display: inline-block;    
+    display: inline-block;
     color: var(--c1);
-    background-color: var(--c5);    
+    background-color: var(--c5);
   }
 
-  &.skip-link & header { position: relative;}
+  &.skip-link & header {
+    position: relative;
+  }
 
   &.info {
     position: relative;
     z-index: 24;
     text-decoration: none;
   }
-  
+
   &.info span:nth-child(2) {
     position: absolute;
     left: -9000px;
@@ -418,7 +446,7 @@ a {
   }
 
   &.selected {
-    border-width: calc(var(--d) * .15);
+    border-width: calc(var(--d) * 0.15);
   }
 }
 
@@ -440,7 +468,8 @@ p {
   margin: calc(var(--d) * 2) 0;
 }
 
-th, td {
+th,
+td {
   min-width: 100px;
   font-size: var(--s3);
   text-align: left;
@@ -480,7 +509,7 @@ img {
 
 .disabled {
   pointer-events: none;
-  opacity: .75;
+  opacity: 0.75;
 }
 
 .draggable {
@@ -517,12 +546,12 @@ img {
 
 .success-icon::before {
   content: '\2713';
-  margin-right: calc(var(--d) * .5);
+  margin-right: calc(var(--d) * 0.5);
 }
 
 .error-icon::before {
   content: '\2717';
-  margin-right: calc(var(--d) * .25);
+  margin-right: calc(var(--d) * 0.25);
 }
 
 .capitalise {
@@ -530,7 +559,7 @@ img {
 }
 
 .serif {
-  font-family: Elena, "PT Serif", serif;
+  font-family: Elena, 'PT Serif', serif;
 }
 
 .alert {
@@ -570,13 +599,14 @@ img {
   margin: 0 auto calc(var(--d) * 4) auto;
   max-width: 30ch;
 
-  & :has(h3), .non-grid:has(h4) {
+  & :has(h3),
+  .non-grid:has(h4) {
     margin-bottom: 0;
   }
 
-  & p {  
-    line-height: calc(var(--d)* 4);
-    font-size: var(--s6);  
+  & p {
+    line-height: calc(var(--d) * 4);
+    font-size: var(--s6);
     color: var(--c6);
     -webkit-font-smoothing: antialiased;
   }
@@ -589,26 +619,25 @@ img {
   margin: 0 auto calc(var(--d));
 
   & figure img {
-    border-radius: calc(var(--d)* .5) calc(var(--d)* .5) 0 0;
+    border-radius: calc(var(--d) * 0.5) calc(var(--d) * 0.5) 0 0;
     cursor: initial;
     pointer-events: none;
     width: 200px;
   }
-  
 
   &:has(figure, img) {
     margin: 0 auto;
   }
-  
+
   & > * {
     display: flex;
     flex-direction: column;
     padding: 0;
   }
-  
+
   &:not(:has(figure)) img {
     object-fit: cover;
-    cursor: pointer;  
+    cursor: pointer;
   }
 
   & .flex-row {
@@ -617,14 +646,15 @@ img {
     align-items: center;
     padding: calc(var(--d) * 1.5) var(--d);
     border: 1px dotted var(--c2);
-    border-radius: calc(var(--d)* .5);
+    border-radius: calc(var(--d) * 0.5);
     background-color: var(--body-bg);
   }
-  
-  & div > div, & figure > figcaption  {
+
+  & div > div,
+  & figure > figcaption {
     display: flex;
     flex-direction: column;
-    align-items: center;  
+    align-items: center;
     justify-content: center;
     height: calc(6 * var(--d));
     padding: var(--d);
@@ -634,16 +664,15 @@ img {
   & span::first-letter {
     text-transform: capitalize;
   }
-  
+
   & figcaption span:nth-child(2) {
-    margin-top: calc(var(--d) * .5);
+    margin-top: calc(var(--d) * 0.5);
     font-size: var(--s3);
   }
-  
-    a.info:hover span:nth-child(2)
-  , a.info:focus span:nth-child(2)
-  , a.info:active span:nth-child(2) 
-  {
+
+  a.info:hover span:nth-child(2),
+  a.info:focus span:nth-child(2),
+  a.info:active span:nth-child(2) {
     display: block;
     position: absolute;
     top: calc(var(--d) * -4.5);
@@ -681,10 +710,11 @@ img {
 }
 
 #selected-term {
-  font-size: var(--s3);  
+  font-size: var(--s3);
 }
 
-#terms label, #selected-term span:nth-child(1){
+#terms label,
+#selected-term span:nth-child(1) {
   min-width: calc(var(--d) * 10);
 }
 
@@ -737,7 +767,7 @@ img {
 }
 
 .section-group {
-  margin-bottom: calc(var(--d) * .25);
+  margin-bottom: calc(var(--d) * 0.25);
   padding-left: calc(var(--d) * 2);
   align-items: center;
   color: var(--c6);
@@ -772,7 +802,7 @@ img {
   float: left;
 }
 
-.btn-secondary  {
+.btn-secondary {
   padding: var(--d);
   width: initial;
   border: 1px solid transparent;
@@ -817,15 +847,17 @@ img {
   max-height: 40.5px;
 }
 
-#observation-dates input[type="date"], #observation-dates label {
+#observation-dates input[type='date'],
+#observation-dates label {
   font-size: var(--s1);
 }
 
-#observation-dates label:nth-child(3), #observation-dates label:nth-child(2) {
+#observation-dates label:nth-child(3),
+#observation-dates label:nth-child(2) {
   min-width: calc(var(--d) * 4);
 }
 
-#observation-dates input[type="date"] {
+#observation-dates input[type='date'] {
   width: calc(var(--d) * 13);
 }
 
@@ -851,7 +883,8 @@ img {
 }
 
 fieldset.species-list {
-  padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 6) calc(var(--d) * 2);
+  padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 6)
+    calc(var(--d) * 2);
 }
 
 /* VIEWS */
@@ -874,7 +907,7 @@ fieldset.species-list {
 }
 
 .m0 {
-  margin: 0
+  margin: 0;
 }
 
 .mt {
@@ -902,7 +935,7 @@ fieldset.species-list {
 }
 
 .mb05 {
-  margin-bottom: calc(var(--d) * .5);
+  margin-bottom: calc(var(--d) * 0.5);
 }
 
 .mb {
@@ -997,7 +1030,7 @@ fieldset.species-list {
   top: var(--d);
 }
 
-.r1 {  
+.r1 {
   right: var(--d);
 }
 
@@ -1040,27 +1073,28 @@ fieldset.species-list {
   dl {
     margin: 0 auto calc(var(--d) * 4) auto;
     border: 1px solid var(--c3);
-    border-radius: calc(var(--d)* .5);
+    border-radius: calc(var(--d) * 0.5);
     padding: calc(var(--d) * 2) calc(var(--d) * 2) 0 calc(var(--d) * 2);
   }
 }
 
 @media only screen and (width >= 32em) {
-  #observation-dates input[type="date"] {
+  #observation-dates input[type='date'] {
     width: initial;
     font-size: var(--s3);
   }
 
   #observation-dates label {
-    font-size: var(--s3);    
+    font-size: var(--s3);
   }
 
-  #observation-dates label:nth-child(3), #observation-dates label:nth-child(2) {
+  #observation-dates label:nth-child(3),
+  #observation-dates label:nth-child(2) {
     min-width: calc(var(--d) * 6);
   }
 }
 
-@media screen and (width >= 458px){
+@media screen and (width >= 458px) {
   .non-grid {
     max-width: 60ch;
   }
@@ -1070,11 +1104,11 @@ fieldset.species-list {
     min-height: var(--img-min-height);
     max-height: var(--img-min-height);
     margin: 0;
-    object-fit: cover;    
+    object-fit: cover;
   }
 }
 
-@media screen and (width <= 458px){
+@media screen and (width <= 458px) {
   figcaption {
     background-color: var(--content-bg) !important;
   }
@@ -1091,7 +1125,8 @@ fieldset.species-list {
 }
 
 /* Widgets */
-#carbon-neutral-website, #the-green-web-foundation {
+#carbon-neutral-website,
+#the-green-web-foundation {
   & a {
     border: none;
   }

@@ -3,7 +3,6 @@
   https://printedcss.com/
 */
 
-
 @media print {
   .print-ignore {
     display: none;
