@@ -1,33 +1,32 @@
 import { pause } from './test-utils.js'
 
 describe('pause function', () => {
-
   const pauses = []
 
-  test('runs in order', async () => {    
+  test('runs in order', async () => {
     const pause1 = await pause({
-    func: async () => {
+      func: async () => {
         return 'pause 1'
       },
-      delay: 300
+      delay: 300,
     })
 
     pauses.push(pause1)
-    
+
     const pause2 = await pause({
-    func: async () => {
+      func: async () => {
         return 'pause 2'
       },
-      delay: 200
+      delay: 200,
     })
 
     pauses.push(pause2)
-    
+
     const pause3 = await pause({
-    func: async () => {
+      func: async () => {
         return 'pause 3'
       },
-      delay: 100
+      delay: 100,
     })
 
     pauses.push(pause3)

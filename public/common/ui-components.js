@@ -1,9 +1,12 @@
-import {
-  logger
-} from './utils.js'
+import { logger } from './utils.js'
 
 export class ButtonComponent {
-  constructor({parent = document, elementSelector, clickHandler, isDisabled = false}) {
+  constructor({
+    parent = document,
+    elementSelector,
+    clickHandler,
+    isDisabled = false,
+  }) {
     try {
       this.buttonElement = parent.querySelector(`#${elementSelector}`)
 
@@ -12,19 +15,19 @@ export class ButtonComponent {
       }
 
       // Disable buttons by default
-      if(isDisabled) {
+      if (isDisabled) {
         this.buttonElement.setAttribute('disabled', '')
       }
 
-      if(clickHandler) {
+      if (clickHandler) {
         this.buttonElement.addEventListener('click', clickHandler)
       }
     } catch (e) {
       logger({
-          message: e.message
-        , type: 'error'
+        message: e.message,
+        type: 'error',
       })
-  }
+    }
   }
 
   disable() {
@@ -48,17 +51,15 @@ export class ButtonComponent {
     this.buttonElement.classList.toggle('disabled')
   }
 
-  toggleActiveStateByInput({str}) {
-    str.length > 0
-      ? this.enable()
-      : this.disable()
+  toggleActiveStateByInput({ str }) {
+    str.length > 0 ? this.enable() : this.disable()
   }
 
-  addClickHandler({clickHandler}) {
+  addClickHandler({ clickHandler }) {
     this.buttonElement.addEventListener('click', clickHandler)
   }
 
-  setText({text}) {
+  setText({ text }) {
     this.buttonElement.innerText = text
   }
 
@@ -76,72 +77,71 @@ export class ButtonComponent {
 }
 
 export class ButtonHideShowComponent extends ButtonComponent {
-  constructor({
-    elementSelector
-  }) {
+  constructor({ elementSelector }) {
     super({
-        elementSelector
-      , clickHandler: (e) => {
-          const ctrl = e.target
-          ctrl.innerText = ctrl.innerText === 'HIDE' ? 'SHOW' : 'HIDE'
-          const fieldset = document.getElementById(ctrl.value)
-          fieldset.classList.toggle('hidden')
-      }
+      elementSelector,
+      clickHandler: (e) => {
+        const ctrl = e.target
+        ctrl.innerText = ctrl.innerText === 'HIDE' ? 'SHOW' : 'HIDE'
+        const fieldset = document.getElementById(ctrl.value)
+        fieldset.classList.toggle('hidden')
+      },
     })
   }
 
   scrollIntoView({ behavior = 'smooth', block = 'start', inline = 'nearest' }) {
-    if(this.buttonElement) this.buttonElement.scrollIntoView({ behavior, block, inline })
+    if (this.buttonElement)
+      this.buttonElement.scrollIntoView({ behavior, block, inline })
   }
 }
 
 export class RadioButtonComponent {
-  constructor({elementSelector, clickHandler}) {
+  constructor({ elementSelector, clickHandler }) {
     this.radioButtonElement = document.getElementById(elementSelector)
 
     if (!this.radioButtonElement) {
       logger({
-          message: `Element with Id ${elementSelector} not found`
-        , type: 'error'
+        message: `Element with Id ${elementSelector} not found`,
+        type: 'error',
       })
       return
     }
 
-    if(clickHandler) {
+    if (clickHandler) {
       this.radioButtonElement.addEventListener('click', clickHandler)
     }
   }
 }
 
 class BaseComponent {
-  constructor({parent = document, selector, clickHandler, changeHandler}) {
+  constructor({ parent = document, selector, clickHandler, changeHandler }) {
     this.element = parent.querySelector(selector)
 
     if (!this.element) {
       logger({
-          message: `Element with selector ${selector} not found`
-        , type: 'error'
+        message: `Element with selector ${selector} not found`,
+        type: 'error',
       })
       return
     }
 
-    if(clickHandler) {
+    if (clickHandler) {
       this.element.addEventListener('click', clickHandler)
     }
 
-    if(changeHandler) {
+    if (changeHandler) {
       this.element.addEventListener('change', changeHandler)
     }
   }
 }
 
 export class CheckBoxComponent extends BaseComponent {
-  constructor({parent = document, selector, clickHandler, changeHandler}) {
+  constructor({ parent = document, selector, clickHandler, changeHandler }) {
     super({
-        parent
-      , selector
-      , clickHandler
-      , changeHandler
+      parent,
+      selector,
+      clickHandler,
+      changeHandler,
     })
   }
 

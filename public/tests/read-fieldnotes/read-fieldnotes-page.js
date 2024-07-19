@@ -11,21 +11,33 @@ const parseEmissions = async (page, url) => {
     },
   }
 
-  const { pageWeight, count, emissions, greenHosting, data, domain, responses } = await node.getPageEmissions(
-      page
-    , url
-    , options
-  )
+  const {
+    pageWeight,
+    count,
+    emissions,
+    greenHosting,
+    data,
+    domain,
+    responses,
+  } = await node.getPageEmissions(page, url, options)
 
-  logEmissions({url, pageWeight, count, emissions, greenHosting, data, domain, responses})
+  logEmissions({
+    url,
+    pageWeight,
+    count,
+    emissions,
+    greenHosting,
+    data,
+    domain,
+    responses,
+  })
 }
 
-(async () => {
-
+;(async () => {
   const browser = await puppeteer.launch({
-      headless: false
-    , devtools: true
-    , defaultViewport: null
+    headless: false,
+    devtools: true,
+    defaultViewport: null,
   })
 
   const page = await browser.newPage()
