@@ -2,6 +2,7 @@ import puppeteer from 'puppeteer'
 
 import { EmissionsTracker } from '@danhartley/emissions'
 import { scroll, isEnabled, pause, sortBy, logEmissions } from '../test-utils.js'
+import { config } from '../test-config.js'
 
 const DELAY_FOR_TITLES = 1000
 const FIELDNOTES_TITLE = 'Streets of Lisbon, Portugal, Wed Feb 28 2024'
@@ -21,6 +22,11 @@ const readFieldnotes = async () => {
 
   const page = await browser.newPage()
 
+  await page.setViewport({
+    width: config.viewport.desktop.width, 
+    height: config.viewport.desktop.height
+  })
+  
   // Establish domain from deploy flag (dev or prod depending on the node argument in the command line)
   const deploy =
     process.argv.find((arg) => arg.includes('deploy'))?.split('=')[1] || 'dev'
