@@ -32,14 +32,21 @@ npm run test
 
 Open site in browser e.g. npm run start
 
-```bash
-node {path} e.g. node public/tests/write-fieldnotes/write-fieldnotes-tests.js
-`node public/tests/read-fieldnotes/read-fieldnotes-page.js`
+```
+node {path} e.g. node public/tests/read-fieldnotes/read-fieldnotes-page.js
+node {path} e.g. node public/tests/read-fieldnotes/read-fieldnotes-tracker.js
+node {path} e.g. node public/tests/read-fieldnotes/read-fieldnotes-lighthouse.js
 ```
 
-NB Optional flag deploy e.g deploy=prod or deploy=dev (default)  
-To debug in VS code select e.g. 'JavaScript Debug Terminal'  
-Then run the integration test in the JS debug terminal (will see 'Debugger attacheed' in terminal)
+To run tests or view in browser with compressed code:
+```
+npm run build
+npm run serve
+// and then, for node
+node public/tests/read-fieldnotes/read-fieldnotes-page.js
+// and then, for browser
+// navigate to the endpoint served
+```
 
 To compare figures filter network requests in Chrome DevTools  
 e.g. /axe|sentry|a11y-engine-core.min.js|firestore|logr-ingest.com/ and toggle the invert flag
