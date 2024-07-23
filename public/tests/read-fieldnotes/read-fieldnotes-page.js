@@ -37,7 +37,6 @@ const parseEmissions = async (page, url) => {
 ;(async () => {
   const browser = await puppeteer.launch({
     headless: false,
-    devtools: true,
     defaultViewport: null,
   })
 
@@ -49,7 +48,7 @@ const parseEmissions = async (page, url) => {
     height: config.viewport.desktop.height
   })
 
-  const url = 'http://localhost:3003'
+  const url = 'http://localhost:3007/read-fieldnotes'
 
   await parseEmissions(page, url)
   await browser.close()

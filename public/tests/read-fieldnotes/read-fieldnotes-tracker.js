@@ -16,7 +16,7 @@ const readFieldnotes = async () => {
 
   const browser = await puppeteer.launch({
     headless: false,
-    devtools: true,
+    // devtools: true,
     defaultViewport: null,
   })
 
@@ -31,7 +31,7 @@ const readFieldnotes = async () => {
   const deploy =
     process.argv.find((arg) => arg.includes('deploy'))?.split('=')[1] || 'dev'
   const url =
-    deploy === 'prod' ? 'https://www.ifieldnotes.org' : 'http://localhost:3003'
+    deploy === 'prod' ? 'https://www.ifieldnotes.org' : 'http://localhost:3007/read-fieldnotes'
 
   const options = {
     url,
