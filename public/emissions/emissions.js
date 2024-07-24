@@ -13,7 +13,7 @@ export const getPageEmissions = () => {
       },
     }
 
-    const { pageWeight, count, greenHosting, mgCO2 } =
+    const { pageWeight, count, greenHosting, mgCO2, records } =
       await browser.getPageEmissions(url, options)
 
     console.log(`Report for ${url}`)
@@ -23,6 +23,11 @@ export const getPageEmissions = () => {
     console.log(
       greenHosting ? 'Hosting: green hosting' : 'Hosting: not green hosting'
     )
+    console.log('Records ', records)
+
+    const bytes = records.reduce((acc, curr) => acc + curr.responseBytes, 0)
+
+    console.log('bytes: ', bytes)
 
     await browser.clearPageEmissions()
   })()

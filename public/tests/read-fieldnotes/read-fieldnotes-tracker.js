@@ -16,7 +16,6 @@ const readFieldnotes = async () => {
 
   const browser = await puppeteer.launch({
     headless: false,
-    // devtools: true,
     defaultViewport: null,
   })
 
@@ -129,15 +128,16 @@ const readFieldnotes = async () => {
 
     await pause({
       func: async () => {
-        const { std } = await tracker.getReport()
-        const {
+        const { 
+          url,
           pageWeight,
           count,
-          emissions,
           greenHosting,
-          data,
-          domain,
-        } = std
+          responses,
+          emissions,
+          mgCO2,
+          data
+         } = await tracker.getReport()
 
         logEmissions({
           url,
@@ -146,7 +146,7 @@ const readFieldnotes = async () => {
           emissions,
           greenHosting,
           data,
-          domain,
+          // domain,
         })
       },
       delay: 5000,
