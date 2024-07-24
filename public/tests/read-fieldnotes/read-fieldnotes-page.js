@@ -19,7 +19,6 @@ const parseEmissions = async (page, url) => {
     greenHosting,
     data,
     domain,
-    responses,
   } = await node.getPageEmissions(page, url, options)
 
   logEmissions({
@@ -30,7 +29,6 @@ const parseEmissions = async (page, url) => {
     greenHosting,
     data,
     domain,
-    responses,
   })
 }
 

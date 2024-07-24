@@ -133,9 +133,7 @@ const readFieldnotes = async () => {
           pageWeight,
           count,
           greenHosting,
-          responses,
           emissions,
-          mgCO2,
           data
          } = await tracker.getReport()
 
@@ -146,7 +144,6 @@ const readFieldnotes = async () => {
           emissions,
           greenHosting,
           data,
-          // domain,
         })
       },
       delay: 5000,

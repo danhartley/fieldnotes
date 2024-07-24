@@ -87,7 +87,6 @@ export const logEmissions = ({
   emissions,
   greenHosting,
   data,
-  responses,
 }) => {
   console.log(`Report for ${url}`)
   console.log('Page weight: ', `${format(pageWeight / 1000)} Kbs`)
@@ -103,6 +102,4 @@ export const logEmissions = ({
   console.log(data?.totalUncachedBytes)
   console.log('groupedByTypeBytes')
   console.log(data?.groupedByTypeBytes)
-  console.log('Responses')
-  console.log(responses || 'Not provided')
 }
