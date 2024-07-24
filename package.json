@@ -49,7 +49,6 @@
     "firebaseui": "^6.1.0",
     "inaturalistjs": "github:inaturalist/inaturalistjs",
     "lighthouse": "^12.0.0",
-    "posthog-js": "^1.136.4",
     "printed": "^0.18.4",
     "puppeteer": "^22.10.0"
   },

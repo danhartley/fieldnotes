@@ -69,11 +69,6 @@ See package.json for the complete list
 Analytics is only running on the read fieldnotes page
 https://withcabin.com/dashboard/ifieldnotes.org
 
-#### Posthog
-
-Analytics currently suspended on the read fieldnotes page
-https://eu.posthog.com/
-
 #### CO2 emissions (online)
 
 See: https://ifieldnotes.org/admin/sustainability.html
