@@ -11,4 +11,4 @@ lighthouse
 hint-report/
 # Local Netlify folder
 .netlify
-public/sw.js
+# public/sw.js
