@@ -13,9 +13,8 @@
   "scripts": {
     "copy-redirects": "cp -vR ./_redirects ./dist",
     "copy-sw": "cp node_modules/@danhartley/emissions/lib/es6/sw.js public/",
-    "copy-sw-dist": "cp public/sw.js dist",
     "start": "npm run copy-sw && parcel --no-cache -p 3007",
-    "build": "parcel build && npm run copy-sw-dist",
+    "build": "parcel build && cp public/sw.js dist/",
     "tests": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "serve": "http-server dist -p 3007 -b -g"
   },
@@ -43,7 +42,7 @@
     "stylelint-config-standard": "^36.0.0"
   },
   "dependencies": {
-    "@danhartley/emissions": "^0.1.0",
+    "@danhartley/emissions": "^0.1.1",
     "@netlify/blobs": "^7.3.0",
     "@tgwf/co2": "^0.15.0",
     "firebase": "^10.12.2",
