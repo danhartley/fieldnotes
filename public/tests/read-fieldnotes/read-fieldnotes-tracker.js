@@ -130,7 +130,7 @@ const readFieldnotes = async () => {
       func: async () => {
         const { 
           url,
-          pageWeight,
+          bytes,
           count,
           greenHosting,
           emissions,
@@ -139,7 +139,7 @@ const readFieldnotes = async () => {
 
         logEmissions({
           url,
-          pageWeight,
+          bytes,
           count,
           emissions,
           greenHosting,

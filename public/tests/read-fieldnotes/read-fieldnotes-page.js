@@ -13,7 +13,7 @@ const parseEmissions = async (page, url) => {
   }
 
   const {
-    pageWeight,
+    bytes,
     count,
     emissions,
     greenHosting,
@@ -23,7 +23,7 @@ const parseEmissions = async (page, url) => {
 
   logEmissions({
     url,
-    pageWeight,
+    bytes,
     count,
     emissions,
     greenHosting,
