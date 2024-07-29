@@ -42,7 +42,7 @@
     "stylelint-config-standard": "^36.0.0"
   },
   "dependencies": {
-    "@danhartley/emissions": "^0.1.1",
+    "@danhartley/emissions": "^0.1.2",
     "@netlify/blobs": "^7.3.0",
     "@tgwf/co2": "^0.15.0",
     "firebase": "^10.12.2",
