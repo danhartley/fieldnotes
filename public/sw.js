@@ -177,7 +177,7 @@ const getResponseDetails = async (response, env, compressionOptions) => {
   const contentEncoding = getHeader('Content-Encoding') || 'n/a';
   const buffer = await getBuffer();
 
-  const uncompressedBytes = buffer.length;
+  const uncompressedBytes = buffer.byteLength;
   const compressedBytes = contentLength ? parseInt(contentLength, 10) : 0;
   const bytes = getBytes({
     compressedBytes,
@@ -242,6 +242,7 @@ const saveNetworkTraffic = async (responseDetails) => {
   const record = {
     url: responseDetails.url,
     bytes: responseDetails.bytes,
+    uncompressedBytes: responseDetails.uncompressedBytes,
     contentType: responseDetails.contentType,
     resourceType: responseDetails.resourceType,
   };
