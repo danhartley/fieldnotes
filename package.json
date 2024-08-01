@@ -17,7 +17,7 @@
     "build": "parcel build && cp public/sw.js dist/ && cp public/_redirects dist/",
     "tests": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "serve": "http-server dist -p 3007 -b -g",
-    "styles": "npx stylelint **/*.css"
+    "styles": "npx stylelint public/**/*.css"
   },
   "keywords": [],
   "author": "",

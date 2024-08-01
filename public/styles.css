@@ -320,13 +320,13 @@ select:focus {
 
 dl {
   max-width: 70ch;
-  margin: 0 auto calc(var(--d) * 4) auto;
+  margin: 0 auto calc(var(--d) * 4);
   margin-block: 0;
   font-size: var(--s3);
 }
 
 dt {
-  margin: 0 0 calc(var(--d) * 0.5) 0;
+  margin: 0 0 calc(var(--d) * 0.5);
   font-weight: bold;
 }
 
@@ -364,10 +364,9 @@ dialog:focus {
 
 fieldset {
   position: relative;
-  margin: 0 0 calc(var(--d) * 2) 0;
+  margin: 0 0 calc(var(--d) * 2);
   border: 1px dashed var(--c4);
-  padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 2)
-    calc(var(--d) * 2);
+  padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 2);
   background-color: var(--content-bg);
 }
 
@@ -596,7 +595,7 @@ img {
 /* SELECTOR RULES */
 
 .non-grid {
-  margin: 0 auto calc(var(--d) * 4) auto;
+  margin: 0 auto calc(var(--d) * 4);
   max-width: 30ch;
 
   & :has(h3),
@@ -883,8 +882,7 @@ img {
 }
 
 fieldset.species-list {
-  padding: calc(var(--d) * 6) calc(var(--d) * 2) calc(var(--d) * 6)
-    calc(var(--d) * 2);
+  padding: calc(var(--d) * 6) calc(var(--d) * 2);
 }
 
 /* VIEWS */
@@ -1071,10 +1069,10 @@ fieldset.species-list {
   }
 
   dl {
-    margin: 0 auto calc(var(--d) * 4) auto;
+    margin: 0 auto calc(var(--d) * 4);
     border: 1px solid var(--c3);
     border-radius: calc(var(--d) * 0.5);
-    padding: calc(var(--d) * 2) calc(var(--d) * 2) 0 calc(var(--d) * 2);
+    padding: calc(var(--d) * 2) calc(var(--d) * 2) 0;
   }
 }
 
