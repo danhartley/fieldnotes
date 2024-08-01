@@ -621,8 +621,8 @@ const init = () => {
             }
           )
           break
-        case 'images-write-template':
-          { const sectionContainer = typeClone.getElementById('section-id')
+        case 'images-write-template': {
+          const sectionContainer = typeClone.getElementById('section-id')
           sectionContainer.id = `${sectionContainer.id}-${sectionIndex}`
           const url1 = typeClone.getElementById('image-url-input-0')
           const title1 = typeClone.getElementById('image-title-input-0')
@@ -657,7 +657,8 @@ const init = () => {
                 cancelActionBtn,
               }),
           })
-          break }
+          break
+        }
         case 'inat-lookup-write-template':
           datalist = typeClone.querySelector('datalist')
           datalist.id = `${sectionIndex}-dl-list`
@@ -800,8 +801,8 @@ const init = () => {
         case 'textarea-write-template':
           fieldset.querySelector('textarea:not(.hidden)')?.focus()
           break
-        case 'terms-write-template':
-          { const parent = fieldset.querySelector('#selected-term')
+        case 'terms-write-template': {
+          const parent = fieldset.querySelector('#selected-term')
           const addSelectedTermBtn = fieldset.querySelector(
             '#add-selected-term-btn'
           )
@@ -889,9 +890,10 @@ const init = () => {
               })
             },
           })
-          break }
-        case 'images-write-template':
-          { const url1 = fieldset.querySelector('#image-url-input-0')
+          break
+        }
+        case 'images-write-template': {
+          const url1 = fieldset.querySelector('#image-url-input-0')
           const title1 = fieldset.querySelector('#image-title-input-0')
           const url2 = fieldset.querySelector('#image-url-input-1')
           const title2 = fieldset.querySelector('#image-title-input-1')
@@ -927,7 +929,8 @@ const init = () => {
             }
           )
           Array.from(fieldset.getElementsByTagName('input'))[0]?.focus()
-          break }
+          break
+        }
         case 'inat-lookup-write-template':
           toggleSpeciesListTopBtn.addClickHandler({
             clickHandler: () =>
@@ -1043,8 +1046,8 @@ const init = () => {
           previewContainer,
         })
         break
-      case 'textarea-write-template':
-        { const ps = typeValue.split('\n').filter((p) => p.length > 0)
+      case 'textarea-write-template': {
+        const ps = typeValue.split('\n').filter((p) => p.length > 0)
         const paras = ps.map((p) => {
           return {
             p,
@@ -1059,7 +1062,8 @@ const init = () => {
             previewContainer,
           })
         )
-        break }
+        break
+      }
       case 'observations-write-template':
       case 'species-write-template':
       case 'inat-lookup-write-template':
@@ -1538,8 +1542,8 @@ const init = () => {
               '#toggle-species-include-all-top-btn'
             ).innerText = 'show all'
             break
-          case 'inat-lookup-preview-template':
-            { let parent = null
+          case 'inat-lookup-preview-template': {
+            let parent = null
             section.species.forEach((species, index) => {
               parent = draggableSection.querySelector(
                 `#inat-lookup-parent-${section.sectionIndex}`
@@ -1561,7 +1565,8 @@ const init = () => {
               checkbox.setAttribute('checked', true)
               checkbox.nextElementSibling.innerText = 'Included'
             })
-            break }
+            break
+          }
           case 'images-preview-template':
             section.images.forEach((img, i) => {
               if (img.src.length > 0) {
@@ -1574,8 +1579,8 @@ const init = () => {
               }
             })
             break
-          case 'terms-preview-template':
-            { const selectedItemsListElement = draggableSection.querySelector(
+          case 'terms-preview-template': {
+            const selectedItemsListElement = draggableSection.querySelector(
               '#selected-terms-list'
             )
             const selectedTerms = []
@@ -1588,7 +1593,8 @@ const init = () => {
                 sectionIndex: section.sectionIndex,
               })
               selectedTerms.push(term)
-            }) }
+            })
+          }
         }
         setOriginalTypeValues({
           globalWrite,

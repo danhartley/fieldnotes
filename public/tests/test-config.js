@@ -10,5 +10,5 @@ export const config = {
       height: 2400,
       scrolled: 30000,
     },
-  }
+  },
 }

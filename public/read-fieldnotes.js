@@ -48,7 +48,6 @@ const init = async () => {
 
   const globalRead = initGlobalRead()
 
-   
   const d = document
 
   // Select title
@@ -321,8 +320,8 @@ const init = async () => {
       // Iterate the sections updating content according to type
       switch (globalRead.template.templateId) {
         case 'species-template':
-        case 'observations-template':
-          { const species =
+        case 'observations-template': {
+          const species =
             globalRead.template.templateId === 'observations-template'
               ? globalRead.fieldnotes.observations
               : globalRead.species
@@ -336,7 +335,8 @@ const init = async () => {
             parent.appendChild(clone)
           })
           article.appendChild(parent)
-          break }
+          break
+        }
         case 'species-test-template':
           globalRead.species.forEach((sp, i) => {
             const clone = templateToClone.content.cloneNode(true)
@@ -388,9 +388,9 @@ const init = async () => {
           })
           article.appendChild(parent)
           break
-        case 'fieldnotes-template':
-          // Display metadata from the field trip to the fieldnotes
-          { const metaTemplate = d.getElementById('meta-preview-template')
+        case 'fieldnotes-template': // Display metadata from the field trip to the fieldnotes
+        {
+          const metaTemplate = d.getElementById('meta-preview-template')
           const metaClone = metaTemplate.content.cloneNode(true)
           const metaList = metaClone.querySelector('ul')
           const required = metaList.querySelectorAll('li > strong')
@@ -600,7 +600,8 @@ const init = async () => {
                 break
             }
           })
-          break }
+          break
+        }
       }
 
       addImgClickEventHandlers()
@@ -620,7 +621,7 @@ const init = async () => {
   }
 
   // Add performance mark that will appear
-   
+
   performance.mark('dom-content-loaded')
 
   const updateScore = () => {
@@ -650,7 +651,6 @@ const init = async () => {
   addImgClickEventHandlers()
 
   const fetchFieldnotes = async () => {
-     
     performance.mark('fetch-field-notes: start')
     try {
       importFieldNotesNotificationText.classList.remove('hidden')
@@ -755,7 +755,6 @@ const init = async () => {
         .classList.remove('border-solid')
 
       updateHistoryAndTitle({
-         
         window,
         slug: globalRead.fieldnotesStubs.slug,
         title: globalRead.fieldnotesStubs.title,
@@ -767,7 +766,7 @@ const init = async () => {
       })
     } finally {
       // Use marks and measure to display timings e.g. in Chrome DevTools (Performance tab)
-       
+
       performance.mark('fetch-field-notes: end')
       // performance.measure('fetch-field-notes', 'fetch-field-notes: start', 'fetch-field-notes: end')
       if (lessonFieldsetLegend) {
@@ -800,7 +799,7 @@ const init = async () => {
       Array.from(d.querySelectorAll('.grid')).forEach((grid) =>
         grid.classList.remove('page-breaks')
       )
-       
+
       print()
     },
   })
@@ -882,7 +881,7 @@ const init = async () => {
     const loadTime = endTime - startTime
 
     logger({
-      message: `DOM loaded in ${loadTime} milliseconds`
+      message: `DOM loaded in ${loadTime} milliseconds`,
     })
     performance.mark('DOM loaded')
   })

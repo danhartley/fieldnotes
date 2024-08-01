@@ -11,9 +11,7 @@ import {
   showNotificationsDialog,
 } from './common/ui-actions.js'
 
-import {
-  ButtonComponent,
-} from './common/ui-components.js'
+import { ButtonComponent } from './common/ui-components.js'
 
 import { appLocalStorage } from './common/utils.js'
 

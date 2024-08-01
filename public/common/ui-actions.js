@@ -404,8 +404,8 @@ export const cloneImages = ({
         })
       }
       break
-    case 'inat-lookup-write-template':
-      { const term = globalWrite.name || globalWrite.matched_term
+    case 'inat-lookup-write-template': {
+      const term = globalWrite.name || globalWrite.matched_term
       if (term) {
         // match.name is the scientific name, match.matched_term is the preferred common name in the given language (default en)
         const match = globalWrite.matches.find(
@@ -433,7 +433,8 @@ export const cloneImages = ({
           })
         }
       }
-      break }
+      break
+    }
   }
 }
 
@@ -1354,7 +1355,6 @@ export const handleLanguagePreference = ({
   globalRead,
   rememberLanguageCheckbox,
 }) => {
-
   const rbLanguageGroup = d.querySelectorAll('input[name="language"]')
 
   rbLanguageGroup.forEach((rb) => {

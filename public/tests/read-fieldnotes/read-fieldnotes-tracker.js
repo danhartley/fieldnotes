@@ -1,7 +1,13 @@
 import puppeteer from 'puppeteer'
 
 import { EmissionsTracker } from '@danhartley/emissions'
-import { scroll, isEnabled, pause, sortBy, logEmissions } from '../test-utils.js'
+import {
+  scroll,
+  isEnabled,
+  pause,
+  sortBy,
+  logEmissions,
+} from '../test-utils.js'
 import { config } from '../test-config.js'
 
 const DELAY_FOR_TITLES = 1000
@@ -22,15 +28,17 @@ const readFieldnotes = async () => {
   const page = await browser.newPage()
 
   await page.setViewport({
-    width: config.viewport.desktop.width, 
-    height: config.viewport.desktop.height
+    width: config.viewport.desktop.width,
+    height: config.viewport.desktop.height,
   })
-  
+
   // Establish domain from deploy flag (dev or prod depending on the node argument in the command line)
   const deploy =
     process.argv.find((arg) => arg.includes('deploy'))?.split('=')[1] || 'dev'
   const url =
-    deploy === 'prod' ? 'https://www.ifieldnotes.org' : 'http://localhost:3007/read-fieldnotes'
+    deploy === 'prod'
+      ? 'https://www.ifieldnotes.org'
+      : 'http://localhost:3007/read-fieldnotes'
 
   const options = {
     url,
@@ -44,10 +52,7 @@ const readFieldnotes = async () => {
   }
 
   try {
-    tracker = new EmissionsTracker(
-      page,
-      options
-    )
+    tracker = new EmissionsTracker(page, options)
 
     // Navigate to site
     await page.goto(url)
@@ -128,14 +133,8 @@ const readFieldnotes = async () => {
 
     await pause({
       func: async () => {
-        const { 
-          url,
-          bytes,
-          count,
-          greenHosting,
-          emissions,
-          data
-         } = await tracker.getReport()
+        const { url, bytes, count, greenHosting, emissions, data } =
+          await tracker.getReport()
 
         logEmissions({
           url,

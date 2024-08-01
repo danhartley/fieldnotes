@@ -12,14 +12,8 @@ const parseEmissions = async (page, url) => {
     },
   }
 
-  const {
-    bytes,
-    count,
-    emissions,
-    greenHosting,
-    data,
-    domain,
-  } = await node.getPageEmissions(page, url, options)
+  const { bytes, count, emissions, greenHosting, data, domain } =
+    await node.getPageEmissions(page, url, options)
 
   logEmissions({
     url,
@@ -38,10 +32,10 @@ const parseEmissions = async (page, url) => {
   })
 
   const page = await browser.newPage()
-  
+
   await page.setViewport({
-    width: config.viewport.desktop.width, 
-    height: config.viewport.desktop.height
+    width: config.viewport.desktop.width,
+    height: config.viewport.desktop.height,
   })
 
   const url = 'http://localhost:3007/read-fieldnotes'
