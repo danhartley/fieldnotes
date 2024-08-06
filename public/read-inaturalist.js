@@ -652,6 +652,7 @@ const init = async () => {
       id,
       prop,
       cbParent: d.getElementById('inat-params-input-check-box-group'),
+      searchInatObservationsBtn
     })
   })
 

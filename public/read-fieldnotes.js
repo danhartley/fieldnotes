@@ -652,7 +652,7 @@ const init = async () => {
 
   addImgClickEventHandlers()
 
-  const fetchFieldnotes = async () => {
+  const fetchFieldnotes = async () => {    
     performance.mark('fetch-field-notes: start')
     try {
       importFieldNotesNotificationText.classList.remove('hidden')
@@ -853,6 +853,7 @@ const init = async () => {
         fetchFieldnotesBtn,
         fieldnotesStubs: globalRead.fieldnotesStubsCollection,
       })
+      fetchFieldnotesBtn.disable()
     }
   })
 

@@ -205,7 +205,8 @@ const init = () => {
       case 'create':
         iNatAutocompleteInputText.focus()
         metaDataSection.classList.remove('disabled')
-        globalWrite.isUserEditing = false
+        globalWrite.isUserEditing = false        
+
         break
       case 'edit':
         fnAutocompleteTitleInputText.focus()
@@ -351,9 +352,6 @@ const init = () => {
       // Set the selected title as the title of the newly created fieldnotes
       fnAutocompleteTitleInputText.value = globalWrite.fieldnotesStubs.title
 
-      // Enable fetch
-      // fetchFieldnotesBtn.enable()
-
       // Save inat user
       if (rememberInatUserCheckbox.checked) {
         const {
@@ -416,6 +414,7 @@ const init = () => {
     id: globalWrite.inatAutocomplete.id,
     prop: globalWrite.inatAutocomplete.prop,
     cbParent: d.getElementById('inat-params-input-check-box-group'),
+    searchInatObservationsBtn
   })
 
   const updateFieldnotesStatusBtn = new ButtonComponent({
@@ -965,6 +964,7 @@ const init = () => {
             cbParent,
             writeTemplateId,
             sectionIndex,
+            searchInatObservationsBtn
           })
           break
       }
@@ -1813,8 +1813,9 @@ const init = () => {
         dataList: fnAutocompleteTitleDatalist,
         global: globalWrite,
         fetchFieldnotesBtn,
-        fieldnotesStubs: globalWrite.fieldnotesStubsCollection,
+        fieldnotesStubs: globalWrite.fieldnotesStubsCollection,      
       })
+      fetchFieldnotesBtn.disable()
     }
   })
 
