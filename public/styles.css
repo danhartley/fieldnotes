@@ -74,6 +74,10 @@ aside {
   max-width: 80ch;
 }
 
+article:empty {
+  display: none;
+}
+
 aside * {
   font-size: var(--s2);
 }
@@ -142,6 +146,10 @@ aside nav li {
   margin: calc(1 * var(--d)) 0;
 }
 
+li:empty {
+  display: none;
+}
+
 button {
   margin: 0;
   line-height: calc(var(--d) * 2);
@@ -169,7 +177,6 @@ button:focus-visible,
 button:focus {
   outline: 1px solid var(--accent);
   border: 1px solid transparent !important;
-  opacity: 0.8;
 }
 
 .btn-reset {
@@ -510,9 +517,14 @@ img {
   height: 0;
 }
 
-.disabled {
+button:disabled, button.disabled {
   pointer-events: none;
-  opacity: 0.75;
+  color: var(--c5);
+}
+
+button:not(:disabled) {
+  pointer-events: all;
+  color: var(--c8);
 }
 
 .draggable {
