@@ -69,6 +69,7 @@ export const handleInatAutocomplete = ({
   cbParent,
   writeTemplateId,
   sectionIndex,
+  searchInatObservationsBtn
 }) => {
   inputText.addEventListener(
     'input',
@@ -120,7 +121,10 @@ export const handleInatAutocomplete = ({
           parent: cbParent,
           writeTemplateId,
           sectionIndex,
-        })
+      })
+      searchInatObservationsBtn.enable()
+    } else {
+      searchInatObservationsBtn.disable()
     }
   })
 }
@@ -1628,6 +1632,8 @@ export const fieldnotesAutocomplete = async ({
       global.fieldnotesStubs = stubs.find((option) => option.title === match)
       fetchFieldnotesBtn.enable()
       fetchFieldnotesBtn.focus()
+    } else {
+      fetchFieldnotesBtn.disable()
     }
   })
 
