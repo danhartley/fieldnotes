@@ -66,7 +66,7 @@ const init = async () => {
   const sectionsWithHeader = d.querySelectorAll('.section-with-header')
   const lessonFieldsetLegend = d.querySelector('#lesson-fieldset > legend')
   const article = d.getElementById('article')
-  const articleHeader = d.getElementById('article-header')
+  const articleHeaderTemplate = d.getElementById('header-1-template')
   const rbTemplate = d.getElementById('radio-button-template')
   const languageGroupContainer = d.getElementById('language-group-container')
   const targetGroupContainer = d.getElementById('target-group-container')
@@ -315,7 +315,9 @@ const init = async () => {
       if (globalRead.species) article.innerHTML = ''
 
       // Add fieldnotes title to article
-      articleHeader.innerText = globalRead.fieldnotes.title
+      const articleHeader = articleHeaderTemplate.content.cloneNode(true)
+      articleHeader.getElementById('article-header').innerText = globalRead.fieldnotes.title
+      article.appendChild(articleHeader)
 
       // Iterate the sections updating content according to type
       switch (globalRead.template.templateId) {

@@ -22,7 +22,7 @@
     <link rel="icon" href="./favicon.ico" />
   </head>
   <body>
-    <header class="print-ignore">
+    <header class="print-ignore" role="banner">
       <a href="#main" class="skip-link">Skip to main content</a>
       <nav>
         <ul>
@@ -91,15 +91,16 @@
       </div>
 
       <div class="section-with-header print-ignore hidden">
-        <fieldset id="lesson-fieldset" class="pt2">
-          <h1 id="article-header">Article header</h1>
-
-          <div id="display-fieldset" class="fieldset-reset">
-            <div id="species-display-container" class="grid ml2 mr2"></div>
-            <div id="targets-fieldset" class="hidden flex-row">
-              <div id="target-group-container" class="grid ml2 mr2"></div>
+        <fieldset id="lesson-fieldset" class="pt6">
+          
+          <legend>
+            <div id="display-fieldset" class="fieldset-reset">
+              <div id="species-display-container" class="grid"></div>
+              <div id="targets-fieldset" class="hidden flex-row">
+                <div id="target-group-container" class="grid ml2 mr2"></div>
+              </div>
             </div>
-          </div>
+          </legend>
 
           <article id="article"></article>
 
@@ -407,6 +408,10 @@
           height="115"
         ></iframe>
       </div>
+    </template>
+
+    <template id="header-1-template">
+      <h1 id="article-header">Article header</h1>
     </template>
 
     <script async defer src="https://scripts.withcabin.com/hello.js"></script>

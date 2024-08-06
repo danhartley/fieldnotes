@@ -398,6 +398,10 @@ legend {
   color: var(--c7);
 }
 
+#lesson-fieldset legend {
+  right: var(--d);
+}
+
 figure input[type='text'] {
   width: initial;
 }
@@ -782,6 +786,10 @@ img {
   background-color: var(--c5);
 }
 
+section:empty {
+  display: none;
+}
+
 .latin {
   font-style: italic;
 }
@@ -986,6 +994,10 @@ fieldset.species-list {
 
 .pt2 {
   padding-top: calc(var(--d) * 2);
+}
+
+.pt6 {
+  padding-top: calc(var(--d) * 6);
 }
 
 .pr {
