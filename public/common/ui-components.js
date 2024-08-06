@@ -33,11 +33,13 @@ export class ButtonComponent {
 
   disable() {
     this.buttonElement.classList.add('disabled')
+    this.buttonElement.setAttribute('disabled', '')
     return this.buttonElement
   }
 
   enable() {
     this.buttonElement.classList.remove('disabled')
+    this.buttonElement.removeAttribute('disabled')
     return this.buttonElement
   }
 
@@ -50,6 +52,9 @@ export class ButtonComponent {
 
   toggleActiveState() {
     this.buttonElement.classList.toggle('disabled')
+    this.buttonElement.classList.contains('disabled')
+      ? this.disable()
+      : this.enable()
   }
 
   toggleActiveStateByInput({ str }) {
