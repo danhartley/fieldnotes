@@ -889,7 +889,7 @@ const init = async () => {
     performance.mark('DOM loaded')
   })
 
-  getPageEmissions()
+  // getPageEmissions()
 }
 
 init()
