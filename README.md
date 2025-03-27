@@ -115,3 +115,9 @@ lighthouse https://ifieldnotes.org --budget-path=public/budgets/budget.json --ou
 ### Site health
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9c06d7f9-7099-4196-b685-81166934bfe0/deploy-status)](https://app.netlify.com/sites/keen-crepe-cdae84/deploys)
+
+## Deployment
+
+Push changes to `netlify-deploy`
+
+This website [deploys from GitHub](https://app.netlify.com/sites/ifieldnotes/overview)
