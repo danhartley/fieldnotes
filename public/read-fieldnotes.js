@@ -15,12 +15,10 @@ import {
   cloneSpeciesCardFromTemplate,
   fetchFieldnotesStubs,
   fieldnotesAutocomplete,
-  // , getFieldnotesFromStore
   getTaxonGroupColour,
   handleLanguagePreference,
   mapTaxon,
   scoreLesson,
-  // , storeFieldnotes
   showNotificationsDialog,
   updateHistoryAndTitle,
 } from './common/ui-actions.js'
@@ -28,8 +26,6 @@ import {
 import { ButtonComponent } from './common/ui-components.js'
 
 import { appLocalStorage, logger } from './common/utils.js'
-
-import { getPageEmissions } from './emissions/emissions.js'
 
 const init = async () => {
   const initGlobalRead = () => {
@@ -608,11 +604,6 @@ const init = async () => {
 
       addImgClickEventHandlers()
 
-      // storeFieldnotes({
-      //       id: globalRead.fieldnotes.fnId
-      //     , article: article.outerHTML
-      // })
-      // getFieldnotesFromStore({id: globalRead.fieldnotes.fnId})
     } catch (e) {
       showNotificationsDialog({
         message: e.message,
@@ -888,8 +879,6 @@ const init = async () => {
     })
     performance.mark('DOM loaded')
   })
-
-  // getPageEmissions()
 }
 
 init()
